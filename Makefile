@@ -1,4 +1,4 @@
-.PHONY: dev build test clean
+.PHONY: dev build test clean start-db
 
 dev:
 	docker-compose -f docker-compose.yml up
@@ -11,5 +11,8 @@ test:
 	cd frontend && npm run test
 
 clean:
-	docker-compose down -v
+	docker compose down -v
 	docker system prune -f
+
+start-db:
+	docker compose up postgres
