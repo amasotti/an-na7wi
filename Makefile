@@ -16,3 +16,15 @@ clean:
 
 start-db:
 	docker compose up postgres
+
+start-fe:
+	docker compose up frontend
+
+start-be:
+	docker compose up backend
+
+local-be:
+	cd backend && ./gradlew quarkusDev
+
+build-be:
+	cd backend && ./gradlew clean quarkusBuild

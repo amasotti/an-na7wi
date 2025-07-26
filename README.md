@@ -1,138 +1,56 @@
-# An-Nahwi (النحوي) - Arabic Learning Application
+# An-Nahwi (النحوي)
 
-## Project Overview
+Arabic learning application for creating and managing learning materials with text analysis, vocabulary management, and annotations.
 
-An-Nahwi is a containerized fullstack application for learning Arabic dialects, specifically designed for creating and managing learning materials. The app allows users to write texts in Arabic with transliteration and translation, manage vocabulary, add annotations, and search through their learning materials with advanced linguistic features.
+**Stack**: Kotlin/Quarkus backend, Vue.js 3/TypeScript frontend, PostgreSQL database
 
-## Technology Stack
+## Quick Start
 
-- **Backend**: Kotlin with Quarkus 
-- **Frontend**: Vue.js 3 with Composition API and TypeScript
-- **Database**: PostgreSQL 17 (containerized)
-- **Build Tools**: Gradle with Kotlin DSL (backend), Vite with TypeScript (frontend)
-- **Containerization**: Docker Compose with multi-stage builds
-
-## Setup Instructions
-
-### Prerequisites
-
-- Docker and Docker Compose
-- JDK 21 (for local development)
-- Node.js 20+ (for local frontend development)
-
-### Running with Docker Compose
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/an-na7wi.git
-   cd an-na7wi
-   ```
-
-2. Start the application:
-   ```
-   docker-compose up
-   ```
-
-3. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8080
-   - API Documentation: http://localhost:8080/swagger-ui
-
-### Local Development Setup
-
-1. Start the database:
-   ```
-   docker-compose up postgres
-   ```
-
-2. Run the backend:
-   ```
-   cd backend
-   ./gradlew quarkusDev
-   ```
-
-3. Run the frontend:
-   ```
-   cd frontend
-   pnpm install
-   pnpm run dev
-   ```
-
-## API Endpoints
-
-The application provides the following main API endpoints:
-
-### Texts
-- `GET /api/v1/texts` - List texts with pagination & filtering
-- `POST /api/v1/texts` - Create new text
-- `GET /api/v1/texts/{id}` - Get specific text with annotations
-- `PUT /api/v1/texts/{id}` - Update text
-- `DELETE /api/v1/texts/{id}` - Delete text
-- `POST /api/v1/texts/{id}/analyze` - Analyze text and extract vocabulary
-
-### Words
-- `GET /api/v1/words` - Search words with filters
-- `POST /api/v1/words` - Create new word
-- `GET /api/v1/words/{id}` - Get word details
-- `PUT /api/v1/words/{id}` - Update word
-- `DELETE /api/v1/words/{id}` - Delete word
-- `GET /api/v1/words/roots/{root}` - Get words by Arabic root
-
-### Annotations
-- `GET /api/v1/annotations/text/{textId}` - Get annotations for text
-- `POST /api/v1/annotations` - Create annotation
-- `PUT /api/v1/annotations/{id}` - Update annotation
-- `DELETE /api/v1/annotations/{id}` - Delete annotation
-
-### Search
-- `GET /api/v1/search/global` - Global search across texts and words
-- `GET /api/v1/search/texts` - Advanced text search
-- `GET /api/v1/search/suggestions` - Search suggestions/autocomplete
-
-## Building the Backend
-
-### Standard JAR Build (Default)
-
-By default, the backend is built as a standard JAR file:
-
+### Full Stack (Docker)
 ```bash
-cd backend
-./gradlew build
+make dev          # Start all services
+# or
+docker-compose up
 ```
 
-This produces a runnable JAR file in `build/quarkus-app/` that can be executed with:
+### Development Mode
 
+**Database only:**
 ```bash
-java -jar build/quarkus-app/quarkus-run.jar
+make start-db     # Start PostgreSQL container
 ```
 
-### Native Image Build (Optional)
-
-If you want to build a native executable for improved startup time and lower memory usage, you need:
-
-1. GraalVM installed with the `native-image` tool
-2. Set the `GRAALVM_HOME` environment variable to your GraalVM installation directory
-
-Then run:
-
+**Backend (local):**
 ```bash
-cd backend
-./gradlew build -Dquarkus.package.type=native
+make local-be     # Start in dev mode with hot reload
+# or
+cd backend && ./gradlew quarkusDev
 ```
 
-Or if you want to use a container for the native build (no GraalVM installation required):
-
+**Frontend (local):**
 ```bash
-cd backend
-./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
+cd frontend && pnpm install && pnpm run dev
 ```
 
-## Project Structure
+## Available Commands
 
-The project follows a monorepo structure:
+- `make dev` - Start full stack
+- `make build` - Build all containers  
+- `make test` - Run all tests
+- `make clean` - Clean containers and volumes
+- `make start-db` - Database only
+- `make local-be` - Backend dev mode
+- Backend build: `cd backend && ./gradlew build`
+- Frontend dev: `cd frontend && pnpm run dev`
 
-- `backend/` - Kotlin/Quarkus backend application
-- `frontend/` - Vue.js frontend application
-- `database/` - Database initialization scripts and migrations
-- `docker-compose.yml` - Docker Compose configuration
-- `docs/` - Project documentation
+## Access Points
+
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8080
+- API Docs: http://localhost:8080/swagger-ui
+
+## Documentation
+
+- [Requirements & Architecture](docs/architecture/)
+- [Development Guide](docs/development/)
+- [Database Management](docs/database/)
