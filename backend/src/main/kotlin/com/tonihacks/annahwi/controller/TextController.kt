@@ -1,6 +1,7 @@
 package com.tonihacks.annahwi.controller
 
 import com.tonihacks.annahwi.dto.request.TextRequestDTO
+import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
@@ -47,8 +48,15 @@ class TextController {
         val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts - page: $page (API) -> $zeroBasedPage (internal), size: $actualSize, sort: $sort")
         val texts = textService.findAll(zeroBasedPage, actualSize, sort)
+        val totalCount = textService.countAll()
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
-        return Response.ok(textDTOs).build()
+        val response = PaginatedResponse(
+            items = textDTOs,
+            totalCount = totalCount,
+            page = page,
+            pageSize = actualSize
+        )
+        return Response.ok(response).build()
     }
     
     @GET

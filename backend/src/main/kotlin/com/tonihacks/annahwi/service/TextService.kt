@@ -45,6 +45,13 @@ class TextService {
     }
     
     /**
+     * Get total count of all texts
+     */
+    fun countAll(): Long {
+        return textRepository.count()
+    }
+    
+    /**
      * Find a text by its ID
      */
     fun findById(id: UUID): Text {

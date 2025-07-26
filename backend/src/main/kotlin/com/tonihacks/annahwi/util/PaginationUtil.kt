@@ -20,3 +20,4 @@ object PaginationUtil {
      */
     fun resolvePageSize(size: Int, pageSize: Int?): Int = pageSize ?: size
 }
+

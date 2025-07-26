@@ -55,7 +55,13 @@ class SearchController {
         logger.info("GET /api/v1/search/texts - query: $query, " +
                 "title: $title, dialect: $dialect, difficulty: $difficulty, " +
                 "tag: $tag, public: $isPublic, page: $page, size: $size")
-        return Response.ok(searchService.advancedTextSearch(query, title, dialect, difficulty, tag, isPublic, PaginationUtil.toZeroBasedPage(page), size)).build()
+
+        val pageToZero = PaginationUtil.toZeroBasedPage(page)
+        val search = searchService.advancedTextSearch(
+            query, title, dialect,
+            difficulty, tag, isPublic,
+            pageToZero, size)
+        return Response.ok(search).build()
     }
     
     @GET
