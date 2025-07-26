@@ -5,6 +5,7 @@ import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.service.TextService
+import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
@@ -37,12 +38,15 @@ class TextController {
     @GET
     @Operation(summary = "Get all texts", description = "Returns a list of texts with pagination")
     fun getAllTexts(
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int,
+        @QueryParam("pageSize") pageSize: Int?,
         @QueryParam("sort") @DefaultValue("title") sort: String
     ): Response {
-        logger.info("GET /api/v1/texts - page: $page, size: $size, sort: $sort")
-        val texts = textService.findAll(page, size, sort)
+        val actualSize = PaginationUtil.resolvePageSize(size, pageSize)
+        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
+        logger.info("GET /api/v1/texts - page: $page (API) -> $zeroBasedPage (internal), size: $actualSize, sort: $sort")
+        val texts = textService.findAll(zeroBasedPage, actualSize, sort)
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
         return Response.ok(textDTOs).build()
     }
@@ -90,11 +94,12 @@ class TextController {
     @Operation(summary = "Find texts by title", description = "Returns texts matching the given title")
     fun findByTitle(
         @PathParam("title") title: String,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
+        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts/title/$title - page: $page, size: $size")
-        val texts = textService.findByTitle(title, page, size)
+        val texts = textService.findByTitle(title, zeroBasedPage, size)
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
         return Response.ok(textDTOs).build()
     }
@@ -104,11 +109,12 @@ class TextController {
     @Operation(summary = "Find texts by dialect", description = "Returns texts with the given dialect")
     fun findByDialect(
         @PathParam("dialect") dialect: Dialect,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
+        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts/dialect/$dialect - page: $page, size: $size")
-        val texts = textService.findByDialect(dialect, page, size)
+        val texts = textService.findByDialect(dialect, zeroBasedPage, size)
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
         return Response.ok(textDTOs).build()
     }
@@ -118,11 +124,12 @@ class TextController {
     @Operation(summary = "Find texts by difficulty", description = "Returns texts with the given difficulty")
     fun findByDifficulty(
         @PathParam("difficulty") difficulty: Difficulty,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
+        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts/difficulty/$difficulty - page: $page, size: $size")
-        val texts = textService.findByDifficulty(difficulty, page, size)
+        val texts = textService.findByDifficulty(difficulty, zeroBasedPage, size)
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
         return Response.ok(textDTOs).build()
     }
@@ -132,11 +139,12 @@ class TextController {
     @Operation(summary = "Find texts by tag", description = "Returns texts with the given tag")
     fun findByTag(
         @PathParam("tag") tag: String,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
+        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts/tag/$tag - page: $page, size: $size")
-        val texts = textService.findByTag(tag, page, size)
+        val texts = textService.findByTag(tag, zeroBasedPage, size)
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
         return Response.ok(textDTOs).build()
     }
@@ -145,11 +153,12 @@ class TextController {
     @Path("/public")
     @Operation(summary = "Find public texts", description = "Returns public texts")
     fun findPublic(
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
+        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts/public - page: $page, size: $size")
-        val texts = textService.findPublic(page, size)
+        val texts = textService.findPublic(zeroBasedPage, size)
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
         return Response.ok(textDTOs).build()
     }

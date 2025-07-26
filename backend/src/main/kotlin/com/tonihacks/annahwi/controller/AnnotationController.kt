@@ -3,6 +3,7 @@ package com.tonihacks.annahwi.controller
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.AnnotationType
 import com.tonihacks.annahwi.service.AnnotationService
+import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
@@ -35,12 +36,12 @@ class AnnotationController {
     @GET
     @Operation(summary = "Get all annotations", description = "Returns a list of annotations with pagination")
     fun getAllAnnotations(
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int,
         @QueryParam("sort") @DefaultValue("createdAt") sort: String
     ): Response {
         logger.info("GET /api/v1/annotations - page: $page, size: $size, sort: $sort")
-        return Response.ok(annotationService.findAll(page, size, sort)).build()
+        return Response.ok(annotationService.findAll(PaginationUtil.toZeroBasedPage(page), size, sort)).build()
     }
     
     @GET
@@ -82,11 +83,11 @@ class AnnotationController {
     @Operation(summary = "Find annotations by text ID", description = "Returns annotations for the given text")
     fun findByTextId(
         @PathParam("textId") textId: UUID,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/annotations/text/$textId - page: $page, size: $size")
-        return Response.ok(annotationService.findByTextId(textId, page, size)).build()
+        return Response.ok(annotationService.findByTextId(textId, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -94,11 +95,11 @@ class AnnotationController {
     @Operation(summary = "Find annotations by type", description = "Returns annotations with the given type")
     fun findByType(
         @PathParam("type") type: AnnotationType,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/annotations/type/$type - page: $page, size: $size")
-        return Response.ok(annotationService.findByType(type, page, size)).build()
+        return Response.ok(annotationService.findByType(type, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -107,11 +108,11 @@ class AnnotationController {
     fun findByTextIdAndType(
         @PathParam("textId") textId: UUID,
         @PathParam("type") type: AnnotationType,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/annotations/text/$textId/type/$type - page: $page, size: $size")
-        return Response.ok(annotationService.findByTextIdAndType(textId, type, page, size)).build()
+        return Response.ok(annotationService.findByTextIdAndType(textId, type, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -121,11 +122,11 @@ class AnnotationController {
         @PathParam("textId") textId: UUID,
         @QueryParam("start") startPosition: Int,
         @QueryParam("end") endPosition: Int,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/annotations/text/$textId/position - start: $startPosition, end: $endPosition, page: $page, size: $size")
-        return Response.ok(annotationService.findByPositionRange(textId, startPosition, endPosition, page, size)).build()
+        return Response.ok(annotationService.findByPositionRange(textId, startPosition, endPosition, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -133,11 +134,11 @@ class AnnotationController {
     @Operation(summary = "Search annotations by content", description = "Returns annotations containing the given text in content")
     fun searchByContent(
         @PathParam("query") query: String,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/annotations/search/$query - page: $page, size: $size")
-        return Response.ok(annotationService.searchByContent(query, page, size)).build()
+        return Response.ok(annotationService.searchByContent(query, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @DELETE

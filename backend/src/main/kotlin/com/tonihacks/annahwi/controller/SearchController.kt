@@ -1,6 +1,7 @@
 package com.tonihacks.annahwi.controller
 
 import com.tonihacks.annahwi.service.SearchService
+import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DefaultValue
@@ -31,11 +32,11 @@ class SearchController {
     @Operation(summary = "Global search", description = "Searches across texts, words, and annotations")
     fun globalSearch(
         @QueryParam("query") query: String,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/search/global - query: $query, page: $page, size: $size")
-        return Response.ok(searchService.globalSearch(query, page, size)).build()
+        return Response.ok(searchService.globalSearch(query, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -48,13 +49,13 @@ class SearchController {
         @QueryParam("difficulty") difficulty: String?,
         @QueryParam("tag") tag: String?,
         @QueryParam("public") isPublic: Boolean?,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/search/texts - query: $query, " +
                 "title: $title, dialect: $dialect, difficulty: $difficulty, " +
                 "tag: $tag, public: $isPublic, page: $page, size: $size")
-        return Response.ok(searchService.advancedTextSearch(query, title, dialect, difficulty, tag, isPublic, page, size)).build()
+        return Response.ok(searchService.advancedTextSearch(query, title, dialect, difficulty, tag, isPublic, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET

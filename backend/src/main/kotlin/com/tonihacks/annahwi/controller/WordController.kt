@@ -5,6 +5,7 @@ import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.entity.Word
 import com.tonihacks.annahwi.service.WordService
+import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
@@ -37,12 +38,12 @@ class WordController {
     @GET
     @Operation(summary = "Get all words", description = "Returns a list of words with pagination")
     fun getAllWords(
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int,
         @QueryParam("sort") @DefaultValue("arabic") sort: String
     ): Response {
         logger.info("GET /api/v1/words - page: $page, size: $size, sort: $sort")
-        return Response.ok(wordService.findAll(page, size, sort)).build()
+        return Response.ok(wordService.findAll(PaginationUtil.toZeroBasedPage(page), size, sort)).build()
     }
     
     @GET
@@ -97,11 +98,11 @@ class WordController {
     @Operation(summary = "Search words by Arabic text", description = "Returns words containing the given Arabic text")
     fun searchByArabic(
         @PathParam("arabic") arabic: String,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/search/arabic/$arabic - page: $page, size: $size")
-        return Response.ok(wordService.searchByArabic(arabic, page, size)).build()
+        return Response.ok(wordService.searchByArabic(arabic, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -109,11 +110,11 @@ class WordController {
     @Operation(summary = "Find words by root", description = "Returns words with the given root")
     fun findByRoot(
         @PathParam("root") root: String,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/root/$root - page: $page, size: $size")
-        return Response.ok(wordService.findByRoot(root, page, size)).build()
+        return Response.ok(wordService.findByRoot(root, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -121,11 +122,11 @@ class WordController {
     @Operation(summary = "Find words by part of speech", description = "Returns words with the given part of speech")
     fun findByPartOfSpeech(
         @PathParam("partOfSpeech") partOfSpeech: PartOfSpeech,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/part-of-speech/$partOfSpeech - page: $page, size: $size")
-        return Response.ok(wordService.findByPartOfSpeech(partOfSpeech, page, size)).build()
+        return Response.ok(wordService.findByPartOfSpeech(partOfSpeech, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -133,11 +134,11 @@ class WordController {
     @Operation(summary = "Find words by dialect", description = "Returns words with the given dialect")
     fun findByDialect(
         @PathParam("dialect") dialect: Dialect,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/dialect/$dialect - page: $page, size: $size")
-        return Response.ok(wordService.findByDialect(dialect, page, size)).build()
+        return Response.ok(wordService.findByDialect(dialect, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -145,22 +146,22 @@ class WordController {
     @Operation(summary = "Find words by difficulty", description = "Returns words with the given difficulty")
     fun findByDifficulty(
         @PathParam("difficulty") difficulty: Difficulty,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/difficulty/$difficulty - page: $page, size: $size")
-        return Response.ok(wordService.findByDifficulty(difficulty, page, size)).build()
+        return Response.ok(wordService.findByDifficulty(difficulty, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
     @Path("/verified")
     @Operation(summary = "Find verified words", description = "Returns verified words")
     fun findVerified(
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/verified - page: $page, size: $size")
-        return Response.ok(wordService.findVerified(page, size)).build()
+        return Response.ok(wordService.findVerified(PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET
@@ -168,11 +169,11 @@ class WordController {
     @Operation(summary = "Search words by translation", description = "Returns words containing the given text in translation or transliteration")
     fun searchByTranslation(
         @PathParam("query") query: String,
-        @QueryParam("page") @DefaultValue("0") page: Int,
+        @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/search/translation/$query - page: $page, size: $size")
-        return Response.ok(wordService.searchByTranslation(query, page, size)).build()
+        return Response.ok(wordService.searchByTranslation(query, PaginationUtil.toZeroBasedPage(page), size)).build()
     }
     
     @GET

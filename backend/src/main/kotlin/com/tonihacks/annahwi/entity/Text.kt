@@ -15,6 +15,8 @@ import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 import java.util.UUID
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 /**
  * Represents a text in Arabic with transliteration and translation
@@ -40,7 +42,8 @@ class Text : PanacheEntityBase {
     @Column(name = "translation", columnDefinition = "TEXT")
     var translation: String? = null
     
-    @Column(name = "tags", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "tags")
     var tags: List<String> = listOf()
     
     @Enumerated(EnumType.STRING)
