@@ -88,6 +88,8 @@ export const useTextStore = defineStore('text', () => {
       annotations.value = await textService.getAnnotations(textId)
     } catch (err) {
       console.error('Failed to fetch annotations', err)
+      // Set empty annotations array if API call fails
+      annotations.value = []
     }
   }
 

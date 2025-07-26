@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -66,6 +67,7 @@ class Word : PanacheEntityBase {
     var createdAt: LocalDateTime = LocalDateTime.now()
     
     @OneToMany(mappedBy = "word", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JsonIgnoreProperties("word")
     var textWords: MutableList<TextWord> = mutableListOf()
     
     @PrePersist

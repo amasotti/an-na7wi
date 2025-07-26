@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -27,10 +28,12 @@ class TextWord : PanacheEntityBase {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "text_id", nullable = false)
+    @JsonIgnoreProperties("annotations", "textWords")
     lateinit var text: Text
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "word_id", nullable = false)
+    @JsonIgnoreProperties("textWords")
     lateinit var word: Word
     
     @Column(name = "position", nullable = false)
