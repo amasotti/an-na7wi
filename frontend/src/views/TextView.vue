@@ -78,8 +78,11 @@
 
     <!-- Results Header -->
     <div class="flex justify-between items-center mb-6">
-      <div class="text-sm text-gray-600">
+      <div class="text-sm text-gray-600" v-if="texts">
         Showing {{ texts.length }} of {{ totalCount }} texts
+      </div>
+      <div class="text-sm text-gray-600" v-else>
+        No texts yet
       </div>
       
       <BaseSelect
@@ -90,8 +93,16 @@
       />
     </div>
 
+    <!-- Debug Info -->
+    <div class="mb-4 p-4 bg-gray-100 rounded">
+      <p>Debug: texts = {{ texts }}</p>
+      <p>Debug: texts.length = {{ texts?.length }}</p>
+      <p>Debug: loading = {{ loading }}</p>
+      <p>Debug: totalCount = {{ totalCount }}</p>
+    </div>
+
     <!-- Text Grid/List -->
-    <div v-if="texts.length > 0" :class="gridClasses">
+    <div v-if="texts && texts.length > 0" :class="gridClasses">
       <TextCard
         v-for="text in texts"
         :key="text.id"
@@ -105,7 +116,7 @@
 
     <!-- Empty State -->
     <EmptyState
-      v-else-if="!loading"
+      v-else-if="!loading && texts"
       :has-filters="hasActiveFilters"
       @create="showCreateModal = true"
       @clear-filters="clearFilters"
