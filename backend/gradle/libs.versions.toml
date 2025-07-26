@@ -24,7 +24,6 @@ quarkus-smallrye-health = { module = "io.quarkus:quarkus-smallrye-health" }
 quarkus-jdbc-postgresql = { module = "io.quarkus:quarkus-jdbc-postgresql" }
 quarkus-micrometer = { module = "io.quarkus:quarkus-micrometer" }
 quarkus-micrometer-registry-prometheus = { module = "io.quarkus:quarkus-micrometer-registry-prometheus" }
-quarkus-jooq = { module = "io.quarkiverse.jooq:quarkus-jooq", version = "2.1.0" }
 quarkus-resteasy = { module = "io.quarkus:quarkus-resteasy" }
 quarkus-resteasy-jackson = { module = "io.quarkus:quarkus-resteasy-jackson" }
 quarkus-smallrye-openapi = { module = "io.quarkus:quarkus-smallrye-openapi" }
@@ -41,7 +40,7 @@ quarkus = [
     "quarkus-hibernate-orm-panache", "quarkus-hibernate-validator",
     "quarkus-hibernate-orm", "quarkus-loggins-json", "quarkus-smallrye-health",
     "quarkus-jdbc-postgresql", "quarkus-micrometer",
-    "quarkus-micrometer-registry-prometheus", "quarkus-jooq",
+    "quarkus-micrometer-registry-prometheus",
     "quarkus-resteasy", "quarkus-resteasy-jackson",
     "quarkus-smallrye-openapi", "quarkus-kotlin"
 ]

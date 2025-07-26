@@ -1,8 +1,9 @@
 package com.tonihacks.annahwi.controller
 
+import com.tonihacks.annahwi.dto.request.TextRequestDTO
+import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
-import com.tonihacks.annahwi.entity.Text
 import com.tonihacks.annahwi.service.TextService
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
@@ -41,7 +42,9 @@ class TextController {
         @QueryParam("sort") @DefaultValue("title") sort: String
     ): Response {
         logger.info("GET /api/v1/texts - page: $page, size: $size, sort: $sort")
-        return Response.ok(textService.findAll(page, size, sort)).build()
+        val texts = textService.findAll(page, size, sort)
+        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
+        return Response.ok(textDTOs).build()
     }
     
     @GET
@@ -49,24 +52,28 @@ class TextController {
     @Operation(summary = "Get text by ID", description = "Returns a specific text by its ID")
     fun getTextById(@PathParam("id") id: UUID): Response {
         logger.info("GET /api/v1/texts/$id")
-        return Response.ok(textService.findById(id)).build()
+        val text = textService.findById(id)
+        val textDTO = TextResponseDTO.fromEntity(text)
+        return Response.ok(textDTO).build()
     }
     
     @POST
     @Operation(summary = "Create text", description = "Creates a new text")
-    fun createText(text: Text): Response {
-        logger.info("POST /api/v1/texts - title: ${text.title}")
+    fun createText(textDTO: TextRequestDTO): Response {
+        logger.info("POST /api/v1/texts - title: ${textDTO.title}")
+        val text = textDTO.toEntity()
         val createdText = textService.create(text)
-        return Response.status(Response.Status.CREATED).entity(createdText).build()
+        return Response.status(Response.Status.CREATED).entity(TextResponseDTO.fromEntity(createdText)).build()
     }
     
     @PUT
     @Path("/{id}")
     @Operation(summary = "Update text", description = "Updates an existing text")
-    fun updateText(@PathParam("id") id: UUID, text: Text): Response {
+    fun updateText(@PathParam("id") id: UUID, textDTO: TextRequestDTO): Response {
         logger.info("PUT /api/v1/texts/$id")
-        val updatedText = textService.update(id, text)
-        return Response.ok(updatedText).build()
+        val existingText = textService.findById(id)
+        val updatedText = textService.update(id, textDTO.updateEntity(existingText))
+        return Response.ok(TextResponseDTO.fromEntity(updatedText)).build()
     }
     
     @DELETE
@@ -87,7 +94,9 @@ class TextController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/texts/title/$title - page: $page, size: $size")
-        return Response.ok(textService.findByTitle(title, page, size)).build()
+        val texts = textService.findByTitle(title, page, size)
+        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
+        return Response.ok(textDTOs).build()
     }
     
     @GET
@@ -99,7 +108,9 @@ class TextController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/texts/dialect/$dialect - page: $page, size: $size")
-        return Response.ok(textService.findByDialect(dialect, page, size)).build()
+        val texts = textService.findByDialect(dialect, page, size)
+        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
+        return Response.ok(textDTOs).build()
     }
     
     @GET
@@ -111,7 +122,9 @@ class TextController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/texts/difficulty/$difficulty - page: $page, size: $size")
-        return Response.ok(textService.findByDifficulty(difficulty, page, size)).build()
+        val texts = textService.findByDifficulty(difficulty, page, size)
+        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
+        return Response.ok(textDTOs).build()
     }
     
     @GET
@@ -123,7 +136,9 @@ class TextController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/texts/tag/$tag - page: $page, size: $size")
-        return Response.ok(textService.findByTag(tag, page, size)).build()
+        val texts = textService.findByTag(tag, page, size)
+        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
+        return Response.ok(textDTOs).build()
     }
     
     @GET
@@ -134,7 +149,9 @@ class TextController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/texts/public - page: $page, size: $size")
-        return Response.ok(textService.findPublic(page, size)).build()
+        val texts = textService.findPublic(page, size)
+        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
+        return Response.ok(textDTOs).build()
     }
     
     @POST
@@ -142,6 +159,7 @@ class TextController {
     @Operation(summary = "Analyze text", description = "Analyzes a text and extracts vocabulary")
     fun analyzeText(@PathParam("id") id: UUID): Response {
         logger.info("POST /api/v1/texts/$id/analyze")
-        return Response.ok(textService.analyzeText(id)).build()
+        val analyzedText = textService.analyzeText(id)
+        return Response.ok(TextResponseDTO.fromEntity(analyzedText)).build()
     }
 }
