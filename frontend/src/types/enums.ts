@@ -1,0 +1,29 @@
+// Application enums
+export enum Difficulty {
+  BEGINNER = 'BEGINNER',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED',
+}
+
+export enum Dialect {
+  TUNISIAN = 'TUNISIAN',
+  MOROCCAN = 'MOROCCAN',
+  EGYPTIAN = 'EGYPTIAN',
+  MSA = 'MSA',
+}
+
+export enum PartOfSpeech {
+  NOUN = 'NOUN',
+  VERB = 'VERB',
+  ADJECTIVE = 'ADJECTIVE',
+  ADVERB = 'ADVERB',
+  PREPOSITION = 'PREPOSITION',
+  PARTICLE = 'PARTICLE',
+}
+
+export enum AnnotationType {
+  GRAMMAR = 'GRAMMAR',
+  VOCABULARY = 'VOCABULARY',
+  CULTURAL = 'CULTURAL',
+  PRONUNCIATION = 'PRONUNCIATION',
+}

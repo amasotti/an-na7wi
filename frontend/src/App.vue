@@ -1,55 +1,61 @@
 <template>
-  <div class="min-h-screen flex flex-col">
-    <header class="bg-white shadow-sm">
-      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div class="flex items-center">
-          <h1 class="text-2xl font-bold text-primary-700 m-0">
-            {{ $t('app.title') }}
-          </h1>
-          <span class="ml-2 text-sm text-gray-500">{{ $t('app.subtitle') }}</span>
-        </div>
-        <nav>
-          <ul class="flex space-x-6">
-            <li>
-              <router-link to="/" class="nav-link">{{ $t('nav.home') }}</router-link>
-            </li>
-            <li>
-              <router-link to="/texts" class="nav-link">{{ $t('nav.texts') }}</router-link>
-            </li>
-            <li>
-              <router-link to="/vocabulary" class="nav-link">{{ $t('nav.vocabulary') }}</router-link>
-            </li>
-            <li>
-              <router-link to="/settings" class="nav-link">{{ $t('nav.settings') }}</router-link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+  <div class="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-blue-50">
+    <TheNavigation />
 
-    <main class="flex-grow container mx-auto px-4 py-6">
-      <router-view />
+    <main class="flex-grow">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Transition
+          name="page"
+          mode="out-in"
+          appear
+        >
+          <router-view />
+        </Transition>
+      </div>
     </main>
 
-    <footer class="bg-gray-100 border-t border-gray-200">
-      <div class="container mx-auto px-4 py-4 text-center text-gray-600 text-sm">
-        <p>An-Nahwi (النحوي) - Arabic Learning Application</p>
-        <p class="mt-1">&copy; {{ new Date().getFullYear() }} ToniHacks</p>
+    <footer class="glass border-t border-white/20 mt-12">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="text-center">
+          <div class="flex items-center justify-center mb-3">
+            <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center mr-3">
+              <span class="text-white font-bold">ن</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 mb-0">An-Nahwi</h3>
+            <span class="arabic text-gray-600 ml-2">النحوي</span>
+          </div>
+          <p class="text-gray-600 mb-4">Arabic Learning Application</p>
+          <div class="flex items-center justify-center space-x-6 text-sm text-gray-500">
+            <span>&copy; {{ new Date().getFullYear() }} ToniHacks</span>
+            <span>•</span>
+            <a href="#" class="hover:text-primary-600 transition-colors">Documentation</a>
+            <span>•</span>
+            <a href="#" class="hover:text-primary-600 transition-colors">Support</a>
+          </div>
+        </div>
       </div>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-// App.vue is the root component
+import TheNavigation from './components/layout/TheNavigation.vue'
 </script>
 
 <style>
-.nav-link {
-  @apply text-gray-600 hover:text-primary-600 font-medium;
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.3s ease-out;
 }
 
-.nav-link.router-link-active {
-  @apply text-primary-600 font-semibold;
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

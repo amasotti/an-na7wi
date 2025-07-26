@@ -12,6 +12,7 @@
     "noEmit": true,
     "target": "ESNext",
     "module": "ESNext",
+    "lib": ["dom", "ESNext"],
     "moduleResolution": "node",
     "jsx": "preserve",
     "skipLibCheck": true,

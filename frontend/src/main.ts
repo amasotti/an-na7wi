@@ -1,5 +1,5 @@
-import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 import App from './App.vue'
@@ -16,28 +16,28 @@ const i18n = createI18n({
     en: {
       app: {
         title: 'An-Nahwi',
-        subtitle: 'Arabic Learning Application'
+        subtitle: 'Arabic Learning Application',
       },
       nav: {
         home: 'Home',
         texts: 'Texts',
         vocabulary: 'Vocabulary',
-        settings: 'Settings'
-      }
+        settings: 'Settings',
+      },
     },
     ar: {
       app: {
         title: 'النحوي',
-        subtitle: 'تطبيق تعلم اللغة العربية'
+        subtitle: 'تطبيق تعلم اللغة العربية',
       },
       nav: {
         home: 'الرئيسية',
         texts: 'النصوص',
         vocabulary: 'المفردات',
-        settings: 'الإعدادات'
-      }
-    }
-  }
+        settings: 'الإعدادات',
+      },
+    },
+  },
 })
 
 const app = createApp(App)
