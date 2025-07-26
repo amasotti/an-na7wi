@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Feature
 import jakarta.ws.rs.ext.Provider
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
+import kotlin.properties.Delegates
 
 @Provider
 @ApplicationScoped
@@ -15,8 +16,8 @@ class CorsConfig : Feature {
     
     private val logger = Logger.getLogger(CorsConfig::class.java)
     
-    @ConfigProperty(name = "quarkus.http.cors", defaultValue = "true")
-    var corsEnabled: Boolean = true
+    @ConfigProperty(name = "quarkus.http.cors.enabled", defaultValue = "true")
+    var corsEnabled: Boolean
     
     @ConfigProperty(name = "quarkus.http.cors.origins", defaultValue = "*")
     lateinit var corsOrigins: String
