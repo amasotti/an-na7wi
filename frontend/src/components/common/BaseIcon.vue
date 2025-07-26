@@ -1,6 +1,6 @@
 <template>
   <svg 
-    :class="sizeClass" 
+    :style="iconStyle"
     :viewBox="viewBox || '0 0 24 24'" 
     fill="none" 
     xmlns="http://www.w3.org/2000/svg"
@@ -22,14 +22,18 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
-const sizeClass = computed(() => {
+const iconStyle = computed(() => {
   const sizes = {
-    xs: 'w-3 h-3 min-w-3 min-h-3',
-    sm: 'w-4 h-4 min-w-4 min-h-4',
-    md: 'w-5 h-5 min-w-5 min-h-5',
-    lg: 'w-6 h-6 min-w-6 min-h-6',
-    xl: 'w-8 h-8 min-w-8 min-h-8',
+    xs: { width: '12px', height: '12px', minWidth: '12px', minHeight: '12px' },
+    sm: { width: '16px', height: '16px', minWidth: '16px', minHeight: '16px' },
+    md: { width: '20px', height: '20px', minWidth: '20px', minHeight: '20px' },
+    lg: { width: '24px', height: '24px', minWidth: '24px', minHeight: '24px' },
+    xl: { width: '32px', height: '32px', minWidth: '32px', minHeight: '32px' },
   }
-  return sizes[props.size]
+  return {
+    ...sizes[props.size],
+    flexShrink: '0',
+    display: 'block'
+  }
 })
 </script>

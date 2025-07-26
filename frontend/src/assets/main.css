@@ -1,5 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -37,17 +39,42 @@
     @apply text-primary-600 hover:text-primary-700 transition-all duration-200;
   }
 
-  /* Arabic text styling */
+  /* Enhanced Arabic text styling */
   .arabic {
-    @apply font-arabic text-right leading-loose;
+    @apply font-arabic text-right;
     direction: rtl;
-    font-size: 1.125rem;
-    line-height: 2;
+    font-size: 1.25rem;
+    line-height: 2.2;
     text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: 0.02em;
+    word-spacing: 0.1em;
   }
 
   .arabic-large {
-    @apply arabic text-2xl;
+    @apply arabic;
+    font-size: 2.5rem;
+    line-height: 1.8;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .arabic-xl {
+    @apply arabic;
+    font-size: 3.5rem;
+    line-height: 1.6;
+    font-weight: 700;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .arabic-display {
+    @apply arabic;
+    font-size: 4.5rem;
+    line-height: 1.4;
+    font-weight: 800;
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   }
 
   /* Scrollbar styling */
@@ -180,6 +207,18 @@
   .animate-scale-in {
     animation: scaleIn 0.3s ease-out;
   }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
 }
 
 /* Custom animations */
@@ -211,5 +250,31 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  50% {
+    transform: translateY(-10px);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
 }

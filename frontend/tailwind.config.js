@@ -46,13 +46,14 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        arabic: ['Amiri', 'serif'],
+        arabic: ['Amiri', 'Noto Sans Arabic', 'Cairo', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.4s ease-out',
         'scale-in': 'scaleIn 0.3s ease-out',
         'bounce-subtle': 'bounceSubtle 2s infinite',
+        'blob': 'blob 7s infinite',
       },
       backdropBlur: {
         xs: '2px',
@@ -61,6 +62,7 @@ module.exports = {
         soft: '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
         medium: '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 30px -5px rgba(0, 0, 0, 0.05)',
         strong: '0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 50px -10px rgba(0, 0, 0, 0.1)',
+        '3xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 25px 100px -12px rgba(0, 0, 0, 0.15)',
       },
     },
   },
