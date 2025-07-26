@@ -4,7 +4,7 @@ import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.entity.Word
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Parameters
 import io.quarkus.panache.common.Sort
@@ -20,15 +20,16 @@ class WordRepository : PanacheRepository<Word> {
     /**
      * Find a word by its ID
      */
-    fun findByIdOptional(id: UUID): Optional<Word> {
-        return find("id", id).firstResultOptional()
+    fun findById(id: UUID): Word? {
+        return find("id", id).firstResult()
     }
     
     /**
      * Find words by Arabic text (exact match)
      */
-    fun findByArabic(arabic: String): Optional<Word> {
-        return find("arabic", arabic).firstResultOptional()
+    fun findByArabic(arabic: String): Word? {
+        return find("arabic", arabic)
+            .firstResult()
     }
     
     /**
@@ -37,7 +38,7 @@ class WordRepository : PanacheRepository<Word> {
     fun searchByArabic(arabic: String, page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("LOWER(arabic) LIKE LOWER(:arabic)", 
             Parameters.with("arabic", "%$arabic%"))
-            .page<Word>(page)
+            .page(page)
             .list()
     }
     
@@ -47,7 +48,7 @@ class WordRepository : PanacheRepository<Word> {
     fun findByRoot(root: String, page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("root = :root", 
             Parameters.with("root", root))
-            .page<Word>(page)
+            .page(page)
             .list()
     }
     
@@ -56,7 +57,7 @@ class WordRepository : PanacheRepository<Word> {
      */
     fun findByPartOfSpeech(partOfSpeech: PartOfSpeech, page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("partOfSpeech", sort, partOfSpeech)
-            .page<Word>(page)
+            .page(page)
             .list()
     }
     
@@ -65,7 +66,7 @@ class WordRepository : PanacheRepository<Word> {
      */
     fun findByDialect(dialect: Dialect, page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("dialect", sort, dialect)
-            .page<Word>(page)
+            .page(page)
             .list()
     }
     
@@ -74,7 +75,7 @@ class WordRepository : PanacheRepository<Word> {
      */
     fun findByDifficulty(difficulty: Difficulty, page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("difficulty", sort, difficulty)
-            .page<Word>(page)
+            .page(page)
             .list()
     }
     
@@ -83,7 +84,7 @@ class WordRepository : PanacheRepository<Word> {
      */
     fun findVerified(page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("isVerified = true", sort)
-            .page<Word>(page)
+            .page(page)
             .list()
     }
     
@@ -93,7 +94,7 @@ class WordRepository : PanacheRepository<Word> {
     fun searchByTranslation(query: String, page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("LOWER(translation) LIKE LOWER(:query) OR LOWER(transliteration) LIKE LOWER(:query)", 
             Parameters.with("query", "%$query%"))
-            .page<Word>(page)
+            .page(page)
             .list()
     }
     
@@ -102,7 +103,7 @@ class WordRepository : PanacheRepository<Word> {
      */
     fun findMostFrequent(limit: Int): List<Word> {
         return find("ORDER BY frequency DESC")
-            .page<Word>(0, limit)
+            .page(0, limit)
             .list()
     }
     

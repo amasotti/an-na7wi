@@ -3,7 +3,7 @@ package com.tonihacks.annahwi.repository
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Parameters
 import io.quarkus.panache.common.Sort
@@ -19,8 +19,8 @@ class TextRepository : PanacheRepository<Text> {
     /**
      * Find a text by its ID
      */
-    fun findByIdOptional(id: UUID): Optional<Text> {
-        return find("id", id).firstResultOptional()
+    fun findById(id: UUID): Text? {
+        return find("id", id).firstResult()
     }
     
     /**
@@ -29,7 +29,7 @@ class TextRepository : PanacheRepository<Text> {
     fun findByTitle(title: String, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("LOWER(title) LIKE LOWER(:title)", 
             Parameters.with("title", "%$title%"))
-            .page<Text>(page)
+            .page(page)
             .list()
     }
     
@@ -38,7 +38,7 @@ class TextRepository : PanacheRepository<Text> {
      */
     fun findByDialect(dialect: Dialect, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("dialect", sort, dialect)
-            .page<Text>(page)
+            .page(page)
             .list()
     }
     
@@ -47,7 +47,7 @@ class TextRepository : PanacheRepository<Text> {
      */
     fun findByDifficulty(difficulty: Difficulty, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("difficulty", sort, difficulty)
-            .page<Text>(page)
+            .page(page)
             .list()
     }
     
@@ -58,7 +58,7 @@ class TextRepository : PanacheRepository<Text> {
         // Note: This is a simplified implementation. In a real application, you would use a JSONB query
         return find("tags LIKE :tag", 
             Parameters.with("tag", "%$tag%"))
-            .page<Text>(page)
+            .page(page)
             .list()
     }
     
@@ -67,7 +67,7 @@ class TextRepository : PanacheRepository<Text> {
      */
     fun findPublic(page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("isPublic = true", sort)
-            .page<Text>(page)
+            .page(page)
             .list()
     }
     
@@ -77,7 +77,7 @@ class TextRepository : PanacheRepository<Text> {
     fun searchByContent(query: String, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("LOWER(arabicContent) LIKE LOWER(:query) OR LOWER(transliteration) LIKE LOWER(:query) OR LOWER(translation) LIKE LOWER(:query)", 
             Parameters.with("query", "%$query%"))
-            .page<Text>(page)
+            .page(page)
             .list()
     }
     

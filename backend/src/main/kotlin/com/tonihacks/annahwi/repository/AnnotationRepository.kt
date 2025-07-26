@@ -2,7 +2,7 @@ package com.tonihacks.annahwi.repository
 
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.AnnotationType
-import io.quarkus.hibernate.orm.panache.PanacheRepository
+import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Parameters
 import io.quarkus.panache.common.Sort
@@ -18,8 +18,8 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     /**
      * Find an annotation by its ID
      */
-    fun findByIdOptional(id: UUID): Optional<Annotation> {
-        return find("id", id).firstResultOptional()
+    fun findById(id: UUID): Annotation? {
+        return find("id", id).firstResult()
     }
     
     /**
@@ -27,7 +27,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
      */
     fun findByTextId(textId: UUID, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("text.id", sort, textId)
-            .page<Annotation>(page)
+            .page(page)
             .list()
     }
     
@@ -36,7 +36,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
      */
     fun findByType(type: AnnotationType, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("type", sort, type)
-            .page<Annotation>(page)
+            .page(page)
             .list()
     }
     
@@ -46,7 +46,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun findByTextIdAndType(textId: UUID, type: AnnotationType, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("text.id = :textId AND type = :type", 
             Parameters.with("textId", textId).and("type", type))
-            .page<Annotation>(page)
+            .page(page)
             .list()
     }
     
@@ -59,7 +59,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
             Parameters.with("textId", textId)
                 .and("startPosition", startPosition)
                 .and("endPosition", endPosition))
-            .page<Annotation>(page)
+            .page(page)
             .list()
     }
     
@@ -69,7 +69,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun searchByContent(query: String, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("LOWER(content) LIKE LOWER(:query)", 
             Parameters.with("query", "%$query%"))
-            .page<Annotation>(page)
+            .page(page)
             .list()
     }
     

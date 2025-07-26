@@ -1,6 +1,6 @@
 package com.tonihacks.annahwi.entity
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase
+import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -21,7 +21,7 @@ import java.util.UUID
  */
 @Entity
 @Table(name = "texts")
-class Text : PanacheEntityBase() {
+class Text : PanacheEntityBase {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

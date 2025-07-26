@@ -41,7 +41,7 @@ class TextService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "title"): List<Text> {
         logger.info("Finding all texts, page: $page, size: $size, sortField: $sortField")
-        return textRepository.findAll(Sort.by(sortField)).page<Text>(Page.of(page, size)).list()
+        return textRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
     }
     
     /**
@@ -49,8 +49,9 @@ class TextService {
      */
     fun findById(id: UUID): Text {
         logger.info("Finding text by ID: $id")
-        return textRepository.findByIdOptional(id)
-            .orElseThrow { NotFoundException("Text with ID $id not found") }
+        return textRepository.findById(id)
+            ?: throw NotFoundException("Text with ID $id not found")
+
     }
     
     /**

@@ -32,7 +32,7 @@ class AnnotationService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "createdAt"): List<Annotation> {
         logger.info("Finding all annotations, page: $page, size: $size, sortField: $sortField")
-        return annotationRepository.findAll(Sort.by(sortField)).page<Annotation>(Page.of(page, size)).list()
+        return annotationRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
     }
     
     /**
@@ -40,8 +40,8 @@ class AnnotationService {
      */
     fun findById(id: UUID): Annotation {
         logger.info("Finding annotation by ID: $id")
-        return annotationRepository.findByIdOptional(id)
-            .orElseThrow { NotFoundException("Annotation with ID $id not found") }
+        return annotationRepository.findById(id)
+            ?: throw NotFoundException("Annotation with ID $id not found")
     }
     
     /**

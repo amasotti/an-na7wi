@@ -9,55 +9,55 @@ CREATE TYPE annotation_type AS ENUM ('GRAMMAR', 'VOCABULARY', 'CULTURAL', 'PRONU
 
 -- Create Text table
 CREATE TABLE text (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    title VARCHAR(255) NOT NULL,
-    arabic_content TEXT NOT NULL,
-    transliteration TEXT,
-    translation TEXT,
-    tags JSONB DEFAULT '[]'::jsonb,
-    difficulty difficulty NOT NULL,
-    dialect dialect NOT NULL,
-    is_public BOOLEAN DEFAULT FALSE,
-    word_count INTEGER DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                      title VARCHAR(255) NOT NULL,
+                      arabic_content TEXT NOT NULL,
+                      transliteration TEXT,
+                      translation TEXT,
+                      tags JSONB DEFAULT '[]'::jsonb,
+                      difficulty difficulty NOT NULL,
+                      dialect dialect NOT NULL,
+                      is_public BOOLEAN DEFAULT FALSE,
+                      word_count INTEGER DEFAULT 0,
+                      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create Word table
 CREATE TABLE word (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    arabic VARCHAR(255) NOT NULL,
-    transliteration VARCHAR(255),
-    translation VARCHAR(255),
-    root VARCHAR(50),
-    part_of_speech part_of_speech,
-    notes TEXT,
-    frequency INTEGER DEFAULT 0,
-    difficulty difficulty NOT NULL,
-    dialect dialect NOT NULL,
-    is_verified BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                      arabic VARCHAR(255) NOT NULL,
+                      transliteration VARCHAR(255),
+                      translation VARCHAR(255),
+                      root VARCHAR(50),
+                      part_of_speech part_of_speech,
+                      notes TEXT,
+                      frequency INTEGER DEFAULT 0,
+                      difficulty difficulty NOT NULL,
+                      dialect dialect NOT NULL,
+                      is_verified BOOLEAN DEFAULT FALSE,
+                      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create Annotation table
 CREATE TABLE annotation (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    text_id UUID NOT NULL REFERENCES text(id) ON DELETE CASCADE,
-    content TEXT NOT NULL,
-    position_start INTEGER NOT NULL,
-    position_end INTEGER NOT NULL,
-    type annotation_type NOT NULL,
-    color VARCHAR(7),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                            text_id UUID NOT NULL REFERENCES text(id) ON DELETE CASCADE,
+                            content TEXT NOT NULL,
+                            position_start INTEGER NOT NULL,
+                            position_end INTEGER NOT NULL,
+                            type annotation_type NOT NULL,
+                            color VARCHAR(7),
+                            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create TextWord junction table
 CREATE TABLE text_word (
-    text_id UUID NOT NULL REFERENCES text(id) ON DELETE CASCADE,
-    word_id UUID NOT NULL REFERENCES word(id) ON DELETE CASCADE,
-    position INTEGER NOT NULL,
-    context VARCHAR(255),
-    PRIMARY KEY (text_id, word_id, position)
+                           text_id UUID NOT NULL REFERENCES text(id) ON DELETE CASCADE,
+                           word_id UUID NOT NULL REFERENCES word(id) ON DELETE CASCADE,
+                           position INTEGER NOT NULL,
+                           context VARCHAR(255),
+                           PRIMARY KEY (text_id, word_id, position)
 );
 
 -- Create indexes for performance
@@ -90,15 +90,15 @@ CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
+RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Create trigger to update updated_at timestamp on text table
 CREATE TRIGGER update_text_updated_at
-BEFORE UPDATE ON text
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+    BEFORE UPDATE ON text
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- Add comments to tables and columns
 COMMENT ON TABLE text IS 'Stores Arabic texts with translations and metadata';

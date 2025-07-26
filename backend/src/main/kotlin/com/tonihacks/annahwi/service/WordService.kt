@@ -35,7 +35,7 @@ class WordService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "arabic"): List<Word> {
         logger.info("Finding all words, page: $page, size: $size, sortField: $sortField")
-        return wordRepository.findAll(Sort.by(sortField)).page<Word>(Page.of(page, size)).list()
+        return wordRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
     }
     
     /**
@@ -43,8 +43,8 @@ class WordService {
      */
     fun findById(id: UUID): Word {
         logger.info("Finding word by ID: $id")
-        return wordRepository.findByIdOptional(id)
-            .orElseThrow { NotFoundException("Word with ID $id not found") }
+        return wordRepository.findById(id)
+            ?: throw NotFoundException("Word with ID $id not found")
     }
     
     /**
@@ -53,6 +53,7 @@ class WordService {
     fun findByArabic(arabic: String): Optional<Word> {
         logger.info("Finding word by Arabic text: $arabic")
         return wordRepository.findByArabic(arabic)
+            .let { Optional.ofNullable(it) }
     }
     
     /**

@@ -89,6 +89,44 @@ The application provides the following main API endpoints:
 - `GET /api/v1/search/texts` - Advanced text search
 - `GET /api/v1/search/suggestions` - Search suggestions/autocomplete
 
+## Building the Backend
+
+### Standard JAR Build (Default)
+
+By default, the backend is built as a standard JAR file:
+
+```bash
+cd backend
+./gradlew build
+```
+
+This produces a runnable JAR file in `build/quarkus-app/` that can be executed with:
+
+```bash
+java -jar build/quarkus-app/quarkus-run.jar
+```
+
+### Native Image Build (Optional)
+
+If you want to build a native executable for improved startup time and lower memory usage, you need:
+
+1. GraalVM installed with the `native-image` tool
+2. Set the `GRAALVM_HOME` environment variable to your GraalVM installation directory
+
+Then run:
+
+```bash
+cd backend
+./gradlew build -Dquarkus.package.type=native
+```
+
+Or if you want to use a container for the native build (no GraalVM installation required):
+
+```bash
+cd backend
+./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
+```
+
 ## Project Structure
 
 The project follows a monorepo structure:
