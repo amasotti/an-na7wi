@@ -93,14 +93,6 @@
       />
     </div>
 
-    <!-- Debug Info -->
-    <div class="mb-4 p-4 bg-gray-100 rounded">
-      <p>Debug: texts = {{ texts }}</p>
-      <p>Debug: texts.length = {{ texts?.length }}</p>
-      <p>Debug: loading = {{ loading }}</p>
-      <p>Debug: totalCount = {{ totalCount }}</p>
-    </div>
-
     <!-- Text Grid/List -->
     <div v-if="texts && texts.length > 0" :class="gridClasses">
       <TextCard

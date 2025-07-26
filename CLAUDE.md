@@ -67,7 +67,7 @@ All backend APIs are under `/api/v1/` with these main endpoints:
 ## Key Development Patterns
 
 - every file ends with a newline
-- You always prefer Kotlin idiomatic, clean and CONCISE approaches. Verbosity is not desired and seen as a code smell.
+- You always prefer idiomatic, clean and CONCISE approaches. Verbosity is not desired and seen as a code smell.
 
 ### Backend Patterns
 - Use Panache repositories for database operations

@@ -1,5 +1,5 @@
-import type { Annotation, Text } from '../types'
-import type { TextsRequest, TextsResponse } from '../types/api'
+import type { Annotation, Text } from '@/types'
+import type { TextsRequest, TextsResponse } from '@/types'
 import apiClient from './api'
 
 export const textService = {
@@ -8,6 +8,18 @@ export const textService = {
    */
   async getTexts(params: TextsRequest = {}): Promise<TextsResponse> {
     const response = await apiClient.get('/texts', { params })
+    
+    // Backend currently returns array directly instead of paginated response
+    if (Array.isArray(response.data)) {
+      return {
+        items: response.data,
+        totalCount: response.data.length,
+        page: params.page || 1,
+        pageSize: params.pageSize || 10,
+      }
+    }
+    
+    // Future: when backend returns proper paginated response
     return response.data
   },
 
