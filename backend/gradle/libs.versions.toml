@@ -1,0 +1,37 @@
+[versions]
+kotlin = "2.2.0"
+quarkus = "3.24.5"
+quarkus-plugin = "3.24.5"
+junit = "5.10.1"
+testcontainers = "1.19.3"
+jackson = "2.15.3"
+flyway = "10.0.1"
+detekt = "1.23.8"
+kover = "0.7.4"
+
+[libraries]
+# Quarkus BOM and core
+quarkus-bom = { module = "io.quarkus:quarkus-bom", version.ref = "quarkus" }
+quarkus-resteasy-jackson = { module = "io.quarkus:quarkus-resteasy-jackson", version.ref = "quarkus" }
+quarkus-jdbc-postgresql = { module = "io.quarkus:quarkus-jdbc-postgresql", version.ref = "quarkus" }
+quarkus-flyway = { module = "io.quarkus:quarkus-flyway", version.ref = "quarkus" }
+quarkus-hibernate-orm-panache = { module = "io.quarkus:quarkus-hibernate-orm-panache", version.ref = "quarkus" }
+quarkus-hibernate-validator = { module = "io.quarkus:quarkus-hibernate-validator", version.ref = "quarkus" }
+
+# Development & Testing
+quarkus-junit5 = { module = "io.quarkus:quarkus-junit5", version.ref = "quarkus" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+quarkus-test-h2 = { module = "io.quarkus:quarkus-test-h2", version.ref = "quarkus" }
+
+# Utilities
+quarkus-smallrye-openapi = { module = "io.quarkus:quarkus-smallrye-openapi", version.ref = "quarkus" }
+quarkus-smallrye-health = { module = "io.quarkus:quarkus-smallrye-health", version.ref = "quarkus" }
+quarkus-micrometer-registry-prometheus = { module = "io.quarkus:quarkus-micrometer-registry-prometheus", version.ref = "quarkus" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+quarkus = { id = "io.quarkus", version.ref = "quarkus-plugin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+kotlinAllopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
