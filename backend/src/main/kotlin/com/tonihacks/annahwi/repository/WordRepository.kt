@@ -105,4 +105,11 @@ class WordRepository : PanacheRepository<Word> {
             .page<Word>(0, limit)
             .list()
     }
+    
+    /**
+     * Delete a word by its ID
+     */
+    fun deleteById(id: UUID): Boolean {
+        return delete("id", id) > 0
+    }
 }

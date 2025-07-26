@@ -80,4 +80,11 @@ class TextRepository : PanacheRepository<Text> {
             .page<Text>(page)
             .list()
     }
+    
+    /**
+     * Delete a text by its ID
+     */
+    fun deleteById(id: UUID): Boolean {
+        return delete("id", id) > 0
+    }
 }

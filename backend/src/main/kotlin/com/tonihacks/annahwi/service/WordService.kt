@@ -190,14 +190,14 @@ class WordService {
      * Delete a word
      */
     @Transactional
-    fun delete(id: UUID) {
+    fun delete(id: UUID): Boolean {
         logger.info("Deleting word with ID: $id")
         
         // Delete related text-word relationships
         textWordRepository.deleteByWordId(id)
         
         // Delete the word
-        wordRepository.deleteById(id)
+        return wordRepository.deleteById(id)
     }
     
     /**

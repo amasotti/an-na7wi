@@ -79,4 +79,11 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun deleteByTextId(textId: UUID): Long {
         return delete("text.id", textId)
     }
+    
+    /**
+     * Delete an annotation by its ID
+     */
+    fun deleteById(id: UUID): Boolean {
+        return delete("id", id) > 0
+    }
 }

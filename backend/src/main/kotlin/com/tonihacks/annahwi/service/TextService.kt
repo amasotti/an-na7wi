@@ -157,7 +157,7 @@ class TextService {
      * Delete a text
      */
     @Transactional
-    fun delete(id: UUID) {
+    fun delete(id: UUID): Boolean {
         logger.info("Deleting text with ID: $id")
         
         // Delete related annotations
@@ -167,7 +167,7 @@ class TextService {
         textWordRepository.deleteByTextId(id)
         
         // Delete the text
-        textRepository.deleteById(id)
+        return textRepository.deleteById(id)
     }
     
     /**

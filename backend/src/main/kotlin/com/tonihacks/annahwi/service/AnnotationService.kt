@@ -136,9 +136,9 @@ class AnnotationService {
      * Delete an annotation
      */
     @Transactional
-    fun delete(id: UUID) {
+    fun delete(id: UUID): Boolean {
         logger.info("Deleting annotation with ID: $id")
-        annotationRepository.deleteById(id)
+        return annotationRepository.deleteById(id)
     }
     
     /**
@@ -155,18 +155,18 @@ class AnnotationService {
      */
     private fun validatePositionRange(annotation: Annotation) {
 
-        require(annotation.positionStart < 0) {
+        require(annotation.positionStart >= 0) {
             "Position start must be non-negative"
         }
 
-        require(annotation.positionEnd < annotation.positionStart) {
+        require(annotation.positionEnd >= annotation.positionStart) {
             throw IllegalArgumentException("Position end must be greater than or equal to position start")
         }
         
         val text = annotation.text
         val contentLength = text.arabicContent.length
 
-        require(annotation.positionEnd > contentLength) {
+        require(annotation.positionEnd <= contentLength) {
             "Position end must be less than or equal to the text length: ${text.arabicContent.length}"
         }
 
