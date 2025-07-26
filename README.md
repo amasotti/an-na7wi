@@ -8,7 +8,7 @@ An-Nahwi is a containerized fullstack application for learning Arabic dialects, 
 
 - **Backend**: Kotlin with Quarkus 
 - **Frontend**: Vue.js 3 with Composition API and TypeScript
-- **Database**: PostgreSQL 16 (containerized)
+- **Database**: PostgreSQL 17 (containerized)
 - **Build Tools**: Gradle with Kotlin DSL (backend), Vite with TypeScript (frontend)
 - **Containerization**: Docker Compose with multi-stage builds
 
@@ -54,8 +54,8 @@ An-Nahwi is a containerized fullstack application for learning Arabic dialects, 
 3. Run the frontend:
    ```
    cd frontend
-   npm install
-   npm run dev
+   pnpm install
+   pnpm run dev
    ```
 
 ## API Endpoints
@@ -98,7 +98,3 @@ The project follows a monorepo structure:
 - `database/` - Database initialization scripts and migrations
 - `docker-compose.yml` - Docker Compose configuration
 - `docs/` - Project documentation
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
