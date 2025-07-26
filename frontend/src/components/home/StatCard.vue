@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200 border border-gray-200">
+  <div class="bg-white rounded-xl p-6 text-center hover:shadow-md transition-shadow duration-200 border border-gray-200">
     <!-- Icon -->
     <div class="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-primary-600 to-primary-700 rounded-lg flex items-center justify-center shadow-md">
       <BaseIcon class="text-white">

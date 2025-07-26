@@ -33,10 +33,6 @@
     @apply text-xl font-semibold mb-2 text-gray-700;
   }
 
-  a {
-    @apply text-primary-600 hover:text-primary-700 transition-all duration-200;
-  }
-
   /* Enhanced Arabic text styling with authentic fonts */
   .arabic {
     @apply font-arabic text-right;
@@ -105,7 +101,7 @@
 /* Component styles */
 @layer components {
   .btn {
-    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    @apply px-6 py-3 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-sm {
@@ -117,7 +113,12 @@
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 shadow-lg hover:shadow-xl focus:ring-primary-500;
+    @apply bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white  shadow-md hover:shadow-lg focus:ring-primary-500;
+    color: white !important;
+  }
+  
+  .btn-primary:hover {
+    color: white !important;
   }
 
   .btn-secondary {
@@ -125,7 +126,7 @@
   }
 
   .btn-outline {
-    @apply border-2 border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-primary-500 hover:text-primary-700 focus:ring-gray-300;
+    @apply border-2 border-gray-300 bg-white text-gray-700 hover:bg-primary-50 hover:border-primary-400 hover:text-primary-700 focus:ring-gray-300 transition-all duration-200;
   }
 
   .btn-ghost {

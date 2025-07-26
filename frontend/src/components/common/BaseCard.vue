@@ -38,7 +38,7 @@ const cardClasses = computed(() => {
     glass: 'glass',
   }
 
-  const hover = props.hover ? 'hover:scale-[1.02] hover:shadow-xl transition-all duration-300' : ''
+  const hover = props.hover ? 'hover:shadow-xl transition-all duration-300' : ''
 
   return [base, variants[props.variant], hover].filter(Boolean).join(' ')
 })

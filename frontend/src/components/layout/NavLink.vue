@@ -2,7 +2,7 @@
   <router-link
     :to="to"
     :class="linkClasses"
-    class="group relative flex items-center transition-all duration-200"
+    class="group relative flex items-center transition-colors duration-200"
   >
     <!-- Icon -->
     <div v-if="icon" class="flex-shrink-0 mr-3">

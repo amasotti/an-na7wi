@@ -156,7 +156,7 @@ const dropdownOpen = ref(false)
 const computedCardClasses = computed(() => {
   const baseClasses = combineClasses(
     cardClasses.base, 
-    'group relative overflow-hidden hover:shadow-lg'
+    'group relative overflow-hidden hover:shadow-md transition-shadow duration-200'
   )
 
   const viewModeClasses = props.viewMode === 'list' 

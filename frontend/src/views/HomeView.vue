@@ -9,14 +9,14 @@
       </div>
       
       <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-2">
-        An-Nahwi
+        An-Na7wi
       </h1>
-      <h2 class="text-3xl md:text-4xl font-semibold text-primary-700 arabic-large mb-6">
+      <h2 class="text-3xl md:text-4xl font-semibold text-primary-700 mb-6">
         النحوي
       </h2>
       
       <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
-        Your personal companion for studying Arabic language and dialects
+        My Companion for Arabic language and its wonderful dialects
       </p>
       
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -28,7 +28,7 @@
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
-Begin Study Session
+            Begin Study Session
         </BaseButton>
         
         <BaseButton 

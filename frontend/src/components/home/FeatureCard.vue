@@ -71,7 +71,7 @@ const iconClasses = computed(() => {
 const cardClass = computed(() => {
   return combineClasses(
     cardClasses.base,
-    'h-full group cursor-pointer transition-all duration-200 hover:shadow-xl'
+    'h-full group cursor-pointer transition-all duration-200 hover:shadow-md hover:border-primary-200'
   )
 })
 
