@@ -33,7 +33,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔧 Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ./backend/gradlew
 
       - name: 📦 Cache Gradle packages
         uses: actions/cache@v4
@@ -46,12 +46,15 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: 🔍 Run Gradle check
+        working-directory: backend
         run: ./gradlew check
 
       - name: 📦 Build project
+        working-directory: backend
         run: ./gradlew quarkusBuild -x test  # Skip tests as they were already run in the check step
 
       - name: 🐳 Build Docker image
+        working-directory: backend
         run: ./gradlew build -Dquarkus.container-image.build=true -Dquarkus.container-image.tag=${{ github.sha }}
 
       - name: 📝 Build Summary

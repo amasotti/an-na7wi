@@ -34,6 +34,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔧 Grant execute permission for gradlew
+        working-directory: backend
         run: chmod +x gradlew
 
       - name: 📦 Cache Gradle packages
@@ -47,12 +48,15 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: 🔍 Run Gradle check
+        working-directory: backend
         run: ./gradlew check
 
       - name: 📦 Build project
+        working-directory: backend
         run: ./gradlew build -x test  # Skip tests as they were already run in the check step
 
       - name: 🐳 Build Docker image
+        working-directory: backend
         run: ./gradlew build -Dquarkus.container-image.build=true -Dquarkus.container-image.tag=${{ github.ref_name }}
 
       - name: 📊 Upload test results
@@ -60,14 +64,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: build/reports/tests/
+          path: backend/build/reports/tests/
 
       - name: 📋 Upload build reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: build-reports
-          path: build/reports/
+          path: backend/build/reports/
           retention-days: 7
 
   release:
