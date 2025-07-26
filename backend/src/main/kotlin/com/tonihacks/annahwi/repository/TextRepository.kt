@@ -7,8 +7,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Parameters
 import io.quarkus.panache.common.Sort
+import jakarta.enterprise.context.ApplicationScoped
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
 
 /**
  * Repository for Text entity
@@ -29,7 +29,7 @@ class TextRepository : PanacheRepository<Text> {
     fun findByTitle(title: String, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("LOWER(title) LIKE LOWER(:title)", 
             Parameters.with("title", "%$title%"))
-            .page(page)
+            .page<Text>(page)
             .list()
     }
     
@@ -38,7 +38,7 @@ class TextRepository : PanacheRepository<Text> {
      */
     fun findByDialect(dialect: Dialect, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("dialect", sort, dialect)
-            .page(page)
+            .page<Text>(page)
             .list()
     }
     
@@ -47,7 +47,7 @@ class TextRepository : PanacheRepository<Text> {
      */
     fun findByDifficulty(difficulty: Difficulty, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("difficulty", sort, difficulty)
-            .page(page)
+            .page<Text>(page)
             .list()
     }
     
@@ -58,7 +58,7 @@ class TextRepository : PanacheRepository<Text> {
         // Note: This is a simplified implementation. In a real application, you would use a JSONB query
         return find("tags LIKE :tag", 
             Parameters.with("tag", "%$tag%"))
-            .page(page)
+            .page<Text>(page)
             .list()
     }
     
@@ -67,7 +67,7 @@ class TextRepository : PanacheRepository<Text> {
      */
     fun findPublic(page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("isPublic = true", sort)
-            .page(page)
+            .page<Text>(page)
             .list()
     }
     
@@ -77,7 +77,7 @@ class TextRepository : PanacheRepository<Text> {
     fun searchByContent(query: String, page: Page, sort: Sort = Sort.by("title")): List<Text> {
         return find("LOWER(arabicContent) LIKE LOWER(:query) OR LOWER(transliteration) LIKE LOWER(:query) OR LOWER(translation) LIKE LOWER(:query)", 
             Parameters.with("query", "%$query%"))
-            .page(page)
+            .page<Text>(page)
             .list()
     }
 }

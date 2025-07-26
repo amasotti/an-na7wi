@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>UnusedParameter:AnnotationRepository.kt$AnnotationRepository$sort: Sort = Sort.by("positionStart")</ID>
+    <ID>UnusedParameter:CorsConfig.kt$CorsConfig$@Observes event: StartupEvent</ID>
+    <ID>UnusedParameter:DatabaseConfig.kt$DatabaseConfig$@Observes event: StartupEvent</ID>
+    <ID>UnusedParameter:TextRepository.kt$TextRepository$sort: Sort = Sort.by("title")</ID>
+    <ID>UnusedParameter:WordRepository.kt$WordRepository$sort: Sort = Sort.by("arabic")</ID>
+  </CurrentIssues>
+</SmellBaseline>

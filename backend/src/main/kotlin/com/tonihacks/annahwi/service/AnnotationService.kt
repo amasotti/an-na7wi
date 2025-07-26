@@ -5,13 +5,13 @@ import com.tonihacks.annahwi.entity.AnnotationType
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import jakarta.transaction.Transactional
+import jakarta.ws.rs.NotFoundException
 import org.jboss.logging.Logger
 import java.time.LocalDateTime
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
-import javax.transaction.Transactional
-import javax.ws.rs.NotFoundException
 
 /**
  * Service for managing annotations
@@ -32,7 +32,7 @@ class AnnotationService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "createdAt"): List<Annotation> {
         logger.info("Finding all annotations, page: $page, size: $size, sortField: $sortField")
-        return annotationRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
+        return annotationRepository.findAll(Sort.by(sortField)).page<Annotation>(Page.of(page, size)).list()
     }
     
     /**
@@ -154,19 +154,21 @@ class AnnotationService {
      * Validate that the annotation position range is valid
      */
     private fun validatePositionRange(annotation: Annotation) {
-        if (annotation.positionStart < 0) {
-            throw IllegalArgumentException("Position start must be non-negative")
+
+        require(annotation.positionStart < 0) {
+            "Position start must be non-negative"
         }
-        
-        if (annotation.positionEnd < annotation.positionStart) {
+
+        require(annotation.positionEnd < annotation.positionStart) {
             throw IllegalArgumentException("Position end must be greater than or equal to position start")
         }
         
         val text = annotation.text
         val contentLength = text.arabicContent.length
-        
-        if (annotation.positionEnd > contentLength) {
-            throw IllegalArgumentException("Position end must be less than or equal to the text length")
+
+        require(annotation.positionEnd > contentLength) {
+            "Position end must be less than or equal to the text length: ${text.arabicContent.length}"
         }
+
     }
 }

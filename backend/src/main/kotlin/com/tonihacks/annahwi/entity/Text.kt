@@ -1,16 +1,27 @@
 package com.tonihacks.annahwi.entity
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
+import jakarta.persistence.Table
 import java.time.LocalDateTime
-import java.util.*
-import javax.persistence.*
+import java.util.UUID
 
 /**
  * Represents a text in Arabic with transliteration and translation
  */
 @Entity
 @Table(name = "texts")
-class Text : PanacheEntityBase {
+class Text : PanacheEntityBase() {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

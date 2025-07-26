@@ -1,13 +1,13 @@
 package com.tonihacks.annahwi.config
 
 import io.quarkus.runtime.StartupEvent
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.enterprise.event.Observes
+import jakarta.ws.rs.core.FeatureContext
+import jakarta.ws.rs.core.Feature
+import jakarta.ws.rs.ext.Provider
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.jboss.logging.Logger
-import javax.enterprise.context.ApplicationScoped
-import javax.enterprise.event.Observes
-import javax.ws.rs.core.Feature
-import javax.ws.rs.core.FeatureContext
-import javax.ws.rs.ext.Provider
 
 @Provider
 @ApplicationScoped

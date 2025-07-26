@@ -5,8 +5,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Parameters
 import io.quarkus.panache.common.Sort
+import jakarta.enterprise.context.ApplicationScoped
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
 
 /**
  * Repository for TextWord entity
@@ -26,7 +26,7 @@ class TextWordRepository : PanacheRepository<TextWord> {
      */
     fun findByTextId(textId: UUID, page: Page, sort: Sort = Sort.by("position")): List<TextWord> {
         return find("text.id", sort, textId)
-            .page(page)
+            .page<TextWord>(page)
             .list()
     }
     
@@ -35,7 +35,7 @@ class TextWordRepository : PanacheRepository<TextWord> {
      */
     fun findByWordId(wordId: UUID, page: Page, sort: Sort = Sort.by("position")): List<TextWord> {
         return find("word.id", sort, wordId)
-            .page(page)
+            .page<TextWord>(page)
             .list()
     }
     
@@ -56,7 +56,7 @@ class TextWordRepository : PanacheRepository<TextWord> {
             Parameters.with("textId", textId)
                 .and("startPosition", startPosition)
                 .and("endPosition", endPosition))
-            .page(page)
+            .page<TextWord>(page)
             .list()
     }
     

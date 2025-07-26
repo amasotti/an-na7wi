@@ -3,14 +3,23 @@ package com.tonihacks.annahwi.controller
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.AnnotationType
 import com.tonihacks.annahwi.service.AnnotationService
+import jakarta.inject.Inject
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.DELETE
+import jakarta.ws.rs.DefaultValue
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.POST
+import jakarta.ws.rs.PUT
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.PathParam
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import org.jboss.logging.Logger
-import java.util.*
-import javax.inject.Inject
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
+import java.util.UUID
 
 @Path("/api/v1/annotations")
 @Produces(MediaType.APPLICATION_JSON)

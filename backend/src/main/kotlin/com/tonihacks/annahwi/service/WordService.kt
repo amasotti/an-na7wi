@@ -8,13 +8,13 @@ import com.tonihacks.annahwi.repository.TextWordRepository
 import com.tonihacks.annahwi.repository.WordRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import jakarta.transaction.Transactional
+import jakarta.ws.rs.NotFoundException
 import org.jboss.logging.Logger
 import java.time.LocalDateTime
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
-import javax.transaction.Transactional
-import javax.ws.rs.NotFoundException
 
 /**
  * Service for managing words
@@ -35,7 +35,7 @@ class WordService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "arabic"): List<Word> {
         logger.info("Finding all words, page: $page, size: $size, sortField: $sortField")
-        return wordRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
+        return wordRepository.findAll(Sort.by(sortField)).page<Word>(Page.of(page, size)).list()
     }
     
     /**

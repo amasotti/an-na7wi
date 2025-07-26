@@ -1,17 +1,23 @@
 package com.tonihacks.annahwi.controller
 
 import com.tonihacks.annahwi.service.SearchService
+import jakarta.inject.Inject
+import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.DefaultValue
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.openapi.annotations.Operation
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
 import org.jboss.logging.Logger
-import javax.inject.Inject
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
+
 
 @Path("/api/v1/search")
-@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Search", description = "Search endpoints")
 class SearchController {
     
@@ -45,7 +51,9 @@ class SearchController {
         @QueryParam("page") @DefaultValue("0") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
-        logger.info("GET /api/v1/search/texts - query: $query, title: $title, dialect: $dialect, difficulty: $difficulty, tag: $tag, public: $isPublic, page: $page, size: $size")
+        logger.info("GET /api/v1/search/texts - query: $query, " +
+                "title: $title, dialect: $dialect, difficulty: $difficulty, " +
+                "tag: $tag, public: $isPublic, page: $page, size: $size")
         return Response.ok(searchService.advancedTextSearch(query, title, dialect, difficulty, tag, isPublic, page, size)).build()
     }
     

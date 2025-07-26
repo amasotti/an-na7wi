@@ -8,13 +8,13 @@ import com.tonihacks.annahwi.repository.TextRepository
 import com.tonihacks.annahwi.repository.TextWordRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import jakarta.transaction.Transactional
+import jakarta.ws.rs.NotFoundException
 import org.jboss.logging.Logger
 import java.time.LocalDateTime
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
-import javax.transaction.Transactional
-import javax.ws.rs.NotFoundException
 
 /**
  * Service for managing texts
@@ -41,7 +41,7 @@ class TextService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "title"): List<Text> {
         logger.info("Finding all texts, page: $page, size: $size, sortField: $sortField")
-        return textRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
+        return textRepository.findAll(Sort.by(sortField)).page<Text>(Page.of(page, size)).list()
     }
     
     /**

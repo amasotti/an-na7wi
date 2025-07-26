@@ -6,8 +6,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Parameters
 import io.quarkus.panache.common.Sort
+import jakarta.enterprise.context.ApplicationScoped
 import java.util.*
-import javax.enterprise.context.ApplicationScoped
 
 /**
  * Repository for Annotation entity
@@ -27,7 +27,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
      */
     fun findByTextId(textId: UUID, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("text.id", sort, textId)
-            .page(page)
+            .page<Annotation>(page)
             .list()
     }
     
@@ -36,7 +36,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
      */
     fun findByType(type: AnnotationType, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("type", sort, type)
-            .page(page)
+            .page<Annotation>(page)
             .list()
     }
     
@@ -46,19 +46,20 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun findByTextIdAndType(textId: UUID, type: AnnotationType, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("text.id = :textId AND type = :type", 
             Parameters.with("textId", textId).and("type", type))
-            .page(page)
+            .page<Annotation>(page)
             .list()
     }
     
     /**
      * Find annotations by position range
      */
+    @Suppress("MaxLineLength")
     fun findByPositionRange(textId: UUID, startPosition: Int, endPosition: Int, page: Page): List<Annotation> {
         return find("text.id = :textId AND ((positionStart >= :startPosition AND positionStart <= :endPosition) OR (positionEnd >= :startPosition AND positionEnd <= :endPosition))", 
             Parameters.with("textId", textId)
                 .and("startPosition", startPosition)
                 .and("endPosition", endPosition))
-            .page(page)
+            .page<Annotation>(page)
             .list()
     }
     
@@ -68,7 +69,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun searchByContent(query: String, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
         return find("LOWER(content) LIKE LOWER(:query)", 
             Parameters.with("query", "%$query%"))
-            .page(page)
+            .page<Annotation>(page)
             .list()
     }
     

@@ -3,10 +3,9 @@ package com.tonihacks.annahwi.service
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.Text
 import com.tonihacks.annahwi.entity.Word
-import io.quarkus.panache.common.Page
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 import org.jboss.logging.Logger
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 
 /**
  * Service for searching across texts and words
