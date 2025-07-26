@@ -7,7 +7,7 @@
           to="/" 
           class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
         >
-          <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center shadow-lg">
             <span class="text-white font-bold text-lg">ن</span>
           </div>
           <div class="hidden sm:block">
@@ -94,19 +94,19 @@ const mobileMenuOpen = ref(false)
 const navItems = [
   {
     name: 'home',
-    label: 'Home',
+    label: 'Study',
     to: '/',
     icon: 'HomeIcon',
   },
   {
     name: 'texts',
-    label: 'Texts',
+    label: 'Library',
     to: '/texts',
     icon: 'DocumentTextIcon',
   },
   {
     name: 'vocabulary',
-    label: 'Vocabulary',
+    label: 'Dictionary',
     to: '/vocabulary',
     icon: 'BookOpenIcon',
   },

@@ -3,7 +3,7 @@
     <!-- Hero Section -->
     <div class="text-center mb-16">
       <div class="inline-block mb-6">
-        <div class="w-20 h-20 bg-primary-600 rounded-2xl flex items-center justify-center shadow-lg mb-4 mx-auto">
+        <div class="w-20 h-20 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg mb-4 mx-auto ring-2 ring-primary-200">
           <span class="text-white font-bold text-3xl">ن</span>
         </div>
       </div>
@@ -11,12 +11,12 @@
       <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-2">
         An-Nahwi
       </h1>
-      <h2 class="text-3xl md:text-4xl font-semibold text-primary-700 mb-6">
+      <h2 class="text-3xl md:text-4xl font-semibold text-primary-700 arabic-large mb-6">
         النحوي
       </h2>
       
       <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
-        Master Arabic dialects through interactive texts, vocabulary management, and intelligent annotations
+        Your personal companion for studying Arabic language and dialects
       </p>
       
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -28,7 +28,7 @@
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
-          Start Learning
+Begin Study Session
         </BaseButton>
         
         <BaseButton 
@@ -40,7 +40,7 @@
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
           </svg>
-          Explore Vocabulary
+Browse Vocabulary
         </BaseButton>
       </div>
     </div>
@@ -48,8 +48,8 @@
     <!-- Features Grid -->
     <div class="mb-16">
       <div class="text-center mb-10">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Key Features</h2>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Everything you need to master Arabic dialects</p>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Study Tools</h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Organized resources for your Arabic learning journey</p>
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -65,14 +65,14 @@
     <BaseCard class="mb-12">
       <template #header>
         <div class="flex items-center justify-between">
-          <h3 class="text-2xl font-bold text-gray-900 mb-0">Sample Arabic Text</h3>
-          <BaseBadge variant="primary">Interactive</BaseBadge>
+          <h3 class="text-2xl font-bold text-gray-900 mb-0">Study Example</h3>
+          <BaseBadge variant="primary">Practice Text</BaseBadge>
         </div>
       </template>
       
       <div class="space-y-6">
         <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-          <p class="text-2xl text-gray-900 mb-4 leading-loose arabic">
+          <p class="text-2xl text-gray-900 mb-4 arabic-text">
             مرحباً بكم في تطبيق النحوي! هذا التطبيق يساعدكم على تعلّم اللهجات العربية.
           </p>
           
@@ -82,7 +82,7 @@
             </p>
             
             <p class="text-gray-800 font-medium">
-              Welcome to the An-Nahwi application! This app helps you learn Arabic dialects in an interactive and enjoyable way.
+              Welcome to An-Nahwi! This is your personal study companion for exploring Arabic language and dialects.
             </p>
           </div>
         </div>
@@ -95,11 +95,11 @@
       </div>
     </BaseCard>
 
-    <!-- Quick Stats -->
+    <!-- Study Overview -->
     <div class="mb-16">
       <div class="text-center mb-10">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Learn with Confidence</h2>
-        <p class="text-lg text-gray-600">Join thousands of Arabic learners on their journey</p>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Your Study Collection</h2>
+        <p class="text-lg text-gray-600">Current resources in your personal Arabic library</p>
       </div>
       
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -122,45 +122,45 @@ import StatCard from '../components/home/StatCard.vue'
 
 const features = [
   {
-    title: 'Interactive Texts',
+    title: 'Text Library',
     description:
-      'Create and manage Arabic texts with real-time transliteration and translation support.',
+      'Collect and organize Arabic texts with transliteration and personal notes.',
     icon: 'document-text',
     color: 'primary',
     link: '/texts',
   },
   {
-    title: 'Smart Vocabulary',
+    title: 'Vocabulary Journal',
     description:
-      'Build your vocabulary with root analysis, frequency tracking, and contextual learning.',
+      'Build your personal dictionary with root analysis and usage examples.',
     icon: 'book-open',
     color: 'secondary',
     link: '/vocabulary',
   },
   {
-    title: 'Advanced Search',
-    description: 'Powerful search across texts and vocabulary with Arabic root pattern matching.',
+    title: 'Study Search',
+    description: 'Find texts and words quickly with intelligent Arabic pattern matching.',
     icon: 'magnifying-glass',
     color: 'accent',
     link: '/search',
   },
   {
-    title: 'Multi-Dialect Support',
-    description: 'Learn various Arabic dialects including Tunisian, Moroccan, Egyptian, and MSA.',
+    title: 'Dialect Studies',
+    description: 'Explore different Arabic dialects: Tunisian, Moroccan, Egyptian, and MSA.',
     icon: 'globe',
     color: 'primary',
     link: '/texts',
   },
   {
-    title: 'Rich Annotations',
-    description: 'Add grammar, vocabulary, cultural, and pronunciation notes to enhance learning.',
+    title: 'Personal Notes',
+    description: 'Add your own grammar observations, cultural insights, and pronunciation guides.',
     icon: 'annotation',
     color: 'secondary',
     link: '/texts',
   },
   {
-    title: 'Progress Tracking',
-    description: 'Monitor your learning journey with detailed analytics and progress insights.',
+    title: 'Study Progress',
+    description: 'Track your learning path and see how your Arabic knowledge grows over time.',
     icon: 'chart',
     color: 'accent',
     link: '/analytics',
@@ -170,29 +170,29 @@ const features = [
 const sampleTags = [
   { text: 'Beginner', variant: 'success' },
   { text: 'MSA', variant: 'primary' },
-  { text: 'Interactive', variant: 'secondary' },
-  { text: 'Tutorial', variant: 'warning' },
+  { text: 'Study Note', variant: 'secondary' },
+  { text: 'Practice', variant: 'warning' },
 ]
 
 const stats = [
   {
-    value: '500+',
-    label: 'Arabic Texts',
+    value: '24',
+    label: 'Saved Texts',
     icon: 'document-text',
   },
   {
-    value: '10K+',
-    label: 'Vocabulary Words',
+    value: '312',
+    label: 'Words Studied',
     icon: 'book-open',
   },
   {
-    value: '4',
-    label: 'Dialects Supported',
+    value: '3',
+    label: 'Dialects Explored',
     icon: 'globe',
   },
   {
-    value: '95%',
-    label: 'Learning Success',
+    value: '18',
+    label: 'Study Sessions',
     icon: 'chart',
   },
 ]

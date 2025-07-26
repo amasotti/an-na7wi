@@ -61,9 +61,9 @@ const router = useRouter()
 
 const iconClasses = computed(() => {
   const colors = {
-    primary: 'bg-primary-600 shadow-lg',
-    secondary: 'bg-secondary-600 shadow-lg',
-    accent: 'bg-accent-600 shadow-lg',
+    primary: 'bg-gradient-to-br from-primary-600 to-primary-700 shadow-lg',
+    secondary: 'bg-gradient-to-br from-secondary-600 to-secondary-700 shadow-lg',
+    accent: 'bg-gradient-to-br from-accent-600 to-accent-700 shadow-lg',
   }
   return colors[props.feature.color]
 })
