@@ -1,31 +1,21 @@
 <template>
-  <div class="relative overflow-hidden glass rounded-3xl p-8 text-center hover:scale-110 transition-all duration-500 group shadow-2xl border-2 border-white/30">
-    <!-- Background Gradient -->
-    <div class="absolute inset-0 bg-gradient-to-br from-primary-50/30 via-secondary-50/30 to-accent-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-    
-    <!-- Floating Particles -->
-    <div class="absolute top-2 right-2 w-2 h-2 bg-primary-400 rounded-full animate-pulse"></div>
-    <div class="absolute bottom-2 left-2 w-1 h-1 bg-secondary-400 rounded-full animate-ping"></div>
-    
+  <div class="bg-white rounded-xl p-6 text-center hover:shadow-lg transition-all duration-200 border border-gray-200">
     <!-- Icon -->
-    <div class="relative z-10 w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-2xl transform group-hover:rotate-6 transition-transform duration-500">
-      <BaseIcon size="lg" class="text-white drop-shadow-lg">
+    <div class="w-12 h-12 mx-auto mb-4 bg-primary-600 rounded-lg flex items-center justify-center">
+      <BaseIcon class="text-white">
         <component :is="iconComponent" />
       </BaseIcon>
     </div>
     
     <!-- Value -->
-    <div class="relative z-10 text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600 mb-2 group-hover:scale-110 transition-transform duration-300">
+    <div class="text-3xl font-bold text-gray-900 mb-2">
       {{ stat.value }}
     </div>
     
     <!-- Label -->
-    <div class="relative z-10 text-base font-semibold text-gray-700 group-hover:text-primary-700 transition-colors duration-300">
+    <div class="text-sm font-medium text-gray-600">
       {{ stat.label }}
     </div>
-    
-    <!-- Animated Border -->
-    <div class="absolute inset-0 rounded-3xl border-2 border-transparent bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500 animate-pulse"></div>
   </div>
 </template>
 

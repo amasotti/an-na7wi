@@ -156,23 +156,21 @@ const dropdownOpen = ref(false)
 const computedCardClasses = computed(() => {
   const baseClasses = combineClasses(
     cardClasses.base, 
-    'group relative overflow-hidden border-2 border-white/50 backdrop-blur-xl bg-white/30 shadow-2xl hover:shadow-3xl'
+    'group relative overflow-hidden hover:shadow-lg'
   )
 
   const viewModeClasses = props.viewMode === 'list' 
-    ? 'flex-1 hover:scale-[1.02]' 
-    : combineClasses('h-full hover:scale-[1.05] hover:rotate-1', cardClasses.hover)
+    ? 'flex-1' 
+    : 'h-full'
 
   return combineClasses(baseClasses, viewModeClasses)
 })
 
-const headerClasses = computed(() => 
-  `${layoutClasses.flex.between} mb-6 p-4 bg-gradient-to-r from-white/80 to-primary-50/40 backdrop-blur-sm rounded-2xl border border-white/50`
-)
+const headerClasses = computed(() => `${layoutClasses.flex.between} mb-4`)
 const titleClasses = computed(() => 
-  'text-xl font-bold text-gray-900 truncate group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary-600 group-hover:to-secondary-600 transition-all duration-300'
+  'text-lg font-bold text-gray-900 truncate group-hover:text-primary-700 transition-colors'
 )
-const badgeContainerClasses = computed(() => `${layoutClasses.flex.center} space-x-3 mt-2`)
+const badgeContainerClasses = computed(() => `${layoutClasses.flex.center} space-x-2 mt-1`)
 const actionButtonClasses = computed(
   () =>
     'p-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-gray-100 transition-all duration-200'
@@ -181,20 +179,13 @@ const dropdownClasses = computed(
   () =>
     'absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-10'
 )
-const arabicContentClasses = computed(() => 
-  combineClasses(
-    textClasses.arabic.base, 
-    'line-clamp-3 text-xl leading-relaxed p-4 bg-gradient-to-br from-white/60 to-primary-50/30 rounded-2xl border border-primary-100/50 backdrop-blur-sm text-gray-800 shadow-inner'
-  )
-)
+const arabicContentClasses = computed(() => combineClasses(textClasses.arabic.base, 'line-clamp-3'))
 const transliterationClasses = computed(() => 'text-gray-600 italic text-sm line-clamp-2')
 const tagsContainerClasses = computed(() => `${layoutClasses.flex.wrap} gap-1`)
-const footerClasses = computed(() => 
-  `${layoutClasses.flex.between} text-sm text-gray-600 p-4 bg-gradient-to-r from-gray-50/50 to-primary-50/30 backdrop-blur-sm rounded-2xl border border-gray-200/30`
-)
+const footerClasses = computed(() => `${layoutClasses.flex.between} text-sm text-gray-500`)
 const footerInfoClasses = computed(() => `${layoutClasses.flex.center} space-x-4`)
 const viewLinkClasses = computed(() => 
-  'flex items-center px-4 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold rounded-xl hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl'
+  'flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors'
 )
 
 // Other computed properties

@@ -7,7 +7,7 @@
     <div class="text-center">
       <!-- Icon -->
       <div 
-        class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+        class="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center transition-all duration-200"
         :class="iconClasses"
       >
         <BaseIcon size="lg" class="text-white">
@@ -61,10 +61,9 @@ const router = useRouter()
 
 const iconClasses = computed(() => {
   const colors = {
-    primary: 'bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/30',
-    secondary:
-      'bg-gradient-to-br from-secondary-500 to-secondary-600 shadow-lg shadow-secondary-500/30',
-    accent: 'bg-gradient-to-br from-accent-500 to-accent-600 shadow-lg shadow-accent-500/30',
+    primary: 'bg-primary-600 shadow-lg',
+    secondary: 'bg-secondary-600 shadow-lg',
+    accent: 'bg-accent-600 shadow-lg',
   }
   return colors[props.feature.color]
 })
@@ -72,8 +71,7 @@ const iconClasses = computed(() => {
 const cardClass = computed(() => {
   return combineClasses(
     cardClasses.base,
-    cardClasses.hover,
-    'h-full group cursor-pointer transition-all duration-300 hover:scale-105'
+    'h-full group cursor-pointer transition-all duration-200 hover:shadow-xl'
   )
 })
 

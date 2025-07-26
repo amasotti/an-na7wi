@@ -1,21 +1,18 @@
 <template>
-  <nav class="glass sticky top-0 z-50 border-b border-white/30 backdrop-blur-2xl bg-white/10 shadow-2xl">
+  <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-20">
+      <div class="flex justify-between items-center h-16">
         <!-- Logo/Brand -->
         <router-link 
           to="/" 
-          class="flex items-center space-x-4 hover:scale-105 transition-all duration-300 group"
+          class="flex items-center space-x-3 hover:opacity-80 transition-opacity"
         >
-          <div class="relative">
-            <div class="w-12 h-12 bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 transition-transform duration-300">
-              <span class="text-white font-bold text-xl drop-shadow-lg">ن</span>
-            </div>
-            <div class="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+          <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg">
+            <span class="text-white font-bold text-lg">ن</span>
           </div>
           <div class="hidden sm:block">
-            <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-secondary-600 mb-0 group-hover:scale-105 transition-transform duration-300">An-Nahwi</h1>
-            <p class="text-sm font-semibold text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-accent-500 -mt-1 arabic">النحوي</p>
+            <h1 class="text-xl font-bold text-gray-900 mb-0">An-Nahwi</h1>
+            <p class="text-xs text-gray-600 -mt-1 arabic">النحوي</p>
           </div>
         </router-link>
 
@@ -34,17 +31,17 @@
         <!-- Mobile Menu Button -->
         <button
           @click="toggleMobileMenu"
-          class="md:hidden p-3 rounded-2xl hover:bg-gradient-to-r hover:from-primary-500/20 hover:to-secondary-500/20 transition-all duration-300 flex-shrink-0 border border-white/20 backdrop-blur-sm transform hover:scale-110"
-          :class="{ 'bg-gradient-to-r from-primary-500/30 to-secondary-500/30 shadow-lg': mobileMenuOpen }"
+          class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
+          :class="{ 'bg-gray-100': mobileMenuOpen }"
           aria-label="Toggle navigation menu"
         >
-          <BaseIcon size="md" class="transition-all duration-300 text-gray-700" :class="{ 'rotate-180 text-primary-600': mobileMenuOpen }">
+          <BaseIcon size="sm" class="transition-transform duration-200" :class="{ 'rotate-90': mobileMenuOpen }">
             <path
               v-if="!mobileMenuOpen"
               stroke="currentColor"
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2.5"
+              stroke-width="2"
               d="M4 6h16M4 12h16M4 18h16"
             />
             <path
@@ -52,7 +49,7 @@
               stroke="currentColor"
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="2.5"
+              stroke-width="2"
               d="M6 18L18 6M6 6l12 12"
             />
           </BaseIcon>
@@ -61,24 +58,22 @@
 
       <!-- Mobile Navigation -->
       <Transition
-        enter-active-class="transition-all duration-300 ease-out"
-        enter-from-class="opacity-0 -translate-y-4 scale-95"
-        enter-to-class="opacity-100 translate-y-0 scale-100"
-        leave-active-class="transition-all duration-200 ease-in"
-        leave-from-class="opacity-100 translate-y-0 scale-100"
-        leave-to-class="opacity-0 -translate-y-4 scale-95"
+        enter-active-class="transition-all duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-2"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-2"
       >
-        <div v-if="mobileMenuOpen" class="md:hidden py-6 border-t border-white/30 bg-gradient-to-b from-white/5 to-white/10 backdrop-blur-xl">
-          <div class="space-y-2 max-h-80 overflow-y-auto">
+        <div v-if="mobileMenuOpen" class="md:hidden py-3 border-t border-gray-200 bg-gray-50">
+          <div class="space-y-1 max-h-80 overflow-y-auto">
             <NavLink
-              v-for="(item, index) in navItems"
+              v-for="item in navItems"
               :key="item.name"
               :to="item.to"
               :icon="item.icon"
               mobile
               @click="closeMobileMenu"
-              class="animate-slide-up"
-              :style="{ 'animation-delay': `${index * 0.1}s` }"
             >
               {{ item.label }}
             </NavLink>
