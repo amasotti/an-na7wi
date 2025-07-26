@@ -25,8 +25,8 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     /**
      * Find annotations by text ID
      */
-    fun findByTextId(textId: UUID, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
-        return find("text.id", sort, textId)
+    fun findByTextId(textId: UUID, page: Page): List<Annotation> {
+        return find("text.id", Sort.by("positionStart"), textId)
             .page(page)
             .list()
     }
