@@ -11,9 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Backend (Kotlin/Quarkus)
 - **Development mode**: `cd backend && ./gradlew quarkusDev`
-- **Build**: `cd backend && ./gradlew build`
-- **Test**: `cd backend && ./gradlew test`
-- **Native build**: `cd backend && ./gradlew build -Dquarkus.package.type=native`
+- **Build**: `cd backend && ./gradlew quarkusBuild`
+- **Test**: `cd backend && ./gradlew quarkusTest`
 
 ### Frontend (Vue.js/TypeScript)
 - **Development**: `cd frontend && pnpm run dev`
@@ -64,10 +63,12 @@ All backend APIs are under `/api/v1/` with these main endpoints:
 - JSONB support for tags and metadata
 - Custom Arabic dictionary for search optimization
 
-## Key Development Patterns
+## Key Development Patterns and Practices
 
 - every file ends with a newline
-- You always prefer idiomatic, clean and CONCISE approaches. Verbosity is not desired and seen as a code smell.
+- Make the relevant adjustments to the backend and frontend. Make sure to understand the project first and work smart, 
+avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verbosity is not desired and seen as a code smell.
+- When possible and meaningful, always write unit tests for new features or changes
 
 ### Backend Patterns
 - Use Panache repositories for database operations
