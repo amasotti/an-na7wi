@@ -41,7 +41,12 @@ class AnnotationController {
         @QueryParam("sort") @DefaultValue("createdAt") sort: String
     ): Response {
         logger.info("GET /api/v1/annotations - page: $page, size: $size, sort: $sort")
-        return Response.ok(annotationService.findAll(PaginationUtil.toZeroBasedPage(page), size, sort)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val results = annotationService.findAll(pagination, size, sort)
+        return Response
+            .ok(results)
+            .encoding("UTF8")
+            .build()
     }
     
     @GET

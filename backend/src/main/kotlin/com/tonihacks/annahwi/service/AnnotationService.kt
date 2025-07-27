@@ -33,7 +33,12 @@ class AnnotationService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "createdAt"): List<Annotation> {
         logger.info("Finding all annotations, page: $page, size: $size, sortField: $sortField")
-        return annotationRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
+        val sortOption = Sort.by(sortField)
+        val paginationOption = Page.of(page, size)
+        return annotationRepository
+            .findAll(sortOption)
+            .page(paginationOption)
+            .list()
     }
     
     /**

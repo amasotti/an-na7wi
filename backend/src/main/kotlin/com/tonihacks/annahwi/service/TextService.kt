@@ -46,7 +46,14 @@ class TextService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "title"): List<Text> {
         logger.info("Finding all texts, page: $page, size: $size, sortField: $sortField")
-        return textRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
+
+        val sortOption = Sort.by(sortField)
+        val paginationOption = Page.of(page, size)
+
+        return textRepository
+            .findAll(sortOption)
+            .page(paginationOption)
+            .list()
     }
     
     /**

@@ -36,7 +36,12 @@ class WordService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "arabic"): List<Word> {
         logger.info("Finding all words, page: $page, size: $size, sortField: $sortField")
-        return wordRepository.findAll(Sort.by(sortField)).page(Page.of(page, size)).list()
+        val sortOption = Sort.by(sortField)
+        val paginationOption = Page.of(page, size)
+        return wordRepository
+            .findAll(sortOption)
+            .page(paginationOption)
+            .list()
     }
     
     /**

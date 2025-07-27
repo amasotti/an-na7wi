@@ -26,7 +26,8 @@ class AnnotationRepository : PanacheRepository<Annotation> {
      * Find annotations by text ID
      */
     fun findByTextId(textId: UUID, page: Page): List<Annotation> {
-        return find("text.id", Sort.by("positionStart"), textId)
+        val sortOption = Sort.by("positionStart")
+        return find(query = "text.id", sort = sortOption, textId)
             .page(page)
             .list()
     }
@@ -34,8 +35,9 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     /**
      * Find annotations by type
      */
-    fun findByType(type: AnnotationType, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
-        return find("type", sort, type)
+    fun findByType(type: AnnotationType, page: Page, sort: String = "positionStart"): List<Annotation> {
+        val sortOption = Sort.by(sort)
+        return find("type", sortOption, type)
             .page(page)
             .list()
     }
@@ -43,7 +45,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     /**
      * Find annotations by text ID and type
      */
-    fun findByTextIdAndType(textId: UUID, type: AnnotationType, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
+    fun findByTextIdAndType(textId: UUID, type: AnnotationType, page: Page): List<Annotation> {
         return find("text.id = :textId AND type = :type", 
             Parameters.with("textId", textId).and("type", type))
             .page(page)

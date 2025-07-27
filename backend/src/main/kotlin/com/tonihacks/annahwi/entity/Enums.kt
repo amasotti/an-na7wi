@@ -16,6 +16,8 @@ enum class Dialect {
     TUNISIAN,
     MOROCCAN,
     EGYPTIAN,
+    GULF,
+    LEVANTINE,
     MSA; // Modern Standard Arabic
 
     companion object {
