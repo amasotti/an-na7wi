@@ -1,5 +1,4 @@
 import type { AnnotationType, Dialect, Difficulty, MasteryLevel } from './enums'
-import type { TextVersionSummary } from './textVersion'
 
 // Core entities
 export interface Text {

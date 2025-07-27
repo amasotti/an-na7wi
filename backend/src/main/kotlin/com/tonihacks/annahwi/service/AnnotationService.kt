@@ -21,10 +21,10 @@ import java.util.*
 class AnnotationService {
     
     @Inject
-    lateinit var annotationRepository: AnnotationRepository
+    private lateinit var annotationRepository: AnnotationRepository
     
     @Inject
-    lateinit var textService: TextService
+    private lateinit var textService: TextService
     
     private val logger = Logger.getLogger(AnnotationService::class.java)
     
@@ -142,7 +142,7 @@ class AnnotationService {
         logger.info("Creating new annotation for text ID: ${annotation.text.id}")
         
         // Verify that the text exists
-        val text = textService.findById(annotation.text.id!!)
+        val text = textService.findById(annotation.text.id)
         annotation.text = text
         
         // Set creation timestamp
@@ -211,14 +211,4 @@ class AnnotationService {
         logger.info("Deleting annotation with ID: $id")
         return annotationRepository.deleteById(id)
     }
-    
-    /**
-     * Delete all annotations for a text
-     */
-    @Transactional
-    fun deleteByTextId(textId: UUID): Long {
-        logger.info("Deleting all annotations for text ID: $textId")
-        return annotationRepository.deleteByTextId(textId)
-    }
-    
 }

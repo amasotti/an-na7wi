@@ -1,6 +1,6 @@
+import { textService } from '@/services/textService.ts'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { textService } from '../../services/textService'
 import { useTextStore } from '../textStore'
 
 // Mock the text service

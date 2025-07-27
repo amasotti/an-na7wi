@@ -461,10 +461,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.font-arabic {
-  font-family: 'Noto Naskh Arabic', 'Arabic Typesetting', 'Times New Roman', serif;
-}
-
 .animate-fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }

@@ -57,9 +57,7 @@ import { useTextStore } from '@/stores/textStore'
 import type { Annotation, AnnotationType, MasteryLevel, Text } from '@/types'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import AnnotationForm from '../annotation/AnnotationForm.vue'
-import BaseButton from '../common/BaseButton.vue'
 import BaseCard from '../common/BaseCard.vue'
-import BaseIcon from '../common/BaseIcon.vue'
 
 interface Props {
   displayText: Text | null

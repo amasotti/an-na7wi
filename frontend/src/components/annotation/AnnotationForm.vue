@@ -130,6 +130,7 @@
 </template>
 
 <script setup lang="ts">
+import BaseIcon from '@/components/common/BaseIcon.vue'
 import type { Annotation, AnnotationType, MasteryLevel } from '@/types'
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
 import { computed, ref, watch } from 'vue'

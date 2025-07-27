@@ -51,26 +51,6 @@ class AnnotationRepository : PanacheRepository<Annotation> {
             .setMaxResults(page.size)
             .resultList
     }
-    
-    /**
-     * Find annotations by type
-     */
-    fun findByType(type: AnnotationType, page: Page, sort: String = "createdAt"): List<Annotation> {
-        val sortOption = Sort.by(sort)
-        return find("type", sortOption, type)
-            .page(page)
-            .list()
-    }
-    
-    /**
-     * Find annotations by text ID and type
-     */
-    fun findByTextIdAndType(textId: UUID, type: AnnotationType, page: Page): List<Annotation> {
-        return find("text.id = :textId AND type = :type", 
-            Parameters.with("textId", textId).and("type", type))
-            .page(page)
-            .list()
-    }
 
     /**
      * Find annotations by needsReview flag with text data fetched

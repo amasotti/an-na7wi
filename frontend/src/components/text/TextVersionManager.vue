@@ -29,7 +29,7 @@
       <ul role="list" class="divide-y divide-gray-200">
         <li 
           v-for="version in versions" 
-          :key="version.id"
+          :key="version.id!!"
           class="relative p-4 hover:bg-gray-50 cursor-pointer transition-colors"
           :class="{ 'bg-blue-50 hover:bg-blue-50': isSelectedVersion(version.versionNumber) }"
           @click="selectVersion(version.versionNumber)"
@@ -67,7 +67,6 @@
 
 <script setup lang="ts">
 import type { TextVersion, TextVersionSummary } from '@/types'
-import { computed } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseCard from '../common/BaseCard.vue'
 import BaseIcon from '../common/BaseIcon.vue'

@@ -1,5 +1,3 @@
-import type { Text } from './entities'
-
 /**
  * Represents a summary of a text version, used in dropdowns
  */

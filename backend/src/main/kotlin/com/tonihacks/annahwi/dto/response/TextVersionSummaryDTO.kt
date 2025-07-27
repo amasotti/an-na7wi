@@ -12,17 +12,4 @@ data class TextVersionSummaryDTO(
     val versionNumber: Int,
     val updatedAt: LocalDateTime,
     val isCurrent: Boolean = false
-) {
-    companion object {
-        /**
-         * Converts a TextVersion entity to TextVersionSummaryDTO
-         */
-        fun fromEntity(version: TextVersion): TextVersionSummaryDTO {
-            return TextVersionSummaryDTO(
-                id = version.id,
-                versionNumber = version.versionNumber,
-                updatedAt = version.updatedAt
-            )
-        }
-    }
-}
+)
