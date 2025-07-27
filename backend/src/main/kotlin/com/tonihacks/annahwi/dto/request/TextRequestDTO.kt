@@ -1,7 +1,5 @@
 package com.tonihacks.annahwi.dto.request
 
-import com.fasterxml.jackson.annotation.JsonAlias
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
@@ -15,10 +13,10 @@ data class TextRequestDTO(
     val arabicContent: String,
     val transliteration: String? = null,
     val translation: String? = null,
+    val comments: String? = null,
     val tags: List<String> = listOf(),
     val difficulty: Difficulty,
-    val dialect: Dialect,
-    @JsonProperty("isPublic") @JsonAlias("public") val isPublic: Boolean = false
+    val dialect: Dialect
 ) {
     /**
      * Converts this DTO to a Text entity
@@ -30,10 +28,10 @@ data class TextRequestDTO(
         text.arabicContent = arabicContent
         text.transliteration = transliteration
         text.translation = translation
+        text.comments = comments
         text.tags = tags
         text.difficulty = difficulty
         text.dialect = dialect
-        text.isPublic = isPublic
         text.wordCount = calculateWordCount(arabicContent)
         return text
     }
@@ -46,10 +44,10 @@ data class TextRequestDTO(
         existingText.arabicContent = arabicContent
         existingText.transliteration = transliteration
         existingText.translation = translation
+        existingText.comments = comments
         existingText.tags = tags
         existingText.difficulty = difficulty
         existingText.dialect = dialect
-        existingText.isPublic = isPublic
         existingText.wordCount = calculateWordCount(arabicContent)
         return existingText
     }

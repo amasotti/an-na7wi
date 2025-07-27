@@ -3,8 +3,10 @@ package com.tonihacks.annahwi.service
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
+import com.tonihacks.annahwi.entity.TextVersion
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import com.tonihacks.annahwi.repository.TextRepository
+import com.tonihacks.annahwi.repository.TextVersionRepository
 import com.tonihacks.annahwi.repository.TextWordRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -30,6 +32,9 @@ class TextService {
     
     @Inject
     lateinit var annotationRepository: AnnotationRepository
+    
+    @Inject
+    lateinit var textVersionRepository: TextVersionRepository
     
     @Inject
     lateinit var wordService: WordService
@@ -93,13 +98,6 @@ class TextService {
         return textRepository.findByTag(tag, Page.of(page, size))
     }
     
-    /**
-     * Find public texts
-     */
-    fun findPublic(page: Int, size: Int): List<Text> {
-        logger.info("Finding public texts, page: $page, size: $size")
-        return textRepository.findPublic(Page.of(page, size))
-    }
     
     /**
      * Search texts by content
@@ -131,7 +129,7 @@ class TextService {
     }
     
     /**
-     * Update an existing text
+     * Update an existing text - creates a new version
      */
     @Transactional
     fun update(id: UUID, text: Text): Text {
@@ -139,15 +137,21 @@ class TextService {
         
         val existingText = findById(id)
         
+        // Create a new version before updating
+        createVersion(existingText)
+        
         // Update fields
         existingText.title = text.title
         existingText.arabicContent = text.arabicContent
         existingText.transliteration = text.transliteration
         existingText.translation = text.translation
+        existingText.comments = text.comments
         existingText.tags = text.tags
         existingText.difficulty = text.difficulty
         existingText.dialect = text.dialect
-        existingText.isPublic = text.isPublic
+        
+        // Increment version number
+        existingText.versionNumber += 1
         
         // Update timestamp
         existingText.updatedAt = LocalDateTime.now()
@@ -234,5 +238,69 @@ class TextService {
         val start = maxOf(0, position - contextSize)
         val end = minOf(words.size - 1, position + contextSize)
         return words.subList(start, end + 1).joinToString(" ")
+    }
+    
+    /**
+     * Create a version from current text state
+     */
+    private fun createVersion(text: Text) {
+        val version = TextVersion().apply {
+            textId = text.id!!
+            versionNumber = text.versionNumber
+            title = text.title
+            arabicContent = text.arabicContent
+            transliteration = text.transliteration
+            translation = text.translation
+            comments = text.comments
+            createdAt = text.updatedAt
+            updatedAt = text.updatedAt
+        }
+        
+        textVersionRepository.persist(version)
+    }
+    
+    /**
+     * Get all versions of a text
+     */
+    fun getTextVersions(textId: UUID): List<TextVersion> {
+        logger.info("Getting versions for text ID: $textId")
+        return textVersionRepository.findByTextId(textId)
+    }
+    
+    /**
+     * Get a specific version of a text
+     */
+    fun getTextVersion(textId: UUID, versionNumber: Int): TextVersion {
+        logger.info("Getting version $versionNumber for text ID: $textId")
+        return textVersionRepository.findByTextIdAndVersionNumber(textId, versionNumber)
+            ?: throw NotFoundException("Version $versionNumber not found for text $textId")
+    }
+    
+    /**
+     * Restore a version as the current version
+     */
+    @Transactional
+    fun restoreVersion(textId: UUID, versionNumber: Int): Text {
+        logger.info("Restoring version $versionNumber for text ID: $textId")
+        
+        val version = getTextVersion(textId, versionNumber)
+        val currentText = findById(textId)
+        
+        // Create a version of the current state before restoring
+        createVersion(currentText)
+        
+        // Restore the version content
+        currentText.title = version.title
+        currentText.arabicContent = version.arabicContent
+        currentText.transliteration = version.transliteration
+        currentText.translation = version.translation
+        currentText.comments = version.comments
+        currentText.versionNumber += 1
+        currentText.updatedAt = LocalDateTime.now()
+        currentText.wordCount = calculateWordCount(currentText.arabicContent)
+        
+        textRepository.persist(currentText)
+        
+        return currentText
     }
 }

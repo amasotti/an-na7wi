@@ -80,7 +80,6 @@ class SearchService {
         dialect: String?,
         difficulty: String?,
         tag: String?,
-        isPublic: Boolean?,
         page: Int,
         size: Int
     ): List<Text> {
@@ -112,10 +111,6 @@ class SearchService {
         
         if (!tag.isNullOrBlank()) {
             results = results.filter { text -> text.tags.any { it.contains(tag, ignoreCase = true) } }
-        }
-        
-        if (isPublic != null) {
-            results = results.filter { it.isPublic == isPublic }
         }
         
         // Apply pagination

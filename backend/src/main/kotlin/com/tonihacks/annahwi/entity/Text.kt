@@ -55,9 +55,6 @@ class Text : PanacheEntityBase {
     @Column(name = "dialect", nullable = false)
     lateinit var dialect: Dialect
     
-    @Column(name = "is_public", nullable = false)
-    var isPublic: Boolean = false
-    
     @Column(name = "word_count", nullable = false)
     var wordCount: Int = 0
     
@@ -66,6 +63,18 @@ class Text : PanacheEntityBase {
     
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now()
+    
+    @Column(name = "version_number", nullable = false)
+    var versionNumber: Int = 1
+    
+    @Column(name = "is_current_version", nullable = false)
+    var isCurrentVersion: Boolean = true
+    
+    @Column(name = "parent_text_id")
+    var parentTextId: UUID? = null
+    
+    @Column(name = "comments", columnDefinition = "TEXT")
+    var comments: String? = null
     
     @OneToMany(mappedBy = "text", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonIgnoreProperties("text")

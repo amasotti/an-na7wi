@@ -48,18 +48,17 @@ class SearchController {
         @QueryParam("dialect") dialect: String?,
         @QueryParam("difficulty") difficulty: String?,
         @QueryParam("tag") tag: String?,
-        @QueryParam("public") isPublic: Boolean?,
         @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/search/texts - query: $query, " +
                 "title: $title, dialect: $dialect, difficulty: $difficulty, " +
-                "tag: $tag, public: $isPublic, page: $page, size: $size")
+                "tag: $tag, page: $page, size: $size")
 
         val pageToZero = PaginationUtil.toZeroBasedPage(page)
         val search = searchService.advancedTextSearch(
             query, title, dialect,
-            difficulty, tag, isPublic,
+            difficulty, tag,
             pageToZero, size)
         return Response.ok(search).build()
     }

@@ -7,10 +7,13 @@ export interface Text {
   arabicContent: string
   transliteration?: string
   translation?: string
+  comments?: string
   tags: string[]
   difficulty: Difficulty
   dialect: Dialect
-  isPublic: boolean
+  versionNumber: number
+  isCurrentVersion: boolean
+  parentTextId?: string
   wordCount: number
   createdAt: string
   updatedAt: string

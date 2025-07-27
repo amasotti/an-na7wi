@@ -34,7 +34,6 @@ class TextControllerTest {
             tags = listOf("test", "example")
             difficulty = Difficulty.BEGINNER
             dialect = Dialect.MSA
-            isPublic = true
             wordCount = 4
             createdAt = LocalDateTime.now()
             updatedAt = LocalDateTime.now()
@@ -62,7 +61,6 @@ class TextControllerTest {
         assertEquals(text.tags, deserializedDTO.tags)
         assertEquals(text.difficulty, deserializedDTO.difficulty)
         assertEquals(text.dialect, deserializedDTO.dialect)
-        assertEquals(text.isPublic, deserializedDTO.isPublic)
         assertEquals(text.wordCount, deserializedDTO.wordCount)
     }
 
@@ -77,7 +75,6 @@ class TextControllerTest {
             tags = listOf("test", "example"),
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
-            isPublic = true
         )
 
         // Serialize to JSON
@@ -98,7 +95,6 @@ class TextControllerTest {
         assertEquals(requestDTO.tags, deserializedDTO.tags)
         assertEquals(requestDTO.difficulty, deserializedDTO.difficulty)
         assertEquals(requestDTO.dialect, deserializedDTO.dialect)
-        assertEquals(requestDTO.isPublic, deserializedDTO.isPublic)
     }
 
     @Test
@@ -113,7 +109,6 @@ class TextControllerTest {
             tags = listOf("test", "example")
             difficulty = Difficulty.BEGINNER
             dialect = Dialect.MSA
-            isPublic = true
             wordCount = 4
             createdAt = LocalDateTime.now()
             updatedAt = LocalDateTime.now()
@@ -132,7 +127,6 @@ class TextControllerTest {
         assertEquals(text.tags, dto.tags)
         assertEquals(text.difficulty, dto.difficulty)
         assertEquals(text.dialect, dto.dialect)
-        assertEquals(text.isPublic, dto.isPublic)
         assertEquals(text.wordCount, dto.wordCount)
     }
 
@@ -147,7 +141,6 @@ class TextControllerTest {
             tags = listOf("test", "example"),
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
-            isPublic = true
         )
 
         // Convert to entity
@@ -162,6 +155,5 @@ class TextControllerTest {
         assertEquals(requestDTO.tags, entity.tags)
         assertEquals(requestDTO.difficulty, entity.difficulty)
         assertEquals(requestDTO.dialect, entity.dialect)
-        assertEquals(requestDTO.isPublic, entity.isPublic)
     }
 }

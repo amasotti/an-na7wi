@@ -157,19 +157,6 @@ class TextController {
         return Response.ok(textDTOs).build()
     }
     
-    @GET
-    @Path("/public")
-    @Operation(summary = "Find public texts", description = "Returns public texts")
-    fun findPublic(
-        @QueryParam("page") @DefaultValue("1") page: Int,
-        @QueryParam("size") @DefaultValue("10") size: Int
-    ): Response {
-        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
-        logger.info("GET /api/v1/texts/public - page: $page, size: $size")
-        val texts = textService.findPublic(zeroBasedPage, size)
-        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
-        return Response.ok(textDTOs).build()
-    }
     
     @POST
     @Path("/{id}/analyze")
@@ -178,5 +165,32 @@ class TextController {
         logger.info("POST /api/v1/texts/$id/analyze")
         val analyzedText = textService.analyzeText(id)
         return Response.ok(TextResponseDTO.fromEntity(analyzedText)).build()
+    }
+    
+    @GET
+    @Path("/{id}/versions")
+    @Operation(summary = "Get text versions", description = "Returns all versions of a text")
+    fun getTextVersions(@PathParam("id") id: UUID): Response {
+        logger.info("GET /api/v1/texts/$id/versions")
+        val versions = textService.getTextVersions(id)
+        return Response.ok(versions).build()
+    }
+    
+    @GET
+    @Path("/{id}/versions/{versionNumber}")
+    @Operation(summary = "Get specific version", description = "Returns a specific version of a text")
+    fun getTextVersion(@PathParam("id") id: UUID, @PathParam("versionNumber") versionNumber: Int): Response {
+        logger.info("GET /api/v1/texts/$id/versions/$versionNumber")
+        val version = textService.getTextVersion(id, versionNumber)
+        return Response.ok(version).build()
+    }
+    
+    @POST
+    @Path("/{id}/restore/{versionNumber}")
+    @Operation(summary = "Restore version", description = "Restores a version as the current version")
+    fun restoreVersion(@PathParam("id") id: UUID, @PathParam("versionNumber") versionNumber: Int): Response {
+        logger.info("POST /api/v1/texts/$id/restore/$versionNumber")
+        val restoredText = textService.restoreVersion(id, versionNumber)
+        return Response.ok(TextResponseDTO.fromEntity(restoredText)).build()
     }
 }

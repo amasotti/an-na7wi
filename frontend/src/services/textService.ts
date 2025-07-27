@@ -8,18 +8,6 @@ export const textService = {
    */
   async getTexts(params: TextsRequest = {}): Promise<TextsResponse> {
     const response = await apiClient.get('/texts', { params })
-    
-    // Backend currently returns array directly instead of paginated response
-    if (Array.isArray(response.data)) {
-      return {
-        items: response.data,
-        totalCount: response.data.length,
-        page: params.page || 1,
-        pageSize: params.pageSize || 10,
-      }
-    }
-    
-    // Future: when backend returns proper paginated response
     return response.data
   },
 
@@ -90,5 +78,29 @@ export const textService = {
    */
   async deleteAnnotation(id: string): Promise<void> {
     await apiClient.delete(`/annotations/${id}`)
+  },
+
+  /**
+   * Get all versions of a text
+   */
+  async getTextVersions(textId: string): Promise<any[]> {
+    const response = await apiClient.get(`/texts/${textId}/versions`)
+    return response.data
+  },
+
+  /**
+   * Get a specific version of a text
+   */
+  async getTextVersion(textId: string, versionNumber: number): Promise<any> {
+    const response = await apiClient.get(`/texts/${textId}/versions/${versionNumber}`)
+    return response.data
+  },
+
+  /**
+   * Restore a version as the current version
+   */
+  async restoreVersion(textId: string, versionNumber: number): Promise<Text> {
+    const response = await apiClient.post(`/texts/${textId}/restore/${versionNumber}`)
+    return response.data
   },
 }

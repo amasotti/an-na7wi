@@ -62,14 +62,6 @@ class TextRepository : PanacheRepository<Text> {
             .list()
     }
     
-    /**
-     * Find public texts
-     */
-    fun findPublic(page: Page, sort: Sort = Sort.by("title")): List<Text> {
-        return find("isPublic = true", sort)
-            .page(page)
-            .list()
-    }
     
     /**
      * Search texts by content (case-insensitive)

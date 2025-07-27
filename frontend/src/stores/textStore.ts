@@ -9,6 +9,8 @@ export const useTextStore = defineStore('text', () => {
   const texts = ref<Text[]>([])
   const currentText = ref<Text | null>(null)
   const annotations = ref<Annotation[]>([])
+  const versions = ref<any[]>([])
+  const viewingVersion = ref<any>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
   const totalCount = ref(0)
@@ -232,11 +234,80 @@ export const useTextStore = defineStore('text', () => {
     fetchTexts()
   }
 
+  async function fetchTextVersions(textId: string) {
+    loading.value = true
+    error.value = null
+
+    try {
+      versions.value = await textService.getTextVersions(textId)
+    } catch (err) {
+      error.value = 'Failed to load text versions'
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function fetchTextVersion(textId: string, versionNumber: number) {
+    loading.value = true
+    error.value = null
+
+    try {
+      viewingVersion.value = await textService.getTextVersion(textId, versionNumber)
+    } catch (err) {
+      error.value = 'Failed to load text version'
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function restoreTextVersion(textId: string, versionNumber: number) {
+    loading.value = true
+    error.value = null
+
+    try {
+      const restoredText = await textService.restoreVersion(textId, versionNumber)
+      
+      // Update current text
+      currentText.value = restoredText
+      
+      // Update in the list
+      const index = texts.value.findIndex(t => t.id === textId)
+      if (index !== -1) {
+        texts.value[index] = restoredText
+      }
+      
+      // Clear viewing version
+      viewingVersion.value = null
+      
+      // Refresh versions
+      await fetchTextVersions(textId)
+      
+      return restoredText
+    } catch (err) {
+      error.value = 'Failed to restore text version'
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  function clearVersionData() {
+    versions.value = []
+    viewingVersion.value = null
+  }
+
   return {
     // State
     texts,
     currentText,
     annotations,
+    versions,
+    viewingVersion,
     loading,
     error,
     totalCount,
@@ -259,6 +330,10 @@ export const useTextStore = defineStore('text', () => {
     updateText,
     deleteText,
     analyzeText,
+    fetchTextVersions,
+    fetchTextVersion,
+    restoreTextVersion,
+    clearVersionData,
     setFilters,
     nextPage,
     prevPage,

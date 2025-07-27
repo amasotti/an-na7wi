@@ -32,7 +32,6 @@ class TextDTOSerializationTest {
             tags = listOf("test", "example")
             difficulty = Difficulty.BEGINNER
             dialect = Dialect.MSA // Modern Standard Arabic
-            isPublic = true
             wordCount = 4
             createdAt = LocalDateTime.now()
             updatedAt = LocalDateTime.now()
@@ -57,7 +56,6 @@ class TextDTOSerializationTest {
         assertEquals(text.tags, deserializedDTO.tags)
         assertEquals(text.difficulty, deserializedDTO.difficulty)
         assertEquals(text.dialect, deserializedDTO.dialect)
-        assertEquals(text.isPublic, deserializedDTO.isPublic)
         assertEquals(text.wordCount, deserializedDTO.wordCount)
     }
 
@@ -72,7 +70,6 @@ class TextDTOSerializationTest {
             tags = listOf("test", "example"),
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA, // Modern Standard Arabic
-            isPublic = true
         )
 
         // Serialize to JSON
@@ -90,7 +87,6 @@ class TextDTOSerializationTest {
         assertEquals(requestDTO.tags, deserializedDTO.tags)
         assertEquals(requestDTO.difficulty, deserializedDTO.difficulty)
         assertEquals(requestDTO.dialect, deserializedDTO.dialect)
-        assertEquals(requestDTO.isPublic, deserializedDTO.isPublic)
     }
 
     @Test
@@ -105,7 +101,6 @@ class TextDTOSerializationTest {
             tags = listOf("test", "example")
             difficulty = Difficulty.BEGINNER
             dialect = Dialect.MSA // Modern Standard Arabic
-            isPublic = true
             wordCount = 4
             createdAt = LocalDateTime.now()
             updatedAt = LocalDateTime.now()
@@ -124,7 +119,6 @@ class TextDTOSerializationTest {
         assertEquals(text.tags, dto.tags)
         assertEquals(text.difficulty, dto.difficulty)
         assertEquals(text.dialect, dto.dialect)
-        assertEquals(text.isPublic, dto.isPublic)
         assertEquals(text.wordCount, dto.wordCount)
     }
 
@@ -139,7 +133,6 @@ class TextDTOSerializationTest {
             tags = listOf("test", "example"),
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA, // Modern Standard Arabic
-            isPublic = true
         )
 
         // Convert to entity
@@ -154,6 +147,5 @@ class TextDTOSerializationTest {
         assertEquals(requestDTO.tags, entity.tags)
         assertEquals(requestDTO.difficulty, entity.difficulty)
         assertEquals(requestDTO.dialect, entity.dialect)
-        assertEquals(requestDTO.isPublic, entity.isPublic)
     }
 }
