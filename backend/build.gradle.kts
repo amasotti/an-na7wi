@@ -22,7 +22,7 @@ dependencies {
     testImplementation(libs.quarkus.junit5)
     testImplementation(libs.restassured)
     testImplementation(libs.testcontainers.postgresql)
-    testImplementation(libs.quarkus.jdbc.h2)
+    testImplementation(libs.testcontainers.junit.jupiter)
 }
 
 group = "com.tonihacks"

@@ -111,7 +111,7 @@ quarkus - flyway
 // Development & Testing
 quarkus - junit5
 testcontainers - postgresql
-quarkus - test - h2
+quarkus - test 
 
 // Utilities
 quarkus - smallrye - openapi          # API documentation

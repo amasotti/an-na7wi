@@ -1,6 +1,8 @@
 package com.tonihacks.annahwi.controller
 
+import com.tonihacks.annahwi.config.PostgreSQLTestResource
 import com.tonihacks.annahwi.entity.Dialect
+import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import org.hamcrest.Matchers.*
@@ -11,6 +13,7 @@ import jakarta.ws.rs.core.MediaType
 import java.util.UUID
 
 @QuarkusTest
+@QuarkusTestResource(PostgreSQLTestResource::class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class TextControllerErrorTest {
 

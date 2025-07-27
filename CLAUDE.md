@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Backend (Kotlin/Quarkus)
 - **Development mode**: `cd backend && ./gradlew quarkusDev`
 - **Build**: `cd backend && ./gradlew quarkusBuild`
-- **Test**: `cd backend && ./gradlew quarkusTest`
+- **Test**: `cd backend && ./gradlew test`
 
 ### Frontend (Vue.js/TypeScript)
 - **Development**: `cd frontend && pnpm run dev`
