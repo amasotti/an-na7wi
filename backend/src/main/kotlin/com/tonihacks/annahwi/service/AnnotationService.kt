@@ -5,7 +5,6 @@ import com.tonihacks.annahwi.entity.AnnotationType
 import com.tonihacks.annahwi.entity.MasteryLevel
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import io.quarkus.panache.common.Page
-import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
