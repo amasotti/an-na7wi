@@ -6,9 +6,9 @@ import type {
   MasteryLevel,
   Text,
   TextVersion,
-  TextVersionSummary
+  TextVersionSummary,
+  TextsRequest,
 } from '@/types'
-import type { TextsRequest } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { annotationService } from '../services/annotationService'
@@ -50,7 +50,7 @@ export const useTextStore = defineStore('text', () => {
     if (selectedVersion.value && !isViewingCurrentVersion.value) {
       return {
         ...currentText.value,
-        ...selectedVersion.value.content
+        ...selectedVersion.value.content,
       }
     }
     return currentText.value
@@ -102,7 +102,7 @@ export const useTextStore = defineStore('text', () => {
       currentText.value = await textService.getText(id)
       await fetchAnnotations(id)
       await fetchTextVersions(id)
-      
+
       // Reset to viewing current version
       isViewingCurrentVersion.value = true
       selectedVersion.value = null
@@ -123,15 +123,18 @@ export const useTextStore = defineStore('text', () => {
       annotations.value = []
     }
   }
-  
-  async function createAnnotation(textId: string, annotationData: {
-    anchorText: string
-    content: string
-    type: AnnotationType
-    masteryLevel?: MasteryLevel
-    needsReview?: boolean
-    color?: string
-  }) {
+
+  async function createAnnotation(
+    textId: string,
+    annotationData: {
+      anchorText: string
+      content: string
+      type: AnnotationType
+      masteryLevel?: MasteryLevel
+      needsReview?: boolean
+      color?: string
+    }
+  ) {
     try {
       const newAnnotation = await annotationService.createAnnotation(textId, annotationData)
       annotations.value.push(newAnnotation)
@@ -141,35 +144,38 @@ export const useTextStore = defineStore('text', () => {
       throw err
     }
   }
-  
-  async function updateAnnotation(id: string, annotationData: {
-    anchorText?: string
-    content?: string
-    type?: AnnotationType
-    masteryLevel?: MasteryLevel
-    needsReview?: boolean
-    color?: string
-  }) {
+
+  async function updateAnnotation(
+    id: string,
+    annotationData: {
+      anchorText?: string
+      content?: string
+      type?: AnnotationType
+      masteryLevel?: MasteryLevel
+      needsReview?: boolean
+      color?: string
+    }
+  ) {
     try {
       const updatedAnnotation = await annotationService.updateAnnotation(id, annotationData)
-      
+
       // Update in the list
       const index = annotations.value.findIndex(a => a.id === id)
       if (index !== -1) {
         annotations.value[index] = updatedAnnotation
       }
-      
+
       return updatedAnnotation
     } catch (err) {
       console.error('Failed to update annotation', err)
       throw err
     }
   }
-  
+
   async function deleteAnnotation(id: string) {
     try {
       await annotationService.deleteAnnotation(id)
-      
+
       // Remove from the list
       annotations.value = annotations.value.filter(a => a.id !== id)
     } catch (err) {
@@ -177,34 +183,38 @@ export const useTextStore = defineStore('text', () => {
       throw err
     }
   }
-  
+
   async function updateAnnotationMastery(id: string, masteryLevel: MasteryLevel) {
     try {
       const updatedAnnotation = await annotationService.updateMasteryLevel(id, masteryLevel)
-      
+
       // Update in the list
       const index = annotations.value.findIndex(a => a.id === id)
       if (index !== -1) {
         annotations.value[index] = updatedAnnotation
       }
-      
+
       return updatedAnnotation
     } catch (err) {
       console.error('Failed to update annotation mastery', err)
       throw err
     }
   }
-  
+
   async function updateAnnotationReview(id: string, needsReview: boolean, nextReviewDate?: string) {
     try {
-      const updatedAnnotation = await annotationService.updateReviewSettings(id, needsReview, nextReviewDate)
-      
+      const updatedAnnotation = await annotationService.updateReviewSettings(
+        id,
+        needsReview,
+        nextReviewDate
+      )
+
       // Update in the list
       const index = annotations.value.findIndex(a => a.id === id)
       if (index !== -1) {
         annotations.value[index] = updatedAnnotation
       }
-      
+
       return updatedAnnotation
     } catch (err) {
       console.error('Failed to update annotation review settings', err)
@@ -227,9 +237,8 @@ export const useTextStore = defineStore('text', () => {
     error.value = null
 
     try {
-      const version = await textService.getTextVersion(textId, versionNumber)
-      selectedVersion.value = version
-      
+      selectedVersion.value = await textService.getTextVersion(textId, versionNumber)
+
       // Check if this is the current version
       const currentVersion = textVersions.value.find(v => v.isCurrent)
       isViewingCurrentVersion.value = currentVersion?.versionNumber === versionNumber
@@ -247,17 +256,17 @@ export const useTextStore = defineStore('text', () => {
 
     try {
       const restoredText = await textService.restoreTextVersion(textId, versionNumber)
-      
+
       // Update current text
       currentText.value = restoredText
-      
+
       // Refresh versions
       await fetchTextVersions(textId)
-      
+
       // Reset to viewing current version
       isViewingCurrentVersion.value = true
       selectedVersion.value = null
-      
+
       return restoredText
     } catch (err) {
       error.value = 'Failed to restore text version'
@@ -305,7 +314,7 @@ export const useTextStore = defineStore('text', () => {
 
       // Refresh versions
       await fetchTextVersions(id)
-      
+
       // Reset to viewing current version
       isViewingCurrentVersion.value = true
       selectedVersion.value = null
@@ -437,7 +446,7 @@ export const useTextStore = defineStore('text', () => {
     analyzeText,
     setFilters,
     resetFilters,
-    
+
     // Annotation Actions
     fetchAnnotations,
     createAnnotation,

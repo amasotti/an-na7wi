@@ -26,7 +26,7 @@
     </div>
 
     <!-- Text Content -->
-    <div v-else-if="currentText" class="max-w-6xl mx-auto px-4 py-8">
+    <div v-else-if="currentText" class="max-w-12xl mx-auto px-6 py-8">
       <!-- Header -->
       <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
@@ -103,17 +103,20 @@
       </div>
 
       <!-- Main Content Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <!-- Text Content (3/4 width on large screens) -->
-        <div class="lg:col-span-3 space-y-6">
+      <div class="grid grid-cols-1 xl:grid-cols-5 lg:grid-cols-3 gap-10">
+        <!-- Text Content (3/5 width on xl screens, 2/3 width on lg screens) -->
+        <div class="xl:col-span-3 lg:col-span-2 space-y-6">
           <!-- Annotated Text Content -->
           <AnnotatedTextContent
+            ref="annotatedTextRef"
             :displayText="displayText"
             :annotations="annotations"
             :loading="loading"
             @annotation-created="handleAnnotationCreated"
             @annotation-updated="handleAnnotationUpdated"
             @annotation-deleted="handleAnnotationDeleted"
+            @text-selected="handleTextSelected"
+            @selection-cleared="handleSelectionCleared"
           />
           
           <!-- Version Manager -->
@@ -127,73 +130,13 @@
           />
         </div>
 
-        <!-- Annotations Panel (1/4 width on large screens) -->
-        <div v-if="showAnnotations" class="lg:col-span-1">
-          <BaseCard>
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold text-gray-900">Annotations</h2>
-              <BaseButton 
-                v-if="annotations.length > 0"
-                variant="outline" 
-                size="xs" 
-                @click="createNewAnnotation"
-              >
-                <BaseIcon size="xs" class="mr-1">
-                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </BaseIcon>
-                New
-              </BaseButton>
-            </div>
-            
-            <div v-if="annotations.length === 0" class="text-center py-8 text-gray-500">
-              <BaseIcon size="lg" class="mx-auto mb-2">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-              </BaseIcon>
-              <p>No annotations yet</p>
-              <p class="text-sm mt-1">Select text and click "Annotate" to add annotations</p>
-              <BaseButton 
-                variant="primary" 
-                size="sm" 
-                class="mt-4"
-                @click="createNewAnnotation"
-              >
-                <BaseIcon size="sm" class="mr-2">
-                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </BaseIcon>
-                Create Annotation
-              </BaseButton>
-            </div>
-
-            <div v-else class="space-y-4">
-              <div
-                v-for="annotation in annotations"
-                :key="annotation.id"
-                class="p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
-                @click="editAnnotation(annotation)"
-              >
-                <!-- Annotation header with type badge and date -->
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center space-x-2">
-                    <BaseBadge 
-                      :variant="getAnnotationColor(annotation.type)"
-                      size="sm"
-                    >
-                      {{ annotation.type }}
-                    </BaseBadge>
-                    <span class="text-xs text-gray-500">
-                      {{ formatAnnotationDate(annotation.createdAt) }}
-                    </span>
-                  </div>
-                </div>
-                <div class="flex items-start space-x-2">
-                  <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-600 mb-1">{{ annotation.anchorText }}</p>
-                    <p class="text-sm text-gray-700">{{ annotation.content }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </BaseCard>
+        <!-- Annotations Panel (2/5 width on xl screens, 1/3 width on lg screens) -->
+        <div v-if="showAnnotations" class="xl:col-span-2 lg:col-span-1">
+          <AnnotationPanel
+            :annotations="annotations"
+            @create-annotation="createNewAnnotation"
+            @edit-annotation="editAnnotation"
+          />
         </div>
       </div>
     </div>
@@ -225,22 +168,36 @@
       @submit="handleAnnotationSubmit"
       @delete="deleteAnnotation"
     />
+
+    <!-- Selection Toolbar (outside all containers for absolute positioning) -->
+    <div 
+      v-if="showSelectionToolbar" 
+      class="fixed bg-white shadow-lg border border-gray-200 rounded-lg p-2 z-[9999] flex items-center space-x-2"
+      :style="selectionToolbarStyle"
+    >
+      <BaseButton size="sm" @click="createAnnotationFromSelection">
+        <BaseIcon size="sm" class="mr-1">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+        </BaseIcon>
+        Annotate
+      </BaseButton>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel } from '@/types'
+import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Text } from '@/types'
 import { Dialect, Difficulty } from '@/types'
 import { computed, onMounted, ref } from 'vue'
+import AnnotationForm from '../components/annotation/AnnotationForm.vue'
+import AnnotationPanel from '../components/annotation/AnnotationPanel.vue'
 import BaseBadge from '../components/common/BaseBadge.vue'
 import BaseButton from '../components/common/BaseButton.vue'
-import BaseCard from '../components/common/BaseCard.vue'
 import BaseIcon from '../components/common/BaseIcon.vue'
+import AnnotatedTextContent from '../components/text/AnnotatedTextContent.vue'
 import TextDeleteModal from '../components/text/TextDeleteModal.vue'
 import TextEditModal from '../components/text/TextEditModal.vue'
 import TextVersionManager from '../components/text/TextVersionManager.vue'
-import AnnotatedTextContent from '../components/text/AnnotatedTextContent.vue'
-import AnnotationForm from '../components/annotation/AnnotationForm.vue'
 import { useTextStore } from '../stores/textStore'
 
 interface Props {
@@ -257,6 +214,12 @@ const showDeleteModal = ref(false)
 const showAnnotationModal = ref(false)
 const editingAnnotation = ref<Annotation | undefined>(undefined)
 
+// Selection toolbar state
+const showSelectionToolbar = ref(false)
+const selectionToolbarPosition = ref({ x: 0, y: 0 })
+// biome-ignore lint/suspicious/noExplicitAny: Allow any type for this expose to access the component instance
+const annotatedTextRef = ref<any>(null)
+
 // Computed properties from store
 const currentText = computed(() => textStore.currentText)
 const annotations = computed(() => textStore.annotations)
@@ -267,17 +230,7 @@ const selectedVersion = computed(() => textStore.selectedVersion)
 const isViewingCurrentVersion = computed(() => textStore.isViewingCurrentVersion)
 
 // Display the current text or selected version
-const displayText = computed(() => textStore.displayText)
-
-// Get the current version number to display
-const currentVersionNumber = computed(() => {
-  if (selectedVersion.value) {
-    return selectedVersion.value.versionNumber
-  }
-  
-  const currentVersion = textVersions.value.find(v => v.isCurrent)
-  return currentVersion?.versionNumber || 1
-})
+const displayText = computed((): Text => textStore.displayText)
 
 // Computed UI properties
 const difficultyColor = computed(() => {
@@ -310,44 +263,54 @@ const formattedDate = computed(() => {
   })
 })
 
+// Computed style for selection toolbar
+const selectionToolbarStyle = computed(() => {
+  const toolbarHeight = 50 // Approximate toolbar height
+  const toolbarWidth = 120 // Approximate toolbar width
+  const padding = 10
+
+  let { x, y } = selectionToolbarPosition.value
+
+  // Ensure toolbar doesn't go off screen horizontally
+  const maxX = window.innerWidth - toolbarWidth - padding
+  const minX = toolbarWidth / 2 + padding
+  x = Math.max(minX, Math.min(maxX, x))
+
+  // Ensure toolbar doesn't go off screen vertically
+  // If selection is too close to top, show below instead of above
+  if (y - toolbarHeight - padding < 0) {
+    y = y + 30 // Show below selection
+    return {
+      top: `${y}px`,
+      left: `${x}px`,
+      transform: 'translate(-50%, 0)',
+    }
+  }
+  // Show above selection
+  return {
+    top: `${y}px`,
+    left: `${x}px`,
+    transform: 'translate(-50%, -100%)',
+  }
+})
+
 // Methods
 const toggleAnnotations = () => {
   showAnnotations.value = !showAnnotations.value
 }
 
-const getAnnotationColor = (type: string): BadgeVariant => {
-  const colors = {
-    GRAMMAR: 'primary' as const,
-    VOCABULARY: 'success' as const,
-    CULTURAL: 'warning' as const,
-    PRONUNCIATION: 'error' as const,
-  }
-  return colors[type as keyof typeof colors] || 'neutral'
-}
-
-const formatAnnotationDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
 // Version methods
 const selectVersion = async (versionNumber: number) => {
   if (!currentText.value) return
-  
+
   await textStore.selectTextVersion(currentText.value.id, versionNumber)
 }
 
-
 const restoreVersion = async () => {
   if (!currentText.value || !selectedVersion.value) return
-  
+
   try {
-    await textStore.restoreTextVersion(
-      currentText.value.id, 
-      selectedVersion.value.versionNumber
-    )
+    await textStore.restoreTextVersion(currentText.value.id, selectedVersion.value.versionNumber)
   } catch (error) {
     console.error('Failed to restore version:', error)
   }
@@ -416,8 +379,6 @@ const editAnnotation = (annotation: Annotation) => {
 }
 
 const deleteAnnotation = async (id: string) => {
-  if (!confirm('Are you sure you want to delete this annotation?')) return
-  
   try {
     await textStore.deleteAnnotation(id)
   } catch (error) {
@@ -439,26 +400,37 @@ const handleAnnotationSubmit = async (data: {
   color?: string
 }) => {
   if (!currentText.value) return
-  
+
   try {
     if (editingAnnotation.value) {
       // Update existing annotation
-      await textStore.updateAnnotation(
-        editingAnnotation.value.id,
-        data
-      )
+      await textStore.updateAnnotation(editingAnnotation.value.id, data)
     } else {
       // Create new annotation
-      await textStore.createAnnotation(
-        currentText.value.id,
-        data
-      )
+      await textStore.createAnnotation(currentText.value.id, data)
     }
-    
+
     // Close the form
     closeAnnotationModal()
   } catch (error) {
     console.error('Failed to save annotation:', error)
+  }
+}
+
+// Selection toolbar handlers
+const handleTextSelected = (data: { selectedText: string; position: { x: number; y: number } }) => {
+  selectionToolbarPosition.value = data.position
+  showSelectionToolbar.value = true
+}
+
+const handleSelectionCleared = () => {
+  showSelectionToolbar.value = false
+}
+
+const createAnnotationFromSelection = () => {
+  if (annotatedTextRef.value) {
+    annotatedTextRef.value.createAnnotationFromSelection()
+    showSelectionToolbar.value = false
   }
 }
 

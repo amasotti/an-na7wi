@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-import { useTextStore } from '../textStore'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { textService } from '../../services/textService'
+import { useTextStore } from '../textStore'
 
 // Mock the text service
 vi.mock('../../services/textService', () => ({
@@ -11,8 +11,8 @@ vi.mock('../../services/textService', () => ({
     getTextVersions: vi.fn(),
     getTextVersion: vi.fn(),
     restoreTextVersion: vi.fn(),
-    updateText: vi.fn()
-  }
+    updateText: vi.fn(),
+  },
 }))
 
 describe('textStore', () => {
@@ -28,7 +28,7 @@ describe('textStore', () => {
       const mockAnnotations = [{ id: 'anno-1', textId: 'text-123' }]
       const mockVersions = [
         { id: 'ver-1', versionNumber: 1, isCurrent: true },
-        { id: 'ver-2', versionNumber: 2, isCurrent: false }
+        { id: 'ver-2', versionNumber: 2, isCurrent: false },
       ]
 
       // Mock service responses
@@ -60,13 +60,13 @@ describe('textStore', () => {
         textId: 'text-123',
         versionNumber: 2,
         isCurrent: false,
-        content: { title: 'Version 2', arabicContent: 'Content 2' }
+        content: { title: 'Version 2', arabicContent: 'Content 2' },
       }
-      
+
       // Set up initial state
       store.textVersions = [
         { id: 'ver-1', versionNumber: 1, isCurrent: true, updatedAt: '2023-01-01' },
-        { id: 'ver-2', versionNumber: 2, isCurrent: false, updatedAt: '2023-01-02' }
+        { id: 'ver-2', versionNumber: 2, isCurrent: false, updatedAt: '2023-01-02' },
       ]
 
       // Mock service response
@@ -89,13 +89,13 @@ describe('textStore', () => {
         textId: 'text-123',
         versionNumber: 1,
         isCurrent: true,
-        content: { title: 'Version 1', arabicContent: 'Content 1' }
+        content: { title: 'Version 1', arabicContent: 'Content 1' },
       }
-      
+
       // Set up initial state
       store.textVersions = [
         { id: 'ver-1', versionNumber: 1, isCurrent: true, updatedAt: '2023-01-01' },
-        { id: 'ver-2', versionNumber: 2, isCurrent: false, updatedAt: '2023-01-02' }
+        { id: 'ver-2', versionNumber: 2, isCurrent: false, updatedAt: '2023-01-02' },
       ]
 
       // Mock service response
@@ -116,9 +116,9 @@ describe('textStore', () => {
       const mockVersions = [
         { id: 'ver-3', versionNumber: 3, isCurrent: true, updatedAt: '2023-01-03' },
         { id: 'ver-1', versionNumber: 1, isCurrent: false, updatedAt: '2023-01-01' },
-        { id: 'ver-2', versionNumber: 2, isCurrent: false, updatedAt: '2023-01-02' }
+        { id: 'ver-2', versionNumber: 2, isCurrent: false, updatedAt: '2023-01-02' },
       ]
-      
+
       // Set up initial state
       store.currentText = { id: 'text-123', title: 'Original Text' }
       store.selectedVersion = {
@@ -128,7 +128,7 @@ describe('textStore', () => {
         isCurrent: false,
         content: { title: 'Version 2', arabicContent: 'Content 2' },
         updatedAt: '2023-01-02',
-        createdAt: '2023-01-02'
+        createdAt: '2023-01-02',
       }
       store.isViewingCurrentVersion = false
 
@@ -153,9 +153,13 @@ describe('textStore', () => {
   describe('displayText', () => {
     it('should return current text when viewing current version', () => {
       const store = useTextStore()
-      
+
       // Set up state
-      store.currentText = { id: 'text-123', title: 'Current Text', arabicContent: 'Current Content' }
+      store.currentText = {
+        id: 'text-123',
+        title: 'Current Text',
+        arabicContent: 'Current Content',
+      }
       store.selectedVersion = null
       store.isViewingCurrentVersion = true
 
@@ -165,42 +169,42 @@ describe('textStore', () => {
 
     it('should return merged text with selected version content when not viewing current version', () => {
       const store = useTextStore()
-      
+
       // Set up state
-      store.currentText = { 
-        id: 'text-123', 
-        title: 'Current Text', 
+      store.currentText = {
+        id: 'text-123',
+        title: 'Current Text',
         arabicContent: 'Current Content',
         tags: ['tag1', 'tag2'],
         difficulty: 'BEGINNER',
-        dialect: 'MSA'
+        dialect: 'MSA',
       }
       store.selectedVersion = {
         id: 'ver-2',
         textId: 'text-123',
         versionNumber: 2,
         isCurrent: false,
-        content: { 
-          title: 'Old Title', 
+        content: {
+          title: 'Old Title',
           arabicContent: 'Old Content',
           transliteration: 'Old Transliteration',
-          translation: 'Old Translation'
+          translation: 'Old Translation',
         },
         updatedAt: '2023-01-02',
-        createdAt: '2023-01-02'
+        createdAt: '2023-01-02',
       }
       store.isViewingCurrentVersion = false
 
       // Verify computed property returns merged object with version content
       expect(store.displayText).toEqual({
-        id: 'text-123', 
-        title: 'Old Title', 
+        id: 'text-123',
+        title: 'Old Title',
         arabicContent: 'Old Content',
         transliteration: 'Old Transliteration',
         translation: 'Old Translation',
         tags: ['tag1', 'tag2'],
         difficulty: 'BEGINNER',
-        dialect: 'MSA'
+        dialect: 'MSA',
       })
     })
   })

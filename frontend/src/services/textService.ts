@@ -62,11 +62,11 @@ export const textService = {
    */
   async getTextVersions(textId: string): Promise<TextVersionSummary[]> {
     const response = await apiClient.get(`/texts/${textId}/versions`)
-    return response.data.map((version: any) => ({
+    return response.data.map((version: TextVersion) => ({
       id: version.id,
       versionNumber: version.versionNumber,
       updatedAt: version.updatedAt,
-      isCurrent: version.isCurrent
+      isCurrent: version.isCurrent,
     }))
   },
 
@@ -82,7 +82,7 @@ export const textService = {
       updatedAt: response.data.updatedAt,
       createdAt: response.data.createdAt,
       isCurrent: response.data.isCurrent,
-      content: response.data.content
+      content: response.data.content,
     }
   },
 
@@ -92,5 +92,5 @@ export const textService = {
   async restoreTextVersion(textId: string, versionNumber: number): Promise<Text> {
     const response = await apiClient.post(`/texts/${textId}/restore/${versionNumber}`)
     return response.data
-  }
+  },
 }

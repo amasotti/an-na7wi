@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { textService } from '../textService'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import apiClient from '../api'
+import { textService } from '../textService'
 
 // Mock the API client
 vi.mock('../api', () => ({
@@ -8,8 +8,8 @@ vi.mock('../api', () => ({
     get: vi.fn(),
     post: vi.fn(),
     put: vi.fn(),
-    delete: vi.fn()
-  }
+    delete: vi.fn(),
+  },
 }))
 
 describe('textService', () => {
@@ -24,19 +24,19 @@ describe('textService', () => {
           id: '123',
           versionNumber: 1,
           updatedAt: '2023-01-01T00:00:00Z',
-          isCurrent: true
+          isCurrent: true,
         },
         {
           id: '456',
           versionNumber: 2,
           updatedAt: '2023-01-02T00:00:00Z',
-          isCurrent: false
-        }
+          isCurrent: false,
+        },
       ]
 
       // Mock the API response
       vi.mocked(apiClient.get).mockResolvedValue({
-        data: mockVersions
+        data: mockVersions,
       })
 
       const result = await textService.getTextVersions('text-123')
@@ -50,14 +50,14 @@ describe('textService', () => {
           id: '123',
           versionNumber: 1,
           updatedAt: '2023-01-01T00:00:00Z',
-          isCurrent: true
+          isCurrent: true,
         },
         {
           id: '456',
           versionNumber: 2,
           updatedAt: '2023-01-02T00:00:00Z',
-          isCurrent: false
-        }
+          isCurrent: false,
+        },
       ])
     })
   })
@@ -75,13 +75,13 @@ describe('textService', () => {
           title: 'Test Title',
           arabicContent: 'Arabic content',
           transliteration: 'Transliteration',
-          translation: 'Translation'
-        }
+          translation: 'Translation',
+        },
       }
 
       // Mock the API response
       vi.mocked(apiClient.get).mockResolvedValue({
-        data: mockVersion
+        data: mockVersion,
       })
 
       const result = await textService.getTextVersion('text-123', 1)
@@ -101,8 +101,8 @@ describe('textService', () => {
           title: 'Test Title',
           arabicContent: 'Arabic content',
           transliteration: 'Transliteration',
-          translation: 'Translation'
-        }
+          translation: 'Translation',
+        },
       })
     })
   })
@@ -121,12 +121,12 @@ describe('textService', () => {
         dialect: 'MSA',
         wordCount: 10,
         createdAt: '2023-01-01T00:00:00Z',
-        updatedAt: '2023-01-03T00:00:00Z'
+        updatedAt: '2023-01-03T00:00:00Z',
       }
 
       // Mock the API response
       vi.mocked(apiClient.post).mockResolvedValue({
-        data: mockRestoredText
+        data: mockRestoredText,
       })
 
       const result = await textService.restoreTextVersion('text-123', 1)

@@ -81,13 +81,13 @@ export const annotationService = {
    * Update the review settings of an annotation
    */
   async updateReviewSettings(
-    id: string, 
-    needsReview: boolean, 
+    id: string,
+    needsReview: boolean,
     nextReviewDate?: string
   ): Promise<Annotation> {
-    const request: ReviewUpdateRequest = { 
-      needsReview, 
-      nextReviewDate 
+    const request: ReviewUpdateRequest = {
+      needsReview,
+      nextReviewDate,
     }
     const response = await apiClient.put(`/annotations/${id}/review`, request)
     return response.data
@@ -99,5 +99,5 @@ export const annotationService = {
   async getAnnotationsForReview(): Promise<Annotation[]> {
     const response = await apiClient.get('/annotations/review')
     return response.data
-  }
+  },
 }

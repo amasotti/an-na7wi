@@ -11,6 +11,8 @@ export const buttonClasses = {
     outline:
       'border-2 border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-primary-500 hover:text-primary-700 focus:ring-gray-300',
     ghost: 'text-gray-600 hover:text-primary-700 hover:bg-primary-50 focus:ring-primary-300',
+    danger:
+      'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl focus:ring-red-500',
   },
 
   sizes: {

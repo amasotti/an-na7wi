@@ -66,10 +66,10 @@
 </template>
 
 <script setup lang="ts">
+import type { TextVersion, TextVersionSummary } from '@/types'
 import { computed } from 'vue'
-import type { TextVersionSummary, TextVersion } from '@/types'
-import BaseCard from '../common/BaseCard.vue'
 import BaseButton from '../common/BaseButton.vue'
+import BaseCard from '../common/BaseCard.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 
 interface Props {
@@ -97,13 +97,13 @@ const isSelectedVersion = (versionNumber: number): boolean => {
   if (props.selectedVersion) {
     return props.selectedVersion.versionNumber === versionNumber
   }
-  
+
   // If no version is selected, check if this is the current version
   if (props.isViewingCurrentVersion) {
     const currentVersion = props.versions.find(v => v.isCurrent)
     return currentVersion?.versionNumber === versionNumber
   }
-  
+
   return false
 }
 
@@ -114,7 +114,7 @@ const formatVersionDate = (dateString: string) => {
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 </script>

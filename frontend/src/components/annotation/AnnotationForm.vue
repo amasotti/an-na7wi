@@ -130,9 +130,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
 import type { Annotation, AnnotationType, MasteryLevel } from '@/types'
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
+import { computed, ref, watch } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseModal from '../common/BaseModal.vue'
 
@@ -147,19 +147,22 @@ const props = withDefaults(defineProps<Props>(), {
   open: false,
   annotation: undefined,
   loading: false,
-  canEditAnchorText: false
+  canEditAnchorText: false,
 })
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'submit', data: {
-    anchorText: string
-    content: string
-    type: AnnotationType
-    masteryLevel: MasteryLevel
-    needsReview: boolean
-    color?: string
-  }): void
+  (
+    e: 'submit',
+    data: {
+      anchorText: string
+      content: string
+      type: AnnotationType
+      masteryLevel: MasteryLevel
+      needsReview: boolean
+      color?: string
+    }
+  ): void
   (e: 'delete', id: string): void
 }>()
 
@@ -170,7 +173,7 @@ const form = ref({
   type: AnnotationTypeEnum.VOCABULARY as AnnotationType,
   masteryLevel: MasteryLevelEnum.NEW as MasteryLevel,
   needsReview: false,
-  color: ''
+  color: '#32a7cf',
 })
 
 // Computed properties
@@ -181,45 +184,52 @@ const annotationTypes = Object.values(AnnotationTypeEnum)
 const masteryLevels = Object.values(MasteryLevelEnum)
 
 // Watch for changes in the annotation prop
-watch(() => props.annotation, (newAnnotation) => {
-  if (newAnnotation) {
-    form.value = {
-      anchorText: newAnnotation.anchorText,
-      content: newAnnotation.content,
-      type: newAnnotation.type,
-      masteryLevel: newAnnotation.masteryLevel,
-      needsReview: newAnnotation.needsReview,
-      color: newAnnotation.color || ''
-    }
-  } else {
-    // Reset form for new annotation
-    form.value = {
-      anchorText: '',
-      content: '',
-      type: AnnotationTypeEnum.VOCABULARY,
-      masteryLevel: MasteryLevelEnum.NEW,
-      needsReview: false,
-      color: ''
-    }
-  }
-}, { immediate: true })
-
-// Watch for open state changes
-watch(() => props.open, (isOpen) => {
-  if (!isOpen) {
-    // Reset form when modal is closed
-    if (!props.annotation) {
+watch(
+  () => props.annotation,
+  newAnnotation => {
+    if (newAnnotation) {
+      form.value = {
+        anchorText: newAnnotation.anchorText,
+        content: newAnnotation.content,
+        type: newAnnotation.type,
+        masteryLevel: newAnnotation.masteryLevel,
+        needsReview: newAnnotation.needsReview,
+        color: newAnnotation.color || '',
+      }
+    } else {
+      // Reset form for new annotation
       form.value = {
         anchorText: '',
         content: '',
         type: AnnotationTypeEnum.VOCABULARY,
         masteryLevel: MasteryLevelEnum.NEW,
         needsReview: false,
-        color: ''
+        color: '#32a7cf',
+      }
+    }
+  },
+  { immediate: true }
+)
+
+// Watch for open state changes
+watch(
+  () => props.open,
+  isOpen => {
+    if (!isOpen) {
+      // Reset form when modal is closed
+      if (!props.annotation) {
+        form.value = {
+          anchorText: '',
+          content: '',
+          type: AnnotationTypeEnum.VOCABULARY,
+          masteryLevel: MasteryLevelEnum.NEW,
+          needsReview: false,
+          color: '#32a7cf',
+        }
       }
     }
   }
-})
+)
 
 // Methods
 const handleSubmit = () => {
@@ -229,7 +239,7 @@ const handleSubmit = () => {
     type: form.value.type,
     masteryLevel: form.value.masteryLevel,
     needsReview: form.value.needsReview,
-    color: form.value.color || undefined
+    color: form.value.color || undefined,
   })
 }
 
@@ -238,9 +248,11 @@ const handleClose = () => {
 }
 
 const handleDelete = () => {
-  if (props.annotation && props.annotation.id) {
+  if (props.annotation?.id) {
     if (confirm('Are you sure you want to delete this annotation?')) {
       emit('delete', props.annotation.id)
+      // Close the modal immediately after confirming deletion
+      emit('close')
     }
   }
 }
