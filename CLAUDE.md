@@ -23,7 +23,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Format**: `cd frontend && pnpm run format`
 
 ### Database
-- **Start only database**: `docker-compose up postgres`
+- **Start only database**: `docker-compose up postgres` or `make start-db`
+- **Clean Database**: `make clean-db`
 
 ## Architecture Overview
 
@@ -55,7 +56,6 @@ All backend APIs are under `/api/v1/` with these main endpoints:
 - `/texts` - Text CRUD and analysis
 - `/words` - Vocabulary management and root-based searches
 - `/annotations` - Text annotation management  
-- `/search` - Global and advanced search functionality
 
 ### Database Features
 - PostgreSQL extensions: uuid-ossp, pg_trgm (trigram search), unaccent
@@ -90,15 +90,6 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 - Frontend: Vitest for unit testing
 - Aim for 70% code coverage
 
-## Development Notes
-
-### Database Migrations
+## Database Migrations
 - Flyway migrations in `backend/src/main/resources/db/migration/`
 - Use meaningful versioning (V001, V002, etc.)
-- Include rollback scripts where applicable
-
-### Docker Development
-- Multi-stage builds for optimized production images
-- PostgreSQL 17 in container with persistent volumes
-- Environment variables configured through docker-compose
-- Health checks implemented for all services
