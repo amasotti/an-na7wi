@@ -38,6 +38,7 @@
           <BaseIcon size="sm" class="transition-transform duration-200" :class="{ 'rotate-90': mobileMenuOpen }">
             <path
               v-if="!mobileMenuOpen"
+              fill="none"
               stroke="currentColor"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -46,6 +47,7 @@
             />
             <path
               v-else
+              fill="none"
               stroke="currentColor"
               stroke-linecap="round"
               stroke-linejoin="round"

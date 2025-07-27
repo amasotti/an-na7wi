@@ -21,7 +21,7 @@
         size="lg"
       >
         <BaseIcon size="sm" class="mr-2">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </BaseIcon>
         Create Your First Text
       </BaseButton>
@@ -33,7 +33,7 @@
         size="lg"
       >
         <BaseIcon size="sm" class="mr-2">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </BaseIcon>
         Clear Filters
       </BaseButton>
@@ -44,7 +44,7 @@
         @click="$emit('browse-examples')"
       >
         <BaseIcon size="sm" class="mr-2">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </BaseIcon>
         Browse Examples
       </BaseButton>
@@ -88,6 +88,7 @@ const iconComponent = computed(() => {
 // Icons
 const searchIcon = () =>
   h('path', {
+    fill: 'none',
     stroke: 'currentColor',
     'stroke-linecap': 'round',
     'stroke-linejoin': 'round',
@@ -97,6 +98,7 @@ const searchIcon = () =>
 
 const documentIcon = () =>
   h('path', {
+    fill: 'none',
     stroke: 'currentColor',
     'stroke-linecap': 'round',
     'stroke-linejoin': 'round',

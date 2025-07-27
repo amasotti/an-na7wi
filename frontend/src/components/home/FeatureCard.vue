@@ -29,7 +29,7 @@
            :class="ctaClasses">
         <span>Learn More</span>
         <BaseIcon size="sm" class="ml-2 transition-transform duration-300 group-hover:translate-x-1">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </BaseIcon>
       </div>
     </div>
@@ -88,6 +88,7 @@ const ctaClasses = computed(() => {
 const iconComponents = {
   'document-text': () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -96,6 +97,7 @@ const iconComponents = {
     }),
   'book-open': () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -104,6 +106,7 @@ const iconComponents = {
     }),
   'magnifying-glass': () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -112,6 +115,7 @@ const iconComponents = {
     }),
   globe: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -120,6 +124,7 @@ const iconComponents = {
     }),
   annotation: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -128,6 +133,7 @@ const iconComponents = {
     }),
   chart: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',

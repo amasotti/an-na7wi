@@ -21,7 +21,7 @@
         
         <BaseButton @click="showCreateModal = true">
           <BaseIcon size="sm" class="mr-2">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </BaseIcon>
           Add New Text
         </BaseButton>
@@ -109,7 +109,7 @@
     <!-- Empty State -->
     <EmptyState
       v-else-if="!loading && texts"
-      :has-filters="hasActiveFilters"
+      :has-filters="!!hasActiveFilters"
       @create="showCreateModal = true"
       @clear-filters="clearFilters"
     />
@@ -153,8 +153,8 @@ import TextCardSkeleton from '../components/text/TextCardSkeleton.vue'
 import TextCreateModal from '../components/text/TextCreateModal.vue'
 import { useTextStore } from '../stores/textStore'
 import { combineClasses, layoutClasses } from '../styles/component-classes'
-import { Dialect, Difficulty } from '../types'
-import type { SelectOption } from '../types/ui'
+import { Dialect, Difficulty } from '@/types'
+import type { SelectOption } from '@/types'
 
 const textStore = useTextStore()
 const showCreateModal = ref(false)
@@ -222,6 +222,7 @@ const gridClasses = computed(() => {
 // Icons
 const gridIcon = () =>
   h('path', {
+    fill: 'none',
     stroke: 'currentColor',
     'stroke-linecap': 'round',
     'stroke-linejoin': 'round',
@@ -231,6 +232,7 @@ const gridIcon = () =>
 
 const listIcon = () =>
   h('path', {
+    fill: 'none',
     stroke: 'currentColor',
     'stroke-linecap': 'round',
     'stroke-linejoin': 'round',

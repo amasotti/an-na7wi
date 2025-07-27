@@ -19,7 +19,7 @@
     <!-- Custom dropdown arrow -->
     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
       <BaseIcon size="sm" class="text-gray-400">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </BaseIcon>
     </div>
   </div>

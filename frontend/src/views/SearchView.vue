@@ -3,7 +3,7 @@
     <div class="text-center py-16">
       <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-accent-500 to-accent-600 rounded-3xl flex items-center justify-center shadow-xl">
         <BaseIcon size="xl" class="text-white">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </BaseIcon>
       </div>
       
@@ -14,7 +14,7 @@
       
       <div class="inline-flex items-center px-6 py-3 bg-accent-100 text-accent-800 rounded-2xl font-medium">
         <BaseIcon size="sm" class="mr-2">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </BaseIcon>
         Coming Soon - Under Development
       </div>

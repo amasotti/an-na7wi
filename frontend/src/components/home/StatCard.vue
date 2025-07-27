@@ -39,6 +39,7 @@ const props = defineProps<Props>()
 const iconComponents = {
   'document-text': () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -47,6 +48,7 @@ const iconComponents = {
     }),
   'book-open': () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -55,6 +57,7 @@ const iconComponents = {
     }),
   globe: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -63,6 +66,7 @@ const iconComponents = {
     }),
   chart: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',

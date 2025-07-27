@@ -34,7 +34,7 @@
           @click="clearInput"
         >
           <BaseIcon size="sm">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </BaseIcon>
         </button>
         <BaseIcon v-else-if="iconRight" :class="iconClasses">
@@ -46,7 +46,7 @@
     <div v-if="error || hint" class="text-sm">
       <p v-if="error" class="text-red-600 flex items-center">
         <BaseIcon size="sm" class="mr-1 flex-shrink-0">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
         </BaseIcon>
         {{ error }}
       </p>

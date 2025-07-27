@@ -1,4 +1,4 @@
-import type { Annotation, Text, Word } from './entities'
+import type { Text, Word } from './entities'
 import type { Dialect, Difficulty, PartOfSpeech } from './enums'
 
 // API Request/Response types

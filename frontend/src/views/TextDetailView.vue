@@ -16,7 +16,7 @@
     <!-- Error State -->
     <div v-else-if="error" class="max-w-2xl mx-auto px-4 py-16 text-center">
       <BaseIcon size="xl" class="mx-auto mb-4 text-red-500">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </BaseIcon>
       <h1 class="text-2xl font-bold text-gray-900 mb-2">Text Not Found</h1>
       <p class="text-gray-600 mb-6">{{ error }}</p>
@@ -32,7 +32,7 @@
         <div class="flex items-center justify-between mb-4">
           <router-link to="/texts" class="text-primary-600 hover:text-primary-700 font-medium flex items-center">
             <BaseIcon size="sm" class="mr-2">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </BaseIcon>
             Back to Texts
           </router-link>
@@ -52,7 +52,7 @@
               </select>
               <BaseButton v-if="viewingVersion" variant="outline" size="sm" @click="restoreVersion">
                 <BaseIcon size="sm" class="mr-1">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </BaseIcon>
                 Restore
               </BaseButton>
@@ -60,14 +60,14 @@
             
             <BaseButton variant="outline" size="sm" @click="toggleAnnotations">
               <BaseIcon size="sm" class="mr-2">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                <path fill="none"  stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
               </BaseIcon>
               {{ showAnnotations ? 'Hide' : 'Show' }} Annotations
             </BaseButton>
             
             <BaseButton variant="outline" size="sm" @click="analyzeText">
               <BaseIcon size="sm" class="mr-2">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </BaseIcon>
               Analyze
             </BaseButton>
@@ -88,7 +88,7 @@
           
           <div class="flex items-center">
             <BaseIcon size="xs" class="mr-1">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </BaseIcon>
             {{ currentText.wordCount }} words
           </div>
@@ -151,7 +151,7 @@
             
             <div v-if="annotations.length === 0" class="text-center py-8 text-gray-500">
               <BaseIcon size="lg" class="mx-auto mb-2">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
               </BaseIcon>
               <p>No annotations yet</p>
               <p class="text-sm mt-1">Annotations will appear here when available</p>
@@ -191,8 +191,8 @@ import BaseButton from '../components/common/BaseButton.vue'
 import BaseCard from '../components/common/BaseCard.vue'
 import BaseIcon from '../components/common/BaseIcon.vue'
 import { useTextStore } from '../stores/textStore'
-import { Dialect, Difficulty } from '../types'
-import type { BadgeVariant } from '../types'
+import { Dialect, Difficulty } from '@/types'
+import type { BadgeVariant } from '@/types'
 
 interface Props {
   id: string

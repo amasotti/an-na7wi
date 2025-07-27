@@ -8,7 +8,7 @@
       :class="{ 'pagination-btn-disabled': currentPage <= 1 }"
     >
       <BaseIcon size="sm">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </BaseIcon>
     </button>
 
@@ -61,7 +61,7 @@
       :class="{ 'pagination-btn-disabled': currentPage >= totalPages }"
     >
       <BaseIcon size="sm">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </BaseIcon>
     </button>
   </nav>

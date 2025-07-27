@@ -9,6 +9,7 @@
       <BaseIcon :size="mobile ? 'md' : 'sm'" class="transition-colors">
         <path
           v-if="icon === 'HomeIcon'"
+          fill="none"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -17,6 +18,7 @@
         />
         <path
           v-else-if="icon === 'DocumentTextIcon'"
+          fill="none"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -25,6 +27,7 @@
         />
         <path
           v-else-if="icon === 'BookOpenIcon'"
+          fill="none"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -33,6 +36,7 @@
         />
         <path
           v-else-if="icon === 'MagnifyingGlassIcon'"
+          fill="none"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"

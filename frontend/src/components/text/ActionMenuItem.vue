@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { computed, h } from 'vue'
-import { combineClasses } from '../../styles/component-classes'
+import { combineClasses } from '@/styles/component-classes.ts'
 import BaseIcon from '../common/BaseIcon.vue'
 
 interface Props {
@@ -46,6 +46,7 @@ const iconClasses = computed(() => 'mr-3')
 const iconComponents = {
   eye: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -54,6 +55,7 @@ const iconComponents = {
     }),
   pencil: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -62,6 +64,7 @@ const iconComponents = {
     }),
   duplicate: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
@@ -70,6 +73,7 @@ const iconComponents = {
     }),
   trash: () =>
     h('path', {
+      fill: 'none',
       stroke: 'currentColor',
       'stroke-linecap': 'round',
       'stroke-linejoin': 'round',
