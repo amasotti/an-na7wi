@@ -1,4 +1,4 @@
-import type { Annotation, Text, TextVersion, TextVersionSummary } from '@/types'
+import type { Annotation, Text } from '@/types'
 import type { TextsRequest, TextsResponse } from '@/types'
 import apiClient from './api'
 
@@ -54,30 +54,6 @@ export const textService = {
    */
   async getAnnotations(textId: string): Promise<Annotation[]> {
     const response = await apiClient.get(`/annotations/text/${textId}`)
-    return response.data
-  },
-
-  /**
-   * Get all version summaries of a text (lightweight)
-   */
-  async getTextVersions(textId: string): Promise<TextVersionSummary[]> {
-    const response = await apiClient.get(`/texts/${textId}/versions`)
-    return response.data
-  },
-
-  /**
-   * Get a specific version of a text
-   */
-  async getTextVersion(textId: string, versionNumber: number): Promise<TextVersion> {
-    const response = await apiClient.get(`/texts/${textId}/versions/${versionNumber}`)
-    return response.data
-  },
-
-  /**
-   * Restore a version as the current version
-   */
-  async restoreVersion(textId: string, versionNumber: number): Promise<Text> {
-    const response = await apiClient.post(`/texts/${textId}/restore/${versionNumber}`)
     return response.data
   },
 }

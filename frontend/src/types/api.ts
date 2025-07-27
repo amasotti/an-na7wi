@@ -1,5 +1,5 @@
-import type { Text, Word } from './entities'
-import type { Dialect, Difficulty, PartOfSpeech } from './enums'
+import type { Text } from './entities'
+import type { Dialect, Difficulty } from './enums'
 
 // API Request/Response types
 export interface PaginatedResponse<T> {
@@ -10,7 +10,6 @@ export interface PaginatedResponse<T> {
 }
 
 export interface TextsResponse extends PaginatedResponse<Text> {}
-export interface WordsResponse extends PaginatedResponse<Word> {}
 
 // Request filters
 export interface BaseRequest {
@@ -23,11 +22,4 @@ export interface TextsRequest extends BaseRequest {
   dialect?: Dialect
   difficulty?: Difficulty
   tags?: string[]
-}
-
-export interface WordsRequest extends BaseRequest {
-  dialect?: Dialect
-  difficulty?: Difficulty
-  partOfSpeech?: PartOfSpeech
-  root?: string
 }

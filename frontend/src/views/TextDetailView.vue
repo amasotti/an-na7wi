@@ -210,41 +210,17 @@ const textStore = useTextStore()
 
 // Local state
 const showAnnotations = ref(true)
-const selectedVersion = ref<number>(1)
 const showEditModal = ref(false)
 const showDeleteModal = ref(false)
 
 // Computed properties from store
 const currentText = computed(() => textStore.currentText)
 const annotations = computed(() => textStore.annotations)
-const versions = computed(() => textStore.versions)
-const viewingVersion = computed(() => textStore.viewingVersion)
 const loading = computed(() => textStore.loading)
 const error = computed(() => textStore.error)
 
-// Display the current text or selected version
+// Display the current text
 const displayText = computed(() => {
-  // When viewing a specific version, show the version content parsed as text-like object
-  if (viewingVersion.value) {
-    try {
-      // Parse the version content (which is stored as a string representation)
-      const content = viewingVersion.value.content
-      // For now, return a basic structure - this could be improved with proper JSON parsing
-      return {
-        title: `Version ${viewingVersion.value.versionNumber}`,
-        arabicContent: content.includes('arabicContent=')
-          ? content.split('arabicContent=')[1]?.split(',')[0]?.trim() || 'Version content'
-          : 'Version content',
-        transliteration: null,
-        translation: null,
-        ...currentText.value, // Use current text as fallback for other properties
-      }
-    } catch {
-      // If parsing fails, fallback to current text
-      return currentText.value
-    }
-  }
-  // Default to current text
   return currentText.value
 })
 
@@ -284,17 +260,6 @@ const toggleAnnotations = () => {
   showAnnotations.value = !showAnnotations.value
 }
 
-const analyzeText = async () => {
-  if (currentText.value) {
-    try {
-      await textStore.analyzeText(currentText.value.id)
-      // Optionally show success message
-    } catch (err) {
-      console.error('Failed to analyze text:', err)
-    }
-  }
-}
-
 const getAnnotationColor = (type: string): BadgeVariant => {
   const colors = {
     GRAMMAR: 'primary' as const,
@@ -310,21 +275,6 @@ const formatAnnotationDate = (dateString: string) => {
     month: 'short',
     day: 'numeric',
   })
-}
-
-const handleVersionChange = (version: string) => {
-  selectedVersion.value = Number.parseInt(version)
-  loadVersion()
-}
-
-const loadVersions = async () => {
-  // Temporarily disable version loading to avoid crashes
-  selectedVersion.value = 1
-}
-
-const loadVersion = async () => {
-  // Simplified - just clear version data
-  textStore.clearVersionData()
 }
 
 const editText = () => {
@@ -360,7 +310,6 @@ const handleEditText = async (formData: {
     closeEditModal()
     // Refresh the current text
     await textStore.fetchTextById(props.id)
-    await loadVersions()
   } catch (error) {
     console.error('Failed to update text:', error)
   }
@@ -383,10 +332,6 @@ const handleDeleteText = async () => {
 onMounted(async () => {
   try {
     await textStore.fetchTextById(props.id)
-    // Only load versions if text was loaded successfully
-    if (currentText.value) {
-      await loadVersions()
-    }
   } catch (err) {
     console.error('Failed to load text:', err)
   }

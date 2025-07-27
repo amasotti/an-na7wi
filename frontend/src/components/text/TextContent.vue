@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Text, TextVersion } from '@/types'
+import type { Text } from '@/types'
 import BaseCard from '../common/BaseCard.vue'
 
 interface Props {
