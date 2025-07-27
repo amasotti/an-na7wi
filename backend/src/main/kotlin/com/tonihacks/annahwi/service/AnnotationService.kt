@@ -34,12 +34,8 @@ class AnnotationService {
      */
     fun findAll(page: Int, size: Int, sortField: String = "createdAt"): List<Annotation> {
         logger.info("Finding all annotations, page: $page, size: $size, sortField: $sortField")
-        val sortOption = Sort.by(sortField)
         val paginationOption = Page.of(page, size)
-        return annotationRepository
-            .findAll(sortOption)
-            .page(paginationOption)
-            .list()
+        return annotationRepository.findAllWithText(paginationOption, sortField)
     }
     
     /**
@@ -56,7 +52,7 @@ class AnnotationService {
      */
     fun findByTextId(textId: UUID, page: Int, size: Int): List<Annotation> {
         logger.info("Finding annotations by text ID: $textId, page: $page, size: $size")
-        return annotationRepository.findByTextId(textId, Page.of(page, size))
+        return annotationRepository.findByTextIdWithText(textId, Page.of(page, size))
     }
     
     /**
@@ -80,7 +76,7 @@ class AnnotationService {
      */
     fun findAnnotationsForReview(page: Int, size: Int): List<Annotation> {
         logger.info("Finding annotations for review, page: $page, size: $size")
-        return annotationRepository.findByNeedsReview(true, Page.of(page, size))
+        return annotationRepository.findByNeedsReviewWithText(true, Page.of(page, size))
     }
     
     /**

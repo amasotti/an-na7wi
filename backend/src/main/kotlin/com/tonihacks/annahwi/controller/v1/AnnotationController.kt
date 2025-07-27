@@ -2,6 +2,7 @@ package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.dto.request.MasteryUpdateRequest
 import com.tonihacks.annahwi.dto.request.ReviewUpdateRequest
+import com.tonihacks.annahwi.dto.response.AnnotationResponseDTO
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.service.AnnotationService
 import com.tonihacks.annahwi.util.PaginationUtil
@@ -44,8 +45,9 @@ class AnnotationController {
     {
         logger.info("GET /api/v1/annotations/$id")
         val annotation = annotationService.findById(id)
+        val result = AnnotationResponseDTO.fromEntity(annotation)
         logger.info("Found annotation with ID $id")
-        return Response.ok(annotation).build()
+        return Response.ok(result).build()
     }
 
     @GET
@@ -58,9 +60,9 @@ class AnnotationController {
     ): Response {
         logger.info("GET /api/v1/annotations - page: $page, size: $size, sort: $sort")
         val paginationOption = PaginationUtil.toZeroBasedPage(page)
-        val result = annotationService.findAll(paginationOption, size, sort).also {
-            logger.info("Found ${it.size} annotations on page $page with size $size sorted by $sort")
-        }
+        val annotations = annotationService.findAll(paginationOption, size, sort)
+        val result = annotations.map { AnnotationResponseDTO.fromEntity(it) }
+        logger.info("Found ${result.size} annotations on page $page with size $size sorted by $sort")
         return Response.ok(result).build()
     }
     
@@ -74,9 +76,9 @@ class AnnotationController {
     ): Response {
         logger.info("GET /api/v1/annotations/text/$textId - page: $page, size: $size")
         val paginationOption = PaginationUtil.toZeroBasedPage(page)
-        val result = annotationService.findByTextId(textId, paginationOption, size).also {
-            logger.info("Found ${it.size} annotations for text $textId on page $page with size $size")
-        }
+        val annotations = annotationService.findByTextId(textId, paginationOption, size)
+        val result = annotations.map { AnnotationResponseDTO.fromEntity(it) }
+        logger.info("Found ${result.size} annotations for text $textId on page $page with size $size")
         return Response.ok(result).build()
     }
     
@@ -87,7 +89,8 @@ class AnnotationController {
     fun createAnnotation(@PathParam("id") textId: UUID, annotation: Annotation): Response {
         logger.info("POST /api/v1/annotations/text/$textId")
         val createdAnnotation = annotationService.create(annotation)
-        return Response.status(Response.Status.CREATED).entity(createdAnnotation).build()
+        val result = AnnotationResponseDTO.fromEntity(createdAnnotation)
+        return Response.status(Response.Status.CREATED).entity(result).build()
     }
     
     @PUT
@@ -96,7 +99,8 @@ class AnnotationController {
     fun updateAnnotation(@PathParam("id") id: UUID, annotation: Annotation): Response {
         logger.info("PUT /api/v1/annotations/$id")
         val updatedAnnotation = annotationService.update(id, annotation)
-        return Response.ok(updatedAnnotation).build()
+        val result = AnnotationResponseDTO.fromEntity(updatedAnnotation)
+        return Response.ok(result).build()
     }
     
     @DELETE
@@ -119,7 +123,9 @@ class AnnotationController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/annotations/review - page: $page, size: $size")
-        return Response.ok(annotationService.findAnnotationsForReview(PaginationUtil.toZeroBasedPage(page), size)).build()
+        val annotations = annotationService.findAnnotationsForReview(PaginationUtil.toZeroBasedPage(page), size)
+        val result = annotations.map { AnnotationResponseDTO.fromEntity(it) }
+        return Response.ok(result).build()
     }
     
     @PUT
@@ -128,7 +134,8 @@ class AnnotationController {
     fun updateMasteryLevel(@PathParam("id") id: UUID, request: MasteryUpdateRequest): Response {
         logger.info("PUT /api/v1/annotations/$id/mastery - masteryLevel: ${request.masteryLevel}")
         val updatedAnnotation = annotationService.updateMasteryLevel(id, request.masteryLevel)
-        return Response.ok(updatedAnnotation).build()
+        val result = AnnotationResponseDTO.fromEntity(updatedAnnotation)
+        return Response.ok(result).build()
     }
     
     @PUT
@@ -137,7 +144,8 @@ class AnnotationController {
     fun updateReviewSettings(@PathParam("id") id: UUID, request: ReviewUpdateRequest): Response {
         logger.info("PUT /api/v1/annotations/$id/review - needsReview: ${request.needsReview}")
         val updatedAnnotation = annotationService.updateReviewSettings(id, request.needsReview, request.nextReviewDate)
-        return Response.ok(updatedAnnotation).build()
+        val result = AnnotationResponseDTO.fromEntity(updatedAnnotation)
+        return Response.ok(result).build()
     }
     
     

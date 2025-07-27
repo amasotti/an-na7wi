@@ -30,6 +30,21 @@ class AnnotationRepository : PanacheRepository<Annotation> {
             .page(page)
             .list()
     }
+
+    /**
+     * Find annotations by text ID with text data fetched to avoid N+1 queries
+     */
+    fun findByTextIdWithText(textId: UUID, page: Page): List<Annotation> {
+        return getEntityManager()
+            .createQuery(
+                "SELECT a FROM Annotation a JOIN FETCH a.text t WHERE t.id = :textId ORDER BY a.createdAt DESC",
+                Annotation::class.java
+            )
+            .setParameter("textId", textId)
+            .setFirstResult(page.index * page.size)
+            .setMaxResults(page.size)
+            .resultList
+    }
     
     /**
      * Find annotations by type
@@ -58,6 +73,35 @@ class AnnotationRepository : PanacheRepository<Annotation> {
         return find("needsReview", Sort.by("nextReviewDate", "createdAt"), needsReview)
             .page(page)
             .list()
+    }
+
+    /**
+     * Find annotations by needsReview flag with text data fetched
+     */
+    fun findByNeedsReviewWithText(needsReview: Boolean, page: Page): List<Annotation> {
+        return getEntityManager()
+            .createQuery(
+                "SELECT a FROM Annotation a JOIN FETCH a.text t WHERE a.needsReview = :needsReview ORDER BY a.nextReviewDate, a.createdAt",
+                Annotation::class.java
+            )
+            .setParameter("needsReview", needsReview)
+            .setFirstResult(page.index * page.size)
+            .setMaxResults(page.size)
+            .resultList
+    }
+
+    /**
+     * Find all annotations with text data fetched
+     */
+    fun findAllWithText(page: Page, sort: String): List<Annotation> {
+        return getEntityManager()
+            .createQuery(
+                "SELECT a FROM Annotation a JOIN FETCH a.text t ORDER BY a.$sort",
+                Annotation::class.java
+            )
+            .setFirstResult(page.index * page.size)
+            .setMaxResults(page.size)
+            .resultList
     }
     
     /**
