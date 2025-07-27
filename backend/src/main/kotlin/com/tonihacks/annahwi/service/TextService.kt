@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Text
 import com.tonihacks.annahwi.entity.TextVersion
 import com.tonihacks.annahwi.repository.AnnotationRepository
@@ -63,9 +64,30 @@ class TextService {
             ?: throw NotFoundException("Text with ID $id not found")
 
     }
-    
-    
-    
+
+    /**
+     * Find texts by Dialect
+     */
+    fun findAllByDialect(
+        dialect: String,
+        page: Int,
+        size: Int,
+        sortField: String = "title"
+    ): List<Text> {
+        logger.info("Finding texts by dialect: $dialect, page: $page, size: $size, sortField: $sortField")
+
+        val dialectEnum = Dialect.fromString(dialect.uppercase())
+        requireNotNull(dialectEnum) { "Invalid dialect: $dialect" }
+
+        val pagination = Page.of(page, size)
+        val sortFilter = Sort.by(sortField)
+
+        return textRepository
+            .findByDialect(dialectEnum, pagination, sortFilter)
+            .also { texts ->
+                logger.debug("Found ${texts.size} texts for dialect $dialectEnum")
+            }
+    }
     
     /**
      * Create a new text

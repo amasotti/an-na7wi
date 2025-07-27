@@ -16,7 +16,12 @@ enum class Dialect {
     TUNISIAN,
     MOROCCAN,
     EGYPTIAN,
-    MSA // Modern Standard Arabic
+    MSA; // Modern Standard Arabic
+
+    companion object {
+        fun fromString(value: String): Dialect? =
+            entries.firstOrNull { it.name.equals(value.trim(), ignoreCase = true) }
+    }
 }
 
 /**

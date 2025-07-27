@@ -3,6 +3,7 @@ package com.tonihacks.annahwi.controller
 import com.tonihacks.annahwi.dto.request.TextRequestDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
+import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.service.TextService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
@@ -40,12 +41,18 @@ class TextController {
         @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int,
         @QueryParam("pageSize") pageSize: Int?,
-        @QueryParam("sort") @DefaultValue("title") sort: String
+        @QueryParam("sort") @DefaultValue("title") sort: String,
+        @QueryParam("dialect") @DefaultValue("ALL") dialect: String
     ): Response {
         val actualSize = PaginationUtil.resolvePageSize(size, pageSize)
         val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts - page: $page (API) -> $zeroBasedPage (internal), size: $actualSize, sort: $sort")
-        val texts = textService.findAll(zeroBasedPage, actualSize, sort)
+
+        val texts = when {
+            dialect.isBlank() || dialect == "ALL" -> textService.findAll(zeroBasedPage, actualSize, sort)
+            else -> textService.findAllByDialect(dialect, zeroBasedPage, actualSize, sort)
+        }
+
         val totalCount = textService.countAll()
         val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
         val response = PaginatedResponse(
