@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.dto.request.WordRequestDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.PartOfSpeech
@@ -152,7 +153,23 @@ class WordService {
     }
     
     /**
-     * Create a new word
+     * Create a new word from DTO
+     */
+    @Transactional
+    fun create(wordDTO: WordRequestDTO): Word {
+        logger.info("Creating new word: ${wordDTO.arabic}")
+        
+        val word = wordDTO.toEntity()
+        word.createdAt = LocalDateTime.now()
+        
+        // Persist the word
+        wordRepository.persist(word)
+        
+        return word
+    }
+    
+    /**
+     * Create a new word (legacy method for backward compatibility)
      */
     @Transactional
     fun create(word: Word): Word {
@@ -168,7 +185,23 @@ class WordService {
     }
     
     /**
-     * Update an existing word
+     * Update an existing word using DTO
+     */
+    @Transactional
+    fun update(id: UUID, wordDTO: WordRequestDTO): Word {
+        logger.info("Updating word with ID: $id")
+        
+        val existingWord = findById(id)
+        wordDTO.updateEntity(existingWord)
+        
+        // Persist the updated word
+        wordRepository.persist(existingWord)
+        
+        return existingWord
+    }
+    
+    /**
+     * Update an existing word (legacy method for backward compatibility)
      */
     @Transactional
     fun update(id: UUID, word: Word): Word {

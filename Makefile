@@ -8,7 +8,7 @@ build:
 
 test:
 	cd backend && ./gradlew test
-	cd frontend && npm run test
+	cd frontend && pnpm run test
 
 clean:
 	docker compose down -v

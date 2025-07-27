@@ -1,9 +1,9 @@
 package com.tonihacks.annahwi.controller.v1
 
+import com.tonihacks.annahwi.dto.request.AnnotationRequestDTO
 import com.tonihacks.annahwi.dto.request.MasteryUpdateRequest
 import com.tonihacks.annahwi.dto.request.ReviewUpdateRequest
 import com.tonihacks.annahwi.dto.response.AnnotationResponseDTO
-import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.service.AnnotationService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
@@ -86,9 +86,9 @@ class AnnotationController {
     @POST
     @Path("/text/{id}")
     @Operation(summary = "Create annotation for text", description = "Creates a new annotation for the given text")
-    fun createAnnotation(@PathParam("id") textId: UUID, annotation: Annotation): Response {
+    fun createAnnotation(@PathParam("id") textId: UUID, annotationDTO: AnnotationRequestDTO): Response {
         logger.info("POST /api/v1/annotations/text/$textId")
-        val createdAnnotation = annotationService.create(annotation)
+        val createdAnnotation = annotationService.createForText(textId, annotationDTO)
         val result = AnnotationResponseDTO.fromEntity(createdAnnotation)
         return Response.status(Response.Status.CREATED).entity(result).build()
     }
@@ -96,9 +96,9 @@ class AnnotationController {
     @PUT
     @Path("/{id}")
     @Operation(summary = "Update annotation", description = "Updates an existing annotation")
-    fun updateAnnotation(@PathParam("id") id: UUID, annotation: Annotation): Response {
+    fun updateAnnotation(@PathParam("id") id: UUID, annotationDTO: AnnotationRequestDTO): Response {
         logger.info("PUT /api/v1/annotations/$id")
-        val updatedAnnotation = annotationService.update(id, annotation)
+        val updatedAnnotation = annotationService.update(id, annotationDTO)
         val result = AnnotationResponseDTO.fromEntity(updatedAnnotation)
         return Response.ok(result).build()
     }

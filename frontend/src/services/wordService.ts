@@ -21,7 +21,7 @@ export const wordService = {
   /**
    * Create a new word
    */
-  async createWord(word: Partial<Word>): Promise<Word> {
+  async createWord(word: Omit<Word, 'id' | 'createdAt'>): Promise<Word> {
     const response = await apiClient.post('/words', word)
     return response.data
   },
@@ -29,7 +29,7 @@ export const wordService = {
   /**
    * Update an existing word
    */
-  async updateWord(id: string, word: Partial<Word>): Promise<Word> {
+  async updateWord(id: string, word: Omit<Word, 'id' | 'createdAt'>): Promise<Word> {
     const response = await apiClient.put(`/words/${id}`, word)
     return response.data
   },

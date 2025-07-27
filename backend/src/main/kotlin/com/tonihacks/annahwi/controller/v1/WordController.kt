@@ -1,9 +1,9 @@
 package com.tonihacks.annahwi.controller.v1
 
+import com.tonihacks.annahwi.dto.request.WordRequestDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.PartOfSpeech
-import com.tonihacks.annahwi.entity.Word
 import com.tonihacks.annahwi.service.WordService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
@@ -56,18 +56,18 @@ class WordController {
     
     @POST
     @Operation(summary = "Create word", description = "Creates a new word")
-    fun createWord(word: Word): Response {
-        logger.info("POST /api/v1/words - arabic: ${word.arabic}")
-        val createdWord = wordService.create(word)
+    fun createWord(wordDTO: WordRequestDTO): Response {
+        logger.info("POST /api/v1/words - arabic: ${wordDTO.arabic}")
+        val createdWord = wordService.create(wordDTO)
         return Response.status(Response.Status.CREATED).entity(createdWord).build()
     }
     
     @PUT
     @Path("/{id}")
     @Operation(summary = "Update word", description = "Updates an existing word")
-    fun updateWord(@PathParam("id") id: UUID, word: Word): Response {
+    fun updateWord(@PathParam("id") id: UUID, wordDTO: WordRequestDTO): Response {
         logger.info("PUT /api/v1/words/$id")
-        val updatedWord = wordService.update(id, word)
+        val updatedWord = wordService.update(id, wordDTO)
         return Response.ok(updatedWord).build()
     }
     

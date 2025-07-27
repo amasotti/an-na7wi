@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.dto.request.AnnotationRequestDTO
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.AnnotationType
 import com.tonihacks.annahwi.entity.MasteryLevel
@@ -112,7 +113,35 @@ class AnnotationService {
     }
     
     /**
-     * Create a new annotation
+     * Create a new annotation for a specific text
+     */
+    @Transactional
+    fun createForText(textId: UUID, annotationDTO: AnnotationRequestDTO): Annotation {
+        logger.info("Creating new annotation for text ID: $textId")
+        
+        // Verify that the text exists
+        val text = textService.findById(textId)
+        
+        // Create annotation entity from DTO
+        val annotation = Annotation().apply {
+            this.text = text
+            anchorText = annotationDTO.anchorText
+            content = annotationDTO.content
+            type = annotationDTO.type
+            masteryLevel = annotationDTO.masteryLevel
+            needsReview = annotationDTO.needsReview
+            color = annotationDTO.color
+            createdAt = LocalDateTime.now()
+        }
+        
+        // Persist the annotation
+        annotationRepository.persist(annotation)
+        
+        return annotation
+    }
+    
+    /**
+     * Create a new annotation (legacy method for backward compatibility)
      */
     @Transactional
     fun create(annotation: Annotation): Annotation {
@@ -132,7 +161,30 @@ class AnnotationService {
     }
     
     /**
-     * Update an existing annotation
+     * Update an existing annotation using DTO
+     */
+    @Transactional
+    fun update(id: UUID, annotationDTO: AnnotationRequestDTO): Annotation {
+        logger.info("Updating annotation with ID: $id")
+        
+        val existingAnnotation = findById(id)
+        
+        // Update fields from DTO
+        existingAnnotation.anchorText = annotationDTO.anchorText
+        existingAnnotation.content = annotationDTO.content
+        existingAnnotation.type = annotationDTO.type
+        existingAnnotation.masteryLevel = annotationDTO.masteryLevel
+        existingAnnotation.needsReview = annotationDTO.needsReview
+        existingAnnotation.color = annotationDTO.color
+        
+        // Persist the updated annotation
+        annotationRepository.persist(existingAnnotation)
+        
+        return existingAnnotation
+    }
+    
+    /**
+     * Update an existing annotation (legacy method for backward compatibility)
      */
     @Transactional
     fun update(id: UUID, annotation: Annotation): Annotation {
