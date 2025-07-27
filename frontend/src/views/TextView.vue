@@ -97,6 +97,7 @@
 </template>
 
 <script setup lang="ts">
+import router from '@/router'
 import { Dialect, Difficulty } from '@/types'
 import type { SelectOption, Text } from '@/types'
 import { computed, onMounted, ref } from 'vue'
@@ -112,7 +113,6 @@ import TextHeader from '../components/text/TextHeader.vue'
 import TextListControls from '../components/text/TextListControls.vue'
 import { useTextStore } from '../stores/textStore'
 import { layoutClasses } from '../styles/component-classes'
-import router from "@/router";
 
 const textStore = useTextStore()
 const showCreateModal = ref(false)
