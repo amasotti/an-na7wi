@@ -51,10 +51,6 @@ jobs:
         working-directory: backend
         run: ./gradlew check
 
-      - name: 📦 Build project
-        working-directory: backend
-        run: ./gradlew build -x test  # Skip tests as they were already run in the check step
-
       - name: 🐳 Build Docker image
         working-directory: backend
         run: ./gradlew build -Dquarkus.container-image.build=true -Dquarkus.container-image.tag=${{ github.ref_name }}
