@@ -3,7 +3,8 @@ package com.tonihacks.annahwi.controller
 import com.tonihacks.annahwi.dto.request.TextRequestDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
-import com.tonihacks.annahwi.entity.Dialect
+import com.tonihacks.annahwi.exception.AppError
+import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.service.TextService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
@@ -44,6 +45,14 @@ class TextController {
         @QueryParam("sort") @DefaultValue("title") sort: String,
         @QueryParam("dialect") @DefaultValue("ALL") dialect: String
     ): Response {
+        // Validate pagination parameters
+        if (page < 1) {
+            throw AppException(AppError.ValidationError.InvalidPageNumber(page))
+        }
+        if (size < 1 || (pageSize != null && pageSize < 1)) {
+            throw AppException(AppError.ValidationError.InvalidPageSize(size))
+        }
+        
         val actualSize = PaginationUtil.resolvePageSize(size, pageSize)
         val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts - page: $page (API) -> $zeroBasedPage (internal), size: $actualSize, sort: $sort")
@@ -98,6 +107,7 @@ class TextController {
     @Operation(summary = "Delete text", description = "Deletes a text")
     fun deleteText(@PathParam("id") id: UUID): Response {
         logger.info("DELETE /api/v1/texts/$id")
+        textService.findById(id)  // Verify text exists first
         textService.delete(id)
         return Response.noContent().build()
     }
@@ -110,6 +120,7 @@ class TextController {
     @Operation(summary = "Get text versions", description = "Returns all versions of a text")
     fun getTextVersions(@PathParam("id") id: UUID): Response {
         logger.info("GET /api/v1/texts/$id/versions")
+        textService.findById(id)  // Verify text exists first
         val versions = textService.getTextVersions(id)
         return Response.ok(versions).build()
     }

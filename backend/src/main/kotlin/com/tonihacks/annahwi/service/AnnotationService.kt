@@ -8,7 +8,8 @@ import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
-import jakarta.ws.rs.NotFoundException
+import com.tonihacks.annahwi.exception.AppError
+import com.tonihacks.annahwi.exception.AppException
 import org.jboss.logging.Logger
 import java.time.LocalDateTime
 import java.util.*
@@ -41,7 +42,7 @@ class AnnotationService {
     fun findById(id: UUID): Annotation {
         logger.info("Finding annotation by ID: $id")
         return annotationRepository.findById(id)
-            ?: throw NotFoundException("Annotation with ID $id not found")
+            ?: throw AppException(AppError.NotFound.Annotation(id.toString()))
     }
     
     /**

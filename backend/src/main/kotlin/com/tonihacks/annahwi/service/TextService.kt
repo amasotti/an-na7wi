@@ -12,7 +12,8 @@ import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
-import jakarta.ws.rs.NotFoundException
+import com.tonihacks.annahwi.exception.AppError
+import com.tonihacks.annahwi.exception.AppException
 import org.jboss.logging.Logger
 import java.time.LocalDateTime
 import java.util.*
@@ -61,7 +62,7 @@ class TextService {
     fun findById(id: UUID): Text {
         logger.info("Finding text by ID: $id")
         return textRepository.findById(id)
-            ?: throw NotFoundException("Text with ID $id not found")
+            ?: throw AppException(AppError.NotFound.Text(id.toString()))
 
     }
 
@@ -77,7 +78,7 @@ class TextService {
         logger.info("Finding texts by dialect: $dialect, page: $page, size: $size, sortField: $sortField")
 
         val dialectEnum = Dialect.fromString(dialect.uppercase())
-        requireNotNull(dialectEnum) { "Invalid dialect: $dialect" }
+            ?: throw AppException(AppError.ValidationError.InvalidDialect(dialect))
 
         val pagination = Page.of(page, size)
         val sortFilter = Sort.by(sortField)
@@ -218,7 +219,7 @@ class TextService {
     fun getTextVersion(textId: UUID, versionNumber: Int): TextVersion {
         logger.info("Getting version $versionNumber for text ID: $textId")
         return textVersionRepository.findByTextIdAndVersionNumber(textId, versionNumber)
-            ?: throw NotFoundException("Version $versionNumber not found for text $textId")
+            ?: throw AppException(AppError.NotFound.TextVersion(textId.toString(), versionNumber))
     }
     
     /**

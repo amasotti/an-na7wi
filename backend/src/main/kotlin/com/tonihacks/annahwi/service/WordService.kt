@@ -11,7 +11,8 @@ import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
-import jakarta.ws.rs.NotFoundException
+import com.tonihacks.annahwi.exception.AppError
+import com.tonihacks.annahwi.exception.AppException
 import org.jboss.logging.Logger
 import java.time.LocalDateTime
 import java.util.*
@@ -44,7 +45,7 @@ class WordService {
     fun findById(id: UUID): Word {
         logger.info("Finding word by ID: $id")
         return wordRepository.findById(id)
-            ?: throw NotFoundException("Word with ID $id not found")
+            ?: throw AppException(AppError.NotFound.Word(id.toString()))
     }
     
     /**
