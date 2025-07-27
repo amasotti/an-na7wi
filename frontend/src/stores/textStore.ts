@@ -3,6 +3,8 @@ import type {
   Dialect,
   Difficulty,
   Text,
+  TextVersion,
+  TextVersionSummary
 } from '@/types'
 import type { TextsRequest } from '@/types'
 import { defineStore } from 'pinia'
@@ -20,6 +22,11 @@ export const useTextStore = defineStore('text', () => {
   const currentPage = ref(1)
   const pageSize = ref(10)
 
+  // Version state
+  const textVersions = ref<TextVersionSummary[]>([])
+  const selectedVersion = ref<TextVersion | null>(null)
+  const isViewingCurrentVersion = ref(true)
+
   // Filter state
   const searchQuery = ref('')
   const selectedDialect = ref<Dialect | null>(null)
@@ -33,6 +40,17 @@ export const useTextStore = defineStore('text', () => {
 
   const hasMorePages = computed(() => {
     return totalCount.value > currentPage.value * pageSize.value
+  })
+
+  // Display text is either the selected version or the current text
+  const displayText = computed(() => {
+    if (selectedVersion.value && !isViewingCurrentVersion.value) {
+      return {
+        ...currentText.value,
+        ...selectedVersion.value.content
+      }
+    }
+    return currentText.value
   })
 
   // Actions
@@ -80,6 +98,11 @@ export const useTextStore = defineStore('text', () => {
     try {
       currentText.value = await textService.getText(id)
       await fetchAnnotations(id)
+      await fetchTextVersions(id)
+      
+      // Reset to viewing current version
+      isViewingCurrentVersion.value = true
+      selectedVersion.value = null
     } catch (err) {
       error.value = 'Failed to fetch text'
       console.error(err)
@@ -95,6 +118,62 @@ export const useTextStore = defineStore('text', () => {
       console.error('Failed to fetch annotations', err)
       // Set empty annotations array if API call fails
       annotations.value = []
+    }
+  }
+
+  async function fetchTextVersions(textId: string) {
+    try {
+      textVersions.value = await textService.getTextVersions(textId)
+    } catch (err) {
+      console.error('Failed to fetch text versions', err)
+      // Set empty versions array if API call fails
+      textVersions.value = []
+    }
+  }
+
+  async function selectTextVersion(textId: string, versionNumber: number) {
+    loading.value = true
+    error.value = null
+
+    try {
+      const version = await textService.getTextVersion(textId, versionNumber)
+      selectedVersion.value = version
+      
+      // Check if this is the current version
+      const currentVersion = textVersions.value.find(v => v.isCurrent)
+      isViewingCurrentVersion.value = currentVersion?.versionNumber === versionNumber
+    } catch (err) {
+      error.value = 'Failed to fetch text version'
+      console.error(err)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function restoreTextVersion(textId: string, versionNumber: number) {
+    loading.value = true
+    error.value = null
+
+    try {
+      const restoredText = await textService.restoreTextVersion(textId, versionNumber)
+      
+      // Update current text
+      currentText.value = restoredText
+      
+      // Refresh versions
+      await fetchTextVersions(textId)
+      
+      // Reset to viewing current version
+      isViewingCurrentVersion.value = true
+      selectedVersion.value = null
+      
+      return restoredText
+    } catch (err) {
+      error.value = 'Failed to restore text version'
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
     }
   }
 
@@ -133,6 +212,13 @@ export const useTextStore = defineStore('text', () => {
         currentText.value = updatedText
       }
 
+      // Refresh versions
+      await fetchTextVersions(id)
+      
+      // Reset to viewing current version
+      isViewingCurrentVersion.value = true
+      selectedVersion.value = null
+
       return updatedText
     } catch (err) {
       error.value = 'Failed to update text'
@@ -156,6 +242,8 @@ export const useTextStore = defineStore('text', () => {
       // Clear current text if it's the same
       if (currentText.value && currentText.value.id === id) {
         currentText.value = null
+        textVersions.value = []
+        selectedVersion.value = null
       }
     } catch (err) {
       error.value = 'Failed to delete text'
@@ -237,14 +325,21 @@ export const useTextStore = defineStore('text', () => {
     selectedDialect,
     selectedDifficulty,
     selectedTags,
+    textVersions,
+    selectedVersion,
+    isViewingCurrentVersion,
 
     // Getters
     filteredTexts,
     hasMorePages,
+    displayText,
 
     // Actions
     fetchTexts,
     fetchTextById,
+    fetchTextVersions,
+    selectTextVersion,
+    restoreTextVersion,
     createText,
     updateText,
     deleteText,

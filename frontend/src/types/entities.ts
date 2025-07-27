@@ -1,4 +1,5 @@
 import type { AnnotationType, Dialect, Difficulty, MasteryLevel } from './enums'
+import type { TextVersionSummary } from './textVersion'
 
 // Core entities
 export interface Text {
@@ -14,6 +15,7 @@ export interface Text {
   wordCount: number
   createdAt: string
   updatedAt: string
+  currentVersionId?: string
 }
 
 export interface Annotation {

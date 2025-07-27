@@ -1,4 +1,4 @@
-import type { Annotation, Text } from '@/types'
+import type { Annotation, Text, TextVersion, TextVersionSummary } from '@/types'
 import type { TextsRequest, TextsResponse } from '@/types'
 import apiClient from './api'
 
@@ -56,4 +56,41 @@ export const textService = {
     const response = await apiClient.get(`/annotations/text/${textId}`)
     return response.data
   },
+
+  /**
+   * Get all versions of a text
+   */
+  async getTextVersions(textId: string): Promise<TextVersionSummary[]> {
+    const response = await apiClient.get(`/texts/${textId}/versions`)
+    return response.data.map((version: any) => ({
+      id: version.id,
+      versionNumber: version.versionNumber,
+      updatedAt: version.updatedAt,
+      isCurrent: version.isCurrent
+    }))
+  },
+
+  /**
+   * Get a specific version of a text
+   */
+  async getTextVersion(textId: string, versionNumber: number): Promise<TextVersion> {
+    const response = await apiClient.get(`/texts/${textId}/versions/${versionNumber}`)
+    return {
+      id: response.data.id,
+      textId: response.data.textId,
+      versionNumber: response.data.versionNumber,
+      updatedAt: response.data.updatedAt,
+      createdAt: response.data.createdAt,
+      isCurrent: response.data.isCurrent,
+      content: response.data.content
+    }
+  },
+
+  /**
+   * Restore a specific version as the current version
+   */
+  async restoreTextVersion(textId: string, versionNumber: number): Promise<Text> {
+    const response = await apiClient.post(`/texts/${textId}/restore/${versionNumber}`)
+    return response.data
+  }
 }

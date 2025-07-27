@@ -9,6 +9,7 @@ import com.tonihacks.annahwi.service.TextService
 import com.tonihacks.annahwi.service.TextVersionService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
+import jakarta.transaction.Transactional
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.DefaultValue
@@ -138,6 +139,7 @@ class TextController {
     @POST
     @Path("/{id}/restore/{versionNumber}")
     @Operation(summary = "Restore version", description = "Restores a specific version as the current version")
+    @Transactional
     fun restoreTextVersion(@PathParam("id") id: UUID, @PathParam("versionNumber") versionNumber: Int): Response {
         logger.info("POST /api/v1/texts/$id/restore/$versionNumber")
         val restoredText = textVersionService.restoreVersion(id, versionNumber)

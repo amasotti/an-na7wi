@@ -38,7 +38,13 @@
           </router-link>
           
           <div class="flex items-center gap-2">
-            <BaseButton variant="outline" size="sm" @click="editText">
+            <!-- Edit Button (only for current version) -->
+            <BaseButton 
+              v-if="isViewingCurrentVersion" 
+              variant="outline" 
+              size="sm" 
+              @click="editText"
+            >
               <BaseIcon size="sm" class="mr-2">
                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </BaseIcon>
@@ -99,37 +105,49 @@
       <!-- Main Content Layout -->
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <!-- Text Content (3/4 width on large screens) -->
-        <BaseCard class="lg:col-span-3">
-          <div class="space-y-8">
-            <!-- Arabic Content -->
-            <div>
-              <h2 class="text-lg font-semibold text-gray-900 mb-4">Arabic Text</h2>
-              <div 
-                class="text-2xl leading-relaxed text-gray-900 font-arabic text-right bg-gray-50 p-6 rounded-lg"
-                dir="rtl"
-                lang="ar"
-              >
-                {{ displayText?.arabicContent || 'No content' }}
+        <div class="lg:col-span-3 space-y-6">
+          <BaseCard>
+            <div class="space-y-8">
+              <!-- Arabic Content -->
+              <div>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Arabic Text</h2>
+                <div 
+                  class="text-2xl leading-relaxed text-gray-900 font-arabic text-right bg-gray-50 p-6 rounded-lg"
+                  dir="rtl"
+                  lang="ar"
+                >
+                  {{ displayText?.arabicContent || 'No content' }}
+                </div>
               </div>
-            </div>
 
-            <!-- Transliteration -->
-            <div v-if="displayText?.transliteration">
-              <h2 class="text-lg font-semibold text-gray-900 mb-4">Transliteration</h2>
-              <div class="text-lg leading-relaxed text-gray-700 italic bg-blue-50 p-6 rounded-lg">
-                {{ displayText.transliteration }}
+              <!-- Transliteration -->
+              <div v-if="displayText?.transliteration">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Transliteration</h2>
+                <div class="text-lg leading-relaxed text-gray-700 italic bg-blue-50 p-6 rounded-lg">
+                  {{ displayText.transliteration }}
+                </div>
               </div>
-            </div>
 
-            <!-- Translation -->
-            <div v-if="displayText?.translation">
-              <h2 class="text-lg font-semibold text-gray-900 mb-4">Translation</h2>
-              <div class="text-lg leading-relaxed text-gray-800 bg-green-50 p-6 rounded-lg">
-                {{ displayText.translation }}
+              <!-- Translation -->
+              <div v-if="displayText?.translation">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Translation</h2>
+                <div class="text-lg leading-relaxed text-gray-800 bg-green-50 p-6 rounded-lg">
+                  {{ displayText.translation }}
+                </div>
               </div>
             </div>
-          </div>
-        </BaseCard>
+          </BaseCard>
+          
+          <!-- Version Manager -->
+          <TextVersionManager
+            v-if="textVersions.length > 0"
+            :versions="textVersions"
+            :selectedVersion="selectedVersion"
+            :isViewingCurrentVersion="isViewingCurrentVersion"
+            @select-version="selectVersion"
+            @restore-version="restoreVersion"
+          />
+        </div>
 
         <!-- Annotations Panel (1/4 width on large screens) -->
         <div v-if="showAnnotations" class="lg:col-span-1">
@@ -199,6 +217,7 @@ import BaseCard from '../components/common/BaseCard.vue'
 import BaseIcon from '../components/common/BaseIcon.vue'
 import TextDeleteModal from '../components/text/TextDeleteModal.vue'
 import TextEditModal from '../components/text/TextEditModal.vue'
+import TextVersionManager from '../components/text/TextVersionManager.vue'
 import { useTextStore } from '../stores/textStore'
 
 interface Props {
@@ -218,10 +237,21 @@ const currentText = computed(() => textStore.currentText)
 const annotations = computed(() => textStore.annotations)
 const loading = computed(() => textStore.loading)
 const error = computed(() => textStore.error)
+const textVersions = computed(() => textStore.textVersions)
+const selectedVersion = computed(() => textStore.selectedVersion)
+const isViewingCurrentVersion = computed(() => textStore.isViewingCurrentVersion)
 
-// Display the current text
-const displayText = computed(() => {
-  return currentText.value
+// Display the current text or selected version
+const displayText = computed(() => textStore.displayText)
+
+// Get the current version number to display
+const currentVersionNumber = computed(() => {
+  if (selectedVersion.value) {
+    return selectedVersion.value.versionNumber
+  }
+  
+  const currentVersion = textVersions.value.find(v => v.isCurrent)
+  return currentVersion?.versionNumber || 1
 })
 
 // Computed UI properties
@@ -277,6 +307,27 @@ const formatAnnotationDate = (dateString: string) => {
   })
 }
 
+// Version methods
+const selectVersion = async (versionNumber: number) => {
+  if (!currentText.value) return
+  
+  await textStore.selectTextVersion(currentText.value.id, versionNumber)
+}
+
+
+const restoreVersion = async () => {
+  if (!currentText.value || !selectedVersion.value) return
+  
+  try {
+    await textStore.restoreTextVersion(
+      currentText.value.id, 
+      selectedVersion.value.versionNumber
+    )
+  } catch (error) {
+    console.error('Failed to restore version:', error)
+  }
+}
+
 const editText = () => {
   showEditModal.value = true
 }
@@ -327,6 +378,7 @@ const handleDeleteText = async () => {
     console.error('Failed to delete text:', error)
   }
 }
+
 
 // Lifecycle
 onMounted(async () => {
