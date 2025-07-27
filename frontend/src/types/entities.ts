@@ -11,9 +11,6 @@ export interface Text {
   tags: string[]
   difficulty: Difficulty
   dialect: Dialect
-  versionId?: string
-  isCurrentVersion: boolean
-  parentTextId?: string
   wordCount: number
   createdAt: string
   updatedAt: string
@@ -55,7 +52,19 @@ export interface TextVersion {
   id: string
   textId: string
   versionNumber: number
+  isCurrent: boolean
   content: string // Serialized content, could be JSON or similar format
   createdAt: string
   updatedAt: string
+}
+
+/**
+ * Lightweight version summary for dropdowns and lists
+ */
+export interface TextVersionSummary {
+  id: string
+  versionNumber: number
+  createdAt: string
+  updatedAt: string
+  isCurrent: boolean
 }

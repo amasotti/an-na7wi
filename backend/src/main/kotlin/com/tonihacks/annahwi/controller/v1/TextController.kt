@@ -6,6 +6,7 @@ import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.service.TextService
+import com.tonihacks.annahwi.service.TextVersionService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
@@ -32,8 +33,11 @@ import java.util.UUID
 class TextController {
     
     @Inject
-    lateinit var textService: TextService
-    
+    private lateinit var textService: TextService
+
+    @Inject
+    private lateinit var textVersionService: TextVersionService
+
     private val logger = Logger.getLogger(TextController::class.java)
     
     @GET
@@ -121,7 +125,7 @@ class TextController {
     fun getTextVersions(@PathParam("id") id: UUID): Response {
         logger.info("GET /api/v1/texts/$id/versions")
         textService.findById(id)  // Verify text exists first
-        val versions = textService.getTextVersions(id)
+        val versions = textVersionService.getVersionsForText(id)
         return Response.ok(versions).build()
     }
     
@@ -130,17 +134,8 @@ class TextController {
     @Operation(summary = "Get specific version", description = "Returns a specific version of a text")
     fun getTextVersion(@PathParam("id") id: UUID, @PathParam("versionNumber") versionNumber: Int): Response {
         logger.info("GET /api/v1/texts/$id/versions/$versionNumber")
-        val version = textService.getTextVersion(id, versionNumber)
+        val version = textVersionService.getVersionForText(id, versionNumber)
         return Response.ok(version).build()
-    }
-    
-    @POST
-    @Path("/{id}/restore/{versionNumber}")
-    @Operation(summary = "Restore version", description = "Restores a version as the current version")
-    fun restoreVersion(@PathParam("id") id: UUID, @PathParam("versionNumber") versionNumber: Int): Response {
-        logger.info("POST /api/v1/texts/$id/restore/$versionNumber")
-        val restoredText = textService.restoreVersion(id, versionNumber)
-        return Response.ok(TextResponseDTO.fromEntity(restoredText)).build()
     }
     
     @POST
@@ -148,7 +143,7 @@ class TextController {
     @Operation(summary = "Migrate versions", description = "Creates initial versions for texts that don't have any")
     fun migrateVersions(): Response {
         logger.info("POST /api/v1/texts/migrate-versions")
-        textService.createMissingInitialVersions()
+        textVersionService.migrateUnversionedTexts()
         return Response.ok(mapOf("message" to "Migration completed successfully")).build()
     }
 }

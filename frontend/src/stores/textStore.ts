@@ -1,4 +1,10 @@
-import type { Annotation, Dialect, Difficulty, Text, TextVersion } from '@/types'
+import type {
+  Annotation,
+  Dialect,
+  Difficulty,
+  Text,
+  TextVersionSummary,
+} from '@/types'
 import type { TextsRequest } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -9,8 +15,8 @@ export const useTextStore = defineStore('text', () => {
   const texts = ref<Text[]>([])
   const currentText = ref<Text | null>(null)
   const annotations = ref<Annotation[]>([])
-  const versions = ref<TextVersion[] | null>([])
-  const viewingVersion = ref<TextVersion | null>(null)
+  const versions = ref<TextVersionSummary[] | null>([])
+  const viewingVersionText = ref<Text | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
   const totalCount = ref(0)
@@ -249,21 +255,6 @@ export const useTextStore = defineStore('text', () => {
     }
   }
 
-  async function fetchTextVersion(textId: string, versionNumber: number) {
-    loading.value = true
-    error.value = null
-
-    try {
-      viewingVersion.value = await textService.getTextVersion(textId, versionNumber)
-    } catch (err) {
-      error.value = 'Failed to load text version'
-      console.error(err)
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
   async function restoreTextVersion(textId: string, versionNumber: number) {
     loading.value = true
     error.value = null
@@ -281,7 +272,7 @@ export const useTextStore = defineStore('text', () => {
       }
 
       // Clear viewing version
-      viewingVersion.value = null
+      viewingVersionText.value = null
 
       // Refresh versions
       await fetchTextVersions(textId)
@@ -298,7 +289,7 @@ export const useTextStore = defineStore('text', () => {
 
   function clearVersionData() {
     versions.value = []
-    viewingVersion.value = null
+    viewingVersionText.value = null
   }
 
   return {
@@ -307,7 +298,7 @@ export const useTextStore = defineStore('text', () => {
     currentText,
     annotations,
     versions,
-    viewingVersion,
+    viewingVersionText,
     loading,
     error,
     totalCount,
@@ -331,7 +322,6 @@ export const useTextStore = defineStore('text', () => {
     deleteText,
     analyzeText,
     fetchTextVersions,
-    fetchTextVersion,
     restoreTextVersion,
     clearVersionData,
     setFilters,

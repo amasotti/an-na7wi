@@ -1,6 +1,8 @@
 package com.tonihacks.annahwi.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -18,7 +20,7 @@ class Text : PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
-    var id: UUID? = null
+    lateinit var id: UUID
     
     @Column(name = "title", length = 255, nullable = false)
     lateinit var title: String
@@ -53,18 +55,12 @@ class Text : PanacheEntityBase {
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now()
     
-    @Column(name = "is_current_version", nullable = false)
-    var isCurrentVersion: Boolean = true
-    
-    @Column(name = "parent_text_id")
-    var parentTextId: UUID? = null
-    
     @Column(name = "comments", columnDefinition = "TEXT")
     var comments: String? = null
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "version_id")
-    var version: TextVersion? = null
+    @JoinColumn(name = "current_version")
+    var currentVersion: TextVersion? = null
     
     @OneToMany(mappedBy = "text", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonIgnoreProperties("text")
@@ -79,5 +75,22 @@ class Text : PanacheEntityBase {
     @PreUpdate
     fun preUpdate() {
         updatedAt = LocalDateTime.now()
+    }
+
+    companion object {
+        fun toJsonObject(text: Text, objectMapper: ObjectMapper): JsonNode {
+            val filtered = mapOf(
+                "title" to text.title,
+                "arabicContent" to text.arabicContent,
+                "transliteration" to text.transliteration,
+                "translation" to text.translation,
+                "tags" to text.tags,
+                "difficulty" to text.difficulty,
+                "dialect" to text.dialect,
+                "wordCount" to text.wordCount,
+                "comments" to text.comments,
+            )
+            return objectMapper.valueToTree(filtered)
+        }
     }
 }

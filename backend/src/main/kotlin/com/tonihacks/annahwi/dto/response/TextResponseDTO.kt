@@ -1,6 +1,5 @@
 package com.tonihacks.annahwi.dto.response
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
@@ -22,8 +21,6 @@ data class TextResponseDTO(
     val difficulty: Difficulty,
     val dialect: Dialect,
     val versionId: UUID?,
-    @get:JsonProperty("isCurrentVersion") val isCurrentVersion: Boolean,
-    val parentTextId: UUID?,
     val wordCount: Int,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
@@ -45,9 +42,7 @@ data class TextResponseDTO(
                 tags = text.tags,
                 difficulty = text.difficulty,
                 dialect = text.dialect,
-                versionId = text.version?.id,
-                isCurrentVersion = text.isCurrentVersion,
-                parentTextId = text.parentTextId,
+                versionId = text.currentVersion?.id,
                 wordCount = text.wordCount,
                 createdAt = text.createdAt,
                 updatedAt = text.updatedAt,

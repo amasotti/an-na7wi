@@ -52,8 +52,6 @@ or more prominent.
 - translation: Text (nullable) 
 - comments: Text (nullable)
 - version: UUID (foreign key to version entity)
-- is_current_version: Boolean
-- parent_text_id: UUID (nullable, references the original text)
 - created_at: DateTime
 - updated_at: DateTime
 ```

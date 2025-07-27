@@ -2,10 +2,8 @@ package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Text
-import com.tonihacks.annahwi.entity.TextVersion
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import com.tonihacks.annahwi.repository.TextRepository
-import com.tonihacks.annahwi.repository.TextVersionRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
@@ -13,7 +11,8 @@ import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
-import org.jboss.logging.Logger
+import com.tonihacks.annahwi.util.getWordCount
+import com.tonihacks.annahwi.util.loggerFor
 import java.time.LocalDateTime
 import java.util.*
 
@@ -24,15 +23,15 @@ import java.util.*
 class TextService {
     
     @Inject
-    lateinit var textRepository: TextRepository
+    private lateinit var textRepository: TextRepository
     
     @Inject
-    lateinit var annotationRepository: AnnotationRepository
-    
+    private lateinit var annotationRepository: AnnotationRepository
+
     @Inject
-    lateinit var textVersionRepository: TextVersionRepository
+    private lateinit var textVersionService: TextVersionService
     
-    private val logger = Logger.getLogger(TextService::class.java)
+    private val logger = loggerFor(TextService::class.java)
     
     /**
      * Find all texts with pagination
@@ -124,13 +123,13 @@ class TextService {
         text.updatedAt = now
         
         // Calculate word count
-        text.wordCount = calculateWordCount(text.arabicContent)
+        text.wordCount = text.arabicContent.getWordCount()
         
         // Persist the text first to get the ID
         textRepository.persist(text)
         
         // Create initial version (version 1)
-        createInitialVersion(text)
+        textVersionService.createInitialVersion(text)
         
         // Initialize lazy collections to prevent LazyInitializationException
         text.annotations.size
@@ -148,7 +147,7 @@ class TextService {
         val existingText = findById(id)
         
         // Create version snapshot before updating
-        createVersionSnapshot(existingText)
+        textVersionService.createVersion(existingText, false)
         
         // Update fields
         existingText.title = text.title
@@ -164,7 +163,10 @@ class TextService {
         existingText.updatedAt = LocalDateTime.now()
         
         // Recalculate word count
-        existingText.wordCount = calculateWordCount(existingText.arabicContent)
+        existingText.wordCount = existingText.arabicContent.getWordCount()
+        
+        // Create new version after updating
+        textVersionService.createVersion(existingText)
         
         // Persist the updated text
         textRepository.persist(existingText)
@@ -188,170 +190,5 @@ class TextService {
         // Delete the text
         return textRepository.deleteById(id)
     }
-    
-    
-    /**
-     * Calculate word count in a text
-     */
-    private fun calculateWordCount(content: String): Int {
-        return content.split("\\s+".toRegex()).filter { it.isNotEmpty() }.size
-    }
-    
-    
-    /**
-     * Create initial version (version 1) for a new text
-     */
-    private fun createInitialVersion(text: Text) {
-        logger.info("Creating initial version for text ID: ${text.id}")
-        
-        // Create content snapshot as JSON
-        val contentSnapshot = mapOf(
-            "title" to text.title,
-            "arabicContent" to text.arabicContent,
-            "transliteration" to text.transliteration,
-            "translation" to text.translation,
-            "comments" to text.comments,
-            "tags" to text.tags,
-            "difficulty" to text.difficulty.name,
-            "dialect" to text.dialect.name
-        )
-        
-        val version = TextVersion().apply {
-            textId = text.id!!
-            versionNumber = 1
-            content = contentSnapshot.toString() // Simple JSON representation
-            createdAt = text.createdAt
-            updatedAt = text.updatedAt
-        }
-        
-        textVersionRepository.persist(version)
-        
-        // Update text to reference this version
-        text.version = version
-        textRepository.persist(text) // Persist the updated reference
-    }
-    
-    /**
-     * Create a version snapshot of the current text state
-     */
-    private fun createVersionSnapshot(text: Text) {
-        logger.info("Creating version snapshot for text ID: ${text.id}")
-        
-        // Count existing versions to get next version number
-        val existingVersions = textVersionRepository.findByTextId(text.id!!)
-        val nextVersionNumber = (existingVersions.maxOfOrNull { it.versionNumber } ?: 0) + 1
-        
-        logger.info("Next version number: $nextVersionNumber")
-        
-        // Create content snapshot as JSON
-        val contentSnapshot = mapOf(
-            "title" to text.title,
-            "arabicContent" to text.arabicContent,
-            "transliteration" to text.transliteration,
-            "translation" to text.translation,
-            "comments" to text.comments,
-            "tags" to text.tags,
-            "difficulty" to text.difficulty.name,
-            "dialect" to text.dialect.name
-        )
-        
-        val version = TextVersion().apply {
-            textId = text.id!!
-            versionNumber = nextVersionNumber
-            content = contentSnapshot.toString() // Simple JSON representation
-            createdAt = LocalDateTime.now()
-            updatedAt = LocalDateTime.now()
-        }
-        
-        textVersionRepository.persist(version)
-        logger.info("Version snapshot created with ID: ${version.id}")
-    }
-    
-    /**
-     * Get all versions of a text
-     */
-    fun getTextVersions(textId: UUID): List<TextVersion> {
-        logger.info("Getting versions for text ID: $textId")
-        return textVersionRepository.findByTextId(textId)
-    }
-    
-    /**
-     * Get a specific version of a text
-     */
-    fun getTextVersion(textId: UUID, versionNumber: Int): TextVersion {
-        logger.info("Getting version $versionNumber for text ID: $textId")
-        return textVersionRepository.findByTextIdAndVersionNumber(textId, versionNumber)
-            ?: throw AppException(AppError.NotFound.TextVersion(textId.toString(), versionNumber))
-    }
-    
-    /**
-     * Restore a version as the current version
-     */
-    @Transactional
-    fun restoreVersion(textId: UUID, versionNumber: Int): Text {
-        logger.info("Restoring version $versionNumber for text ID: $textId")
-        
-        val version = getTextVersion(textId, versionNumber)
-        val currentText = findById(textId)
-        
-        // Create a version of the current state before restoring
-        createVersionSnapshot(currentText)
-        
-        // Parse the version content (simple approach for now)
-        val contentMap = parseVersionContent(version.content)
-        
-        // Restore the version content
-        currentText.title = contentMap["title"] ?: currentText.title
-        currentText.arabicContent = contentMap["arabicContent"] ?: currentText.arabicContent
-        currentText.transliteration = contentMap["transliteration"]
-        currentText.translation = contentMap["translation"]
-        currentText.comments = contentMap["comments"]
-        currentText.updatedAt = LocalDateTime.now()
-        currentText.wordCount = calculateWordCount(currentText.arabicContent)
-        
-        textRepository.persist(currentText)
-        
-        // Initialize lazy collections to prevent LazyInitializationException
-        currentText.annotations.size
-        
-        return currentText
-    }
-    
-    /**
-     * Simple content parser for version snapshots
-     * TODO: Replace with proper JSON parsing library
-     */
-    private fun parseVersionContent(content: String): Map<String, String?> {
-        // Very simple parsing - in production use Jackson or similar
-        return mapOf(
-            "title" to "Restored Text",
-            "arabicContent" to content,
-            "transliteration" to null,
-            "translation" to null,
-            "comments" to null
-        )
-    }
-    
-    /**
-     * Create initial version for texts that don't have any versions yet
-     * This is a utility method for migrating existing texts
-     */
-    @Transactional
-    fun createMissingInitialVersions() {
-        logger.info("Creating missing initial versions for existing texts")
-        
-        val allTexts = textRepository.listAll()
-        var migrated = 0
-        
-        for (text in allTexts) {
-            val existingVersions = textVersionRepository.findByTextId(text.id!!)
-            if (existingVersions.isEmpty()) {
-                logger.info("Creating missing initial version for text: ${text.id}")
-                createInitialVersion(text)
-                migrated++
-            }
-        }
-        
-        logger.info("Migration complete: created initial versions for $migrated texts")
-    }
+
 }

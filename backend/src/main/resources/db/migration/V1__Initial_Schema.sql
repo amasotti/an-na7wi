@@ -11,14 +11,12 @@ CREATE TYPE annotation_type AS ENUM ('GRAMMAR', 'VOCABULARY', 'CULTURAL', 'PRONU
 
 -- Create text_versions table (must be created before texts due to FK)
 CREATE TABLE text_versions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    text_id UUID NOT NULL,
-    version_number INTEGER NOT NULL,
-    content TEXT NOT NULL, -- Full snapshot of text content at this version (as JSON)
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    
-    CONSTRAINT unique_text_version UNIQUE (text_id, version_number)
+                               id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                               text_id UUID NOT NULL,
+                               version_number INTEGER NOT NULL,
+                               content TEXT NOT NULL, -- Full snapshot of text content at this version (as JSON)
+                               created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                               updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create texts table

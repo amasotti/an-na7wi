@@ -10,10 +10,16 @@ import java.util.UUID
 class TextVersionRepository : PanacheRepository<TextVersion> {
     
     fun findByTextId(textId: UUID): List<TextVersion> {
-        return list("textId = ?1", Sort.by("versionNumber").descending(), textId)
+        val sortingParam = Sort.by("versionNumber").descending()
+        return list("textId = ?1", sortingParam, textId)
     }
     
     fun findByTextIdAndVersionNumber(textId: UUID, versionNumber: Int): TextVersion? {
         return find("textId = ?1 AND versionNumber = ?2", textId, versionNumber).firstResult()
+    }
+
+    fun findById(id: UUID): TextVersion? {
+        return find("id", id)
+            .firstResult()
     }
 }

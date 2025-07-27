@@ -3,3 +3,10 @@ GET http://localhost:8080/api/v1/texts/c0316477-cdfb-4363-a0be-873856360272/vers
 
 
 ###
+
+# Migrate versions (initial migration)
+POST http://localhost:8080/api/v1/texts/migrate-versions
+accept: */*
+
+###
+

@@ -17,8 +17,6 @@
 ## Prompts
 
 We're in the process of implementing the requirements described here: docs/architecture/brainstorming-text-annotation-workflow.md. Sofar only the adjustments to the project (backend and frontend) were done. 
-The DTOs were created and the API cleaned up. The frontend offers a way to create texts. Now focus on adding functionality to remove or edit an existing text.
-Work as senior engineer, avoid verbosity and focus on the task at hand. Take care of modularity and clean readable code. The types in the frontend are all in one
-directory, so also the api calls and services and store. The backend should already offer the needed api endpoints, but check them. 
-Modifying a text should produce a new version, not overwrite the existing one. Later we will add the functionality to diff
-between versions or restore a previous version. Avoid bombing the database and be clever as for the logic.
+The DTOs were created and the API cleaned up. The frontend offers a way to create and edit texts. Now focus on adding functionality to load versions of a text and being able
+to switch between them. The frontend should allow to select a version and display it. 
+Only the current version of a text should be editable. Follow the code style and guidelines in CLAUDE.md

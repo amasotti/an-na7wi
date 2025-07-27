@@ -1,4 +1,4 @@
-import type { Annotation, Text, TextVersion } from '@/types'
+import type { Annotation, Text, TextVersion, TextVersionSummary } from '@/types'
 import type { TextsRequest, TextsResponse } from '@/types'
 import apiClient from './api'
 
@@ -58,9 +58,9 @@ export const textService = {
   },
 
   /**
-   * Get all versions of a text
+   * Get all version summaries of a text (lightweight)
    */
-  async getTextVersions(textId: string): Promise<TextVersion[]> {
+  async getTextVersions(textId: string): Promise<TextVersionSummary[]> {
     const response = await apiClient.get(`/texts/${textId}/versions`)
     return response.data
   },
