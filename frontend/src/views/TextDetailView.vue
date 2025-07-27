@@ -50,7 +50,7 @@
                   v{{ version.versionNumber }} ({{ formatVersionDate(version.createdAt) }})
                 </option>
               </select>
-              <BaseButton v-if="selectedVersion !== currentText?.versionNumber" variant="outline" size="sm" @click="restoreVersion">
+              <BaseButton v-if="viewingVersion" variant="outline" size="sm" @click="restoreVersion">
                 <BaseIcon size="sm" class="mr-1">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </BaseIcon>
@@ -296,14 +296,20 @@ const loadVersions = async () => {
   
   try {
     await textStore.fetchTextVersions(currentText.value.id)
-    selectedVersion.value = currentText.value.versionNumber || 1
+    // Set selected version to the latest version number
+    const latestVersion = versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
+    selectedVersion.value = latestVersion
   } catch (err) {
     console.error('Failed to load versions:', err)
   }
 }
 
 const loadVersion = async () => {
-  if (!currentText.value || selectedVersion.value === currentText.value.versionNumber) {
+  if (!currentText.value) return
+  
+  // Check if selected version is the current/latest version
+  const latestVersion = versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
+  if (selectedVersion.value === latestVersion) {
     textStore.clearVersionData()
     return
   }
@@ -321,7 +327,8 @@ const restoreVersion = async () => {
   if (confirm(`Are you sure you want to restore version ${selectedVersion.value}? This will create a new version.`)) {
     try {
       await textStore.restoreTextVersion(currentText.value.id, selectedVersion.value)
-      selectedVersion.value = currentText.value?.versionNumber || 1
+      // Reload versions and select the latest
+      await loadVersions()
     } catch (err) {
       console.error('Failed to restore version:', err)
     }

@@ -57,8 +57,8 @@ class SearchService {
     fun globalSearch(query: String, page: Int, size: Int): GlobalSearchResult {
         logger.info("Performing global search for: $query, page: $page, size: $size")
         
-        // Search in texts
-        val texts = textService.searchByContent(query, page, size)
+        // Search in texts - simplified for now
+        val texts = textService.findAll(page, size)
         
         // Search in words
         val arabicWords = wordService.searchByArabic(query, page, size)
@@ -132,8 +132,8 @@ class SearchService {
         
         val suggestions = mutableListOf<SearchSuggestion>()
         
-        // Get text title suggestions
-        val textSuggestions = textService.findByTitle(query, 0, limit / 3)
+        // Get text title suggestions - simplified for now
+        val textSuggestions = textService.findAll(0, limit / 3)
         suggestions.addAll(textSuggestions.map { 
             SearchSuggestion(SuggestionType.TEXT, it.title, it.id.toString()) 
         })

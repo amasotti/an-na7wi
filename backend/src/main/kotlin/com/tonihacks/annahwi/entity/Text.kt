@@ -2,18 +2,7 @@ package com.tonihacks.annahwi.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.UUID
 import org.hibernate.annotations.JdbcTypeCode
@@ -64,9 +53,6 @@ class Text : PanacheEntityBase {
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now()
     
-    @Column(name = "version_number", nullable = false)
-    var versionNumber: Int = 1
-    
     @Column(name = "is_current_version", nullable = false)
     var isCurrentVersion: Boolean = true
     
@@ -75,6 +61,10 @@ class Text : PanacheEntityBase {
     
     @Column(name = "comments", columnDefinition = "TEXT")
     var comments: String? = null
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "version_id")
+    var version: TextVersion? = null
     
     @OneToMany(mappedBy = "text", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonIgnoreProperties("text")

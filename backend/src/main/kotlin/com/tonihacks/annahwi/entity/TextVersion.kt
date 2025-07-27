@@ -20,20 +20,8 @@ class TextVersion : PanacheEntityBase {
     @Column(name = "version_number", nullable = false)
     var versionNumber: Int = 1
     
-    @Column(name = "title", length = 255, nullable = false)
-    lateinit var title: String
-    
-    @Column(name = "arabic_content", columnDefinition = "TEXT", nullable = false)
-    lateinit var arabicContent: String
-    
-    @Column(name = "transliteration", columnDefinition = "TEXT")
-    var transliteration: String? = null
-    
-    @Column(name = "translation", columnDefinition = "TEXT")
-    var translation: String? = null
-    
-    @Column(name = "comments", columnDefinition = "TEXT")
-    var comments: String? = null
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
+    lateinit var content: String
     
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()

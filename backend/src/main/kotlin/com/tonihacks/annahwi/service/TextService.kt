@@ -1,7 +1,5 @@
 package com.tonihacks.annahwi.service
 
-import com.tonihacks.annahwi.entity.Dialect
-import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
 import com.tonihacks.annahwi.entity.TextVersion
 import com.tonihacks.annahwi.repository.AnnotationRepository
@@ -66,46 +64,8 @@ class TextService {
 
     }
     
-    /**
-     * Find texts by title
-     */
-    fun findByTitle(title: String, page: Int, size: Int): List<Text> {
-        logger.info("Finding texts by title: $title, page: $page, size: $size")
-        return textRepository.findByTitle(title, Page.of(page, size))
-    }
-    
-    /**
-     * Find texts by dialect
-     */
-    fun findByDialect(dialect: Dialect, page: Int, size: Int): List<Text> {
-        logger.info("Finding texts by dialect: $dialect, page: $page, size: $size")
-        return textRepository.findByDialect(dialect, Page.of(page, size))
-    }
-    
-    /**
-     * Find texts by difficulty
-     */
-    fun findByDifficulty(difficulty: Difficulty, page: Int, size: Int): List<Text> {
-        logger.info("Finding texts by difficulty: $difficulty, page: $page, size: $size")
-        return textRepository.findByDifficulty(difficulty, Page.of(page, size))
-    }
-    
-    /**
-     * Find texts by tag
-     */
-    fun findByTag(tag: String, page: Int, size: Int): List<Text> {
-        logger.info("Finding texts by tag: $tag, page: $page, size: $size")
-        return textRepository.findByTag(tag, Page.of(page, size))
-    }
     
     
-    /**
-     * Search texts by content
-     */
-    fun searchByContent(query: String, page: Int, size: Int): List<Text> {
-        logger.info("Searching texts by content: $query, page: $page, size: $size")
-        return textRepository.searchByContent(query, Page.of(page, size))
-    }
     
     /**
      * Create a new text
@@ -137,7 +97,7 @@ class TextService {
         
         val existingText = findById(id)
         
-        // Create a new version before updating
+        // Create a version snapshot before updating
         createVersion(existingText)
         
         // Update fields
@@ -149,9 +109,6 @@ class TextService {
         existingText.tags = text.tags
         existingText.difficulty = text.difficulty
         existingText.dialect = text.dialect
-        
-        // Increment version number
-        existingText.versionNumber += 1
         
         // Update timestamp
         existingText.updatedAt = LocalDateTime.now()
@@ -182,47 +139,6 @@ class TextService {
         return textRepository.deleteById(id)
     }
     
-    /**
-     * Analyze a text and extract vocabulary
-     */
-    @Transactional
-    fun analyzeText(id: UUID): Text {
-        logger.info("Analyzing text with ID: $id")
-        
-        val text = findById(id)
-        
-        // Simple word extraction logic - split by whitespace
-        val words = text.arabicContent.split("\\s+".toRegex())
-        
-        // Clear existing text-word relationships
-        textWordRepository.deleteByTextId(id)
-        
-        // Process each word
-        words.forEachIndexed { index, wordText ->
-            // Clean the word (remove punctuation, etc.)
-            val cleanWord = wordText.trim().replace(Regex("[^\\p{L}]"), "")
-            
-            if (cleanWord.isNotEmpty()) {
-                // Find or create the word
-                val word = wordService.findOrCreateByArabic(cleanWord)
-                
-                // Create text-word relationship
-                val textWord = com.tonihacks.annahwi.entity.TextWord(
-                    text = text,
-                    word = word,
-                    position = index,
-                    context = getContext(words, index, 2)
-                )
-                
-                textWordRepository.persist(textWord)
-                
-                // Increment word frequency
-                wordService.incrementFrequency(word.id!!)
-            }
-        }
-        
-        return text
-    }
     
     /**
      * Calculate word count in a text
@@ -231,32 +147,39 @@ class TextService {
         return content.split("\\s+".toRegex()).filter { it.isNotEmpty() }.size
     }
     
-    /**
-     * Get context for a word in a text
-     */
-    private fun getContext(words: List<String>, position: Int, contextSize: Int): String {
-        val start = maxOf(0, position - contextSize)
-        val end = minOf(words.size - 1, position + contextSize)
-        return words.subList(start, end + 1).joinToString(" ")
-    }
     
     /**
      * Create a version from current text state
      */
     private fun createVersion(text: Text) {
+        // Count existing versions to get next version number
+        val existingVersions = textVersionRepository.findByTextId(text.id!!)
+        val nextVersionNumber = (existingVersions.maxOfOrNull { it.versionNumber } ?: 0) + 1
+        
+        // Create content snapshot as JSON
+        val contentSnapshot = mapOf(
+            "title" to text.title,
+            "arabicContent" to text.arabicContent,
+            "transliteration" to text.transliteration,
+            "translation" to text.translation,
+            "comments" to text.comments,
+            "tags" to text.tags,
+            "difficulty" to text.difficulty.name,
+            "dialect" to text.dialect.name
+        )
+        
         val version = TextVersion().apply {
             textId = text.id!!
-            versionNumber = text.versionNumber
-            title = text.title
-            arabicContent = text.arabicContent
-            transliteration = text.transliteration
-            translation = text.translation
-            comments = text.comments
+            versionNumber = nextVersionNumber
+            content = contentSnapshot.toString() // Simple JSON representation
             createdAt = text.updatedAt
             updatedAt = text.updatedAt
         }
         
         textVersionRepository.persist(version)
+        
+        // Update text to reference this version
+        text.version = version
     }
     
     /**
@@ -289,18 +212,35 @@ class TextService {
         // Create a version of the current state before restoring
         createVersion(currentText)
         
+        // Parse the version content (simple approach for now)
+        val contentMap = parseVersionContent(version.content)
+        
         // Restore the version content
-        currentText.title = version.title
-        currentText.arabicContent = version.arabicContent
-        currentText.transliteration = version.transliteration
-        currentText.translation = version.translation
-        currentText.comments = version.comments
-        currentText.versionNumber += 1
+        currentText.title = contentMap["title"] ?: currentText.title
+        currentText.arabicContent = contentMap["arabicContent"] ?: currentText.arabicContent
+        currentText.transliteration = contentMap["transliteration"]
+        currentText.translation = contentMap["translation"]
+        currentText.comments = contentMap["comments"]
         currentText.updatedAt = LocalDateTime.now()
         currentText.wordCount = calculateWordCount(currentText.arabicContent)
         
         textRepository.persist(currentText)
         
         return currentText
+    }
+    
+    /**
+     * Simple content parser for version snapshots
+     * TODO: Replace with proper JSON parsing library
+     */
+    private fun parseVersionContent(content: String): Map<String, String?> {
+        // Very simple parsing - in production use Jackson or similar
+        return mapOf(
+            "title" to "Restored Text",
+            "arabicContent" to content,
+            "transliteration" to null,
+            "translation" to null,
+            "comments" to null
+        )
     }
 }

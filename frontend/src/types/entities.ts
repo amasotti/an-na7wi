@@ -11,7 +11,7 @@ export interface Text {
   tags: string[]
   difficulty: Difficulty
   dialect: Dialect
-  versionNumber: number
+  versionId?: string
   isCurrentVersion: boolean
   parentTextId?: string
   wordCount: number

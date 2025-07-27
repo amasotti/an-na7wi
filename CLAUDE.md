@@ -34,12 +34,13 @@ The file `docs/requirements.md` contains the detailed requirements and specifica
 ### Backend (Kotlin + Quarkus)
 - **Framework**: Quarkus 3.24+ with Kotlin 2.2+, JDK 21
 - **Database**: PostgreSQL with Flyway migrations
-- **Architecture**: Standard layered architecture with controllers, services, repositories, and entities
+- **Architecture**: Standard layered architecture with controllers, services, repositories, and entities. Focus on clean code practices.
 - **Package structure**: `com.tonihacks.annahwi.*`
 - **Key features**: Full-text search for Arabic content, RESTful APIs, OpenAPI documentation
 
 ### Frontend (Vue.js 3 + TypeScript)
 - **Framework**: Vue 3 with Composition API, TypeScript, Vite
+- APIs: Axios for API communication
 - **Styling**: Tailwind CSS
 - **State management**: Pinia stores
 - **Key features**: RTL support for Arabic text, text editor, vocabulary management, annotations
@@ -91,12 +92,6 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 - Aim for 70% code coverage
 
 ## Development Notes
-
-### Arabic Text Handling
-- All Arabic content supports RTL display
-- Text processing utilities for Arabic root extraction
-- Full-text search optimized for Arabic script
-- Transliteration and translation fields are optional
 
 ### Database Migrations
 - Flyway migrations in `backend/src/main/resources/db/migration/`
