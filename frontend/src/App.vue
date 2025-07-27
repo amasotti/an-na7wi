@@ -4,13 +4,11 @@
 
     <main class="flex-grow">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Transition
-          name="page"
-          mode="out-in"
-          appear
-        >
-          <router-view />
-        </Transition>
+        <router-view v-slot="{ Component }">
+          <Transition name="slide-fade-enter-active" mode="out-in">
+            <component :is="Component" />
+          </Transition>
+        </router-view>
       </div>
     </main>
 
