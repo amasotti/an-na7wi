@@ -35,18 +35,25 @@ class Annotation : PanacheEntityBase {
     @JsonIgnoreProperties("annotations", "textWords")
     lateinit var text: Text
     
+    @Column(name = "anchor_text", nullable = false)
+    lateinit var anchorText: String
+    
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     lateinit var content: String
-    
-    @Column(name = "position_start", nullable = false)
-    var positionStart: Int = 0
-    
-    @Column(name = "position_end", nullable = false)
-    var positionEnd: Int = 0
     
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     lateinit var type: AnnotationType
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mastery_level", nullable = false)
+    var masteryLevel: MasteryLevel = MasteryLevel.NEW
+    
+    @Column(name = "needs_review", nullable = false)
+    var needsReview: Boolean = false
+    
+    @Column(name = "next_review_date")
+    var nextReviewDate: LocalDateTime? = null
     
     @Column(name = "color")
     var color: String? = null

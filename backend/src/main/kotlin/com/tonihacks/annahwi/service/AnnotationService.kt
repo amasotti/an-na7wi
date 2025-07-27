@@ -2,6 +2,7 @@ package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.AnnotationType
+import com.tonihacks.annahwi.entity.MasteryLevel
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -75,11 +76,36 @@ class AnnotationService {
     }
     
     /**
-     * Find annotations by position range
+     * Find annotations needing review
      */
-    fun findByPositionRange(textId: UUID, startPosition: Int, endPosition: Int, page: Int, size: Int): List<Annotation> {
-        logger.info("Finding annotations by position range: $startPosition-$endPosition, page: $page, size: $size")
-        return annotationRepository.findByPositionRange(textId, startPosition, endPosition, Page.of(page, size))
+    fun findAnnotationsForReview(page: Int, size: Int): List<Annotation> {
+        logger.info("Finding annotations for review, page: $page, size: $size")
+        return annotationRepository.findByNeedsReview(true, Page.of(page, size))
+    }
+    
+    /**
+     * Update mastery level
+     */
+    @Transactional
+    fun updateMasteryLevel(id: UUID, masteryLevel: MasteryLevel): Annotation {
+        logger.info("Updating mastery level for annotation $id to $masteryLevel")
+        val annotation = findById(id)
+        annotation.masteryLevel = masteryLevel
+        annotationRepository.persist(annotation)
+        return annotation
+    }
+    
+    /**
+     * Update review settings
+     */
+    @Transactional
+    fun updateReviewSettings(id: UUID, needsReview: Boolean, nextReviewDate: LocalDateTime?): Annotation {
+        logger.info("Updating review settings for annotation $id - needsReview: $needsReview")
+        val annotation = findById(id)
+        annotation.needsReview = needsReview
+        annotation.nextReviewDate = nextReviewDate
+        annotationRepository.persist(annotation)
+        return annotation
     }
     
     /**
@@ -104,9 +130,6 @@ class AnnotationService {
         // Set creation timestamp
         annotation.createdAt = LocalDateTime.now()
         
-        // Validate position range
-        validatePositionRange(annotation)
-        
         // Persist the annotation
         annotationRepository.persist(annotation)
         
@@ -123,14 +146,13 @@ class AnnotationService {
         val existingAnnotation = findById(id)
         
         // Update fields
+        existingAnnotation.anchorText = annotation.anchorText
         existingAnnotation.content = annotation.content
-        existingAnnotation.positionStart = annotation.positionStart
-        existingAnnotation.positionEnd = annotation.positionEnd
         existingAnnotation.type = annotation.type
+        existingAnnotation.masteryLevel = annotation.masteryLevel
+        existingAnnotation.needsReview = annotation.needsReview
+        existingAnnotation.nextReviewDate = annotation.nextReviewDate
         existingAnnotation.color = annotation.color
-        
-        // Validate position range
-        validatePositionRange(existingAnnotation)
         
         // Persist the updated annotation
         annotationRepository.persist(existingAnnotation)
@@ -156,25 +178,4 @@ class AnnotationService {
         return annotationRepository.deleteByTextId(textId)
     }
     
-    /**
-     * Validate that the annotation position range is valid
-     */
-    private fun validatePositionRange(annotation: Annotation) {
-
-        require(annotation.positionStart >= 0) {
-            "Position start must be non-negative"
-        }
-
-        require(annotation.positionEnd >= annotation.positionStart) {
-            throw IllegalArgumentException("Position end must be greater than or equal to position start")
-        }
-        
-        val text = annotation.text
-        val contentLength = text.arabicContent.length
-
-        require(annotation.positionEnd <= contentLength) {
-            "Position end must be less than or equal to the text length: ${text.arabicContent.length}"
-        }
-
-    }
 }

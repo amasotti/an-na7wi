@@ -32,6 +32,7 @@ quarkus-kotlin = { module = "io.quarkus:quarkus-kotlin" }
 restassured = { module = "io.rest-assured:rest-assured" }
 quarkus-junit5 = { module = "io.quarkus:quarkus-junit5" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+quarkus-jdbc-h2 = { module = "io.quarkus:quarkus-jdbc-h2" }
 
 [bundles]
 quarkus = [

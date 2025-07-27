@@ -51,5 +51,15 @@ enum class AnnotationType {
     GRAMMAR,
     VOCABULARY,
     CULTURAL,
-    PRONUNCIATION
+    OTHER
+}
+
+/**
+ * Represents the mastery level of an annotation
+ */
+enum class MasteryLevel {
+    NEW,
+    LEARNING,
+    KNOWN,
+    MASTERED
 }

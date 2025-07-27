@@ -25,5 +25,12 @@ export enum AnnotationType {
   GRAMMAR = 'GRAMMAR',
   VOCABULARY = 'VOCABULARY',
   CULTURAL = 'CULTURAL',
-  PRONUNCIATION = 'PRONUNCIATION',
+  OTHER = 'OTHER',
+}
+
+export enum MasteryLevel {
+  NEW = 'NEW',
+  LEARNING = 'LEARNING',
+  KNOWN = 'KNOWN',
+  MASTERED = 'MASTERED',
 }

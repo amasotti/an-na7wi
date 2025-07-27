@@ -26,7 +26,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
      * Find annotations by text ID
      */
     fun findByTextId(textId: UUID, page: Page): List<Annotation> {
-        val sortOption = Sort.by("positionStart")
+        val sortOption = Sort.by("createdAt")
         return find(query = "text.id", sort = sortOption, textId)
             .page(page)
             .list()
@@ -35,7 +35,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     /**
      * Find annotations by type
      */
-    fun findByType(type: AnnotationType, page: Page, sort: String = "positionStart"): List<Annotation> {
+    fun findByType(type: AnnotationType, page: Page, sort: String = "createdAt"): List<Annotation> {
         val sortOption = Sort.by(sort)
         return find("type", sortOption, type)
             .page(page)
@@ -53,14 +53,10 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     }
     
     /**
-     * Find annotations by position range
+     * Find annotations by needsReview flag
      */
-    @Suppress("MaxLineLength")
-    fun findByPositionRange(textId: UUID, startPosition: Int, endPosition: Int, page: Page): List<Annotation> {
-        return find("text.id = :textId AND ((positionStart >= :startPosition AND positionStart <= :endPosition) OR (positionEnd >= :startPosition AND positionEnd <= :endPosition))", 
-            Parameters.with("textId", textId)
-                .and("startPosition", startPosition)
-                .and("endPosition", endPosition))
+    fun findByNeedsReview(needsReview: Boolean, page: Page): List<Annotation> {
+        return find("needsReview", Sort.by("nextReviewDate", "createdAt"), needsReview)
             .page(page)
             .list()
     }
@@ -68,7 +64,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     /**
      * Search annotations by content (case-insensitive)
      */
-    fun searchByContent(query: String, page: Page, sort: Sort = Sort.by("positionStart")): List<Annotation> {
+    fun searchByContent(query: String, page: Page): List<Annotation> {
         return find("LOWER(content) LIKE LOWER(:query)", 
             Parameters.with("query", "%$query%"))
             .page(page)
