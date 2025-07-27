@@ -2,7 +2,6 @@ package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.dto.request.AnnotationRequestDTO
 import com.tonihacks.annahwi.entity.Annotation
-import com.tonihacks.annahwi.entity.AnnotationType
 import com.tonihacks.annahwi.entity.MasteryLevel
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import io.quarkus.panache.common.Page

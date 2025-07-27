@@ -74,7 +74,7 @@
           </div>
         </div>
 
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ displayText!!.title }}</h1>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ displayText?.title || 'Untitled' }}</h1>
         
         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
           <div class="flex items-center gap-2">
@@ -122,12 +122,12 @@
                 dir="rtl"
                 lang="ar"
               >
-                {{ displayText.arabicContent }}
+                {{ displayText?.arabicContent || 'No content' }}
               </div>
             </div>
 
             <!-- Transliteration -->
-            <div v-if="displayText.transliteration">
+            <div v-if="displayText?.transliteration">
               <h2 class="text-lg font-semibold text-gray-900 mb-4">Transliteration</h2>
               <div class="text-lg leading-relaxed text-gray-700 italic bg-blue-50 p-6 rounded-lg">
                 {{ displayText.transliteration }}
@@ -135,7 +135,7 @@
             </div>
 
             <!-- Translation -->
-            <div v-if="displayText.translation">
+            <div v-if="displayText?.translation">
               <h2 class="text-lg font-semibold text-gray-900 mb-4">Translation</h2>
               <div class="text-lg leading-relaxed text-gray-800 bg-green-50 p-6 rounded-lg">
                 {{ displayText.translation }}
@@ -215,7 +215,28 @@ const error = computed(() => textStore.error)
 
 // Display the current text or selected version
 const displayText = computed(() => {
-  return viewingVersion.value || currentText.value
+  // When viewing a specific version, show the version content parsed as text-like object
+  if (viewingVersion.value) {
+    try {
+      // Parse the version content (which is stored as a string representation)
+      const content = viewingVersion.value.content
+      // For now, return a basic structure - this could be improved with proper JSON parsing
+      return {
+        title: `Version ${viewingVersion.value.versionNumber}`,
+        arabicContent: content.includes('arabicContent=')
+          ? content.split('arabicContent=')[1]?.split(',')[0]?.trim() || 'Version content'
+          : 'Version content',
+        transliteration: null,
+        translation: null,
+        ...currentText.value, // Use current text as fallback for other properties
+      }
+    } catch {
+      // If parsing fails, fallback to current text
+      return currentText.value
+    }
+  }
+  // Default to current text
+  return currentText.value
 })
 
 // Computed UI properties
