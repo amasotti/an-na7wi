@@ -163,6 +163,7 @@
     <AnnotationForm
       :open="showAnnotationModal"
       :annotation="editingAnnotation"
+      :selected-text="currentSelectedText"
       :loading="loading"
       @close="closeAnnotationModal"
       @submit="handleAnnotationSubmit"
@@ -217,6 +218,7 @@ const editingAnnotation = ref<Annotation | undefined>(undefined)
 // Selection toolbar state
 const showSelectionToolbar = ref(false)
 const selectionToolbarPosition = ref({ x: 0, y: 0 })
+const currentSelectedText = ref('')
 // biome-ignore lint/suspicious/noExplicitAny: Allow any type for this expose to access the component instance
 const annotatedTextRef = ref<any>(null)
 
@@ -420,11 +422,13 @@ const handleAnnotationSubmit = async (data: {
 // Selection toolbar handlers
 const handleTextSelected = (data: { selectedText: string; position: { x: number; y: number } }) => {
   selectionToolbarPosition.value = data.position
+  currentSelectedText.value = data.selectedText
   showSelectionToolbar.value = true
 }
 
 const handleSelectionCleared = () => {
   showSelectionToolbar.value = false
+  currentSelectedText.value = ''
 }
 
 const createAnnotationFromSelection = () => {

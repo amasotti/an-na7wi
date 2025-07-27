@@ -99,31 +99,27 @@
       </div>
 
       <!-- Buttons -->
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center pt-6">
         <!-- Delete button (only in edit mode) -->
-        <div>
-          <BaseButton 
-            v-if="isEditing" 
-            type="button" 
-            variant="danger" 
-            @click="handleDelete"
-          >
-            <BaseIcon size="sm" class="mr-1">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </BaseIcon>
-            Delete
-          </BaseButton>
-        </div>
+        <BaseButton 
+          v-if="isEditing" 
+          type="button" 
+          variant="danger"
+          @click="handleDelete"
+        >
+          Delete
+        </BaseButton>
         
-        <!-- Cancel and Submit buttons -->
-        <div class="flex space-x-3">
-          <BaseButton type="button" variant="outline" @click="handleClose">
-            Cancel
-          </BaseButton>
-          <BaseButton type="submit" :loading="loading">
-            {{ isEditing ? 'Update' : 'Create' }}
-          </BaseButton>
-        </div>
+        <!-- Empty div to maintain layout when no delete button -->
+        <div v-else></div>
+        
+        <!-- Submit button -->
+        <BaseButton 
+          type="submit"
+          :loading="loading"
+        >
+          {{ isEditing ? 'Update' : 'Create' }}
+        </BaseButton>
       </div>
     </form>
   </BaseModal>
@@ -142,6 +138,7 @@ interface Props {
   annotation?: Annotation
   loading?: boolean
   canEditAnchorText?: boolean
+  selectedText?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -149,6 +146,7 @@ const props = withDefaults(defineProps<Props>(), {
   annotation: undefined,
   loading: false,
   canEditAnchorText: false,
+  selectedText: '',
 })
 
 const emit = defineEmits<{
@@ -200,7 +198,7 @@ watch(
     } else {
       // Reset form for new annotation
       form.value = {
-        anchorText: '',
+        anchorText: props.selectedText || '',
         content: '',
         type: AnnotationTypeEnum.VOCABULARY,
         masteryLevel: MasteryLevelEnum.NEW,
@@ -212,6 +210,17 @@ watch(
   { immediate: true }
 )
 
+// Watch for changes in selectedText prop
+watch(
+  () => props.selectedText,
+  newSelectedText => {
+    // Only update if we're not editing an existing annotation
+    if (!props.annotation) {
+      form.value.anchorText = newSelectedText || ''
+    }
+  }
+)
+
 // Watch for open state changes
 watch(
   () => props.open,
@@ -220,7 +229,7 @@ watch(
       // Reset form when modal is closed
       if (!props.annotation) {
         form.value = {
-          anchorText: '',
+          anchorText: props.selectedText || '',
           content: '',
           type: AnnotationTypeEnum.VOCABULARY,
           masteryLevel: MasteryLevelEnum.NEW,

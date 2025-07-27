@@ -45,6 +45,7 @@
     <AnnotationForm
       :open="showAnnotationForm"
       :annotation="editingAnnotation"
+      :selected-text="selectedText"
       :loading="loading"
       @close="closeAnnotationForm"
       @submit="handleAnnotationSubmit"
