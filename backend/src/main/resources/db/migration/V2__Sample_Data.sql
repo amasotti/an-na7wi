@@ -2,7 +2,7 @@
 -- Sample data for the An-Nahwi application
 
 -- Sample texts
-INSERT INTO texts (id, title, arabic_content, transliteration, translation, tags, difficulty, dialect, is_public, word_count, created_at, updated_at)
+INSERT INTO texts (id, title, arabic_content, transliteration, translation, tags, difficulty, dialect, word_count, created_at, updated_at)
 VALUES 
     ('17bd0e0e-9a5c-4d1a-8ac6-9f68bc5af56d',
      'مرحبا بالعالم', 
@@ -12,7 +12,6 @@ VALUES
      '["greeting", "beginner"]', 
      'BEGINNER', 
      'MSA', 
-     TRUE, 
      6, 
      NOW(), 
      NOW()),
@@ -25,7 +24,6 @@ VALUES
      '["weather", "tunisia", "intermediate"]', 
      'INTERMEDIATE', 
      'TUNISIAN', 
-     TRUE, 
      12, 
      NOW(), 
      NOW()),
@@ -38,7 +36,6 @@ VALUES
      '["food", "morocco", "culture", "advanced"]', 
      'ADVANCED', 
      'MOROCCAN', 
-     TRUE, 
      15, 
      NOW(), 
      NOW());
