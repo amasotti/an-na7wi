@@ -11,8 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h } from 'vue'
 import { combineClasses } from '@/styles/component-classes.ts'
+import { computed, h } from 'vue'
 import BaseIcon from '../common/BaseIcon.vue'
 
 interface Props {
