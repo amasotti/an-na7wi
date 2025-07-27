@@ -54,3 +54,10 @@ cd frontend && pnpm install && pnpm run dev
 - [Requirements & Architecture](docs/architecture/)
 - [Development Guide](docs/development/)
 - [Database Management](docs/database/)
+
+
+## Backup DB
+
+```bash
+ docker exec -i annahwi-postgres pg_dump -U annahwi_user -d annahwi --column-inserts --data-only > path.sql
+```
