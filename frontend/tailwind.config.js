@@ -45,7 +45,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Lato', 'system-ui', 'sans-serif'],
         arabic: ['Noto Naskh Arabic', 'Lateef', 'serif'],
         'arabic-display': ['Lateef', 'Noto Naskh Arabic', 'serif'],
         'arabic-text': ['Markazi Text', 'Noto Naskh Arabic', 'serif'],

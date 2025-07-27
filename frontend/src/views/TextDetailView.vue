@@ -337,7 +337,7 @@ onMounted(async () => {
 
 <style scoped>
 .font-arabic {
-  font-family: 'Amiri', 'Arabic Typesetting', 'Times New Roman', serif;
+  font-family: 'Noto Naskh Arabic', 'Arabic Typesetting', 'Times New Roman', serif;
 }
 
 .animate-fade-in {
