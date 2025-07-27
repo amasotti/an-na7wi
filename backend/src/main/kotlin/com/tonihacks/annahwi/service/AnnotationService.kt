@@ -56,22 +56,6 @@ class AnnotationService {
     }
     
     /**
-     * Find annotations by type
-     */
-    fun findByType(type: AnnotationType, page: Int, size: Int): List<Annotation> {
-        logger.info("Finding annotations by type: $type, page: $page, size: $size")
-        return annotationRepository.findByType(type, Page.of(page, size))
-    }
-    
-    /**
-     * Find annotations by text ID and type
-     */
-    fun findByTextIdAndType(textId: UUID, type: AnnotationType, page: Int, size: Int): List<Annotation> {
-        logger.info("Finding annotations by text ID: $textId and type: $type, page: $page, size: $size")
-        return annotationRepository.findByTextIdAndType(textId, type, Page.of(page, size))
-    }
-    
-    /**
      * Find annotations needing review
      */
     fun findAnnotationsForReview(page: Int, size: Int): List<Annotation> {

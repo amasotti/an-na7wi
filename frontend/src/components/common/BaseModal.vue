@@ -102,22 +102,6 @@ watch(
   @apply bg-white rounded-lg shadow-xl max-h-[90vh] overflow-hidden flex flex-col;
 }
 
-.modal-sm {
-  @apply w-full max-w-sm;
-}
-
-.modal-md {
-  @apply w-full max-w-md;
-}
-
-.modal-lg {
-  @apply w-full max-w-2xl;
-}
-
-.modal-xl {
-  @apply w-full max-w-4xl;
-}
-
 .modal-header {
   @apply flex items-center justify-between p-6 border-b border-gray-200;
 }
@@ -138,19 +122,9 @@ watch(
   @apply p-6 border-t border-gray-200 bg-gray-50;
 }
 
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-
 .modal-enter-active .modal-container,
 .modal-leave-active .modal-container {
   transition: transform 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
 }
 
 .modal-enter-from .modal-container,

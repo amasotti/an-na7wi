@@ -74,7 +74,7 @@
           </div>
         </div>
 
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ displayText.title }}</h1>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ displayText!!.title }}</h1>
         
         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
           <div class="flex items-center gap-2">
@@ -185,14 +185,14 @@
 </template>
 
 <script setup lang="ts">
+import type { BadgeVariant } from '@/types'
+import { Dialect, Difficulty } from '@/types'
 import { computed, onMounted, ref } from 'vue'
 import BaseBadge from '../components/common/BaseBadge.vue'
 import BaseButton from '../components/common/BaseButton.vue'
 import BaseCard from '../components/common/BaseCard.vue'
 import BaseIcon from '../components/common/BaseIcon.vue'
 import { useTextStore } from '../stores/textStore'
-import { Dialect, Difficulty } from '@/types'
-import type { BadgeVariant } from '@/types'
 
 interface Props {
   id: string
@@ -296,10 +296,10 @@ const loadVersions = async () => {
 
   try {
     await textStore.fetchTextVersions(currentText.value.id)
-    // Set selected version to the latest version number
-    const latestVersion =
-      versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
-    selectedVersion.value = latestVersion
+
+    const allVersions = versions.value ?? []
+    selectedVersion.value =
+      allVersions.length > 0 ? Math.max(...allVersions.map(v => v.versionNumber ?? 1)) : 1
   } catch (err) {
     console.error('Failed to load versions:', err)
   }
@@ -308,9 +308,10 @@ const loadVersions = async () => {
 const loadVersion = async () => {
   if (!currentText.value) return
 
-  // Check if selected version is the current/latest version
+  const allVersions = versions.value ?? []
   const latestVersion =
-    versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
+    allVersions.length > 0 ? Math.max(...allVersions.map(v => v.versionNumber ?? 1)) : 1
+
   if (selectedVersion.value === latestVersion) {
     textStore.clearVersionData()
     return

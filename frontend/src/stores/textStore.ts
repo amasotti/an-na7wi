@@ -1,8 +1,8 @@
+import type { Annotation, Dialect, Difficulty, Text, TextVersion } from '@/types'
+import type { TextsRequest } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { textService } from '../services/textService'
-import type { Annotation, Dialect, Difficulty, Text, TextVersion } from '../types'
-import type { TextsRequest } from '../types/api'
 
 export const useTextStore = defineStore('text', () => {
   // State

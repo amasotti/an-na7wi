@@ -21,15 +21,6 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun findById(id: UUID): Annotation? {
         return find("id", id).firstResult()
     }
-    
-    /**
-     * Find annotations by text ID
-     */
-    fun findByTextId(textId: UUID, page: Page): List<Annotation> {
-        return find("text.id = :textId", Parameters.with("textId", textId))
-            .page(page)
-            .list()
-    }
 
     /**
      * Find annotations by text ID with text data fetched to avoid N+1 queries
@@ -62,15 +53,6 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun findByTextIdAndType(textId: UUID, type: AnnotationType, page: Page): List<Annotation> {
         return find("text.id = :textId AND type = :type", 
             Parameters.with("textId", textId).and("type", type))
-            .page(page)
-            .list()
-    }
-    
-    /**
-     * Find annotations by needsReview flag
-     */
-    fun findByNeedsReview(needsReview: Boolean, page: Page): List<Annotation> {
-        return find("needsReview", Sort.by("nextReviewDate", "createdAt"), needsReview)
             .page(page)
             .list()
     }

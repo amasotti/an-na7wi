@@ -135,9 +135,9 @@
 </template>
 
 <script setup lang="ts">
+import { Dialect, Difficulty } from '@/types'
+import type { SelectOption } from '@/types'
 import { computed, ref, watch } from 'vue'
-import { Dialect, Difficulty } from '../../types/enums'
-import type { SelectOption } from '../../types/ui'
 import BaseBadge from '../common/BaseBadge.vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseInput from '../common/BaseInput.vue'

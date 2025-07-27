@@ -109,7 +109,7 @@
     <!-- Empty State -->
     <EmptyState
       v-else-if="!loading && texts"
-      :has-filters="!!hasActiveFilters"
+      :has-filters="hasActiveFilters"
       @create="showCreateModal = true"
       @clear-filters="clearFilters"
     />
@@ -139,7 +139,9 @@
 </template>
 
 <script setup lang="ts">
-import { type ComputedRef, computed, h, onMounted, ref } from 'vue'
+import { Dialect, Difficulty } from '@/types'
+import type { SelectOption } from '@/types'
+import { computed, h, onMounted, ref } from 'vue'
 import BaseBadge from '../components/common/BaseBadge.vue'
 import BaseButton from '../components/common/BaseButton.vue'
 import BaseCard from '../components/common/BaseCard.vue'
@@ -152,9 +154,7 @@ import TextCard from '../components/text/TextCard.vue'
 import TextCardSkeleton from '../components/text/TextCardSkeleton.vue'
 import TextCreateModal from '../components/text/TextCreateModal.vue'
 import { useTextStore } from '../stores/textStore'
-import { combineClasses, layoutClasses } from '../styles/component-classes'
-import { Dialect, Difficulty } from '@/types'
-import type { SelectOption } from '@/types'
+import { layoutClasses } from '../styles/component-classes'
 
 const textStore = useTextStore()
 const showCreateModal = ref(false)
@@ -207,13 +207,14 @@ const sortOptions: SelectOption<string>[] = [
 
 // Computed
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize.value))
-const hasActiveFilters = computed(
-  () =>
+const hasActiveFilters = computed(() => {
+  return Boolean(
     searchQuery.value ||
-    selectedDialect.value ||
-    selectedDifficulty.value ||
-    activeTags.value.length > 0
-)
+      selectedDialect.value ||
+      selectedDifficulty.value ||
+      activeTags.value.length > 0
+  )
+})
 
 const gridClasses = computed(() => {
   return viewMode.value === 'grid' ? layoutClasses.grid.cols3 : 'space-y-4'

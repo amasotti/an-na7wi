@@ -36,9 +36,6 @@ class TextService {
     @Inject
     lateinit var textVersionRepository: TextVersionRepository
     
-    @Inject
-    lateinit var wordService: WordService
-    
     private val logger = Logger.getLogger(TextService::class.java)
     
     /**

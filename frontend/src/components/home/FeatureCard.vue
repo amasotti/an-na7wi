@@ -37,9 +37,9 @@
 </template>
 
 <script setup lang="ts">
+import { cardClasses, combineClasses } from '@/styles/component-classes.ts'
 import { computed, h } from 'vue'
 import { useRouter } from 'vue-router'
-import { cardClasses, combineClasses } from '../../styles/component-classes'
 import BaseCard from '../common/BaseCard.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 
