@@ -1,4 +1,4 @@
-package com.tonihacks.annahwi.controller
+package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.dto.request.TextRequestDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse

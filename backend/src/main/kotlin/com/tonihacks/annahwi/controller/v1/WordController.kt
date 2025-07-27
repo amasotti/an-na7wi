@@ -1,4 +1,4 @@
-package com.tonihacks.annahwi.controller
+package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty

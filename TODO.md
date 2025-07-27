@@ -12,15 +12,6 @@
 * [ ] Clean TextService. Analyze functionality should be in another service
 * [ ] DB setup for tests or mocking DB conenction
 
-"
-TextControllerErrorTest > should return 400 for invalid pageSize parameter() FAILED
-java.lang.RuntimeException at QuarkusTestExtension.java:668
-Caused by: java.lang.RuntimeException at null:-1
-Caused by: org.flywaydb.core.internal.exception.sqlExceptions.FlywaySqlUnableToConnectToDbException at JdbcUtils.java:70
-Caused by: org.postgresql.util.PSQLException at ConnectionFactoryImpl.java:373
-Caused by: java.net.ConnectException at Net.java:-2
-"
-
 
 ## Prompts
 

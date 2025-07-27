@@ -26,8 +26,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
      * Find annotations by text ID
      */
     fun findByTextId(textId: UUID, page: Page): List<Annotation> {
-        val sortOption = Sort.by("createdAt")
-        return find(query = "text.id", sort = sortOption, textId)
+        return find("text.id = :textId", Parameters.with("textId", textId))
             .page(page)
             .list()
     }
