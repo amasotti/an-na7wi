@@ -155,20 +155,18 @@ const dropdownOpen = ref(false)
 // Computed classes using the style system
 const computedCardClasses = computed(() => {
   const baseClasses = combineClasses(
-    cardClasses.base, 
+    cardClasses.base,
     'group relative overflow-hidden hover:shadow-md transition-shadow duration-200'
   )
 
-  const viewModeClasses = props.viewMode === 'list' 
-    ? 'flex-1' 
-    : 'h-full'
+  const viewModeClasses = props.viewMode === 'list' ? 'flex-1' : 'h-full'
 
   return combineClasses(baseClasses, viewModeClasses)
 })
 
 const headerClasses = computed(() => `${layoutClasses.flex.between} mb-4`)
-const titleClasses = computed(() => 
-  'text-lg font-bold text-gray-900 truncate group-hover:text-primary-700 transition-colors'
+const titleClasses = computed(
+  () => 'text-lg font-bold text-gray-900 truncate group-hover:text-primary-700 transition-colors'
 )
 const badgeContainerClasses = computed(() => `${layoutClasses.flex.center} space-x-2 mt-1`)
 const actionButtonClasses = computed(
@@ -184,8 +182,8 @@ const transliterationClasses = computed(() => 'text-gray-600 italic text-sm line
 const tagsContainerClasses = computed(() => `${layoutClasses.flex.wrap} gap-1`)
 const footerClasses = computed(() => `${layoutClasses.flex.between} text-sm text-gray-500`)
 const footerInfoClasses = computed(() => `${layoutClasses.flex.center} space-x-4`)
-const viewLinkClasses = computed(() => 
-  'flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors'
+const viewLinkClasses = computed(
+  () => 'flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors'
 )
 
 // Other computed properties

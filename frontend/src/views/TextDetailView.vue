@@ -186,13 +186,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useTextStore } from '../stores/textStore'
-import { Dialect, Difficulty } from '../types'
-import type { BadgeVariant } from '../types'
 import BaseBadge from '../components/common/BaseBadge.vue'
 import BaseButton from '../components/common/BaseButton.vue'
 import BaseCard from '../components/common/BaseCard.vue'
 import BaseIcon from '../components/common/BaseIcon.vue'
+import { useTextStore } from '../stores/textStore'
+import { Dialect, Difficulty } from '../types'
+import type { BadgeVariant } from '../types'
 
 interface Props {
   id: string
@@ -293,11 +293,12 @@ const formatVersionDate = (dateString: string) => {
 
 const loadVersions = async () => {
   if (!currentText.value) return
-  
+
   try {
     await textStore.fetchTextVersions(currentText.value.id)
     // Set selected version to the latest version number
-    const latestVersion = versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
+    const latestVersion =
+      versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
     selectedVersion.value = latestVersion
   } catch (err) {
     console.error('Failed to load versions:', err)
@@ -306,14 +307,15 @@ const loadVersions = async () => {
 
 const loadVersion = async () => {
   if (!currentText.value) return
-  
+
   // Check if selected version is the current/latest version
-  const latestVersion = versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
+  const latestVersion =
+    versions.value.length > 0 ? Math.max(...versions.value.map(v => v.versionNumber)) : 1
   if (selectedVersion.value === latestVersion) {
     textStore.clearVersionData()
     return
   }
-  
+
   try {
     await textStore.fetchTextVersion(currentText.value.id, selectedVersion.value)
   } catch (err) {
@@ -323,8 +325,12 @@ const loadVersion = async () => {
 
 const restoreVersion = async () => {
   if (!currentText.value || !selectedVersion.value) return
-  
-  if (confirm(`Are you sure you want to restore version ${selectedVersion.value}? This will create a new version.`)) {
+
+  if (
+    confirm(
+      `Are you sure you want to restore version ${selectedVersion.value}? This will create a new version.`
+    )
+  ) {
     try {
       await textStore.restoreTextVersion(currentText.value.id, selectedVersion.value)
       // Reload versions and select the latest

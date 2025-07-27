@@ -53,9 +53,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed, h } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
-import {computed, h} from "vue";
 
 interface Props {
   hasFilters?: boolean

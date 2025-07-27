@@ -270,22 +270,22 @@ export const useTextStore = defineStore('text', () => {
 
     try {
       const restoredText = await textService.restoreVersion(textId, versionNumber)
-      
+
       // Update current text
       currentText.value = restoredText
-      
+
       // Update in the list
       const index = texts.value.findIndex(t => t.id === textId)
       if (index !== -1) {
         texts.value[index] = restoredText
       }
-      
+
       // Clear viewing version
       viewingVersion.value = null
-      
+
       // Refresh versions
       await fetchTextVersions(textId)
-      
+
       return restoredText
     } catch (err) {
       error.value = 'Failed to restore text version'

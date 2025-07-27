@@ -127,11 +127,19 @@
         @page-change="handlePageChange"
       />
     </div>
+
+    <!-- Text Create Modal -->
+    <TextCreateModal
+      :open="showCreateModal"
+      :loading="loading"
+      @close="showCreateModal = false"
+      @submit="handleCreateText"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, type ComputedRef, h, onMounted, ref} from 'vue'
+import { type ComputedRef, computed, h, onMounted, ref } from 'vue'
 import BaseBadge from '../components/common/BaseBadge.vue'
 import BaseButton from '../components/common/BaseButton.vue'
 import BaseCard from '../components/common/BaseCard.vue'
@@ -142,6 +150,7 @@ import Pagination from '../components/common/Pagination.vue'
 import EmptyState from '../components/text/EmptyState.vue'
 import TextCard from '../components/text/TextCard.vue'
 import TextCardSkeleton from '../components/text/TextCardSkeleton.vue'
+import TextCreateModal from '../components/text/TextCreateModal.vue'
 import { useTextStore } from '../stores/textStore'
 import { combineClasses, layoutClasses } from '../styles/component-classes'
 import { Dialect, Difficulty } from '../types'
@@ -262,6 +271,26 @@ const deleteTextConfirm = (textId: string) => {
 const duplicateText = (textId: string) => {
   // Handle duplicate text
   console.log('Duplicate text:', textId)
+}
+
+const handleCreateText = async (formData: {
+  title: string
+  arabicContent: string
+  transliteration?: string
+  translation?: string
+  comments?: string
+  tags: string[]
+  difficulty: Difficulty
+  dialect: Dialect
+}) => {
+  try {
+    await textStore.createText(formData)
+    showCreateModal.value = false
+    // Refresh the texts list
+    await textStore.fetchTexts()
+  } catch (error) {
+    console.error('Failed to create text:', error)
+  }
 }
 
 // Lifecycle

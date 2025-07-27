@@ -123,16 +123,14 @@ import StatCard from '../components/home/StatCard.vue'
 const features = [
   {
     title: 'Text Library',
-    description:
-      'Collect and organize Arabic texts with transliteration and personal notes.',
+    description: 'Collect and organize Arabic texts with transliteration and personal notes.',
     icon: 'document-text',
     color: 'primary',
     link: '/texts',
   },
   {
     title: 'Vocabulary Journal',
-    description:
-      'Build your personal dictionary with root analysis and usage examples.',
+    description: 'Build your personal dictionary with root analysis and usage examples.',
     icon: 'book-open',
     color: 'secondary',
     link: '/vocabulary',

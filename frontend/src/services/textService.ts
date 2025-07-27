@@ -22,8 +22,17 @@ export const textService = {
   /**
    * Create a new text
    */
-  async createText(text: Partial<Text>): Promise<Text> {
-    const response = await apiClient.post('/texts', text)
+  async createText(textData: {
+    title: string
+    arabicContent: string
+    transliteration?: string
+    translation?: string
+    comments?: string
+    tags: string[]
+    difficulty: string
+    dialect: string
+  }): Promise<Text> {
+    const response = await apiClient.post('/texts', textData)
     return response.data
   },
 
@@ -60,7 +69,10 @@ export const textService = {
   /**
    * Create a new annotation for a text
    */
-  async createAnnotation(textId: string, annotation: Omit<Annotation, 'id' | 'textId' | 'createdAt'>): Promise<Annotation> {
+  async createAnnotation(
+    textId: string,
+    annotation: Omit<Annotation, 'id' | 'textId' | 'createdAt'>
+  ): Promise<Annotation> {
     const response = await apiClient.post(`/annotations/text/${textId}`, annotation)
     return response.data
   },
@@ -68,7 +80,10 @@ export const textService = {
   /**
    * Update an existing annotation
    */
-  async updateAnnotation(id: string, annotation: Omit<Annotation, 'id' | 'textId' | 'createdAt'>): Promise<Annotation> {
+  async updateAnnotation(
+    id: string,
+    annotation: Omit<Annotation, 'id' | 'textId' | 'createdAt'>
+  ): Promise<Annotation> {
     const response = await apiClient.put(`/annotations/${id}`, annotation)
     return response.data
   },

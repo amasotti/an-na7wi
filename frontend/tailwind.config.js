@@ -55,7 +55,7 @@ module.exports = {
         'slide-up': 'slideUp 0.4s ease-out',
         'scale-in': 'scaleIn 0.3s ease-out',
         'bounce-subtle': 'bounceSubtle 2s infinite',
-        'blob': 'blob 7s infinite',
+        blob: 'blob 7s infinite',
       },
       backdropBlur: {
         xs: '2px',
