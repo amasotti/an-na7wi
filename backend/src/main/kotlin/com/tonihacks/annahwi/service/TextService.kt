@@ -145,9 +145,9 @@ class TextService {
         logger.info("Updating text with ID: $id")
         
         val existingText = findById(id)
-        
+
         // Create version snapshot before updating
-        textVersionService.createVersion(existingText, false)
+        //textVersionService.createVersion(existingText, false)
         
         // Update fields
         existingText.title = text.title

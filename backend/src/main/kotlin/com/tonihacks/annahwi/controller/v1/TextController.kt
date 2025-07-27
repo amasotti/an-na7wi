@@ -115,10 +115,7 @@ class TextController {
         textService.delete(id)
         return Response.noContent().build()
     }
-    
-    
-    
-    
+
     @GET
     @Path("/{id}/versions")
     @Operation(summary = "Get text versions", description = "Returns all versions of a text")
@@ -136,6 +133,15 @@ class TextController {
         logger.info("GET /api/v1/texts/$id/versions/$versionNumber")
         val version = textVersionService.getVersionForText(id, versionNumber)
         return Response.ok(version).build()
+    }
+    
+    @POST
+    @Path("/{id}/restore/{versionNumber}")
+    @Operation(summary = "Restore version", description = "Restores a specific version as the current version")
+    fun restoreTextVersion(@PathParam("id") id: UUID, @PathParam("versionNumber") versionNumber: Int): Response {
+        logger.info("POST /api/v1/texts/$id/restore/$versionNumber")
+        val restoredText = textVersionService.restoreVersion(id, versionNumber)
+        return Response.ok(TextResponseDTO.fromEntity(restoredText)).build()
     }
     
     @POST

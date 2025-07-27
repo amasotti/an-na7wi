@@ -107,5 +107,33 @@ class TextVersionService {
     fun getVersionsForText(textId: UUID): List<TextVersion> =
         textVersionRepository.findByTextId(textId)
 
+    @Transactional
+    fun restoreVersion(textId: UUID, versionNumber: Int): Text {
+        val text = textRepository.findById(textId)
+            ?: throw AppException(AppError.NotFound.Text(textId.toString()))
+        
+        val versionToRestore = getVersionForText(textId, versionNumber)
+        
+        // Get the version content (already a JsonNode)
+        val contentSnapshot = versionToRestore.content
+        
+        // Update text with version content
+        text.apply {
+            arabicContent = contentSnapshot.get("arabicContent")?.asText() ?: arabicContent
+            transliteration = contentSnapshot.get("transliteration")?.asText()
+            translation = contentSnapshot.get("translation")?.asText()
+            comments = contentSnapshot.get("comments")?.asText()
+            title = contentSnapshot.get("title")?.asText() ?: title
+            // Keep current metadata like tags, difficulty, dialect unchanged
+        }
+        
+        // Create a new version from the restored content and set it as current
+        createVersion(text, setAsCurrent = true)
+        
+        textRepository.persistAndFlush(text)
+            .also { logger.info("Text restored from version $versionNumber: ${text.id}") }
+        
+        return text
+    }
 
 }
