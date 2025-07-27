@@ -1,11 +1,9 @@
 package com.tonihacks.annahwi.repository
 
 import com.tonihacks.annahwi.entity.Annotation
-import com.tonihacks.annahwi.entity.AnnotationType
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Parameters
-import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
 import java.util.*
 

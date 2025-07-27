@@ -1,6 +1,5 @@
 package com.tonihacks.annahwi.dto.response
 
-import com.tonihacks.annahwi.entity.TextVersion
 import java.time.LocalDateTime
 import java.util.UUID
 
