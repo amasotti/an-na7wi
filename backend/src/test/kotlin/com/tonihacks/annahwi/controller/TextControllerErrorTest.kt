@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.controller
 
+import com.tonihacks.annahwi.entity.Dialect
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import org.hamcrest.Matchers.*
@@ -23,7 +24,7 @@ class TextControllerErrorTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body("error.code", equalTo("VALIDATION_ERROR"))
             .body("error.message", containsString("Invalid dialect 'INVALID_DIALECT'"))
-            .body("error.message", containsString("TUNISIAN, MOROCCAN, EGYPTIAN, MSA"))
+            .body("error.message", containsString(Dialect.allToJoinedString()))
             .body("error.field", equalTo("dialect"))
             .body("timestamp", notNullValue())
     }

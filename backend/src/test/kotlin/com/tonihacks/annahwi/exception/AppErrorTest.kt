@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.exception
 
+import com.tonihacks.annahwi.entity.Dialect
 import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -34,7 +35,7 @@ class AppErrorTest {
         
         assertEquals("VALIDATION_ERROR", error.code)
         assertTrue(error.message.contains("Invalid dialect '$invalidDialect'"))
-        assertTrue(error.message.contains("TUNISIAN, MOROCCAN, EGYPTIAN, MSA"))
+        assertTrue(error.message.contains(Dialect.allToJoinedString()))
         assertEquals("dialect", error.fieldName)
         assertEquals(invalidDialect, error.rejectedValue)
     }

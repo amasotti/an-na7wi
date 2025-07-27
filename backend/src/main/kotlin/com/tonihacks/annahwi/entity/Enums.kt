@@ -23,6 +23,12 @@ enum class Dialect {
     companion object {
         fun fromString(value: String): Dialect? =
             entries.firstOrNull { it.name.equals(value.trim(), ignoreCase = true) }
+
+        fun allToJoinedString(): String =
+            entries.joinToString(", ")
+
+        fun isValid(value: String): Boolean =
+            entries.any { it.name.equals(value.trim(), ignoreCase = true) }
     }
 }
 
