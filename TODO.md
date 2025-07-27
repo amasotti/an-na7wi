@@ -10,8 +10,9 @@
 
 * [ ] Cleanup job for deprecated versions of a text
 * [ ] Clean TextService. Analyze functionality should be in another service
-* [ ] DB setup for tests or mocking DB conenction
-
+* [x] DB setup for tests or mocking DB conenction
+* [x] Add tests for Services and Controllers
+* [x] Add DTOs
 
 ## Prompts
 

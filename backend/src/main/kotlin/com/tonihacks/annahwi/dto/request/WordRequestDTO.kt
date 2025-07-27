@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.dto.request
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.PartOfSpeech
@@ -18,7 +19,7 @@ data class WordRequestDTO(
     val frequency: Int = 0,
     val difficulty: Difficulty,
     val dialect: Dialect,
-    val isVerified: Boolean = false
+    @JsonProperty("isVerified") val isVerified: Boolean = false
 ) {
     fun toEntity(): Word {
         return Word().apply {
@@ -50,3 +51,4 @@ data class WordRequestDTO(
         }
     }
 }
+
