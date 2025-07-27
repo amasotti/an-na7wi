@@ -6,7 +6,6 @@ import com.tonihacks.annahwi.entity.TextVersion
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import com.tonihacks.annahwi.repository.TextRepository
 import com.tonihacks.annahwi.repository.TextVersionRepository
-import com.tonihacks.annahwi.repository.TextWordRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
@@ -26,9 +25,6 @@ class TextService {
     
     @Inject
     lateinit var textRepository: TextRepository
-    
-    @Inject
-    lateinit var textWordRepository: TextWordRepository
     
     @Inject
     lateinit var annotationRepository: AnnotationRepository
@@ -56,7 +52,6 @@ class TextService {
         // Initialize lazy collections to prevent LazyInitializationException
         texts.forEach { text ->
             text.annotations.size
-            text.textWords.size
         }
         
         return texts
@@ -80,7 +75,6 @@ class TextService {
         
         // Initialize lazy collections to prevent LazyInitializationException
         text.annotations.size
-        text.textWords.size
         
         return text
     }
@@ -112,7 +106,6 @@ class TextService {
         // Initialize lazy collections to prevent LazyInitializationException
         texts.forEach { text ->
             text.annotations.size
-            text.textWords.size
         }
         
         return texts
@@ -141,7 +134,6 @@ class TextService {
         
         // Initialize lazy collections to prevent LazyInitializationException
         text.annotations.size
-        text.textWords.size
         
         return text
     }
@@ -179,7 +171,6 @@ class TextService {
         
         // Initialize lazy collections to prevent LazyInitializationException
         existingText.annotations.size
-        existingText.textWords.size
         
         return existingText
     }
@@ -193,9 +184,6 @@ class TextService {
         
         // Delete related annotations
         annotationRepository.deleteByTextId(id)
-        
-        // Delete related text-word relationships
-        textWordRepository.deleteByTextId(id)
         
         // Delete the text
         return textRepository.deleteById(id)
@@ -325,7 +313,6 @@ class TextService {
         
         // Initialize lazy collections to prevent LazyInitializationException
         currentText.annotations.size
-        currentText.textWords.size
         
         return currentText
     }

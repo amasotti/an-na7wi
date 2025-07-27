@@ -8,7 +8,7 @@ The backend was experiencing serialization/deserialization issues with Hibernate
 
 After examining the codebase, we identified several issues contributing to the serialization problems:
 
-1. **Bidirectional Relationships**: The entity classes (`Text`, `Word`, `TextWord`, `Annotation`) had bidirectional relationships that created circular references during serialization.
+1. **Bidirectional Relationships**: The entity classes (`Text`, `Word`, `Annotation`) had bidirectional relationships that created circular references during serialization.
 
 2. **Lazy Loading**: Many entity relationships used `FetchType.LAZY`, which can cause issues when the serializer tries to access these properties after the Hibernate session is closed.
 

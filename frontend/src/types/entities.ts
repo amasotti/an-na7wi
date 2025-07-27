@@ -47,13 +47,6 @@ export interface Annotation {
   createdAt: string
 }
 
-export interface TextWord {
-  textId: string
-  wordId: string
-  position: number
-  context?: string
-}
-
 /**
  * Represents a version of a text, which can include changes to the content,
  *

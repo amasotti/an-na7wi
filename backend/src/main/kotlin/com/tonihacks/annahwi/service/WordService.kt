@@ -5,7 +5,6 @@ import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.entity.Word
-import com.tonihacks.annahwi.repository.TextWordRepository
 import com.tonihacks.annahwi.repository.WordRepository
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -26,9 +25,6 @@ class WordService {
     
     @Inject
     lateinit var wordRepository: WordRepository
-    
-    @Inject
-    lateinit var textWordRepository: TextWordRepository
     
     private val logger = Logger.getLogger(WordService::class.java)
     
@@ -232,9 +228,6 @@ class WordService {
     @Transactional
     fun delete(id: UUID): Boolean {
         logger.info("Deleting word with ID: $id")
-        
-        // Delete related text-word relationships
-        textWordRepository.deleteByWordId(id)
         
         // Delete the word
         return wordRepository.deleteById(id)

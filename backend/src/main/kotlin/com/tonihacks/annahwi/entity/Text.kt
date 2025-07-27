@@ -70,10 +70,6 @@ class Text : PanacheEntityBase {
     @JsonIgnoreProperties("text")
     var annotations: MutableList<Annotation> = mutableListOf()
     
-    @OneToMany(mappedBy = "text", cascade = [CascadeType.ALL], orphanRemoval = true) 
-    @JsonIgnoreProperties("text")
-    var textWords: MutableList<TextWord> = mutableListOf()
-    
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()

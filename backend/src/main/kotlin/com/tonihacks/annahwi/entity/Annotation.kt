@@ -32,7 +32,7 @@ class Annotation : PanacheEntityBase {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "text_id", nullable = false)
-    @JsonIgnoreProperties("annotations", "textWords")
+    @JsonIgnoreProperties("annotations")
     lateinit var text: Text
     
     @Column(name = "anchor_text", nullable = false)

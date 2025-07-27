@@ -146,7 +146,6 @@ com.tonihacks.annahwi/
 │   ├── Text.kt
 │   ├── Word.kt
 │   ├── Annotation.kt
-│   └── TextWord.kt
 ├── dto/
 │   ├── request/
 │   └── response/
@@ -196,12 +195,6 @@ com.tonihacks.annahwi/
     - `type: AnnotationType` (ENUM: GRAMMAR, VOCABULARY, CULTURAL, PRONUNCIATION)
     - `color: String?` (hex color for UI)
     - `createdAt: LocalDateTime`
-
-4. **TextWord Junction Table**
-    - `textId: UUID`
-    - `wordId: UUID`
-    - `position: Int`
-    - `context: String?` (surrounding words for context-aware learning)
 
 ### API Endpoints:
 

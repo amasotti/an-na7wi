@@ -29,7 +29,6 @@ data class TextResponseDTO(
     val updatedAt: LocalDateTime,
     // Include only IDs for related entities to prevent circular references
     val annotationIds: List<UUID>,
-    val textWordIds: List<UUID>
 ) {
     companion object {
         /**
@@ -54,7 +53,6 @@ data class TextResponseDTO(
                 updatedAt = text.updatedAt,
                 // Extract only IDs from related entities
                 annotationIds = text.annotations.mapNotNull { it.id },
-                textWordIds = text.textWords.mapNotNull { it.id }
             )
         }
     }

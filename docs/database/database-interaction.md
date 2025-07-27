@@ -24,10 +24,6 @@ The database schema consists of the following main tables:
     - Links to specific texts and positions within those texts
     - Categorizes annotations by type (grammar, vocabulary, cultural, pronunciation)
 
-4. **text_words** - Junction table linking texts and words
-    - Tracks the position of each word in a text
-    - Provides context for context-aware learning
-
 ### Database Extensions
 
 The application uses several PostgreSQL extensions:

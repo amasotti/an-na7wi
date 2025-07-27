@@ -49,7 +49,6 @@ The file `docs/requirements.md` contains the detailed requirements and specifica
 - **Text**: Arabic content with transliteration, translation, tags, difficulty levels
 - **Word**: Vocabulary entries with Arabic roots, part-of-speech, frequency data
 - **Annotation**: Text annotations for grammar, vocabulary, cultural notes
-- **TextWord**: Junction table linking texts and words with position context
 
 ### API Structure
 All backend APIs are under `/api/v1/` with these main endpoints:

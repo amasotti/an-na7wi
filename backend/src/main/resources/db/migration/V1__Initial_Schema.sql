@@ -73,21 +73,9 @@ CREATE TABLE annotations (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
--- Create text_words junction table
-CREATE TABLE text_words (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    text_id UUID NOT NULL REFERENCES texts(id) ON DELETE CASCADE,
-    word_id UUID NOT NULL REFERENCES words(id) ON DELETE CASCADE,
-    position INT NOT NULL,
-    context VARCHAR(255),
-    UNIQUE (text_id, word_id, position)
-);
-
 -- Create indexes for performance
 CREATE INDEX idx_word_arabic ON words (arabic);
 CREATE INDEX idx_annotation_text_id ON annotations (text_id);
-CREATE INDEX idx_text_word_text_id ON text_words (text_id);
-CREATE INDEX idx_text_word_word_id ON text_words (word_id);
 CREATE INDEX idx_text_versions_text_id ON text_versions(text_id);
 CREATE INDEX idx_text_versions_version_number ON text_versions(text_id, version_number);
 CREATE INDEX idx_texts_version_id ON texts(version_id);
@@ -98,4 +86,3 @@ COMMENT ON TABLE texts IS 'Stores Arabic texts with transliteration and translat
 COMMENT ON TABLE text_versions IS 'Stores historical versions of texts as JSON snapshots';
 COMMENT ON TABLE words IS 'Stores Arabic vocabulary with linguistic information';
 COMMENT ON TABLE annotations IS 'Stores annotations for texts';
-COMMENT ON TABLE text_words IS 'Junction table linking texts and words with position information';
