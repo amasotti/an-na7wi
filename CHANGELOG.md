@@ -2,9 +2,38 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [0.1.0] - 2025-07-27
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/bcec08ab646aa97800182070f9ed277c00ba1069..)
+### 🚀 Features
+
+
+- Add modal to create texts ([d180f4e](https://github.com/amasotti/an-na7wi/commit/d180f4ea8701e21f8a5dcb97b7ddd6b902324ba4))
+
+### 🐛 Bug Fixes
+
+
+- Solve tsc errors ([8bed1b4](https://github.com/amasotti/an-na7wi/commit/8bed1b4919ec59ddb376ebb377f34cf514a14525))
+
+### 🚜 Refactor
+
+
+- Simplify frontend ([a33b7bc](https://github.com/amasotti/an-na7wi/commit/a33b7bcd5b95fafd068c75c5dbb411a6fdfe5ffb))
+
+- Simplify frontend ([f56a8f2](https://github.com/amasotti/an-na7wi/commit/f56a8f2e4f7209ecc3d6f55713769278fdda362a))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Fix svg fill property ([14ab77f](https://github.com/amasotti/an-na7wi/commit/14ab77f3f58e098540d7a874de91ced6678236f2))
+
+- Typescript cleanup ([2219773](https://github.com/amasotti/an-na7wi/commit/22197737f6198d0b062f2b7a4a9a3faaddf439c7))
+
+- Typescript cleanup ([d89cd44](https://github.com/amasotti/an-na7wi/commit/d89cd44772276042d001b618e26ed13990dc7018))
+
 ## [0.0.4] - 2025-07-27
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/83fc3cf922d88ccea189acd79ad84d9f4d2bc7fe..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/83fc3cf922d88ccea189acd79ad84d9f4d2bc7fe..bcec08ab646aa97800182070f9ed277c00ba1069)
 ### 🚀 Features
 
 
