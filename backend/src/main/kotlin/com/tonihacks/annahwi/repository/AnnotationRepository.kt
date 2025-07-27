@@ -21,6 +21,21 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun findById(id: UUID): Annotation? {
         return find("id", id).firstResult()
     }
+    
+    /**
+     * Find an annotation by its ID with text data eagerly loaded
+     */
+    fun findByIdWithText(id: UUID): Annotation? {
+        return getEntityManager()
+            .createQuery(
+                "SELECT a FROM Annotation a JOIN FETCH a.text t WHERE a.id = :id",
+                Annotation::class.java
+            )
+            .setParameter("id", id)
+            .resultStream
+            .findFirst()
+            .orElse(null)
+    }
 
     /**
      * Find annotations by text ID with text data fetched to avoid N+1 queries

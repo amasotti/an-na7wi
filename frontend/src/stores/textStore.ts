@@ -1,7 +1,9 @@
 import type {
   Annotation,
+  AnnotationType,
   Dialect,
   Difficulty,
+  MasteryLevel,
   Text,
   TextVersion,
   TextVersionSummary
@@ -9,6 +11,7 @@ import type {
 import type { TextsRequest } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { annotationService } from '../services/annotationService'
 import { textService } from '../services/textService'
 
 export const useTextStore = defineStore('text', () => {
@@ -113,11 +116,99 @@ export const useTextStore = defineStore('text', () => {
 
   async function fetchAnnotations(textId: string) {
     try {
-      annotations.value = await textService.getAnnotations(textId)
+      annotations.value = await annotationService.getAnnotationsForText(textId)
     } catch (err) {
       console.error('Failed to fetch annotations', err)
       // Set empty annotations array if API call fails
       annotations.value = []
+    }
+  }
+  
+  async function createAnnotation(textId: string, annotationData: {
+    anchorText: string
+    content: string
+    type: AnnotationType
+    masteryLevel?: MasteryLevel
+    needsReview?: boolean
+    color?: string
+  }) {
+    try {
+      const newAnnotation = await annotationService.createAnnotation(textId, annotationData)
+      annotations.value.push(newAnnotation)
+      return newAnnotation
+    } catch (err) {
+      console.error('Failed to create annotation', err)
+      throw err
+    }
+  }
+  
+  async function updateAnnotation(id: string, annotationData: {
+    anchorText?: string
+    content?: string
+    type?: AnnotationType
+    masteryLevel?: MasteryLevel
+    needsReview?: boolean
+    color?: string
+  }) {
+    try {
+      const updatedAnnotation = await annotationService.updateAnnotation(id, annotationData)
+      
+      // Update in the list
+      const index = annotations.value.findIndex(a => a.id === id)
+      if (index !== -1) {
+        annotations.value[index] = updatedAnnotation
+      }
+      
+      return updatedAnnotation
+    } catch (err) {
+      console.error('Failed to update annotation', err)
+      throw err
+    }
+  }
+  
+  async function deleteAnnotation(id: string) {
+    try {
+      await annotationService.deleteAnnotation(id)
+      
+      // Remove from the list
+      annotations.value = annotations.value.filter(a => a.id !== id)
+    } catch (err) {
+      console.error('Failed to delete annotation', err)
+      throw err
+    }
+  }
+  
+  async function updateAnnotationMastery(id: string, masteryLevel: MasteryLevel) {
+    try {
+      const updatedAnnotation = await annotationService.updateMasteryLevel(id, masteryLevel)
+      
+      // Update in the list
+      const index = annotations.value.findIndex(a => a.id === id)
+      if (index !== -1) {
+        annotations.value[index] = updatedAnnotation
+      }
+      
+      return updatedAnnotation
+    } catch (err) {
+      console.error('Failed to update annotation mastery', err)
+      throw err
+    }
+  }
+  
+  async function updateAnnotationReview(id: string, needsReview: boolean, nextReviewDate?: string) {
+    try {
+      const updatedAnnotation = await annotationService.updateReviewSettings(id, needsReview, nextReviewDate)
+      
+      // Update in the list
+      const index = annotations.value.findIndex(a => a.id === id)
+      if (index !== -1) {
+        annotations.value[index] = updatedAnnotation
+      }
+      
+      return updatedAnnotation
+    } catch (err) {
+      console.error('Failed to update annotation review settings', err)
+      throw err
     }
   }
 
@@ -334,7 +425,7 @@ export const useTextStore = defineStore('text', () => {
     hasMorePages,
     displayText,
 
-    // Actions
+    // Text Actions
     fetchTexts,
     fetchTextById,
     fetchTextVersions,
@@ -346,5 +437,13 @@ export const useTextStore = defineStore('text', () => {
     analyzeText,
     setFilters,
     resetFilters,
+    
+    // Annotation Actions
+    fetchAnnotations,
+    createAnnotation,
+    updateAnnotation,
+    deleteAnnotation,
+    updateAnnotationMastery,
+    updateAnnotationReview,
   }
 })

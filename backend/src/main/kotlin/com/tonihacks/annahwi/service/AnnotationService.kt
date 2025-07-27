@@ -47,6 +47,15 @@ class AnnotationService {
     }
     
     /**
+     * Find an annotation by its ID with text data eagerly loaded
+     */
+    fun findByIdWithText(id: UUID): Annotation {
+        logger.info("Finding annotation by ID with text data: $id")
+        return annotationRepository.findByIdWithText(id)
+            ?: throw AppException(AppError.NotFound.Annotation(id.toString()))
+    }
+    
+    /**
      * Find annotations by text ID
      */
     fun findByTextId(textId: UUID, page: Int, size: Int): List<Annotation> {
@@ -68,7 +77,8 @@ class AnnotationService {
     @Transactional
     fun updateMasteryLevel(id: UUID, masteryLevel: MasteryLevel): Annotation {
         logger.info("Updating mastery level for annotation $id to $masteryLevel")
-        val annotation = findById(id)
+        // Use findByIdWithText to eagerly load the text data
+        val annotation = findByIdWithText(id)
         annotation.masteryLevel = masteryLevel
         annotationRepository.persist(annotation)
         return annotation
@@ -80,7 +90,8 @@ class AnnotationService {
     @Transactional
     fun updateReviewSettings(id: UUID, needsReview: Boolean, nextReviewDate: LocalDateTime?): Annotation {
         logger.info("Updating review settings for annotation $id - needsReview: $needsReview")
-        val annotation = findById(id)
+        // Use findByIdWithText to eagerly load the text data
+        val annotation = findByIdWithText(id)
         annotation.needsReview = needsReview
         annotation.nextReviewDate = nextReviewDate
         annotationRepository.persist(annotation)
@@ -150,7 +161,8 @@ class AnnotationService {
     fun update(id: UUID, annotationDTO: AnnotationRequestDTO): Annotation {
         logger.info("Updating annotation with ID: $id")
         
-        val existingAnnotation = findById(id)
+        // Use findByIdWithText to eagerly load the text data
+        val existingAnnotation = findByIdWithText(id)
         
         // Update fields from DTO
         existingAnnotation.anchorText = annotationDTO.anchorText
@@ -173,7 +185,8 @@ class AnnotationService {
     fun update(id: UUID, annotation: Annotation): Annotation {
         logger.info("Updating annotation with ID: $id")
         
-        val existingAnnotation = findById(id)
+        // Use findByIdWithText to eagerly load the text data
+        val existingAnnotation = findByIdWithText(id)
         
         // Update fields
         existingAnnotation.anchorText = annotation.anchorText
