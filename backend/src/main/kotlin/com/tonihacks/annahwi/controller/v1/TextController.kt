@@ -142,4 +142,13 @@ class TextController {
         val restoredText = textService.restoreVersion(id, versionNumber)
         return Response.ok(TextResponseDTO.fromEntity(restoredText)).build()
     }
+    
+    @POST
+    @Path("/migrate-versions")
+    @Operation(summary = "Migrate versions", description = "Creates initial versions for texts that don't have any")
+    fun migrateVersions(): Response {
+        logger.info("POST /api/v1/texts/migrate-versions")
+        textService.createMissingInitialVersions()
+        return Response.ok(mapOf("message" to "Migration completed successfully")).build()
+    }
 }

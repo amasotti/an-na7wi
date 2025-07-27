@@ -86,5 +86,6 @@ export interface ApiError {
 
 export interface ValidationError extends ApiError {
   field: string
+  // biome-ignore lint/suspicious/noExplicitAny: general validation error type
   value: any
 }

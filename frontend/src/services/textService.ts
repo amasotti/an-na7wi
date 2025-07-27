@@ -1,4 +1,4 @@
-import type { Annotation, Text } from '@/types'
+import type { Annotation, Text, TextVersion } from '@/types'
 import type { TextsRequest, TextsResponse } from '@/types'
 import apiClient from './api'
 
@@ -22,16 +22,7 @@ export const textService = {
   /**
    * Create a new text
    */
-  async createText(textData: {
-    title: string
-    arabicContent: string
-    transliteration?: string
-    translation?: string
-    comments?: string
-    tags: string[]
-    difficulty: string
-    dialect: string
-  }): Promise<Text> {
+  async createText(textData: Partial<Text>): Promise<Text> {
     const response = await apiClient.post('/texts', textData)
     return response.data
   },
@@ -98,7 +89,7 @@ export const textService = {
   /**
    * Get all versions of a text
    */
-  async getTextVersions(textId: string): Promise<any[]> {
+  async getTextVersions(textId: string): Promise<TextVersion[]> {
     const response = await apiClient.get(`/texts/${textId}/versions`)
     return response.data
   },
@@ -106,7 +97,7 @@ export const textService = {
   /**
    * Get a specific version of a text
    */
-  async getTextVersion(textId: string, versionNumber: number): Promise<any> {
+  async getTextVersion(textId: string, versionNumber: number): Promise<TextVersion> {
     const response = await apiClient.get(`/texts/${textId}/versions/${versionNumber}`)
     return response.data
   },

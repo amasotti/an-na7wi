@@ -112,8 +112,11 @@ class TextService {
         // Calculate word count
         text.wordCount = calculateWordCount(text.arabicContent)
         
-        // Persist the text
+        // Persist the text first to get the ID
         textRepository.persist(text)
+        
+        // Create initial version (version 1)
+        createInitialVersion(text)
         
         return text
     }
@@ -127,8 +130,8 @@ class TextService {
         
         val existingText = findById(id)
         
-        // Create a version snapshot before updating
-        createVersion(existingText)
+        // TODO: Fix versioning during updates - temporarily disabled
+        // createVersionSnapshot(existingText)
         
         // Update fields
         existingText.title = text.title
@@ -179,12 +182,49 @@ class TextService {
     
     
     /**
-     * Create a version from current text state
+     * Create initial version (version 1) for a new text
      */
-    private fun createVersion(text: Text) {
+    private fun createInitialVersion(text: Text) {
+        logger.info("Creating initial version for text ID: ${text.id}")
+        
+        // Create content snapshot as JSON
+        val contentSnapshot = mapOf(
+            "title" to text.title,
+            "arabicContent" to text.arabicContent,
+            "transliteration" to text.transliteration,
+            "translation" to text.translation,
+            "comments" to text.comments,
+            "tags" to text.tags,
+            "difficulty" to text.difficulty.name,
+            "dialect" to text.dialect.name
+        )
+        
+        val version = TextVersion().apply {
+            textId = text.id!!
+            versionNumber = 1
+            content = contentSnapshot.toString() // Simple JSON representation
+            createdAt = text.createdAt
+            updatedAt = text.updatedAt
+        }
+        
+        textVersionRepository.persist(version)
+        
+        // Update text to reference this version
+        text.version = version
+        textRepository.persist(text) // Persist the updated reference
+    }
+    
+    /**
+     * Create a version snapshot of the current text state
+     */
+    private fun createVersionSnapshot(text: Text) {
+        logger.info("Creating version snapshot for text ID: ${text.id}")
+        
         // Count existing versions to get next version number
         val existingVersions = textVersionRepository.findByTextId(text.id!!)
         val nextVersionNumber = (existingVersions.maxOfOrNull { it.versionNumber } ?: 0) + 1
+        
+        logger.info("Next version number: $nextVersionNumber")
         
         // Create content snapshot as JSON
         val contentSnapshot = mapOf(
@@ -202,14 +242,12 @@ class TextService {
             textId = text.id!!
             versionNumber = nextVersionNumber
             content = contentSnapshot.toString() // Simple JSON representation
-            createdAt = text.updatedAt
-            updatedAt = text.updatedAt
+            createdAt = LocalDateTime.now()
+            updatedAt = LocalDateTime.now()
         }
         
         textVersionRepository.persist(version)
-        
-        // Update text to reference this version
-        text.version = version
+        logger.info("Version snapshot created with ID: ${version.id}")
     }
     
     /**
@@ -240,7 +278,7 @@ class TextService {
         val currentText = findById(textId)
         
         // Create a version of the current state before restoring
-        createVersion(currentText)
+        createVersionSnapshot(currentText)
         
         // Parse the version content (simple approach for now)
         val contentMap = parseVersionContent(version.content)
@@ -272,5 +310,28 @@ class TextService {
             "translation" to null,
             "comments" to null
         )
+    }
+    
+    /**
+     * Create initial version for texts that don't have any versions yet
+     * This is a utility method for migrating existing texts
+     */
+    @Transactional
+    fun createMissingInitialVersions() {
+        logger.info("Creating missing initial versions for existing texts")
+        
+        val allTexts = textRepository.listAll()
+        var migrated = 0
+        
+        for (text in allTexts) {
+            val existingVersions = textVersionRepository.findByTextId(text.id!!)
+            if (existingVersions.isEmpty()) {
+                logger.info("Creating missing initial version for text: ${text.id}")
+                createInitialVersion(text)
+                migrated++
+            }
+        }
+        
+        logger.info("Migration complete: created initial versions for $migrated texts")
     }
 }

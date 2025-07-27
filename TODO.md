@@ -16,6 +16,8 @@
 
 ## Prompts
 
-We're in the process of implementing the requirements described here: docs/architecture/brainstorming-text-annotation-workflow.md. Sofar only the basic adjustments to the project (backend and frontend) were done. Take
-this just as background. let's focus for now on simplification of the current endpoints, services, frontend. In particular 1) the annotation still contain the info about the position start and position end, but we
-decided in that requirement document that they're only related to a text and loosely coupled, so we can simplify a lot.
+We're in the process of implementing the requirements described here: docs/architecture/brainstorming-text-annotation-workflow.md. Sofar only the adjustments to the project (backend and frontend) were done. 
+The DTOs were created and the API cleaned up. Let's now move forward implementing the first important piece of functionality: being able to create
+a text in the frontend. Focus on this only, work in a clean solid way, avoid e.g. profileration of tailwind classes in the frontend, use the existing styles and components
+and create meaningful names for the style classes.
+There is already a button in the TextView in the frontend but not doing anything. 

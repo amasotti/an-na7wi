@@ -90,6 +90,7 @@
             placeholder="Add tags (comma separated)..."
             @keydown.enter.prevent="addTag"
             @keydown.comma.prevent="addTag"
+            @blur="addTag"
           />
           <div v-if="form.tags.length > 0" class="tag-list">
             <BaseBadge
@@ -226,9 +227,17 @@ const resetForm = () => {
 }
 
 const addTag = () => {
-  const tag = tagInput.value.trim()
-  if (tag && !form.value.tags.includes(tag)) {
-    form.value.tags.push(tag)
+  const input = tagInput.value.trim()
+  if (!input) return
+
+  // Split by comma and process each tag
+  const newTags = input
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(tag => tag && !form.value.tags.includes(tag))
+
+  if (newTags.length > 0) {
+    form.value.tags.push(...newTags)
     tagInput.value = ''
   }
 }
@@ -261,6 +270,9 @@ const validateForm = (): boolean => {
 
 const handleSubmit = () => {
   if (!validateForm()) return
+
+  // Process any remaining tag input before submitting
+  addTag()
 
   if (form.value.difficulty && form.value.dialect) {
     emit('submit', {

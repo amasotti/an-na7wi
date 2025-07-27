@@ -53,3 +53,16 @@ export interface TextWord {
   position: number
   context?: string
 }
+
+/**
+ * Represents a version of a text, which can include changes to the content,
+ *
+ */
+export interface TextVersion {
+  id: string
+  textId: string
+  versionNumber: number
+  content: string // Serialized content, could be JSON or similar format
+  createdAt: string
+  updatedAt: string
+}

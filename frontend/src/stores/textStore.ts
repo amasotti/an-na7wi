@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { textService } from '../services/textService'
-import type { Annotation, Dialect, Difficulty, Text } from '../types'
+import type { Annotation, Dialect, Difficulty, Text, TextVersion } from '../types'
 import type { TextsRequest } from '../types/api'
 
 export const useTextStore = defineStore('text', () => {
@@ -9,8 +9,8 @@ export const useTextStore = defineStore('text', () => {
   const texts = ref<Text[]>([])
   const currentText = ref<Text | null>(null)
   const annotations = ref<Annotation[]>([])
-  const versions = ref<any[]>([])
-  const viewingVersion = ref<any>(null)
+  const versions = ref<TextVersion[] | null>([])
+  const viewingVersion = ref<TextVersion | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
   const totalCount = ref(0)

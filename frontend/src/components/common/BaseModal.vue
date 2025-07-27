@@ -71,20 +71,21 @@ const close = () => {
 watch(
   () => props.open,
   isOpen => {
-    if (isOpen) {
-      const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && !props.persistent) {
-          close()
-        }
-      }
-      document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
+    if (!isOpen) {
+      document.body.style.overflow = ''
+      return
+    }
 
-      return () => {
-        document.removeEventListener('keydown', handleEscape)
-        document.body.style.overflow = ''
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !props.persistent) {
+        close()
       }
-    } else {
+    }
+    document.addEventListener('keydown', handleEscape)
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
       document.body.style.overflow = ''
     }
   },
