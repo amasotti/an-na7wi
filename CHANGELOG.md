@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [0.0.4] - 2025-07-27
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/83fc3cf922d88ccea189acd79ad84d9f4d2bc7fe..)
+### 🚀 Features
+
+
+- Improve annotation dtos ([5470b44](https://github.com/amasotti/an-na7wi/commit/5470b44c8b8eccc9159d3f7609fc693492d41dda))
+
+- Add DTOs for creating the Annotations and Words ([83bc8af](https://github.com/amasotti/an-na7wi/commit/83bc8af6ff27db5bed2f7f826bf2443213bedddd))
+
+### 🚜 Refactor
+
+
+- Fix annotation endpoints ([23829cc](https://github.com/amasotti/an-na7wi/commit/23829cc607d58b4ed60eed1db094fdbcf2d6aef3))
+
+### 🧪 Testing
+
+
+- Add unit tests for dtos ([e9e14a0](https://github.com/amasotti/an-na7wi/commit/e9e14a0e499bd15e3517b81317b85aa40ba0073a))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Fix detekt issue ([6eb72da](https://github.com/amasotti/an-na7wi/commit/6eb72da2cc22f332563ac9efa776ab085d714aba))
+
+## [0.0.3] - 2025-07-27
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/36d6dd24526fbca5c00ad27e696ba217cc655814..83fc3cf922d88ccea189acd79ad84d9f4d2bc7fe)
+### 🚀 Features
+
+
+- *(test)* Add local testcontainer for tests with postgres ([83fc3cf](https://github.com/amasotti/an-na7wi/commit/83fc3cf922d88ccea189acd79ad84d9f4d2bc7fe))
+
+### 🚜 Refactor
+
+
+- Simplify annotation schema ([a91b055](https://github.com/amasotti/an-na7wi/commit/a91b0557893cfa866d83337a2095e60b7aecf0d0))
+
 ## [0.0.2] - 2025-07-27
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/fa482d02a5f81ccb2a5d38fdbcfaf72136cff6ae..36d6dd24526fbca5c00ad27e696ba217cc655814)
