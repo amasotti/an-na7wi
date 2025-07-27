@@ -1,0 +1,18 @@
+# Get Texts in all dialects
+GET http://localhost:8080/api/v1/texts?page=1&pageSize=10&dialect=ALL
+
+###
+
+# Get Texts in a specific dialect
+GET http://localhost:8080/api/v1/texts?page=1&pageSize=10&dialect=ALL
+
+
+###
+
+# Get Texts in a specific dialect with a specific dialect
+GET http://localhost:8080/api/v1/texts?page=1&pageSize=10&dialect=TUNISIAN
+
+###
+
+# Get Texts in a specific dialect with a specific dialect and a specific page
+GET http://localhost:8080/api/v1/texts?page=2&pageSize=10&dialect=GHSHSHH

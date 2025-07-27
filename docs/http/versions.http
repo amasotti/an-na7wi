@@ -1,0 +1,5 @@
+# Get versions of a text
+GET http://localhost:8080/api/v1/texts/c0316477-cdfb-4363-a0be-873856360272/versions
+
+
+###

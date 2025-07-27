@@ -1,0 +1,5 @@
+# Get annotation for a given text
+GET http://localhost:8080/api/v1/annotations/text/c0316477-cdfb-4363-a0be-873856360272
+Accept: application/json
+
+###
