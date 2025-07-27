@@ -24,8 +24,8 @@
           @click="toggleDropdown"
           :class="actionButtonClasses"
         >
-          <BaseIcon size="sm" class="text-gray-500">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01" />
+          <BaseIcon size="sm">
+            <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 5v.01M12 12v.01M12 19v.01" />
           </BaseIcon>
         </button>
         
@@ -41,14 +41,16 @@
             v-if="dropdownOpen"
             :class="dropdownClasses"
           >
-            <ActionMenuItem @click="viewText" icon="eye">
+            <router-link
+                :to="`/texts/${text.id}`"
+                :class="viewLinkClasses"
+            >
+            <ActionMenuItem icon="eye">
               View Details
             </ActionMenuItem>
+            </router-link>
             <ActionMenuItem @click="editText" icon="pencil">
               Edit Text
-            </ActionMenuItem>
-            <ActionMenuItem @click="duplicateText" icon="duplicate">
-              Duplicate
             </ActionMenuItem>
             <hr class="my-2 border-gray-100">
             <ActionMenuItem @click="deleteText" icon="trash" danger>
@@ -105,16 +107,6 @@
         </span>
         <span>{{ formattedDate }}</span>
       </div>
-      
-      <router-link
-        :to="`/texts/${text.id}`"
-        :class="viewLinkClasses"
-      >
-        View
-        <BaseIcon size="xs" class="ml-1">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </BaseIcon>
-      </router-link>
     </div>
   </BaseCard>
 </template>
@@ -171,7 +163,7 @@ const titleClasses = computed(
 const badgeContainerClasses = computed(() => `${layoutClasses.flex.center} space-x-2 mt-1`)
 const actionButtonClasses = computed(
   () =>
-    'p-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-gray-100 transition-all duration-200'
+    'p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-400 shadow-md hover:shadow-lg transition-all duration-200 border-0'
 )
 const dropdownClasses = computed(
   () =>
@@ -219,19 +211,9 @@ const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
 }
 
-const viewText = () => {
-  dropdownOpen.value = false
-  // Navigate to text detail view
-}
-
 const editText = () => {
   dropdownOpen.value = false
   emit('edit', props.text.id)
-}
-
-const duplicateText = () => {
-  dropdownOpen.value = false
-  emit('duplicate', props.text.id)
 }
 
 const deleteText = () => {

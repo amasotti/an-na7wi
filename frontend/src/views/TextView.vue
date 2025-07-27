@@ -1,97 +1,38 @@
 <template>
   <div class="texts animate-fade-in">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-      <div>
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">Arabic Texts</h1>
-        <p class="text-gray-600">Create, manage, and explore your Arabic learning materials</p>
-      </div>
-      
-      <div class="flex gap-3">
-        <BaseButton 
-          variant="outline" 
-          @click="toggleViewMode"
-          class="hidden sm:inline-flex"
-        >
-          <BaseIcon size="sm" class="mr-2">
-            <component :is="viewMode === 'grid' ? gridIcon : listIcon" />
-          </BaseIcon>
-          {{ viewMode === 'grid' ? 'Grid' : 'List' }}
-        </BaseButton>
-        
-        <BaseButton @click="showCreateModal = true">
-          <BaseIcon size="sm" class="mr-2">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </BaseIcon>
-          Add New Text
-        </BaseButton>
-      </div>
-    </div>
+    <TextHeader
+      title="Arabic Texts"
+      subtitle="Create, manage, and explore your Arabic learning materials"
+      :view-mode="viewMode"
+      @toggle-view-mode="toggleViewMode"
+      @show-create-modal="showCreateModal = true"
+    />
 
     <!-- Filters -->
-    <BaseCard class="mb-8">
-      <div class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div class="md:col-span-2">
-            <BaseInput
-              v-model="searchQuery"
-              placeholder="Search texts, titles, or content..."
-              clearable
-              icon-left="search"
-            />
-          </div>
-          
-          <BaseSelect
-            v-model="selectedDialect"
-            :options="dialectOptions"
-            placeholder="All Dialects"
-          />
-          
-          <BaseSelect
-            v-model="selectedDifficulty"
-            :options="difficultyOptions"
-            placeholder="All Difficulties"
-          />
-        </div>
-        
-        <div class="flex flex-wrap gap-2">
-          <BaseBadge
-            v-for="tag in activeTags"
-            :key="tag"
-            closable
-            @close="removeTag(tag)"
-          >
-            {{ tag }}
-          </BaseBadge>
-          
-          <BaseButton
-            v-if="hasActiveFilters"
-            variant="ghost"
-            size="sm"
-            @click="clearFilters"
-          >
-            Clear All
-          </BaseButton>
-        </div>
-      </div>
-    </BaseCard>
+    <TextFilters
+      :search-query="searchQuery"
+      :selected-dialect="selectedDialect"
+      :selected-difficulty="selectedDifficulty"
+      :active-tags="activeTags"
+      :has-active-filters="hasActiveFilters"
+      :dialect-options="dialectOptions"
+      :difficulty-options="difficultyOptions"
+      @update:search-query="setSearchQuery"
+      @update:selected-dialect="setSelectedDialect"
+      @update:selected-difficulty="setSelectedDifficulty"
+      @remove-tag="removeTag"
+      @clear-filters="clearFilters"
+    />
 
     <!-- Results Header -->
-    <div class="flex justify-between items-center mb-6">
-      <div class="text-sm text-gray-600" v-if="texts">
-        Showing {{ texts.length }} of {{ totalCount }} texts
-      </div>
-      <div class="text-sm text-gray-600" v-else>
-        No texts yet
-      </div>
-      
-      <BaseSelect
-        v-model="sortBy"
-        :options="sortOptions"
-        size="sm"
-        class="w-48"
-      />
-    </div>
+    <TextListControls
+      :texts="texts"
+      :total-count="totalCount"
+      :sort-by="sortBy"
+      :sort-options="sortOptions"
+      @update:sort-by="sortBy = $event"
+    />
 
     <!-- Text Grid/List -->
     <div v-if="texts && texts.length > 0" :class="gridClasses">
@@ -102,7 +43,6 @@
         :view-mode="viewMode"
         @edit="editText"
         @delete="deleteTextConfirm"
-        @duplicate="duplicateText"
       />
     </div>
 
@@ -135,29 +75,51 @@
       @close="showCreateModal = false"
       @submit="handleCreateText"
     />
+
+    <!-- Text Edit Modal -->
+    <TextEditModal
+      :open="showEditModal"
+      :loading="loading"
+      :text="textToEdit"
+      @close="closeEditModal"
+      @submit="handleEditText"
+    />
+
+    <!-- Text Delete Modal -->
+    <TextDeleteModal
+      :open="showDeleteModal"
+      :loading="loading"
+      :text="textToDelete"
+      @close="closeDeleteModal"
+      @confirm="handleDeleteText"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Dialect, Difficulty } from '@/types'
-import type { SelectOption } from '@/types'
-import { computed, h, onMounted, ref } from 'vue'
-import BaseBadge from '../components/common/BaseBadge.vue'
-import BaseButton from '../components/common/BaseButton.vue'
-import BaseCard from '../components/common/BaseCard.vue'
-import BaseIcon from '../components/common/BaseIcon.vue'
-import BaseInput from '../components/common/BaseInput.vue'
-import BaseSelect from '../components/common/BaseSelect.vue'
+import type { SelectOption, Text } from '@/types'
+import { computed, onMounted, ref } from 'vue'
 import Pagination from '../components/common/Pagination.vue'
 import EmptyState from '../components/text/EmptyState.vue'
 import TextCard from '../components/text/TextCard.vue'
 import TextCardSkeleton from '../components/text/TextCardSkeleton.vue'
 import TextCreateModal from '../components/text/TextCreateModal.vue'
+import TextDeleteModal from '../components/text/TextDeleteModal.vue'
+import TextEditModal from '../components/text/TextEditModal.vue'
+import TextFilters from '../components/text/TextFilters.vue'
+import TextHeader from '../components/text/TextHeader.vue'
+import TextListControls from '../components/text/TextListControls.vue'
 import { useTextStore } from '../stores/textStore'
 import { layoutClasses } from '../styles/component-classes'
+import router from "@/router";
 
 const textStore = useTextStore()
 const showCreateModal = ref(false)
+const showEditModal = ref(false)
+const showDeleteModal = ref(false)
+const textToEdit = ref<Text | null>(null)
+const textToDelete = ref<Text | null>(null)
 const viewMode = ref<'grid' | 'list'>('grid')
 
 // Computed properties from store
@@ -166,18 +128,9 @@ const loading = computed(() => textStore.loading)
 const totalCount = computed(() => textStore.totalCount)
 const currentPage = computed(() => textStore.currentPage)
 const pageSize = computed(() => textStore.pageSize)
-const searchQuery = computed({
-  get: () => textStore.searchQuery,
-  set: value => textStore.setFilters({ search: value }),
-})
-const selectedDialect = computed({
-  get: () => textStore.selectedDialect,
-  set: value => textStore.setFilters({ dialect: value }),
-})
-const selectedDifficulty = computed({
-  get: () => textStore.selectedDifficulty,
-  set: value => textStore.setFilters({ difficulty: value }),
-})
+const searchQuery = computed(() => textStore.searchQuery)
+const selectedDialect = computed(() => textStore.selectedDialect)
+const selectedDifficulty = computed(() => textStore.selectedDifficulty)
 
 // Local state
 const sortBy = ref('updatedAt')
@@ -220,30 +173,21 @@ const gridClasses = computed(() => {
   return viewMode.value === 'grid' ? layoutClasses.grid.cols3 : 'space-y-4'
 })
 
-// Icons
-const gridIcon = () =>
-  h('path', {
-    fill: 'none',
-    stroke: 'currentColor',
-    'stroke-linecap': 'round',
-    'stroke-linejoin': 'round',
-    'stroke-width': '2',
-    d: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z',
-  })
-
-const listIcon = () =>
-  h('path', {
-    fill: 'none',
-    stroke: 'currentColor',
-    'stroke-linecap': 'round',
-    'stroke-linejoin': 'round',
-    'stroke-width': '2',
-    d: 'M4 6h16M4 10h16M4 14h16M4 18h16',
-  })
-
 // Methods
 const toggleViewMode = () => {
   viewMode.value = viewMode.value === 'grid' ? 'list' : 'grid'
+}
+
+const setSearchQuery = (value: string) => {
+  textStore.setFilters({ search: value })
+}
+
+const setSelectedDialect = (value: Dialect | null) => {
+  textStore.setFilters({ dialect: value })
+}
+
+const setSelectedDifficulty = (value: Difficulty | null) => {
+  textStore.setFilters({ difficulty: value })
 }
 
 const removeTag = (tag: string) => {
@@ -262,18 +206,19 @@ const handlePageChange = (page: number) => {
 }
 
 const editText = (textId: string) => {
-  // Handle edit text
-  console.log('Edit text:', textId)
+  const text = texts.value.find(t => t.id === textId)
+  if (text) {
+    textToEdit.value = text
+    showEditModal.value = true
+  }
 }
 
 const deleteTextConfirm = (textId: string) => {
-  // Handle delete confirmation
-  console.log('Delete text:', textId)
-}
-
-const duplicateText = (textId: string) => {
-  // Handle duplicate text
-  console.log('Duplicate text:', textId)
+  const text = texts.value.find(t => t.id === textId)
+  if (text) {
+    textToDelete.value = text
+    showDeleteModal.value = true
+  }
 }
 
 const handleCreateText = async (formData: {
@@ -294,6 +239,51 @@ const handleCreateText = async (formData: {
   } catch (error) {
     console.error('Failed to create text:', error)
   }
+}
+
+const handleEditText = async (formData: {
+  title: string
+  arabicContent: string
+  transliteration?: string
+  translation?: string
+  comments?: string
+  tags: string[]
+  difficulty: Difficulty
+  dialect: Dialect
+}) => {
+  if (!textToEdit.value) return
+
+  try {
+    await textStore.updateText(textToEdit.value.id, formData)
+    closeEditModal()
+    // Refresh the texts list
+    await textStore.fetchTexts()
+  } catch (error) {
+    console.error('Failed to update text:', error)
+  }
+}
+
+const handleDeleteText = async () => {
+  if (!textToDelete.value) return
+
+  try {
+    await textStore.deleteText(textToDelete.value.id)
+    closeDeleteModal()
+    // Refresh the texts list
+    await textStore.fetchTexts()
+  } catch (error) {
+    console.error('Failed to delete text:', error)
+  }
+}
+
+const closeEditModal = () => {
+  showEditModal.value = false
+  textToEdit.value = null
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+  textToDelete.value = null
 }
 
 // Lifecycle

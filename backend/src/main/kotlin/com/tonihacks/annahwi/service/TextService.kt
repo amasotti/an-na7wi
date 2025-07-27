@@ -127,8 +127,8 @@ class TextService {
         
         val existingText = findById(id)
         
-        // TODO: Fix versioning during updates - temporarily disabled
-        // createVersionSnapshot(existingText)
+        // Create version snapshot before updating
+        createVersionSnapshot(existingText)
         
         // Update fields
         existingText.title = text.title
