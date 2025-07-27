@@ -102,6 +102,22 @@ watch(
   @apply bg-white rounded-lg shadow-xl max-h-[90vh] overflow-hidden flex flex-col;
 }
 
+.modal-sm {
+  @apply max-w-md w-full;
+}
+
+.modal-md {
+  @apply max-w-lg w-full;
+}
+
+.modal-lg {
+  @apply max-w-2xl w-full;
+}
+
+.modal-xl {
+  @apply max-w-4xl w-full;
+}
+
 .modal-header {
   @apply flex items-center justify-between p-6 border-b border-gray-200;
 }

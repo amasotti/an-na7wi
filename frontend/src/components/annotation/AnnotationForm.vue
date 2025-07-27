@@ -2,6 +2,7 @@
   <BaseModal
     :open="open"
     :title="isEditing ? 'Edit Annotation' : 'New Annotation'"
+    size="xl"
     @close="handleClose"
   >
     <form @submit.prevent="handleSubmit" class="space-y-6">
@@ -32,9 +33,9 @@
         <textarea
           id="content"
           v-model="form.content"
-          rows="4"
+          rows="6"
           required
-          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 resize-y"
         ></textarea>
       </div>
 
