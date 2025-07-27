@@ -58,35 +58,6 @@ export const textService = {
   },
 
   /**
-   * Create a new annotation for a text
-   */
-  async createAnnotation(
-    textId: string,
-    annotation: Omit<Annotation, 'id' | 'textId' | 'createdAt'>
-  ): Promise<Annotation> {
-    const response = await apiClient.post(`/annotations/text/${textId}`, annotation)
-    return response.data
-  },
-
-  /**
-   * Update an existing annotation
-   */
-  async updateAnnotation(
-    id: string,
-    annotation: Omit<Annotation, 'id' | 'textId' | 'createdAt'>
-  ): Promise<Annotation> {
-    const response = await apiClient.put(`/annotations/${id}`, annotation)
-    return response.data
-  },
-
-  /**
-   * Delete an annotation
-   */
-  async deleteAnnotation(id: string): Promise<void> {
-    await apiClient.delete(`/annotations/${id}`)
-  },
-
-  /**
    * Get all versions of a text
    */
   async getTextVersions(textId: string): Promise<TextVersion[]> {
