@@ -25,6 +25,13 @@
           v-if="dropdownOpen"
           :class="dropdownClasses"
         >
+          <router-link
+            :to="`/texts/${text.id}`"
+          >
+          <ActionMenuItem icon="eye">
+            View Text
+          </ActionMenuItem>
+          </router-link>
           <ActionMenuItem @click="editText" icon="pencil">
             Edit Text
           </ActionMenuItem>

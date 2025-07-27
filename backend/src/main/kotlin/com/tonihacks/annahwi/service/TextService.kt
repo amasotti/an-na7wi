@@ -41,16 +41,25 @@ class TextService {
     /**
      * Find all texts with pagination
      */
+    @Transactional
     fun findAll(page: Int, size: Int, sortField: String = "title"): List<Text> {
         logger.info("Finding all texts, page: $page, size: $size, sortField: $sortField")
 
         val sortOption = Sort.by(sortField)
         val paginationOption = Page.of(page, size)
 
-        return textRepository
+        val texts = textRepository
             .findAll(sortOption)
             .page(paginationOption)
             .list()
+        
+        // Initialize lazy collections to prevent LazyInitializationException
+        texts.forEach { text ->
+            text.annotations.size
+            text.textWords.size
+        }
+        
+        return texts
     }
     
     /**
@@ -63,16 +72,23 @@ class TextService {
     /**
      * Find a text by its ID
      */
+    @Transactional
     fun findById(id: UUID): Text {
         logger.info("Finding text by ID: $id")
-        return textRepository.findById(id)
+        val text = textRepository.findById(id)
             ?: throw AppException(AppError.NotFound.Text(id.toString()))
-
+        
+        // Initialize lazy collections to prevent LazyInitializationException
+        text.annotations.size
+        text.textWords.size
+        
+        return text
     }
 
     /**
      * Find texts by Dialect
      */
+    @Transactional
     fun findAllByDialect(
         dialect: String,
         page: Int,
@@ -87,11 +103,19 @@ class TextService {
         val pagination = Page.of(page, size)
         val sortFilter = Sort.by(sortField)
 
-        return textRepository
+        val texts = textRepository
             .findByDialect(dialectEnum, pagination, sortFilter)
             .also { texts ->
                 logger.debug("Found ${texts.size} texts for dialect $dialectEnum")
             }
+        
+        // Initialize lazy collections to prevent LazyInitializationException
+        texts.forEach { text ->
+            text.annotations.size
+            text.textWords.size
+        }
+        
+        return texts
     }
     
     /**
@@ -114,6 +138,10 @@ class TextService {
         
         // Create initial version (version 1)
         createInitialVersion(text)
+        
+        // Initialize lazy collections to prevent LazyInitializationException
+        text.annotations.size
+        text.textWords.size
         
         return text
     }
@@ -148,6 +176,10 @@ class TextService {
         
         // Persist the updated text
         textRepository.persist(existingText)
+        
+        // Initialize lazy collections to prevent LazyInitializationException
+        existingText.annotations.size
+        existingText.textWords.size
         
         return existingText
     }
@@ -290,6 +322,10 @@ class TextService {
         currentText.wordCount = calculateWordCount(currentText.arabicContent)
         
         textRepository.persist(currentText)
+        
+        // Initialize lazy collections to prevent LazyInitializationException
+        currentText.annotations.size
+        currentText.textWords.size
         
         return currentText
     }
