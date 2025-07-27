@@ -2,13 +2,48 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [0.2.0] - 2025-07-27
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/b4236470ee8e0e8580b14057a287f44193187c8e..)
+### 🚀 Features
+
+
+- Reorganize frontend main components ([63410b2](https://github.com/amasotti/an-na7wi/commit/63410b28e731df3c4c433b4cd38c375197add1cc))
+
+- Refactor and improve version handling ([3a97fe9](https://github.com/amasotti/an-na7wi/commit/3a97fe9728e7021ee77e1f5902d66503efbedf0f))
+
+- Implement restore version functionality ([23ce968](https://github.com/amasotti/an-na7wi/commit/23ce9682e61a7e321c4323bcec72b4b45cac584c))
+
+### 🐛 Bug Fixes
+
+
+- PUT request for texts ([a51b932](https://github.com/amasotti/an-na7wi/commit/a51b93232d4481776958e1cbf01b848a9bea67fa))
+
+### 🚜 Refactor
+
+
+- *(ux)* Improve cards ([d915abe](https://github.com/amasotti/an-na7wi/commit/d915abe0bc4e19c65a0cd0bb090e878f19e3a63e))
+
+- Delete entity textWord - not needed anymore ([cba8b4f](https://github.com/amasotti/an-na7wi/commit/cba8b4fb615ffce18d021a198075efb40d6d305a))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Add functionality to export schema ([940978c](https://github.com/amasotti/an-na7wi/commit/940978cdb4159a29369b052631b5dade094aacc5))
+
+- Improve UX for card ([ed52c59](https://github.com/amasotti/an-na7wi/commit/ed52c59e9df7648571a549f29f8590074d9c67ed))
+
+- Cleanup frontend from crap versions implementation ([d0af0f2](https://github.com/amasotti/an-na7wi/commit/d0af0f275d457cca948ad01082bdc193320a3a42))
+
 ## [0.1.0] - 2025-07-27
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/bcec08ab646aa97800182070f9ed277c00ba1069..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/bcec08ab646aa97800182070f9ed277c00ba1069..b4236470ee8e0e8580b14057a287f44193187c8e)
 ### 🚀 Features
 
 
 - Add modal to create texts ([d180f4e](https://github.com/amasotti/an-na7wi/commit/d180f4ea8701e21f8a5dcb97b7ddd6b902324ba4))
+
+- Finish prototype with texts ([b423647](https://github.com/amasotti/an-na7wi/commit/b4236470ee8e0e8580b14057a287f44193187c8e))
 
 ### 🐛 Bug Fixes
 
