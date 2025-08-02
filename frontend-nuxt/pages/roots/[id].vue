@@ -56,11 +56,11 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
 import RootWordsList from '~/components/roots/RootWordsList.vue'
 import { useRootStore } from '~/stores/rootStore'
-import { onMounted, watch } from 'vue'
 
 const route = useRoute()
 const rootStore = useRootStore()

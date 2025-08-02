@@ -124,10 +124,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import Pagination from '~/components/common/Pagination.vue'
 import type { Root } from '~/types'
-import { ref } from 'vue'
 import RootCard from './RootCard.vue'
 import RootListItem from './RootListItem.vue'
 

@@ -198,8 +198,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Text } from '~/types'
-import { Dialect, Difficulty } from '~/types'
 import { computed, onMounted, ref } from 'vue'
 import AnnotationForm from '~/components/annotation/AnnotationForm.vue'
 import AnnotationPanel from '~/components/annotation/AnnotationPanel.vue'
@@ -212,6 +210,8 @@ import TextEditModal from '~/components/text/TextEditModal.vue'
 import TextTokenizedWords from '~/components/text/TextTokenizedWords.vue'
 import TextVersionManager from '~/components/text/TextVersionManager.vue'
 import { useTextStore } from '~/stores/textStore'
+import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Text } from '~/types'
+import { Dialect, Difficulty } from '~/types'
 
 const route = useRoute()
 const textStore = useTextStore()

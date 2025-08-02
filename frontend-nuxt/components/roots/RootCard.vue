@@ -73,9 +73,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import type { Root } from '~/types'
-import { computed } from 'vue'
 
 interface Props {
   root: Root
