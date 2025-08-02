@@ -1,5 +1,8 @@
 package com.tonihacks.annahwi.util
 
+import com.tonihacks.annahwi.exception.AppError
+import com.tonihacks.annahwi.exception.AppException
+
 /**
  * Utility functions for pagination handling
  */
@@ -19,5 +22,15 @@ object PaginationUtil {
      * @return resolved page size
      */
     fun resolvePageSize(size: Int, pageSize: Int?): Int = pageSize ?: size
+
+    fun validatePageSize(page: Int, pageSize: Int? = 1) {
+        if (page < 1) {
+            throw AppException(AppError.ValidationError.InvalidPageNumber(page))
+        }
+
+        if (pageSize != null && pageSize < 1) {
+            throw AppException(AppError.ValidationError.InvalidPageSize(page))
+        }
+    }
 }
 

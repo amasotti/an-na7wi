@@ -18,6 +18,7 @@ sealed class AppError(
             NotFound("Version $versionNumber not found for text '$textId'")
         data class Word(val id: String) : NotFound("Word with ID '$id' not found")
         data class Annotation(val id: String) : NotFound("Annotation with ID '$id' not found")
+        data class Root(val id: String) : NotFound("Root with ID '$id' not found")
     }
     
     /**
@@ -67,6 +68,12 @@ sealed class AppError(
         
         data class MultipleFields(val fieldErrors: Map<String, String>) : ValidationError(
             message = "Multiple validation errors occurred"
+        )
+        
+        data class InvalidRoot(val rootInput: String) : ValidationError(
+            message = rootInput,
+            fieldName = "root",
+            rejectedValue = rootInput
         )
     }
     

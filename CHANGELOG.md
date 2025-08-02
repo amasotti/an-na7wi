@@ -2,9 +2,53 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
-## [0.4.0] - 2025-07-28
+## [0.5.0] - 2025-08-02
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/125041ac2af62c86469d605785eec6b32961a247..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/eb19f2b327599cd78c4ada4c6ea78b06272288b5..4168e8da03ac9f0b2494f160d0bd021a0fd187f9)
+### 🚀 Features
+
+
+- First feature word implementation ([fd551a6](https://github.com/amasotti/an-na7wi/commit/fd551a6a60cae758c3ad662f3d7c86a0ee0fd59f))
+
+- Add word store and improve filter ([e86521c](https://github.com/amasotti/an-na7wi/commit/e86521cd3c8f84ae3df4906a7f2ea762ef1f45c7))
+
+- Auto-translitteration ([33bc7fe](https://github.com/amasotti/an-na7wi/commit/33bc7fef59368a53b63faf9b09f3d802825fa3cf))
+
+### 🐛 Bug Fixes
+
+
+- Improve search ([56d6e97](https://github.com/amasotti/an-na7wi/commit/56d6e9734b6aa68818dbabe5dceaa132f8c6952b))
+
+- Compund filters ([f7bda6f](https://github.com/amasotti/an-na7wi/commit/f7bda6f8586eef1e6f0efd6857d7d9024862aa58))
+
+### 🚜 Refactor
+
+
+- Modularize view component ([7b11fba](https://github.com/amasotti/an-na7wi/commit/7b11fbab663cece44e2b81a73463ab4b2a443ea1))
+
+- Keep improving word components ([e0a2658](https://github.com/amasotti/an-na7wi/commit/e0a2658da82ff9e414eab90e9bc083c1cdd8f105))
+
+### 🧪 Testing
+
+
+- *(frontend)* Add unit test ([88ce1a0](https://github.com/amasotti/an-na7wi/commit/88ce1a0ccc8e85bbddf0c59e810c7bcfe6f9e2c8))
+
+- Translitteration ([a62d285](https://github.com/amasotti/an-na7wi/commit/a62d285d0e84e3bdd5592efc06b512c8346eaad3))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Add string utils ([e21eff8](https://github.com/amasotti/an-na7wi/commit/e21eff89f27a936f3473980119197816f8116800))
+
+- Improve pipeline ([9494c77](https://github.com/amasotti/an-na7wi/commit/9494c77a7d62077d71bdad6e33c839eb706c23c1))
+
+- New line at end of file ([63b5336](https://github.com/amasotti/an-na7wi/commit/63b5336cc44bd993bf2809fb649704cdf87b7911))
+
+- Use npm cache ([4168e8d](https://github.com/amasotti/an-na7wi/commit/4168e8da03ac9f0b2494f160d0bd021a0fd187f9))
+
+## [0.4.0] - 2025-07-27
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/125041ac2af62c86469d605785eec6b32961a247..eb19f2b327599cd78c4ada4c6ea78b06272288b5)
 ### 🚀 Features
 
 

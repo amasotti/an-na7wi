@@ -25,7 +25,10 @@ import java.util.*
 class WordService {
     
     @Inject
-    lateinit var wordRepository: WordRepository
+    private lateinit var wordRepository: WordRepository
+    
+    @Inject
+    private lateinit var rootService: RootService
     
     private val logger = Logger.getLogger(WordService::class.java)
     
@@ -166,6 +169,19 @@ class WordService {
         val word = wordDTO.toEntity()
         word.createdAt = LocalDateTime.now()
         
+        // Handle root assignment
+        if (!wordDTO.root.isNullOrBlank()) {
+            try {
+                val arabicRoot = rootService.createOrFindRoot(wordDTO.root)
+                word.arabicRoot = arabicRoot
+                logger.debug("Assigned root ${arabicRoot.displayForm} to word ${word.arabic}")
+            } catch (e: Exception) {
+                logger.warn("Failed to create/find root for '${wordDTO.root}': ${e.message}")
+                // Keep the original root string for backward compatibility
+                word.root = wordDTO.root
+            }
+        }
+        
         // Persist the word
         wordRepository.persist(word)
         
@@ -197,6 +213,23 @@ class WordService {
         
         val existingWord = findById(id)
         wordDTO.updateEntity(existingWord)
+        
+        // Handle root assignment
+        if (!wordDTO.root.isNullOrBlank()) {
+            try {
+                val arabicRoot = rootService.createOrFindRoot(wordDTO.root)
+                existingWord.arabicRoot = arabicRoot
+                logger.debug("Updated root to ${arabicRoot.displayForm} for word ${existingWord.arabic}")
+            } catch (e: Exception) {
+                logger.warn("Failed to create/find root for '${wordDTO.root}': ${e.message}")
+                // Keep the original root string for backward compatibility
+                existingWord.root = wordDTO.root
+                existingWord.arabicRoot = null
+            }
+        } else {
+            // Clear root relationship if no root provided
+            existingWord.arabicRoot = null
+        }
         
         // Persist the updated word
         wordRepository.persist(existingWord)
