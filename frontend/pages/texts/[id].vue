@@ -64,6 +64,13 @@
               </BaseIcon>
               {{ showAnnotations ? 'Hide' : 'Show' }} Annotations
             </BaseButton>
+
+            <BaseButton variant="primary" size="sm" @click="addNewWord">
+              <BaseIcon size="sm" class="mr-2">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </BaseIcon>
+              Add Word
+            </BaseButton>
           </div>
         </div>
 
@@ -181,6 +188,19 @@
       @delete="deleteAnnotation"
     />
 
+    <!-- Word Form Modal -->
+    <WordForm
+      :open="showWordModal"
+      :loading="wordLoading"
+      :word="wordForForm"
+      :difficulty-options="difficultyOptions"
+      :dialect-options="dialectOptions"
+      :mastery-level-options="masteryLevelOptions"
+      :parts-of-speech-options="partsOfSpeechOptions"
+      @close="closeWordModal"
+      @submit="handleWordSubmit"
+    />
+
     <!-- Selection Toolbar (outside all containers for absolute positioning) -->
     <div 
       v-if="showSelectionToolbar" 
@@ -189,9 +209,15 @@
     >
       <BaseButton size="sm" @click="createAnnotationFromSelection">
         <BaseIcon size="sm" class="mr-1">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 01-2 2h-3l-4 4z" />
         </BaseIcon>
         Annotate
+      </BaseButton>
+      <BaseButton size="sm" @click="addWordFromSelection">
+        <BaseIcon size="sm" class="mr-1">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </BaseIcon>
+        Add Word
       </BaseButton>
     </div>
   </div>
@@ -209,12 +235,15 @@ import TextDeleteModal from '~/components/text/TextDeleteModal.vue'
 import TextEditModal from '~/components/text/TextEditModal.vue'
 import TextTokenizedWords from '~/components/text/TextTokenizedWords.vue'
 import TextVersionManager from '~/components/text/TextVersionManager.vue'
+import WordForm from '~/components/vocabulary/WordForm.vue'
 import { useTextStore } from '~/stores/textStore'
-import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Text } from '~/types'
+import { useWordStore } from '~/stores/wordStore'
+import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Text, Word } from '~/types'
 import { Dialect, Difficulty } from '~/types'
 
 const route = useRoute()
 const textStore = useTextStore()
+const wordStore = useWordStore()
 
 // Local state
 const showAnnotations = ref(true)
@@ -222,6 +251,11 @@ const showEditModal = ref(false)
 const showDeleteModal = ref(false)
 const showAnnotationModal = ref(false)
 const editingAnnotation = ref<Annotation | undefined>(undefined)
+
+// Word modal state
+const showWordModal = ref(false)
+const wordLoading = ref(false)
+const editingWord = ref<Word | null>(null)
 
 // Selection toolbar state
 const showSelectionToolbar = ref(false)
@@ -276,6 +310,28 @@ const formattedDate = computed(() => {
     day: 'numeric',
     year: 'numeric',
   })
+})
+
+// Word form options
+const difficultyOptions = computed(() => wordStore.difficultyOptions)
+const dialectOptions = computed(() => wordStore.dialectOptions)
+const masteryLevelOptions = computed(() => wordStore.masteryLevelOptions)
+const partsOfSpeechOptions = computed(() => wordStore.partsOfSpeechOptions)
+
+// Word for form - pre-fills with selected text if available and Arabic
+const wordForForm = computed(() => {
+  if (editingWord.value) {
+    return editingWord.value
+  }
+
+  // If we have selected Arabic text, create a partial word object
+  if (currentSelectedText.value && /[\u0600-\u06FF]/.test(currentSelectedText.value)) {
+    return {
+      arabic: currentSelectedText.value.trim(),
+    } as Partial<Word>
+  }
+
+  return null
 })
 
 // Computed style for selection toolbar
@@ -471,6 +527,49 @@ const handleAnnotationDeleted = (id: string) => {
 const handleTokenizedWordsPageChange = (page: number) => {
   if (currentText.value) {
     textStore.fetchTokenizedWords(currentText.value.id, page)
+  }
+}
+
+// Word form methods
+const addNewWord = () => {
+  editingWord.value = null
+  showWordModal.value = true
+}
+
+const addWordFromSelection = () => {
+  editingWord.value = null
+  // Pre-fill with selected text if it's Arabic
+  if (currentSelectedText.value) {
+    // We'll set the Arabic field in the form when the modal opens
+    showWordModal.value = true
+  } else {
+    showWordModal.value = true
+  }
+  showSelectionToolbar.value = false
+}
+
+const closeWordModal = () => {
+  showWordModal.value = false
+  editingWord.value = null
+}
+
+const handleWordSubmit = async (formData: Partial<Word>) => {
+  wordLoading.value = true
+  try {
+    if (editingWord.value) {
+      // Update existing word
+      await wordStore.updateWord(editingWord.value.id!, formData)
+    } else {
+      // Create new word
+      await wordStore.createWord(formData)
+    }
+    closeWordModal()
+    // Clear the selection after successful creation
+    currentSelectedText.value = ''
+  } catch (error) {
+    console.error('Failed to save word:', error)
+  } finally {
+    wordLoading.value = false
   }
 }
 
