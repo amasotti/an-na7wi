@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Script to backup the PostgreSQL database
+set -euo pipefail
 
-# Default values
+# Config
 CONTAINER_NAME="annahwi-postgres"
 BACKUP_DIR="../database/backups"
 DB_NAME="annahwi"
@@ -10,27 +10,35 @@ DB_USER="annahwi_user"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_${TIMESTAMP}.sql"
 
-# Create backup directory if it doesn't exist
-mkdir -p ${BACKUP_DIR}
+# Tables to include
+TABLES=("annotations" "texts" "text_versions" "arabic_roots" "words")
 
-# Display backup information
-echo "Backing up database ${DB_NAME} from container ${CONTAINER_NAME}..."
+# Create backup directory if it doesn't exist
+mkdir -p "${BACKUP_DIR}"
+
+echo "Backing up tables from ${DB_NAME} in ${CONTAINER_NAME}..."
 echo "Backup file: ${BACKUP_FILE}"
 
-# Execute the backup
-docker exec ${CONTAINER_NAME} pg_dump -U ${DB_USER} -d ${DB_NAME} > ${BACKUP_FILE}
+# Construct table arguments
+TABLE_ARGS=()
+for table in "${TABLES[@]}"; do
+  TABLE_ARGS+=(--table="public.${table}")
+done
 
-# Check if backup was successful
-if [ $? -eq 0 ]; then
-    echo "Backup completed successfully!"
-    echo "Backup saved to: ${BACKUP_FILE}"
-else
-    echo "Backup failed!"
-    exit 1
-fi
 
-# Create a 'latest' symlink for easy reference
-ln -sf ${BACKUP_FILE} ${BACKUP_DIR}/${DB_NAME}_latest.sql
-echo "Created symlink: ${BACKUP_DIR}/${DB_NAME}_latest.sql -> ${BACKUP_FILE}"
+# Run pg_dump
+docker exec "${CONTAINER_NAME}" pg_dump \
+    -U "${DB_USER}" \
+    -d "${DB_NAME}" \
+    --data-only \
+    --column-inserts \
+    --no-owner \
+    --disable-triggers \
+    "${TABLE_ARGS[@]}" > "${BACKUP_FILE}"
 
-exit 0
+
+echo "Backup completed successfully: ${BACKUP_FILE}"
+
+# Update symlink to latest
+ln -sf "${BACKUP_FILE}" "${BACKUP_DIR}/${DB_NAME}_latest.sql"
+echo "Symlink updated: ${DB_NAME}_latest.sql -> ${BACKUP_FILE}"
