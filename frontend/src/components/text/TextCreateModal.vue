@@ -62,7 +62,18 @@
 
         <!-- Transliteration -->
         <div class="form-field">
-          <label class="form-label">Transliteration</label>
+          <div class="flex items-center justify-between">
+            <label class="form-label">Transliteration</label>
+            <BaseButton
+              v-if="form.arabicContent.trim()"
+              variant="outline"
+              size="sm"
+              :loading="transliterationLoading"
+              @click="handleTransliterate"
+            >
+              Auto-transliterate
+            </BaseButton>
+          </div>
           <textarea
             v-model="form.transliteration"
             class="text-input"
@@ -135,6 +146,7 @@
 </template>
 
 <script setup lang="ts">
+import { textService } from '@/services/textService'
 import { Dialect, Difficulty } from '@/types'
 import type { SelectOption } from '@/types'
 import { computed, ref, watch } from 'vue'
@@ -185,6 +197,7 @@ const form = ref<TextForm>({
 
 const tagInput = ref('')
 const errors = ref<Record<string, string>>({})
+const transliterationLoading = ref(false)
 
 // Options
 const difficultyOptions: SelectOption<Difficulty>[] = [
@@ -290,6 +303,20 @@ const handleSubmit = () => {
 
 const handleClose = () => {
   emit('close')
+}
+
+const handleTransliterate = async () => {
+  if (!form.value.arabicContent.trim()) return
+
+  try {
+    transliterationLoading.value = true
+    const response = await textService.transliterateText(form.value.arabicContent)
+    form.value.transliteration = response.transliteratedText
+  } catch (error) {
+    console.error('Failed to transliterate text:', error)
+  } finally {
+    transliterationLoading.value = false
+  }
 }
 
 // Reset form when modal closes

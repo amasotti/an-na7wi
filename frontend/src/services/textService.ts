@@ -1,5 +1,10 @@
 import type { Annotation, Text, TextVersion, TextVersionSummary } from '@/types'
-import type { TextsRequest, TextsResponse } from '@/types'
+import type {
+  TextsRequest,
+  TextsResponse,
+  TransliterationRequest,
+  TransliterationResponse,
+} from '@/types'
 import apiClient from './api'
 
 export const textService = {
@@ -91,6 +96,15 @@ export const textService = {
    */
   async restoreTextVersion(textId: string, versionNumber: number): Promise<Text> {
     const response = await apiClient.post(`/texts/${textId}/restore/${versionNumber}`)
+    return response.data
+  },
+
+  /**
+   * Transliterate Arabic text to Latin alphabet
+   */
+  async transliterateText(arabicText: string): Promise<TransliterationResponse> {
+    const request: TransliterationRequest = { arabicText }
+    const response = await apiClient.post('/texts/transliterate', request)
     return response.data
   },
 }

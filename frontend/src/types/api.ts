@@ -23,3 +23,12 @@ export interface TextsRequest extends BaseRequest {
   difficulty?: Difficulty
   tags?: string[]
 }
+
+export interface TransliterationRequest {
+  arabicText: string
+}
+
+export interface TransliterationResponse {
+  originalText: string
+  transliteratedText: string
+}

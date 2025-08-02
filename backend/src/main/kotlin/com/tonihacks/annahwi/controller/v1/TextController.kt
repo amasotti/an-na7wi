@@ -1,12 +1,15 @@
 package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.dto.request.TextRequestDTO
+import com.tonihacks.annahwi.dto.request.TransliterationRequestDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
+import com.tonihacks.annahwi.dto.response.TransliterationResponseDTO
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.service.TextService
 import com.tonihacks.annahwi.service.TextVersionService
+import com.tonihacks.annahwi.service.TransliterationService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
@@ -38,6 +41,9 @@ class TextController {
 
     @Inject
     private lateinit var textVersionService: TextVersionService
+
+    @Inject
+    private lateinit var transliterationService: TransliterationService
 
     private val logger = Logger.getLogger(TextController::class.java)
     
@@ -153,5 +159,18 @@ class TextController {
         logger.info("POST /api/v1/texts/migrate-versions")
         textVersionService.migrateUnversionedTexts()
         return Response.ok(mapOf("message" to "Migration completed successfully")).build()
+    }
+    
+    @POST
+    @Path("/transliterate")
+    @Operation(summary = "Transliterate Arabic text", description = "Converts Arabic text to Latin alphabet/Arabic chat alphabet")
+    fun transliterateText(request: TransliterationRequestDTO): Response {
+        logger.info("POST /api/v1/texts/transliterate - text length: ${request.arabicText.length}")
+        val transliteratedText = transliterationService.transliterate(request.arabicText)
+        val response = TransliterationResponseDTO(
+            originalText = request.arabicText,
+            transliteratedText = transliteratedText
+        )
+        return Response.ok(response).build()
     }
 }
