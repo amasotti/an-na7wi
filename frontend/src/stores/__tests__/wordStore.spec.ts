@@ -15,6 +15,9 @@ vi.mock('../../services/wordService', () => ({
     deleteWord: vi.fn(),
     searchByArabic: vi.fn(),
     searchByTranslation: vi.fn(),
+    findByDifficulty: vi.fn(),
+    findByDialect: vi.fn(),
+    findByPartOfSpeech: vi.fn(),
   },
 }))
 
@@ -89,29 +92,44 @@ describe('wordStore', () => {
       expect(store.loading).toBe(false)
     })
 
-    it('should fetch words with filters', async () => {
+    it('should fetch words with difficulty filter', async () => {
       const store = useWordStore()
       store.filters.difficulty = 'INTERMEDIATE'
-      store.filters.dialect = 'MSA'
 
       const mockResponse = {
-        items: [],
-        totalCount: 0,
+        items: [{ id: '1', arabic: 'كتاب', translation: 'book' }] as Word[],
+        totalCount: 5,
         page: 1,
         pageSize: 10,
-      }
+      } as PaginatedResponse<Word>
 
-      vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
+      vi.mocked(wordService.findByDifficulty).mockResolvedValue(mockResponse)
 
       await store.fetchWords()
 
-      expect(wordService.getWords).toHaveBeenCalledWith({
+      expect(wordService.findByDifficulty).toHaveBeenCalledWith('INTERMEDIATE', 1, 10)
+      expect(store.words).toEqual(mockResponse.items)
+      expect(store.pagination.totalCount).toBe(mockResponse.totalCount)
+    })
+
+    it('should fetch words with dialect filter', async () => {
+      const store = useWordStore()
+      store.filters.dialect = 'MSA'
+
+      const mockResponse = {
+        items: [{ id: '1', arabic: 'كتاب', translation: 'book' }] as Word[],
+        totalCount: 3,
         page: 1,
-        size: 10,
-        sort: 'arabic',
-        difficulty: 'INTERMEDIATE',
-        dialect: 'MSA',
-      })
+        pageSize: 10,
+      } as PaginatedResponse<Word>
+
+      vi.mocked(wordService.findByDialect).mockResolvedValue(mockResponse)
+
+      await store.fetchWords()
+
+      expect(wordService.findByDialect).toHaveBeenCalledWith('MSA', 1, 10)
+      expect(store.words).toEqual(mockResponse.items)
+      expect(store.pagination.totalCount).toBe(mockResponse.totalCount)
     })
 
     it('should handle fetch errors', async () => {
@@ -334,18 +352,18 @@ describe('wordStore', () => {
     it('should refetch words when non-search filter is updated', async () => {
       const store = useWordStore()
       const mockResponse = {
-        items: [],
-        totalCount: 0,
+        items: [{ id: '1', arabic: 'كتاب', translation: 'book' }] as Word[],
+        totalCount: 1,
         page: 1,
         pageSize: 10,
-      }
+      } as PaginatedResponse<Word>
 
-      vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
+      vi.mocked(wordService.findByDifficulty).mockResolvedValue(mockResponse)
 
       store.updateFilters({ difficulty: 'INTERMEDIATE' })
 
       expect(store.filters.difficulty).toBe('INTERMEDIATE')
-      expect(wordService.getWords).toHaveBeenCalled()
+      expect(wordService.findByDifficulty).toHaveBeenCalledWith('INTERMEDIATE', 1, 10)
     })
   })
 

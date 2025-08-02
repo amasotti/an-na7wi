@@ -86,7 +86,7 @@ export const wordService = {
   /**
    * Find words by root
    */
-  async findByRoot(root: string, page = 1, size = 10): Promise<Word[]> {
+  async findByRoot(root: string, page = 1, size = 10): Promise<PaginatedResponse<Word>> {
     const response = await apiClient.get(`/words/root/${root}`, {
       params: { page, size },
     })
@@ -96,7 +96,11 @@ export const wordService = {
   /**
    * Find words by part of speech
    */
-  async findByPartOfSpeech(partOfSpeech: string, page = 1, size = 10): Promise<Word[]> {
+  async findByPartOfSpeech(
+    partOfSpeech: string,
+    page = 1,
+    size = 10
+  ): Promise<PaginatedResponse<Word>> {
     const response = await apiClient.get(`/words/part-of-speech/${partOfSpeech}`, {
       params: { page, size },
     })
@@ -106,7 +110,7 @@ export const wordService = {
   /**
    * Find words by dialect
    */
-  async findByDialect(dialect: string, page = 1, size = 10): Promise<Word[]> {
+  async findByDialect(dialect: string, page = 1, size = 10): Promise<PaginatedResponse<Word>> {
     const response = await apiClient.get(`/words/dialect/${dialect}`, {
       params: { page, size },
     })
@@ -116,7 +120,11 @@ export const wordService = {
   /**
    * Find words by difficulty
    */
-  async findByDifficulty(difficulty: string, page = 1, size = 10): Promise<Word[]> {
+  async findByDifficulty(
+    difficulty: string,
+    page = 1,
+    size = 10
+  ): Promise<PaginatedResponse<Word>> {
     const response = await apiClient.get(`/words/difficulty/${difficulty}`, {
       params: { page, size },
     })
@@ -126,7 +134,7 @@ export const wordService = {
   /**
    * Find verified words
    */
-  async findVerified(page = 1, size = 10): Promise<Word[]> {
+  async findVerified(page = 1, size = 10): Promise<PaginatedResponse<Word>> {
     const response = await apiClient.get('/words/verified', {
       params: { page, size },
     })

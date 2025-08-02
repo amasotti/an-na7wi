@@ -74,17 +74,42 @@ export const useWordStore = defineStore('word', () => {
 
     loading.value = true
     try {
-      const params = {
-        page: pagination.value.page,
-        size: pagination.value.pageSize,
-        sort: 'arabic',
-        ...(filters.value.difficulty && { difficulty: filters.value.difficulty }),
-        ...(filters.value.dialect && { dialect: filters.value.dialect }),
-        ...(filters.value.masteryLevel && { masteryLevel: filters.value.masteryLevel }),
-        ...(filters.value.partOfSpeech && { partOfSpeech: filters.value.partOfSpeech }),
+      let response: { items: Word[]; totalCount: number; page: number; pageSize: number }
+
+      // Use specialized endpoints when specific filters are applied
+      if (filters.value.difficulty) {
+        const paginatedResponse = await wordService.findByDifficulty(
+          filters.value.difficulty,
+          pagination.value.page,
+          pagination.value.pageSize
+        )
+        response = paginatedResponse
+      } else if (filters.value.dialect) {
+        const paginatedResponse = await wordService.findByDialect(
+          filters.value.dialect,
+          pagination.value.page,
+          pagination.value.pageSize
+        )
+        response = paginatedResponse
+      } else if (filters.value.partOfSpeech) {
+        const paginatedResponse = await wordService.findByPartOfSpeech(
+          filters.value.partOfSpeech,
+          pagination.value.page,
+          pagination.value.pageSize
+        )
+        response = paginatedResponse
+      } else {
+        // Use general endpoint when no specific filters are applied
+        const params = {
+          page: pagination.value.page,
+          size: pagination.value.pageSize,
+          sort: 'arabic',
+          ...(filters.value.masteryLevel && { masteryLevel: filters.value.masteryLevel }),
+        }
+
+        response = await wordService.getWords(params)
       }
 
-      const response = await wordService.getWords(params)
       words.value = response.items
       pagination.value.totalCount = response.totalCount
       pagination.value.page = response.page
