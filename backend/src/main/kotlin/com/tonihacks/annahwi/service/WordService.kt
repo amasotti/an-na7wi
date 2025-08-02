@@ -3,6 +3,7 @@ package com.tonihacks.annahwi.service
 import com.tonihacks.annahwi.dto.request.WordRequestDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
+import com.tonihacks.annahwi.entity.MasteryLevel
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.entity.Word
 import com.tonihacks.annahwi.repository.WordRepository
@@ -45,6 +46,41 @@ class WordService {
         logger.info("Counting all words")
         return wordRepository.count()
     }
+
+    /**
+     * Find all words with optional filters and pagination
+     */
+    fun findAllWithFilters(
+        page: Int, 
+        size: Int, 
+        sortField: String = "arabic",
+        difficulty: Difficulty? = null,
+        dialect: Dialect? = null,
+        partOfSpeech: PartOfSpeech? = null,
+        masteryLevel: MasteryLevel? = null,
+        verified: Boolean? = null
+    ): List<Word> {
+        logger.info(
+            "Finding words with filters - page: $page, size: $size, sort: $sortField, " +
+            "difficulty: $difficulty, dialect: $dialect, partOfSpeech: $partOfSpeech, masteryLevel: $masteryLevel, verified: $verified"
+        )
+        return wordRepository.findAllWithFilters(Page.of(page, size), sortField, difficulty, dialect, partOfSpeech, masteryLevel, verified)
+    }
+
+    /**
+     * Count words with optional filters
+     */
+    fun countWithFilters(
+        difficulty: Difficulty? = null,
+        dialect: Dialect? = null,
+        partOfSpeech: PartOfSpeech? = null,
+        masteryLevel: MasteryLevel? = null,
+        verified: Boolean? = null
+    ): Long {
+        logger.info("Counting words with filters - difficulty: $difficulty, dialect: $dialect, " +
+                "partOfSpeech: $partOfSpeech, masteryLevel: $masteryLevel, verified: $verified")
+        return wordRepository.countWithFilters(difficulty, dialect, partOfSpeech, masteryLevel, verified)
+    }
     
     /**
      * Find a word by its ID
@@ -62,31 +98,6 @@ class WordService {
         logger.info("Finding word by Arabic text: $arabic")
         return wordRepository.findByArabic(arabic)
             .let { Optional.ofNullable(it) }
-    }
-    
-    /**
-     * Find or create a word by Arabic text
-     */
-    @Transactional
-    fun findOrCreateByArabic(arabic: String): Word {
-        logger.info("Finding or creating word by Arabic text: $arabic")
-        
-        val existingWord = findByArabic(arabic)
-        if (existingWord.isPresent) {
-            return existingWord.get()
-        }
-        
-        // Create a new word with default values
-        val word = Word().apply {
-            this.arabic = arabic
-            this.difficulty = Difficulty.BEGINNER // Default difficulty
-            this.dialect = Dialect.MSA // Default dialect (Modern Standard Arabic)
-            this.frequency = 1 // Initial frequency
-            this.createdAt = LocalDateTime.now()
-        }
-        
-        wordRepository.persist(word)
-        return word
     }
     
     /**
@@ -143,14 +154,6 @@ class WordService {
     fun searchByTranslation(query: String, page: Int, size: Int): List<Word> {
         logger.info("Searching words by translation or transliteration: $query, page: $page, size: $size")
         return wordRepository.searchByTranslation(query, Page.of(page, size))
-    }
-    
-    /**
-     * Find most frequent words
-     */
-    fun findMostFrequent(limit: Int): List<Word> {
-        logger.info("Finding most frequent words, limit: $limit")
-        return wordRepository.findMostFrequent(limit)
     }
     
     /**
@@ -237,19 +240,5 @@ class WordService {
         // Delete the word
         return wordRepository.deleteById(id)
     }
-    
-    /**
-     * Increment the frequency of a word
-     */
-    @Transactional
-    fun incrementFrequency(id: UUID): Word {
-        logger.info("Incrementing frequency of word with ID: $id")
-        
-        val word = findById(id)
-        word.frequency++
-        
-        wordRepository.persist(word)
-        
-        return word
-    }
+
 }

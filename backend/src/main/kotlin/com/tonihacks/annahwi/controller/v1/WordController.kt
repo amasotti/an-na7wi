@@ -4,6 +4,7 @@ import com.tonihacks.annahwi.dto.request.WordRequestDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
+import com.tonihacks.annahwi.entity.MasteryLevel
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.service.WordService
 import com.tonihacks.annahwi.util.PaginationUtil
@@ -37,16 +38,24 @@ class WordController {
     private val logger = Logger.getLogger(WordController::class.java)
     
     @GET
-    @Operation(summary = "Get all words", description = "Returns a list of words with pagination")
+    @Operation(summary = "Get all words", description = "Returns a list of words with pagination and optional filtering")
     fun getAllWords(
         @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int,
-        @QueryParam("sort") @DefaultValue("arabic") sort: String
+        @QueryParam("sort") @DefaultValue("arabic") sort: String,
+        @QueryParam("difficulty") difficulty: Difficulty?,
+        @QueryParam("dialect") dialect: Dialect?,
+        @QueryParam("partOfSpeech") partOfSpeech: PartOfSpeech?,
+        @QueryParam("masteryLevel") masteryLevel: MasteryLevel?,
+        @QueryParam("verified") verified: Boolean?
     ): Response {
-        logger.info("GET /api/v1/words - page: $page, size: $size, sort: $sort")
+        logger.info(
+            "GET /api/v1/words - page: $page, size: $size, sort: $sort, " +
+            "difficulty: $difficulty, dialect: $dialect, partOfSpeech: $partOfSpeech, masteryLevel: $masteryLevel, verified: $verified"
+        )
         val pagination = PaginationUtil.toZeroBasedPage(page)
-        val total = wordService.countAll()
-        val words = wordService.findAll(pagination, size, sort)
+        val total = wordService.countWithFilters(difficulty, dialect, partOfSpeech, masteryLevel, verified)
+        val words = wordService.findAllWithFilters(pagination, size, sort, difficulty, dialect, partOfSpeech, masteryLevel, verified)
         val paginatedResponse = PaginatedResponse(
             items = words,
             totalCount = total,

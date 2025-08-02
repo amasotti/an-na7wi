@@ -15,9 +15,6 @@ vi.mock('../../services/wordService', () => ({
     deleteWord: vi.fn(),
     searchByArabic: vi.fn(),
     searchByTranslation: vi.fn(),
-    findByDifficulty: vi.fn(),
-    findByDialect: vi.fn(),
-    findByPartOfSpeech: vi.fn(),
   },
 }))
 
@@ -92,7 +89,7 @@ describe('wordStore', () => {
       expect(store.loading).toBe(false)
     })
 
-    it('should fetch words with difficulty filter', async () => {
+    it('should fetch words with single difficulty filter', async () => {
       const store = useWordStore()
       store.filters.difficulty = 'INTERMEDIATE'
 
@@ -103,16 +100,21 @@ describe('wordStore', () => {
         pageSize: 10,
       } as PaginatedResponse<Word>
 
-      vi.mocked(wordService.findByDifficulty).mockResolvedValue(mockResponse)
+      vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
 
       await store.fetchWords()
 
-      expect(wordService.findByDifficulty).toHaveBeenCalledWith('INTERMEDIATE', 1, 10)
+      expect(wordService.getWords).toHaveBeenCalledWith({
+        page: 1,
+        size: 10,
+        sort: 'arabic',
+        difficulty: 'INTERMEDIATE',
+      })
       expect(store.words).toEqual(mockResponse.items)
       expect(store.pagination.totalCount).toBe(mockResponse.totalCount)
     })
 
-    it('should fetch words with dialect filter', async () => {
+    it('should fetch words with single dialect filter', async () => {
       const store = useWordStore()
       store.filters.dialect = 'MSA'
 
@@ -123,11 +125,76 @@ describe('wordStore', () => {
         pageSize: 10,
       } as PaginatedResponse<Word>
 
-      vi.mocked(wordService.findByDialect).mockResolvedValue(mockResponse)
+      vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
 
       await store.fetchWords()
 
-      expect(wordService.findByDialect).toHaveBeenCalledWith('MSA', 1, 10)
+      expect(wordService.getWords).toHaveBeenCalledWith({
+        page: 1,
+        size: 10,
+        sort: 'arabic',
+        dialect: 'MSA',
+      })
+      expect(store.words).toEqual(mockResponse.items)
+      expect(store.pagination.totalCount).toBe(mockResponse.totalCount)
+    })
+
+    it('should fetch words with compound filters', async () => {
+      const store = useWordStore()
+      store.filters.difficulty = 'INTERMEDIATE'
+      store.filters.dialect = 'MSA'
+      store.filters.partOfSpeech = 'NOUN'
+
+      const mockResponse = {
+        items: [{ id: '1', arabic: 'كتاب', translation: 'book' }] as Word[],
+        totalCount: 2,
+        page: 1,
+        pageSize: 10,
+      } as PaginatedResponse<Word>
+
+      vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
+
+      await store.fetchWords()
+
+      expect(wordService.getWords).toHaveBeenCalledWith({
+        page: 1,
+        size: 10,
+        sort: 'arabic',
+        difficulty: 'INTERMEDIATE',
+        dialect: 'MSA',
+        partOfSpeech: 'NOUN',
+      })
+      expect(store.words).toEqual(mockResponse.items)
+      expect(store.pagination.totalCount).toBe(mockResponse.totalCount)
+    })
+
+    it('should fetch words with all filters including masteryLevel', async () => {
+      const store = useWordStore()
+      store.filters.difficulty = 'ADVANCED'
+      store.filters.dialect = 'EGYPTIAN'
+      store.filters.partOfSpeech = 'VERB'
+      store.filters.masteryLevel = 'KNOWN'
+
+      const mockResponse = {
+        items: [{ id: '1', arabic: 'كتب', translation: 'wrote' }] as Word[],
+        totalCount: 1,
+        page: 1,
+        pageSize: 10,
+      } as PaginatedResponse<Word>
+
+      vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
+
+      await store.fetchWords()
+
+      expect(wordService.getWords).toHaveBeenCalledWith({
+        page: 1,
+        size: 10,
+        sort: 'arabic',
+        difficulty: 'ADVANCED',
+        dialect: 'EGYPTIAN',
+        partOfSpeech: 'VERB',
+        masteryLevel: 'KNOWN',
+      })
       expect(store.words).toEqual(mockResponse.items)
       expect(store.pagination.totalCount).toBe(mockResponse.totalCount)
     })
@@ -358,12 +425,17 @@ describe('wordStore', () => {
         pageSize: 10,
       } as PaginatedResponse<Word>
 
-      vi.mocked(wordService.findByDifficulty).mockResolvedValue(mockResponse)
+      vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
 
       store.updateFilters({ difficulty: 'INTERMEDIATE' })
 
       expect(store.filters.difficulty).toBe('INTERMEDIATE')
-      expect(wordService.findByDifficulty).toHaveBeenCalledWith('INTERMEDIATE', 1, 10)
+      expect(wordService.getWords).toHaveBeenCalledWith({
+        page: 1,
+        size: 10,
+        sort: 'arabic',
+        difficulty: 'INTERMEDIATE',
+      })
     })
   })
 

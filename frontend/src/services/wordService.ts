@@ -15,6 +15,7 @@ export const wordService = {
       difficulty?: string
       partOfSpeech?: string
       masteryLevel?: string
+      verified?: boolean
     } = {}
   ): Promise<{
     items: Word[]

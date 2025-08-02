@@ -2,6 +2,7 @@ package com.tonihacks.annahwi.repository
 
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
+import com.tonihacks.annahwi.entity.MasteryLevel
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.entity.Word
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepository
@@ -107,6 +108,112 @@ class WordRepository : PanacheRepository<Word> {
             .list()
     }
     
+    /**
+     * Find all words with optional filters
+     */
+    fun findAllWithFilters(
+        page: Page,
+        sortField: String = "arabic",
+        difficulty: Difficulty? = null,
+        dialect: Dialect? = null,
+        partOfSpeech: PartOfSpeech? = null,
+        masteryLevel: MasteryLevel? = null,
+        verified: Boolean? = null
+    ): List<Word> {
+        val conditions = mutableListOf<String>()
+        val params = Parameters()
+        
+        difficulty?.let {
+            conditions.add("difficulty = :difficulty")
+            params.and("difficulty", it)
+        }
+        
+        dialect?.let {
+            conditions.add("dialect = :dialect")
+            params.and("dialect", it)
+        }
+        
+        partOfSpeech?.let {
+            conditions.add("partOfSpeech = :partOfSpeech")
+            params.and("partOfSpeech", it)
+        }
+        
+        masteryLevel?.let {
+            conditions.add("masteryLevel = :masteryLevel")
+            params.and("masteryLevel", it)
+        }
+        
+        verified?.let {
+            conditions.add("isVerified = :verified")
+            params.and("verified", it)
+        }
+        
+        val query = if (conditions.isNotEmpty()) {
+            conditions.joinToString(" AND ")
+        } else {
+            "" // No conditions means return all
+        }
+        
+        val sort = Sort.by(sortField)
+        
+        return if (query.isEmpty()) {
+            findAll(sort).page(page).list()
+        } else {
+            find(query, sort, params).page(page).list()
+        }
+    }
+    
+    /**
+     * Count words with optional filters
+     */
+    fun countWithFilters(
+        difficulty: Difficulty? = null,
+        dialect: Dialect? = null,
+        partOfSpeech: PartOfSpeech? = null,
+        masteryLevel: MasteryLevel? = null,
+        verified: Boolean? = null
+    ): Long {
+        val conditions = mutableListOf<String>()
+        val params = Parameters()
+        
+        difficulty?.let {
+            conditions.add("difficulty = :difficulty")
+            params.and("difficulty", it)
+        }
+        
+        dialect?.let {
+            conditions.add("dialect = :dialect")
+            params.and("dialect", it)
+        }
+        
+        partOfSpeech?.let {
+            conditions.add("partOfSpeech = :partOfSpeech")
+            params.and("partOfSpeech", it)
+        }
+        
+        masteryLevel?.let {
+            conditions.add("masteryLevel = :masteryLevel")
+            params.and("masteryLevel", it)
+        }
+        
+        verified?.let {
+            conditions.add("isVerified = :verified")
+            params.and("verified", it)
+        }
+        
+        val query = if (conditions.isNotEmpty()) {
+            conditions.joinToString(" AND ")
+        } else {
+            "" // No conditions means count all
+        }
+        
+        return if (query.isEmpty()) {
+            count()
+        } else {
+            count(query, params)
+        }
+    }
+
     /**
      * Delete a word by its ID
      */
