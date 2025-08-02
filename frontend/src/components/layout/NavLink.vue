@@ -43,6 +43,16 @@
           stroke-width="2"
           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
         />
+        <!-- Root icon proposal 1: Network/Tree Structure -->
+        <path
+          v-else-if="icon === 'CubeTransparentIcon'"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 3v6m-6 6l6-6 6 6M6 15l6-6m0 6l6-6M3 18h6m6 0h6M9 21v-3m6 0v3"
+        />
       </BaseIcon>
     </div>
     

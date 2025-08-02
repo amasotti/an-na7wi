@@ -136,11 +136,11 @@ const features = [
     link: '/vocabulary',
   },
   {
-    title: 'Study Search',
-    description: 'Find texts and words quickly with intelligent Arabic pattern matching.',
-    icon: 'magnifying-glass',
+    title: 'Root Deep-Dive',
+    description: 'Explore Arabic word roots and discover related words across different forms.',
+    icon: 'cube-transparent',
     color: 'accent',
-    link: '/search',
+    link: '/roots',
   },
   {
     title: 'Dialect Studies',
