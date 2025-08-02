@@ -11,6 +11,9 @@
               Translation
             </th>
             <th scope="col" class="word-table-header">
+              Root
+            </th>
+            <th scope="col" class="word-table-header">
               Links
             </th>
             <th scope="col" class="word-table-header">
@@ -44,6 +47,28 @@
               >
                 {{ word.translation || 'No translation' }}
               </div>
+            </td>
+            <td class="word-table-cell">
+              <div v-if="word.root" class="root-cell">
+                <router-link
+                  :to="getRootDetailPath(word.root)"
+                  class="inline-flex items-center px-2 py-1 text-xs font-medium text-purple-600 bg-purple-100 rounded-full hover:bg-purple-200 transition-colors arabic"
+                  :title="`Explore root: ${word.root}`"
+                >
+                  <BaseIcon size="xs" class="mr-1">
+                    <path
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                    />
+                  </BaseIcon>
+                  {{ word.root }}
+                </router-link>
+              </div>
+              <span v-else class="text-xs text-gray-400">No root</span>
             </td>
             <td class="word-table-cell">
               <div class="flex items-center space-x-2">
@@ -117,8 +142,10 @@
 </template>
 
 <script setup lang="ts">
+import { rootService } from '@/services/rootService'
 import type { Word } from '@/types'
 import { Difficulty, MasteryLevel } from '@/types/enums'
+import { ref } from 'vue'
 import BaseIcon from '../common/BaseIcon.vue'
 
 interface Props {
@@ -168,6 +195,14 @@ const getMasteryBadgeClass = (masteryLevel?: MasteryLevel) => {
 const openLink = (url: string) => {
   window.open(url, '_blank', 'noopener,noreferrer')
 }
+
+// Create root link path - this is a simplified approach for demo
+// In production, you'd want to get the actual root ID from the backend
+const getRootDetailPath = (rootString: string) => {
+  // For now, we'll use root normalization to try to find the root
+  // This should be improved to use actual root IDs in production
+  return `/roots?search=${encodeURIComponent(rootString)}`
+}
 </script>
 
 <style scoped>
@@ -197,5 +232,9 @@ const openLink = (url: string) => {
 
 .rtl {
   direction: rtl;
+}
+
+.root-cell {
+  @apply min-w-0;
 }
 </style>

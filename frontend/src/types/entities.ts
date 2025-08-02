@@ -56,6 +56,7 @@ export interface Root {
   normalizedForm: string
   displayForm: string
   letterCount: number
+  meaning?: string
   wordCount: number
   createdAt: string
   updatedAt: string

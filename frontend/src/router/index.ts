@@ -26,6 +26,17 @@ const router = createRouter({
       component: () => import('../views/VocabularyView.vue'),
     },
     {
+      path: '/roots',
+      name: 'roots',
+      component: () => import('../views/RootsView.vue'),
+    },
+    {
+      path: '/roots/:id',
+      name: 'root-detail',
+      component: () => import('../views/RootDetailView.vue'),
+      props: true,
+    },
+    {
       path: '/search',
       name: 'search',
       component: () => import('../views/SearchView.vue'),

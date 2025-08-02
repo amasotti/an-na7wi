@@ -13,6 +13,7 @@ data class RootResponseDTO(
     val normalizedForm: String,
     val displayForm: String,
     val letterCount: Int,
+    val meaning: String?,
     val wordCount: Int,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
@@ -25,6 +26,7 @@ data class RootResponseDTO(
                 normalizedForm = root.normalizedForm,
                 displayForm = root.displayForm,
                 letterCount = root.letterCount,
+                meaning = root.meaning,
                 wordCount = root.words.size,
                 createdAt = root.createdAt,
                 updatedAt = root.updatedAt

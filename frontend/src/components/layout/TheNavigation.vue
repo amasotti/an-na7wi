@@ -113,6 +113,12 @@ const navItems = [
     icon: 'BookOpenIcon',
   },
   {
+    name: 'roots',
+    label: 'Roots',
+    to: '/roots',
+    icon: 'CubeTransparentIcon',
+  },
+  {
     name: 'search',
     label: 'Search',
     to: '/search',
