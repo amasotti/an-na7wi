@@ -69,7 +69,7 @@ Phase 2: Enhanced Word Management
 
 Phase 3: Frontend Root System
 1. Improve root input component in VocabularyView / VocabularyContent
-   - Add real-time normalization
+   - Add root normalization and validation on submit of the word form
    - Display formatted root
    - Add a section below with a delay of 1 second to avoid excessive API calls, that shows related words with the same root
    - Displayed related words should be clickable and lead to the word detail page

@@ -41,6 +41,7 @@
       :parts-of-speech-options="wordStore.partsOfSpeechOptions"
       @close="closeWordModal"
       @submit="saveWord"
+      @related-word-click="handleRelatedWordClick"
     />
 
     <!-- Delete Confirmation Modal -->
@@ -145,6 +146,20 @@ const handleDeleteWord = async () => {
     console.error('Error deleting word:', error)
   } finally {
     deleteLoading.value = false
+  }
+}
+
+// Handle clicking on related words from WordForm
+const handleRelatedWordClick = async (word: Partial<Word>) => {
+  try {
+    // Fetch the full word details
+    await wordStore.fetchWordById(word.id!)
+    if (wordStore.currentWord) {
+      // Open the word form in edit mode
+      openWordForm(wordStore.currentWord)
+    }
+  } catch (error) {
+    console.error('Error fetching word details:', error)
   }
 }
 

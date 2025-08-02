@@ -45,12 +45,21 @@
         </div>
 
         <!-- Root -->
-        <div>
+        <div class="col-span-2">
           <BaseInput
             v-model="form.root"
             label="Root"
             class="rtl"
+            :error="rootValidationError"
           />
+          
+          <!-- Loading state for related words -->
+          <div v-if="loadingRelatedWords" class="mt-4 p-3 bg-gray-50 border border-gray-200 rounded">
+            <div class="flex items-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-600 mr-2"></div>
+              <span class="text-sm text-gray-600">Loading related words...</span>
+            </div>
+          </div>
         </div>
 
         <!-- Part of Speech -->
@@ -110,23 +119,44 @@
           />
         </div>
 
-        <!-- Related Words -->
-        <div>
-          <BaseInput
-            v-model="form.relatedWords"
-            label="Related Words"
-            placeholder="Comma-separated related words"
-          />
-        </div>
-
         <!-- Notes -->
         <div class="col-span-2">
           <label class="form-label">Notes</label>
-          <textarea 
-            v-model="form.notes" 
+          <textarea
+            v-model="form.notes"
             rows="3"
             class="form-textarea"
           ></textarea>
+        </div>
+
+        <!-- Loading state for related words -->
+        <div v-if="loadingRelatedWords" class="col-span-2">
+          <label class="form-label">Related Words with Same Root</label>
+          <div class="mt-2 p-3 bg-gray-50 border border-gray-200 rounded">
+            <div class="flex items-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-600 mr-2"></div>
+              <span class="text-sm text-gray-600">Loading related words...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related words section -->
+        <div v-if="relatedWords.length > 0" class="col-span-2 p-3 bg-blue-50 border border-blue-200 rounded">
+          <h4 class="text-sm font-medium text-blue-900 mb-2">Related Words with Same Root:</h4>
+          <div class="space-y-2">
+            <div
+                v-for="word in relatedWords"
+                :key="word.id"
+                class="flex justify-between items-center p-2 bg-white rounded border cursor-pointer hover:bg-blue-50 transition-colors"
+                @click="$emit('related-word-click', word)"
+            >
+              <div>
+                <span class="font-medium text-blue-900 rtl">{{ word.arabic }}</span>
+                <span v-if="word.transliteration" class="text-sm text-gray-600 ml-2">{{ word.transliteration }}</span>
+              </div>
+              <span class="text-sm text-gray-500">{{ word.translation }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -150,6 +180,8 @@
 </template>
 
 <script setup lang="ts">
+import { rootService } from '@/services/rootService'
+import { wordService } from '@/services/wordService'
 import type { SelectOption, Word } from '@/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { computed, ref, watch } from 'vue'
@@ -176,9 +208,15 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   close: []
   submit: [formData: Partial<Word>]
+  'related-word-click': [word: Partial<Word>]
 }>()
 
 const isEditing = computed(() => !!props.word)
+
+// Root validation and related words state
+const rootValidationError = ref<string>('')
+const relatedWords = ref<Partial<Word>[]>([])
+const loadingRelatedWords = ref(false)
 
 const form = ref({
   arabic: '',
@@ -193,7 +231,6 @@ const form = ref({
   masteryLevel: MasteryLevel.NEW,
   dictionaryLinks: '',
   pronunciationLink: '',
-  relatedWords: '',
   isVerified: false,
 })
 
@@ -215,7 +252,6 @@ watch(
         masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
         dictionaryLinks: newWord.dictionaryLinks || '',
         pronunciationLink: newWord.pronunciationLink || '',
-        relatedWords: newWord.relatedWords || '',
         isVerified: newWord.isVerified,
       }
     } else {
@@ -232,7 +268,6 @@ watch(
         masteryLevel: MasteryLevel.NEW,
         dictionaryLinks: '',
         pronunciationLink: '',
-        relatedWords: '',
         isVerified: false,
       }
     }
@@ -244,9 +279,93 @@ const handleClose = () => {
   emit('close')
 }
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
+  // Reset validation error
+  rootValidationError.value = ''
+
+  // Validate root if provided
+  if (form.value.root?.trim()) {
+    try {
+      const normalization = await rootService.normalizeRoot(form.value.root.trim())
+      if (!normalization.valid) {
+        rootValidationError.value = 'Invalid root format'
+        return // Prevent submission
+      }
+      // Use normalized form for saving
+      form.value.root = normalization.displayForm
+    } catch (error) {
+      console.error('Error validating root:', error)
+      rootValidationError.value = 'Error validating root'
+      return // Prevent submission
+    }
+  }
+
   emit('submit', form.value)
 }
+
+// Handle clicking on related words - emit event to parent
+const handleRelatedWordClick = (word: Partial<Word>) => {
+  emit('related-word-click', word)
+}
+
+// Load related words when editing a word with a root
+const loadRelatedWords = async (root: string) => {
+  if (!root?.trim()) {
+    relatedWords.value = []
+    return
+  }
+
+  loadingRelatedWords.value = true
+  try {
+    // First normalize the root to get the proper form
+    const normalization = await rootService.normalizeRoot(root.trim())
+    if (normalization.valid) {
+      const response = await wordService.findByRoot(normalization.displayForm, 1, 5)
+      // Filter out the current word being edited
+      relatedWords.value = response.items
+        .filter(word => !props.word || word.id !== props.word.id)
+        .map(word => ({
+          id: word.id,
+          arabic: word.arabic,
+          transliteration: word.transliteration,
+          translation: word.translation,
+          partOfSpeech: word.partOfSpeech,
+          difficulty: word.difficulty,
+          dialect: word.dialect,
+        }))
+    }
+  } catch (error) {
+    console.error('Error loading related words:', error)
+    relatedWords.value = []
+  } finally {
+    loadingRelatedWords.value = false
+  }
+}
+
+// Watch for word changes to load related words
+watch(
+  () => props.word,
+  newWord => {
+    if (newWord?.root) {
+      loadRelatedWords(newWord.root)
+    } else {
+      relatedWords.value = []
+      loadingRelatedWords.value = false
+    }
+    // Don't clear validation error here - let it persist until modal closes
+  },
+  { immediate: true }
+)
+
+// Clear validation error when modal opens
+watch(
+  () => props.open,
+  isOpen => {
+    if (isOpen) {
+      rootValidationError.value = ''
+    }
+  }
+)
 </script>
 
 <style scoped>

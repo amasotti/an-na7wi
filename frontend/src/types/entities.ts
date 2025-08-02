@@ -49,3 +49,46 @@ export interface Annotation {
   color?: string
   createdAt: string
 }
+
+export interface Root {
+  id: string
+  letters: string[]
+  normalizedForm: string
+  displayForm: string
+  letterCount: number
+  wordCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface RootNormalization {
+  input: string
+  letters: string[]
+  normalizedForm: string
+  displayForm: string
+  letterCount: number
+  valid: boolean
+}
+
+export interface RootStatistics {
+  totalRoots: number
+  triLiteral: number
+  quadriLiteral: number
+  quinqueLiteral: number
+  otherCounts: Record<number, number>
+}
+
+export interface WordSummary {
+  id: string
+  arabic: string
+  transliteration?: string
+  translation?: string
+  partOfSpeech?: string
+  difficulty: string
+  dialect: string
+}
+
+export interface RootWithWords {
+  root: Root
+  words: WordSummary[]
+}
