@@ -4,7 +4,8 @@ package com.tonihacks.annahwi.dto.request
  * DTO for creating/updating Arabic roots
  */
 data class RootRequestDTO(
-    val input: String
+    val input: String,
+    val meaning: String = ""
 )
 
 /**

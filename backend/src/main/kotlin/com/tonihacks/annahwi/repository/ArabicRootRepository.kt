@@ -23,7 +23,7 @@ class ArabicRootRepository : PanacheRepository<ArabicRoot> {
      * Find roots by letter count with pagination
      */
     fun findByLetterCount(letterCount: Int, page: Page, sort: Sort = Sort.by("displayForm")): List<ArabicRoot> {
-        return find("letterCount", letterCount, sort).page(page).list()
+        return find("letterCount = ?1", sort, letterCount).page(page).list()
     }
     
     /**
@@ -63,12 +63,6 @@ class ArabicRootRepository : PanacheRepository<ArabicRoot> {
         return find(whereClause, sort).page(page).list()
     }
     
-    /**
-     * Find roots that start with specific letter
-     */
-    fun findRootsStartingWith(letter: String, page: Page, sort: Sort = Sort.by("displayForm")): List<ArabicRoot> {
-        return find("letters->>0 = ?1", sort, letter).page(page).list()
-    }
     
     /**
      * Get root statistics

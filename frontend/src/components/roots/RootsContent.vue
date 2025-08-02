@@ -75,7 +75,9 @@
           v-for="root in roots"
           :key="root.id"
           :root="root"
+          :show-delete-button="showDeleteButtons"
           @click="$emit('root-clicked', root.id)"
+          @delete="$emit('root-deleted', $event)"
         />
       </div>
 
@@ -87,8 +89,10 @@
             v-for="root in roots"
             :key="root.id"
             :root="root"
+            :show-delete-button="showDeleteButtons"
             mobile
             @click="$emit('root-clicked', root.id)"
+            @delete="$emit('root-deleted', $event)"
           />
         </div>
 
@@ -98,7 +102,9 @@
             v-for="root in roots"
             :key="root.id"
             :root="root"
+            :show-delete-button="showDeleteButtons"
             @click="$emit('root-clicked', root.id)"
+            @delete="$emit('root-deleted', $event)"
           />
         </div>
       </div>
@@ -135,11 +141,13 @@ interface Props {
     totalCount: number
     totalPages: number
   }
+  showDeleteButtons?: boolean
 }
 
 interface Emits {
   (e: 'page-changed', page: number): void
   (e: 'root-clicked', rootId: string): void
+  (e: 'root-deleted', rootId: string): void
 }
 
 defineProps<Props>()

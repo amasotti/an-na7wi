@@ -21,7 +21,6 @@ export const useRootStore = defineStore('root', () => {
   const filters = ref({
     search: '',
     letterCount: null as number | null,
-    startingLetter: '',
     sort: 'displayForm',
   })
 
@@ -40,10 +39,6 @@ export const useRootStore = defineStore('root', () => {
 
     if (filters.value.letterCount) {
       filtered = filtered.filter(root => root.letterCount === filters.value.letterCount)
-    }
-
-    if (filters.value.startingLetter) {
-      filtered = filtered.filter(root => root.letters[0] === filters.value.startingLetter)
     }
 
     return filtered
@@ -184,39 +179,6 @@ export const useRootStore = defineStore('root', () => {
     }
   }
 
-  const fetchRootsStartingWith = async (
-    letter: string,
-    params: {
-      page?: number
-      size?: number
-      sort?: string
-    } = {}
-  ) => {
-    try {
-      setLoading(true)
-      clearError()
-
-      const response: PaginatedResponse<Root> = await rootService.getRootsStartingWith(letter, {
-        page: params.page || 1,
-        size: params.size || pagination.value.size,
-        sort: params.sort || filters.value.sort,
-      })
-
-      roots.value = response.items
-      pagination.value = {
-        page: response.page,
-        size: response.pageSize,
-        totalCount: response.totalCount,
-        totalPages: Math.ceil(response.totalCount / response.pageSize),
-      }
-    } catch (err) {
-      error.value =
-        err instanceof Error ? err.message : 'Failed to fetch roots starting with letter'
-      console.error('Error fetching roots starting with letter:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const fetchStatistics = async () => {
     try {
@@ -234,13 +196,46 @@ export const useRootStore = defineStore('root', () => {
     filters.value = {
       search: '',
       letterCount: null,
-      startingLetter: '',
       sort: 'displayForm',
     }
   }
 
   const setPage = (page: number) => {
     pagination.value.page = page
+  }
+
+  const createRoot = async (input: string, meaning?: string) => {
+    try {
+      setLoading(true)
+      clearError()
+      const newRoot = await rootService.createRoot(input, meaning)
+      roots.value.unshift(newRoot)
+      pagination.value.totalCount += 1
+      return newRoot
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to create root'
+      console.error('Error creating root:', err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deleteRoot = async (id: string) => {
+    try {
+      setLoading(true)
+      clearError()
+      await rootService.deleteRoot(id)
+      roots.value = roots.value.filter(root => root.id !== id)
+      pagination.value.totalCount -= 1
+      return true
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to delete root'
+      console.error('Error deleting root:', err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
   }
 
   return {
@@ -259,10 +254,11 @@ export const useRootStore = defineStore('root', () => {
     fetchRootWithWords,
     searchRoots,
     fetchRootsByLetterCount,
-    fetchRootsStartingWith,
     fetchStatistics,
     updateFilters,
     resetFilters,
     setPage,
+    createRoot,
+    deleteRoot,
   }
 })

@@ -33,18 +33,40 @@
         </div>
       </div>
 
-      <!-- Hover Indicator -->
-      <div :class="hoverIndicatorClasses">
-        <BaseIcon size="xs" class="text-primary-400">
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </BaseIcon>
+      <!-- Action Buttons -->
+      <div :class="actionButtonsClasses">
+        <!-- Delete Button -->
+        <button
+          v-if="showDeleteButton && root.wordCount === 0"
+          @click.stop="handleDelete"
+          class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-full bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700"
+          title="Delete root"
+        >
+          <BaseIcon size="xs">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </BaseIcon>
+        </button>
+
+        <!-- Hover Indicator -->
+        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <BaseIcon size="xs" class="text-primary-400">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </BaseIcon>
+        </div>
       </div>
     </div>
   </div>
@@ -58,12 +80,17 @@ import { computed } from 'vue'
 interface Props {
   root: Root
   mobile?: boolean
+  showDeleteButton?: boolean
 }
 
-type Emits = (e: 'click') => void
+interface Emits {
+  (e: 'click'): void
+  (e: 'delete', rootId: string): void
+}
 
 const props = withDefaults(defineProps<Props>(), {
   mobile: false,
+  showDeleteButton: false,
 })
 
 const emit = defineEmits<Emits>()
@@ -88,12 +115,17 @@ const meaningClasses = computed(() => [
 
 const detailsClasses = computed(() => [props.mobile ? 'space-y-1' : 'space-y-2'])
 
-const hoverIndicatorClasses = computed(() => [
-  'absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200',
+const actionButtonsClasses = computed(() => [
+  'absolute top-2 right-2 flex items-center space-x-1',
   props.mobile ? 'top-1 right-1' : '',
 ])
 
 const handleClick = () => {
   emit('click')
+}
+
+const handleDelete = (event: Event) => {
+  event.stopPropagation()
+  emit('delete', props.root.id)
 }
 </script>

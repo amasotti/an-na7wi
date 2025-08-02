@@ -14,8 +14,27 @@
         </div>
       </div>
 
-      <!-- Word Count & Arrow -->
+      <!-- Word Count & Actions -->
       <div class="flex items-center space-x-3">
+        <!-- Delete Button -->
+        <button
+          v-if="showDeleteButton && root.wordCount === 0"
+          @click.stop="handleDelete"
+          class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-full bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700"
+          title="Delete root"
+        >
+          <BaseIcon size="xs">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </BaseIcon>
+        </button>
+        
         <div class="text-sm text-gray-600">
           {{ root.wordCount }} words
         </div>
@@ -56,10 +75,22 @@ import type { Root } from '@/types'
 
 interface Props {
   root: Root
+  showDeleteButton?: boolean
 }
 
-type Emits = (e: 'click') => void
+interface Emits {
+  (e: 'click'): void
+  (e: 'delete', rootId: string): void
+}
 
-defineProps<Props>()
-defineEmits<Emits>()
+const props = withDefaults(defineProps<Props>(), {
+  showDeleteButton: false,
+})
+
+const emit = defineEmits<Emits>()
+
+const handleDelete = (event: Event) => {
+  event.stopPropagation()
+  emit('delete', props.root.id)
+}
 </script>

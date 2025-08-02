@@ -70,20 +70,6 @@ export const rootService = {
     return response.data
   },
 
-  /**
-   * Get roots starting with specific letter
-   */
-  async getRootsStartingWith(
-    letter: string,
-    params: {
-      page?: number
-      size?: number
-      sort?: string
-    } = {}
-  ): Promise<PaginatedResponse<Root>> {
-    const response = await apiClient.get(`/roots/starting-with/${letter}`, { params })
-    return response.data
-  },
 
   /**
    * Normalize root input
@@ -99,5 +85,23 @@ export const rootService = {
   async getStatistics(): Promise<RootStatistics> {
     const response = await apiClient.get('/roots/statistics')
     return response.data
+  },
+
+  /**
+   * Create a new root
+   */
+  async createRoot(input: string, meaning?: string): Promise<Root> {
+    const response = await apiClient.post('/roots', { 
+      input,
+      meaning: meaning || ''
+    })
+    return response.data
+  },
+
+  /**
+   * Delete a root by ID
+   */
+  async deleteRoot(id: string): Promise<void> {
+    await apiClient.delete(`/roots/${id}`)
   },
 }

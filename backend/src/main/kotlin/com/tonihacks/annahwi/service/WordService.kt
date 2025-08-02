@@ -1,6 +1,8 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.dto.request.RootRequestDTO
 import com.tonihacks.annahwi.dto.request.WordRequestDTO
+import com.tonihacks.annahwi.dto.response.RootNormalizationResponseDTO
 import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
@@ -184,9 +186,41 @@ class WordService {
         // Handle root assignment
         if (!wordDTO.root.isNullOrBlank()) {
             try {
-                val arabicRoot = rootService.createOrFindRoot(wordDTO.root)
-                word.arabicRoot = arabicRoot
-                logger.debug("Assigned root ${arabicRoot.displayForm} to word ${word.arabic}")
+
+                val rootDto = RootRequestDTO(
+                    input = wordDTO.root,
+                    meaning = ""
+                )
+
+                // see if the root already exists
+                val normalizedRoot = rootService.normalizeRoot(wordDTO.root)?.let {
+                    RootNormalizationResponseDTO(
+                        input = wordDTO.root,
+                        letters = it.letters,
+                        normalizedForm = it.normalizedForm,
+                        displayForm = it.displayForm,
+                        letterCount = it.letterCount,
+                        isValid = true
+                    )
+                } ?: RootNormalizationResponseDTO(
+                    input = wordDTO.root,
+                    letters = emptyList(),
+                    normalizedForm = "",
+                    displayForm = "",
+                    letterCount = 0,
+                    isValid = false
+                )
+                val existingRoot = rootService.findByNormalizedForm(normalizedRoot.normalizedForm)
+                val root = when (existingRoot) {
+                    null -> rootService.createRoot(rootDto)
+                    else -> {
+                        logger.debug("Root already exists: ${existingRoot.displayForm}")
+                        existingRoot
+                    }
+                }
+
+                word.arabicRoot = root
+                logger.debug("Assigned root ${root.displayForm} to word ${word.arabic}")
             } catch (e: Exception) {
                 logger.warn("Failed to create/find root for '${wordDTO.root}': ${e.message}")
                 // Keep the original root string for backward compatibility
@@ -230,7 +264,11 @@ class WordService {
         // Handle root assignment
         if (!wordDTO.root.isNullOrBlank()) {
             try {
-                val arabicRoot = rootService.createOrFindRoot(wordDTO.root)
+                val rootDto = RootRequestDTO(
+                    input = wordDTO.root,
+                    meaning = ""
+                )
+                val arabicRoot = rootService.createRoot(rootDto)
                 existingWord.arabicRoot = arabicRoot
                 logger.debug("Updated root to ${arabicRoot.displayForm} for word ${existingWord.arabic}")
             } catch (e: Exception) {
@@ -245,7 +283,7 @@ class WordService {
         }
         
         // Persist the updated word
-        wordRepository.persist(existingWord)
+        wordRepository.persistAndFlush(existingWord)
         
         return WordResponseDTO.fromEntity(existingWord)
     }

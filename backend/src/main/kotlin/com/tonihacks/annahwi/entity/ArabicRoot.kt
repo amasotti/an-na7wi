@@ -75,11 +75,12 @@ class ArabicRoot : PanacheEntityBase {
         /**
          * Create a new ArabicRoot from normalized letters
          */
-        fun create(letters: List<String>): ArabicRoot {
+        fun create(letters: List<String>, meaning: String): ArabicRoot {
             val root = ArabicRoot()
             root.letters = letters
             root.normalizedForm = letters.joinToString("")
             root.displayForm = letters.joinToString("-")
+            root.meaning = meaning
             return root
         }
     }

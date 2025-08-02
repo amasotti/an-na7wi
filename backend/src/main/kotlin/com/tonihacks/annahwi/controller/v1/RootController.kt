@@ -1,7 +1,9 @@
 package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.dto.request.RootNormalizationRequestDTO
+import com.tonihacks.annahwi.dto.request.RootRequestDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
+import com.tonihacks.annahwi.dto.response.RootNormalizationResponseDTO
 import com.tonihacks.annahwi.dto.response.RootResponseDTO
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
@@ -9,6 +11,7 @@ import com.tonihacks.annahwi.service.RootService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
@@ -144,37 +147,6 @@ class RootController {
         return Response.ok(response).build()
     }
     
-    @GET
-    @Path("/starting-with/{letter}")
-    @Operation(summary = "Get roots starting with letter", description = "Returns roots that start with specific Arabic letter")
-    fun getRootsStartingWith(
-        @PathParam("letter") letter: String,
-        @QueryParam("page") @DefaultValue("1") page: Int,
-        @QueryParam("size") @DefaultValue("10") size: Int,
-        @QueryParam("pageSize") pageSize: Int?,
-        @QueryParam("sort") @DefaultValue("displayForm") sort: String
-    ): Response {
-        if (letter.length != 1) {
-            throw AppException(AppError.ValidationError.InvalidRoot("Letter must be a single Arabic character"))
-        }
-        
-        // Validate pagination parameters
-        PaginationUtil.validatePageSize(page)
-        
-        val actualSize = PaginationUtil.resolvePageSize(size, pageSize)
-        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
-        logger.info("GET /api/v1/roots/starting-with/$letter - page: $page -> $zeroBasedPage, size: $actualSize")
-
-        val roots = rootService.findRootsStartingWith(letter, zeroBasedPage, actualSize, sort)
-        
-        val response = PaginatedResponse(
-            items = roots,
-            totalCount = roots.size.toLong(), // Approximate count
-            page = page,
-            pageSize = actualSize
-        )
-        return Response.ok(response).build()
-    }
     
     @POST
     @Path("/normalize")
@@ -182,7 +154,13 @@ class RootController {
     fun normalizeRoot(request: RootNormalizationRequestDTO): Response {
         logger.info("POST /api/v1/roots/normalize - input: '${request.input}'")
         val result = rootService.normalizeRoot(request.input)
-        return Response.ok(result).build()
+
+        if (result == null) {
+            throw AppException(AppError.ValidationError.InvalidRoot("Invalid Arabic root input: '${request.input}'"))
+        }
+
+        val responseDto = RootNormalizationResponseDTO.fromNormalizedRoot(request.input, result)
+        return Response.ok(responseDto).build()
     }
     
     @GET
@@ -192,5 +170,35 @@ class RootController {
         logger.info("GET /api/v1/roots/statistics")
         val statistics = rootService.getStatistics()
         return Response.ok(statistics).build()
+    }
+    
+    @POST
+    @Operation(summary = "Create root", description = "Creates a new Arabic root from input text")
+    fun createRoot(request: RootRequestDTO): Response {
+        logger.info("POST /api/v1/roots - input: '${request.input}'")
+        try {
+            val root = rootService.createRoot(request)
+            return Response.status(Response.Status.CREATED).entity(RootResponseDTO.fromEntity(root)).build()
+        }  catch (e: AppException) {
+            logger.error("Error creating root: ${e.message}", e)
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.error).build()
+        } catch (e: Exception) {
+            logger.error("Unexpected error creating root", e)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
+        }
+
+    }
+    
+    @DELETE
+    @Path("/{id}")
+    @Operation(summary = "Delete root", description = "Deletes an Arabic root by ID")
+    fun deleteRoot(@PathParam("id") id: UUID): Response {
+        logger.info("DELETE /api/v1/roots/$id")
+        val deleted = rootService.deleteRoot(id)
+        return if (deleted) {
+            Response.noContent().build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).build()
+        }
     }
 }

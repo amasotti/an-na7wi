@@ -1,6 +1,8 @@
 package com.tonihacks.annahwi.dto.response
 
 import com.tonihacks.annahwi.entity.ArabicRoot
+import com.tonihacks.annahwi.service.RootNormalizationService
+import com.tonihacks.annahwi.service.RootNormalizationService.NormalizedRoot
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -32,6 +34,21 @@ data class RootResponseDTO(
                 updatedAt = root.updatedAt
             )
         }
+
+        fun fromNormalizedRoot(normalizedRoot: NormalizedRoot
+        ): RootResponseDTO {
+            return RootResponseDTO(
+                id = UUID.randomUUID(), // ID will be set later when saved
+                letters = normalizedRoot.letters,
+                normalizedForm = normalizedRoot.normalizedForm,
+                displayForm = normalizedRoot.displayForm,
+                letterCount = normalizedRoot.letterCount,
+                meaning = null, // Meaning is not part of normalization
+                wordCount = 0, // Word count will be set when words are added
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
+            )
+        }
     }
 }
 
@@ -45,7 +62,20 @@ data class RootNormalizationResponseDTO(
     val displayForm: String,
     val letterCount: Int,
     val isValid: Boolean
-)
+) {
+    companion object {
+        fun fromNormalizedRoot(input: String, normalizedRoot: NormalizedRoot): RootNormalizationResponseDTO {
+            return RootNormalizationResponseDTO(
+                input = input,
+                letters = normalizedRoot.letters,
+                normalizedForm = normalizedRoot.normalizedForm,
+                displayForm = normalizedRoot.displayForm,
+                letterCount = normalizedRoot.letterCount,
+                isValid = true // Normalization implies validity
+            )
+        }
+    }
+}
 
 /**
  * DTO for root statistics

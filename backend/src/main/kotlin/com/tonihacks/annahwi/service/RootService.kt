@@ -1,6 +1,6 @@
 package com.tonihacks.annahwi.service
 
-import com.tonihacks.annahwi.dto.response.RootNormalizationResponseDTO
+import com.tonihacks.annahwi.dto.request.RootRequestDTO
 import com.tonihacks.annahwi.dto.response.RootResponseDTO
 import com.tonihacks.annahwi.dto.response.RootStatisticsDTO
 import com.tonihacks.annahwi.dto.response.RootWithWordsDTO
@@ -9,6 +9,7 @@ import com.tonihacks.annahwi.entity.ArabicRoot
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.repository.ArabicRootRepository
+import com.tonihacks.annahwi.service.RootNormalizationService.NormalizedRoot
 import com.tonihacks.annahwi.util.loggerFor
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -22,7 +23,10 @@ import java.util.UUID
  */
 @ApplicationScoped
 class RootService {
-    
+
+    @Inject
+    internal lateinit var rootNormalizationService: RootNormalizationService
+
     @Inject
     private lateinit var rootRepository: ArabicRootRepository
     
@@ -85,9 +89,8 @@ class RootService {
         val normalizedResults = rootRepository.searchByNormalizedForm(query, pagination, sort)
         
         // Combine and deduplicate results
-        val allResults = (displayResults + normalizedResults).distinctBy { it.id }
-        
-        return allResults.map { RootResponseDTO.fromEntity(it) }
+        return (displayResults + normalizedResults).distinctBy { it.id }
+            .map { RootResponseDTO.fromEntity(it) }
     }
     
     /**
@@ -131,55 +134,12 @@ class RootService {
     }
     
     /**
-     * Create or find existing root from input
-     */
-    @Transactional
-    fun createOrFindRoot(input: String): ArabicRoot {
-        logger.info("Creating or finding root from input: '$input'")
-        
-        val normalized = normalizationService.normalize(input)
-        
-        // Check if root already exists
-        val existing = findByNormalizedForm(normalized.normalizedForm)
-        if (existing != null) {
-            logger.debug("Root already exists: ${existing.displayForm}")
-            return existing
-        }
-        
-        // Create new root
-        val newRoot = ArabicRoot.create(normalized.letters)
-        rootRepository.persist(newRoot)
-        
-        logger.info("Created new root: ${newRoot.displayForm}")
-        return newRoot
-    }
-    
-    /**
      * Normalize root input (validation endpoint)
      */
-    fun normalizeRoot(input: String): RootNormalizationResponseDTO {
+    fun normalizeRoot(input: String): NormalizedRoot? {
         logger.info("Normalizing root input: '$input'")
-        
-        return try {
-            val normalized = normalizationService.normalize(input)
-            RootNormalizationResponseDTO(
-                input = input,
-                letters = normalized.letters,
-                normalizedForm = normalized.normalizedForm,
-                displayForm = normalized.displayForm,
-                letterCount = normalized.letterCount,
-                isValid = true
-            )
-        } catch (_: AppException) {
-            RootNormalizationResponseDTO(
-                input = input,
-                letters = emptyList(),
-                normalizedForm = "",
-                displayForm = "",
-                letterCount = 0,
-                isValid = false
-            )
-        }
+
+        return rootNormalizationService.normalize(input)
     }
     
     /**
@@ -199,30 +159,44 @@ class RootService {
     }
     
     /**
-     * Find roots starting with specific letter
+     * Create a new root from input
      */
     @Transactional
-    fun findRootsStartingWith(letter: String, page: Int, size: Int, sortField: String = "displayForm"): List<RootResponseDTO> {
-        logger.info("Finding roots starting with letter: '$letter', page: $page, size: $size")
+    fun createRoot(createDto: RootRequestDTO): ArabicRoot {
+        logger.info("Creating new root from input: '${createDto.input}'")
         
-        val sort = Sort.by(sortField)
-        val pagination = Page.of(page, size)
+        val normalized = normalizationService.normalize(createDto.input)
         
-        return rootRepository.findRootsStartingWith(letter, pagination, sort)
-            .map { RootResponseDTO.fromEntity(it) }
+        // Check if root already exists
+        val existing = findByNormalizedForm(normalized.normalizedForm)
+        if (existing != null) {
+            throw AppException(AppError.ValidationError.ExistingRoot(existing.displayForm))
+        }
+        
+        // Create new root
+        val newRoot = ArabicRoot.create(normalized.letters, createDto.meaning)
+        rootRepository.persist(newRoot).also {
+            logger.info("Created new root: ${newRoot.displayForm} with ID: ${newRoot.id}")
+        }
+        return newRoot
     }
     
     /**
-     * Find roots containing specific letters
+     * Delete a root by ID
      */
     @Transactional
-    fun findRootsContainingLetters(letters: List<String>, page: Int, size: Int, sortField: String = "displayForm"): List<RootResponseDTO> {
-        logger.info("Finding roots containing letters: $letters, page: $page, size: $size")
+    fun deleteRoot(id: UUID): Boolean {
+        logger.info("Deleting root with ID: $id")
         
-        val sort = Sort.by(sortField)
-        val pagination = Page.of(page, size)
+        val root = findById(id)
         
-        return rootRepository.findRootsContainingLetters(letters, pagination, sort)
-            .map { RootResponseDTO.fromEntity(it) }
+        // Check if root has associated words
+        if (root.words.isNotEmpty()) {
+            val error = "Cannot delete root ${root.displayForm} because it has ${root.words.size} associated words"
+            throw AppException(AppError.ValidationError.InvalidRoot(error))
+        }
+        
+        rootRepository.delete(root)
+        return true
     }
 }

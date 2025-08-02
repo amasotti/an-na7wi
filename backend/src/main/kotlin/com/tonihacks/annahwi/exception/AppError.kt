@@ -69,6 +69,12 @@ sealed class AppError(
         data class MultipleFields(val fieldErrors: Map<String, String>) : ValidationError(
             message = "Multiple validation errors occurred"
         )
+
+        data class ExistingRoot(val rootInput: String) : ValidationError(
+            message = "Root with input '$rootInput' already exists",
+            fieldName = "root",
+            rejectedValue = rootInput
+        )
         
         data class InvalidRoot(val rootInput: String) : ValidationError(
             message = rootInput,

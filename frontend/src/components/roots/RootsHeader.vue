@@ -8,8 +8,26 @@
             Explore {{ totalCount }} Arabic roots and their derived words
           </p>
         </div>
-        <div v-if="statistics" class="hidden md:block">
-          <RootStatisticsCard :statistics="statistics" />
+        <div class="flex items-center space-x-4">
+          <BaseButton
+            @click="handleAddRoot"
+            class="flex items-center space-x-2"
+          >
+            <BaseIcon size="sm">
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </BaseIcon>
+            <span class="hidden sm:inline">Add Root</span>
+          </BaseButton>
+          <div v-if="statistics" class="hidden md:block">
+            <RootStatisticsCard :statistics="statistics" />
+          </div>
         </div>
       </div>
     </div>
@@ -51,18 +69,6 @@
           @update:model-value="handleFilterChange"
         />
 
-        <!-- Starting Letter Filter -->
-        <div class="flex items-center space-x-2">
-          <label class="text-sm font-medium text-gray-700">Starts with:</label>
-          <input
-            v-model="filters.startingLetter"
-            type="text"
-            maxlength="1"
-            placeholder="ا"
-            class="w-12 px-2 py-1 text-center border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 arabic text-lg"
-            @input="handleFilterChange"
-          />
-        </div>
 
         <!-- Sort -->
         <BaseSelect
@@ -109,13 +115,13 @@ interface Props {
 interface FilterData {
   search: string
   letterCount: number | null
-  startingLetter: string
   sort: string
 }
 
 interface Emits {
   (e: 'search', query: string): void
   (e: 'filter-changed', filters: FilterData): void
+  (e: 'add-root'): void
 }
 
 defineProps<Props>()
@@ -124,7 +130,6 @@ const emit = defineEmits<Emits>()
 const searchQuery = ref('')
 const filters = ref({
   letterCount: null as number | null,
-  startingLetter: '',
   sort: 'displayForm',
 })
 
@@ -147,7 +152,6 @@ const hasActiveFilters = computed(() => {
   return (
     searchQuery.value.trim() !== '' ||
     filters.value.letterCount !== null ||
-    filters.value.startingLetter !== '' ||
     filters.value.sort !== 'displayForm'
   )
 })
@@ -171,10 +175,13 @@ const clearFilters = () => {
   searchQuery.value = ''
   filters.value = {
     letterCount: null,
-    startingLetter: '',
     sort: 'displayForm',
   }
   handleFilterChange()
+}
+
+const handleAddRoot = () => {
+  emit('add-root')
 }
 
 onMounted(() => {
