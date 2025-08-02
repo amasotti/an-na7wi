@@ -10,7 +10,7 @@ describe('router', () => {
 
     it('should have home route configured correctly', () => {
       const homeRoute = router.options.routes.find(route => route.name === 'home')
-      
+
       expect(homeRoute).toBeDefined()
       expect(homeRoute?.path).toBe('/')
       expect(homeRoute?.name).toBe('home')
@@ -19,7 +19,7 @@ describe('router', () => {
 
     it('should have texts route configured correctly', () => {
       const textsRoute = router.options.routes.find(route => route.name === 'texts')
-      
+
       expect(textsRoute).toBeDefined()
       expect(textsRoute?.path).toBe('/texts')
       expect(textsRoute?.name).toBe('texts')
@@ -28,7 +28,7 @@ describe('router', () => {
 
     it('should have text-detail route configured correctly', () => {
       const textDetailRoute = router.options.routes.find(route => route.name === 'text-detail')
-      
+
       expect(textDetailRoute).toBeDefined()
       expect(textDetailRoute?.path).toBe('/texts/:id')
       expect(textDetailRoute?.name).toBe('text-detail')
@@ -38,7 +38,7 @@ describe('router', () => {
 
     it('should have vocabulary route configured correctly', () => {
       const vocabularyRoute = router.options.routes.find(route => route.name === 'vocabulary')
-      
+
       expect(vocabularyRoute).toBeDefined()
       expect(vocabularyRoute?.path).toBe('/vocabulary')
       expect(vocabularyRoute?.name).toBe('vocabulary')
@@ -47,7 +47,7 @@ describe('router', () => {
 
     it('should have search route configured correctly', () => {
       const searchRoute = router.options.routes.find(route => route.name === 'search')
-      
+
       expect(searchRoute).toBeDefined()
       expect(searchRoute?.path).toBe('/search')
       expect(searchRoute?.name).toBe('search')
@@ -56,7 +56,7 @@ describe('router', () => {
 
     it('should have analytics route configured correctly', () => {
       const analyticsRoute = router.options.routes.find(route => route.name === 'analytics')
-      
+
       expect(analyticsRoute).toBeDefined()
       expect(analyticsRoute?.path).toBe('/analytics')
       expect(analyticsRoute?.name).toBe('analytics')
@@ -65,7 +65,7 @@ describe('router', () => {
 
     it('should have not-found route configured correctly', () => {
       const notFoundRoute = router.options.routes.find(route => route.name === 'not-found')
-      
+
       expect(notFoundRoute).toBeDefined()
       expect(notFoundRoute?.path).toBe('/:pathMatch(.*)*')
       expect(notFoundRoute?.name).toBe('not-found')
@@ -172,7 +172,7 @@ describe('router', () => {
       })
 
       await testRouter.push('/texts/abc-123')
-      
+
       const textDetailRoute = router.options.routes.find(route => route.name === 'text-detail')
       expect(textDetailRoute?.props).toBe(true)
       expect(testRouter.currentRoute.value.params.id).toBe('abc-123')

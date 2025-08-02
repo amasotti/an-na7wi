@@ -1,20 +1,22 @@
-import type { Word } from '@/types'
+import type {PaginatedResponse, Word} from '@/types'
+import { isAxiosError } from 'axios'
 import apiClient from './api'
-import {type AxiosError, isAxiosError} from "axios";
 
 export const wordService = {
   /**
    * Get a list of words with pagination and filtering
    */
-  async getWords(params: {
-    page?: number
-    size?: number
-    sort?: string
-    dialect?: string
-    difficulty?: string
-    partOfSpeech?: string
-    masteryLevel?: string
-  } = {}): Promise<{
+  async getWords(
+    params: {
+      page?: number
+      size?: number
+      sort?: string
+      dialect?: string
+      difficulty?: string
+      partOfSpeech?: string
+      masteryLevel?: string
+    } = {}
+  ): Promise<{
     items: Word[]
     totalCount: number
     page: number
@@ -58,9 +60,9 @@ export const wordService = {
   /**
    * Search words by Arabic text
    */
-  async searchByArabic(arabic: string, page = 1, size = 10): Promise<Word[]> {
+  async searchByArabic(arabic: string, page = 1, size = 10): Promise<PaginatedResponse<Word>> {
     const response = await apiClient.get(`/words/search/arabic/${arabic}`, {
-      params: { page, size }
+      params: { page, size },
     })
     return response.data
   },
@@ -68,13 +70,13 @@ export const wordService = {
   /**
    * Find word by exact Arabic text
    */
-  async findByArabic(arabic: string): Promise<Word | null> {
+  async findByArabic(arabic: string): Promise<PaginatedResponse<Word> | null> {
     try {
       const response = await apiClient.get(`/words/arabic/${arabic}`)
       return response.data
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response?.status === 404) {
-        console.log("Word not found:", arabic)
+        console.log('Word not found:', arabic)
         return null
       }
       throw error
@@ -86,7 +88,7 @@ export const wordService = {
    */
   async findByRoot(root: string, page = 1, size = 10): Promise<Word[]> {
     const response = await apiClient.get(`/words/root/${root}`, {
-      params: { page, size }
+      params: { page, size },
     })
     return response.data
   },
@@ -96,7 +98,7 @@ export const wordService = {
    */
   async findByPartOfSpeech(partOfSpeech: string, page = 1, size = 10): Promise<Word[]> {
     const response = await apiClient.get(`/words/part-of-speech/${partOfSpeech}`, {
-      params: { page, size }
+      params: { page, size },
     })
     return response.data
   },
@@ -106,7 +108,7 @@ export const wordService = {
    */
   async findByDialect(dialect: string, page = 1, size = 10): Promise<Word[]> {
     const response = await apiClient.get(`/words/dialect/${dialect}`, {
-      params: { page, size }
+      params: { page, size },
     })
     return response.data
   },
@@ -116,7 +118,7 @@ export const wordService = {
    */
   async findByDifficulty(difficulty: string, page = 1, size = 10): Promise<Word[]> {
     const response = await apiClient.get(`/words/difficulty/${difficulty}`, {
-      params: { page, size }
+      params: { page, size },
     })
     return response.data
   },
@@ -126,7 +128,7 @@ export const wordService = {
    */
   async findVerified(page = 1, size = 10): Promise<Word[]> {
     const response = await apiClient.get('/words/verified', {
-      params: { page, size }
+      params: { page, size },
     })
     return response.data
   },
@@ -134,9 +136,9 @@ export const wordService = {
   /**
    * Search words by translation
    */
-  async searchByTranslation(query: string, page = 1, size = 10): Promise<Word[]> {
+  async searchByTranslation(query: string, page = 1, size = 10): Promise<PaginatedResponse<Word>> {
     const response = await apiClient.get(`/words/search/translation/${query}`, {
-      params: { page, size }
+      params: { page, size },
     })
     return response.data
   },
@@ -147,5 +149,5 @@ export const wordService = {
   async findMostFrequent(limit = 10): Promise<Word[]> {
     const response = await apiClient.get(`/words/most-frequent/${limit}`)
     return response.data
-  }
+  },
 }

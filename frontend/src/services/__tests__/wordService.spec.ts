@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { isAxiosError } from 'axios'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import apiClient from '../api'
 import { wordService } from '../wordService'
 
@@ -270,9 +270,7 @@ describe('wordService', () => {
 
   describe('findByDialect', () => {
     it('should find words by dialect', async () => {
-      const mockWords = [
-        { id: '1', arabic: 'كتاب', dialect: 'MSA' },
-      ]
+      const mockWords = [{ id: '1', arabic: 'كتاب', dialect: 'MSA' }]
 
       vi.mocked(apiClient.get).mockResolvedValue({ data: mockWords })
 
@@ -287,9 +285,7 @@ describe('wordService', () => {
 
   describe('findByDifficulty', () => {
     it('should find words by difficulty', async () => {
-      const mockWords = [
-        { id: '1', arabic: 'كتاب', difficulty: 'BEGINNER' },
-      ]
+      const mockWords = [{ id: '1', arabic: 'كتاب', difficulty: 'BEGINNER' }]
 
       vi.mocked(apiClient.get).mockResolvedValue({ data: mockWords })
 
@@ -304,9 +300,7 @@ describe('wordService', () => {
 
   describe('findVerified', () => {
     it('should find verified words', async () => {
-      const mockWords = [
-        { id: '1', arabic: 'كتاب', verified: true },
-      ]
+      const mockWords = [{ id: '1', arabic: 'كتاب', verified: true }]
 
       vi.mocked(apiClient.get).mockResolvedValue({ data: mockWords })
 
@@ -321,9 +315,7 @@ describe('wordService', () => {
 
   describe('searchByTranslation', () => {
     it('should search words by translation', async () => {
-      const mockWords = [
-        { id: '1', arabic: 'كتاب', translation: 'book' },
-      ]
+      const mockWords = [{ id: '1', arabic: 'كتاب', translation: 'book' }]
 
       vi.mocked(apiClient.get).mockResolvedValue({ data: mockWords })
 

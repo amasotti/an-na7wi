@@ -1,5 +1,5 @@
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { describe, expect, it } from 'vitest'
-import type {AxiosError, InternalAxiosRequestConfig} from 'axios'
 import { isAxiosError } from '../axiosUtils'
 
 describe('axiosUtils', () => {

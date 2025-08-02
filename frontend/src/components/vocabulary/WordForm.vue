@@ -150,9 +150,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import type { Word, SelectOption } from '@/types'
-import { Difficulty, Dialect, MasteryLevel, PartOfSpeech } from '@/types/enums'
+import type { SelectOption, Word } from '@/types'
+import { Dialect, Difficulty, MasteryLevel, type PartOfSpeech } from '@/types/enums'
+import { computed, ref, watch } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseInput from '../common/BaseInput.vue'
 import BaseModal from '../common/BaseModal.vue'
@@ -194,47 +194,51 @@ const form = ref({
   dictionaryLinks: '',
   pronunciationLink: '',
   relatedWords: '',
-  isVerified: false
+  isVerified: false,
 })
 
 // Watch for changes in the word prop to update the form
-watch(() => props.word, (newWord) => {
-  if (newWord) {
-    form.value = {
-      arabic: newWord.arabic,
-      transliteration: newWord.transliteration || '',
-      translation: newWord.translation || '',
-      example: newWord.example || '',
-      root: newWord.root || '',
-      partOfSpeech: newWord.partOfSpeech || '',
-      notes: newWord.notes || '',
-      difficulty: newWord.difficulty,
-      dialect: newWord.dialect,
-      masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
-      dictionaryLinks: newWord.dictionaryLinks || '',
-      pronunciationLink: newWord.pronunciationLink || '',
-      relatedWords: newWord.relatedWords || '',
-      isVerified: newWord.isVerified
+watch(
+  () => props.word,
+  newWord => {
+    if (newWord) {
+      form.value = {
+        arabic: newWord.arabic,
+        transliteration: newWord.transliteration || '',
+        translation: newWord.translation || '',
+        example: newWord.example || '',
+        root: newWord.root || '',
+        partOfSpeech: newWord.partOfSpeech || '',
+        notes: newWord.notes || '',
+        difficulty: newWord.difficulty,
+        dialect: newWord.dialect,
+        masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
+        dictionaryLinks: newWord.dictionaryLinks || '',
+        pronunciationLink: newWord.pronunciationLink || '',
+        relatedWords: newWord.relatedWords || '',
+        isVerified: newWord.isVerified,
+      }
+    } else {
+      form.value = {
+        arabic: '',
+        transliteration: '',
+        translation: '',
+        example: '',
+        root: '',
+        partOfSpeech: '',
+        notes: '',
+        difficulty: Difficulty.BEGINNER,
+        dialect: Dialect.MSA,
+        masteryLevel: MasteryLevel.NEW,
+        dictionaryLinks: '',
+        pronunciationLink: '',
+        relatedWords: '',
+        isVerified: false,
+      }
     }
-  } else {
-    form.value = {
-      arabic: '',
-      transliteration: '',
-      translation: '',
-      example: '',
-      root: '',
-      partOfSpeech: '',
-      notes: '',
-      difficulty: Difficulty.BEGINNER,
-      dialect: Dialect.MSA,
-      masteryLevel: MasteryLevel.NEW,
-      dictionaryLinks: '',
-      pronunciationLink: '',
-      relatedWords: '',
-      isVerified: false
-    }
-  }
-}, { immediate: true })
+  },
+  { immediate: true }
+)
 
 const handleClose = () => {
   emit('close')

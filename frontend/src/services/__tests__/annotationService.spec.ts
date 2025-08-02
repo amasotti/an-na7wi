@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import apiClient from '../api'
-import { annotationService } from '../annotationService'
 import type { AnnotationType, MasteryLevel } from '@/types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { annotationService } from '../annotationService'
+import apiClient from '../api'
 
 vi.mock('../api', () => ({
   default: {

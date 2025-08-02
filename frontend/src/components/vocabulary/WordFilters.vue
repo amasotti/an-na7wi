@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import type { SelectOption } from '@/types'
-import { Difficulty, Dialect, MasteryLevel } from '@/types/enums'
+import type { Dialect, Difficulty, MasteryLevel } from '@/types/enums'
 import BaseCard from '../common/BaseCard.vue'
 import BaseInput from '../common/BaseInput.vue'
 import BaseSelect from '../common/BaseSelect.vue'
