@@ -1,7 +1,6 @@
 package com.tonihacks.annahwi.dto.response
 
 import com.tonihacks.annahwi.entity.ArabicRoot
-import com.tonihacks.annahwi.service.RootNormalizationService
 import com.tonihacks.annahwi.service.RootNormalizationService.NormalizedRoot
 import java.time.LocalDateTime
 import java.util.UUID
