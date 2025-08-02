@@ -97,3 +97,6 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 ## Database Migrations
 - Flyway migrations in `backend/src/main/resources/db/migration/`
 - Use meaningful versioning (V001, V002, etc.)
+
+## Claude Interaction Patterns
+- When I ask you to make a plan, you always create a Markdown with the proposal and steps 
