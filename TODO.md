@@ -1,18 +1,20 @@
 # ToDos:
 
 * [x] Dual Interface Edit and Study
-* [ ] Automatic translitteration
+* [x] Automatic translitteration
 * [ ] Complete frontend features
 * [ ] Mastering dashboard (how many words, texts, etc.)
-* [ ] Root functionalities
+* [x] Root functionalities
+
 
 ## Technical / Utilities
 
 * [ ] Cleanup job for deprecated versions of a text
-* [ ] Clean TextService. Analyze functionality should be in another service
+* [x] Clean TextService. Analyze functionality should be in another service
 * [x] DB setup for tests or mocking DB conenction
 * [x] Add tests for Services and Controllers
 * [x] Add DTOs
+* S3 Bucket for backup of db
 
 ## Prompts
 

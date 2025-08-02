@@ -128,6 +128,17 @@
             @select-version="selectVersion"
             @restore-version="restoreVersion"
           />
+
+          <!-- Tokenized Words (only show in view mode) -->
+          <TextTokenizedWords
+            v-if="isViewingCurrentVersion"
+            :words="tokenizedWords"
+            :loading="tokenizedWordsLoading"
+            :total-count="tokenizedWordsTotalCount"
+            :current-page="tokenizedWordsCurrentPage"
+            :page-size="tokenizedWordsPageSize"
+            @page-change="handleTokenizedWordsPageChange"
+          />
         </div>
 
         <!-- Annotations Panel (2/5 width on xl screens, 1/3 width on lg screens) -->
@@ -198,6 +209,7 @@ import BaseIcon from '../components/common/BaseIcon.vue'
 import AnnotatedTextContent from '../components/text/AnnotatedTextContent.vue'
 import TextDeleteModal from '../components/text/TextDeleteModal.vue'
 import TextEditModal from '../components/text/TextEditModal.vue'
+import TextTokenizedWords from '../components/text/TextTokenizedWords.vue'
 import TextVersionManager from '../components/text/TextVersionManager.vue'
 import { useTextStore } from '../stores/textStore'
 
@@ -230,6 +242,11 @@ const error = computed(() => textStore.error)
 const textVersions = computed(() => textStore.textVersions)
 const selectedVersion = computed(() => textStore.selectedVersion)
 const isViewingCurrentVersion = computed(() => textStore.isViewingCurrentVersion)
+const tokenizedWords = computed(() => textStore.tokenizedWords)
+const tokenizedWordsLoading = computed(() => textStore.tokenizedWordsLoading)
+const tokenizedWordsTotalCount = computed(() => textStore.tokenizedWordsTotalCount)
+const tokenizedWordsCurrentPage = computed(() => textStore.tokenizedWordsCurrentPage)
+const tokenizedWordsPageSize = computed(() => textStore.tokenizedWordsPageSize)
 
 // Display the current text or selected version
 const displayText = computed((): Text => textStore.displayText)
@@ -454,10 +471,21 @@ const handleAnnotationDeleted = (id: string) => {
   console.log('Annotation deleted:', id)
 }
 
+// Tokenized words methods
+const handleTokenizedWordsPageChange = (page: number) => {
+  if (currentText.value) {
+    textStore.fetchTokenizedWords(currentText.value.id, page)
+  }
+}
+
 // Lifecycle
 onMounted(async () => {
   try {
     await textStore.fetchTextById(props.id)
+    // Fetch tokenized words after text is loaded
+    if (currentText.value) {
+      await textStore.fetchTokenizedWords(currentText.value.id)
+    }
   } catch (err) {
     console.error('Failed to load text:', err)
   }

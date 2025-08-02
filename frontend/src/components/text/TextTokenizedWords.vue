@@ -3,15 +3,22 @@
     <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold text-gray-900">
-          Words from Root {{ rootDisplay }}
+          Words Found in Text
         </h2>
         <BaseBadge variant="primary">
-          {{ words.length }} words
+          {{ totalCount }} words
         </BaseBadge>
       </div>
     </div>
 
-    <div v-if="words.length === 0" class="p-12 text-center">
+    <!-- Loading State -->
+    <div v-if="loading" class="p-12 text-center">
+      <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent mx-auto mb-4"></div>
+      <span class="text-gray-600">Finding words...</span>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else-if="words.length === 0" class="p-12 text-center">
       <BaseIcon size="xl" class="text-gray-300 mx-auto mb-4">
         <path
           fill="none"
@@ -23,15 +30,25 @@
         />
       </BaseIcon>
       <h3 class="text-lg font-medium text-gray-900 mb-2">No words found</h3>
-      <p class="text-gray-600">No words are currently associated with this root.</p>
+      <p class="text-gray-600">No vocabulary words were found in the database that match this text.</p>
     </div>
 
+    <!-- Words List -->
     <div v-else class="divide-y divide-gray-200">
-      <RootWordItem
+      <TokenizedWordItem
         v-for="word in words"
         :key="word.id"
         :word="word"
         @click="handleWordClick"
+      />
+    </div>
+
+    <!-- Pagination -->
+    <div v-if="totalCount > pageSize && !loading" class="p-6 border-t border-gray-200">
+      <Pagination
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @page-change="handlePageChange"
       />
     </div>
   </div>
@@ -40,18 +57,28 @@
 <script setup lang="ts">
 import BaseBadge from '@/components/common/BaseBadge.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import type { WordSummary } from '@/types'
+import Pagination from '@/components/common/Pagination.vue'
+import type { Word } from '@/types'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import RootWordItem from './RootWordItem.vue'
+import TokenizedWordItem from './TokenizedWordItem.vue'
 
 interface Props {
-  words: WordSummary[]
-  rootDisplay: string
+  words: Word[]
+  loading: boolean
+  totalCount: number
+  currentPage: number
+  pageSize: number
 }
 
-defineProps<Props>()
+type Emits = (e: 'page-change', page: number) => void
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 const router = useRouter()
+
+const totalPages = computed(() => Math.ceil(props.totalCount / props.pageSize))
 
 const handleWordClick = (arabic: string) => {
   // Navigate to vocabulary view with Arabic search query
@@ -59,5 +86,9 @@ const handleWordClick = (arabic: string) => {
     name: 'vocabulary',
     query: { search: arabic },
   })
+}
+
+const handlePageChange = (page: number) => {
+  emit('page-change', page)
 }
 </script>

@@ -4,10 +4,12 @@ import type {
   Dialect,
   Difficulty,
   MasteryLevel,
+  PaginatedResponse,
   Text,
   TextVersion,
   TextVersionSummary,
   TextsRequest,
+  Word,
 } from '@/types'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
@@ -35,6 +37,13 @@ export const useTextStore = defineStore('text', () => {
   const selectedDialect = ref<Dialect | null>(null)
   const selectedDifficulty = ref<Difficulty | null>(null)
   const selectedTags = ref<string[]>([])
+
+  // Tokenized words state
+  const tokenizedWords = ref<Word[]>([])
+  const tokenizedWordsLoading = ref(false)
+  const tokenizedWordsTotalCount = ref(0)
+  const tokenizedWordsCurrentPage = ref(1)
+  const tokenizedWordsPageSize = ref(10)
 
   // Getters
   const filteredTexts = computed(() => {
@@ -402,6 +411,31 @@ export const useTextStore = defineStore('text', () => {
     fetchTexts()
   }
 
+  // Tokenized words actions
+  async function fetchTokenizedWords(textId: string, page = 1) {
+    tokenizedWordsLoading.value = true
+    error.value = null
+
+    try {
+      const response = await textService.tokenizeText(textId, page, tokenizedWordsPageSize.value)
+      tokenizedWords.value = response.items
+      tokenizedWordsTotalCount.value = response.totalCount
+      tokenizedWordsCurrentPage.value = page
+    } catch (err) {
+      error.value = 'Failed to fetch tokenized words'
+      console.error(err)
+    } finally {
+      tokenizedWordsLoading.value = false
+    }
+  }
+
+  function resetTokenizedWords() {
+    tokenizedWords.value = []
+    tokenizedWordsTotalCount.value = 0
+    tokenizedWordsCurrentPage.value = 1
+    tokenizedWordsLoading.value = false
+  }
+
   function resetFilters() {
     searchQuery.value = ''
     selectedDialect.value = null
@@ -428,6 +462,11 @@ export const useTextStore = defineStore('text', () => {
     textVersions,
     selectedVersion,
     isViewingCurrentVersion,
+    tokenizedWords,
+    tokenizedWordsLoading,
+    tokenizedWordsTotalCount,
+    tokenizedWordsCurrentPage,
+    tokenizedWordsPageSize,
 
     // Getters
     filteredTexts,
@@ -446,6 +485,10 @@ export const useTextStore = defineStore('text', () => {
     analyzeText,
     setFilters,
     resetFilters,
+
+    // Tokenized Words Actions
+    fetchTokenizedWords,
+    resetTokenizedWords,
 
     // Annotation Actions
     fetchAnnotations,

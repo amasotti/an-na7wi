@@ -5,7 +5,7 @@ import router from '../index'
 describe('router', () => {
   describe('route configuration', () => {
     it('should have correct number of routes', () => {
-      expect(router.options.routes).toHaveLength(7)
+      expect(router.options.routes).toHaveLength(9)
     })
 
     it('should have home route configured correctly', () => {

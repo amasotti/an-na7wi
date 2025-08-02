@@ -1,4 +1,11 @@
-import type { Annotation, Text, TextVersion, TextVersionSummary } from '@/types'
+import type {
+  Annotation,
+  PaginatedResponse,
+  Text,
+  TextVersion,
+  TextVersionSummary,
+  Word,
+} from '@/types'
 import type {
   TextsRequest,
   TextsResponse,
@@ -105,6 +112,16 @@ export const textService = {
   async transliterateText(arabicText: string): Promise<TransliterationResponse> {
     const request: TransliterationRequest = { arabicText }
     const response = await apiClient.post('/texts/transliterate', request)
+    return response.data
+  },
+
+  /**
+   * Tokenize text and get matching words from database
+   */
+  async tokenizeText(textId: string, page = 1, size = 10): Promise<PaginatedResponse<Word>> {
+    const response = await apiClient.post(`/texts/${textId}/tokenize`, null, {
+      params: { page, size },
+    })
     return response.data
   },
 }

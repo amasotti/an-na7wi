@@ -1,9 +1,13 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.dto.response.PaginatedResponse
+import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Text
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import com.tonihacks.annahwi.repository.TextRepository
+import com.tonihacks.annahwi.repository.WordRepository
+import com.tonihacks.annahwi.util.StringUtil
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
 import jakarta.enterprise.context.ApplicationScoped
@@ -30,6 +34,9 @@ class TextService {
 
     @Inject
     private lateinit var textVersionService: TextVersionService
+
+    @Inject
+    private lateinit var wordRepository: WordRepository
     
     private val logger = loggerFor(TextService::class.java)
     
@@ -189,6 +196,60 @@ class TextService {
         
         // Delete the text
         return textRepository.deleteById(id)
+    }
+
+    /**
+     * Tokenize text and find matching words in the database
+     */
+    @Transactional
+    fun tokenizeAndFindWords(id: UUID, page: Int, size: Int): PaginatedResponse<WordResponseDTO> {
+        logger.info("Tokenizing text with ID: $id, page: $page, size: $size")
+        
+        val text = findById(id)
+        val tokens = StringUtil.tokenizeArabicText(text.arabicContent)
+        
+        if (tokens.isEmpty()) {
+            return PaginatedResponse(
+                items = emptyList(),
+                totalCount = 0,
+                page = page,
+                pageSize = size
+            )
+        }
+        
+        // Find words that match any of the tokens
+        val matchingWords = mutableListOf<WordResponseDTO>()
+        
+        tokens.forEach { token ->
+            // Only do exact matches for tokenization to avoid false positives
+            val exactMatch = wordRepository.findByArabic(token)
+            if (exactMatch != null) {
+                val wordDto = WordResponseDTO.fromEntity(exactMatch)
+                if (!matchingWords.any { it.id == wordDto.id }) {
+                    matchingWords.add(wordDto)
+                }
+            }
+        }
+        
+        // Sort by Arabic text
+        val sortedWords = matchingWords.sortedBy { it.arabic }
+        
+        // Apply pagination
+        val totalCount = sortedWords.size.toLong()
+        val startIndex = page * size
+        val endIndex = minOf(startIndex + size, sortedWords.size)
+        val paginatedWords = if (startIndex < sortedWords.size) {
+            sortedWords.subList(startIndex, endIndex)
+        } else {
+            emptyList()
+        }
+        
+        return PaginatedResponse(
+            items = paginatedWords,
+            totalCount = totalCount,
+            page = page,
+            pageSize = size
+        )
     }
 
 }

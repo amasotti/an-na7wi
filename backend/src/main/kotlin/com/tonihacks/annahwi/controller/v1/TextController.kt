@@ -173,4 +173,35 @@ class TextController {
         )
         return Response.ok(response).build()
     }
+
+    @POST
+    @Path("/{id}/tokenize")
+    @Operation(summary = "Tokenize text and find words", description = "Tokenizes the Arabic text and returns matching words from the database")
+    fun tokenizeText(
+        @PathParam("id") id: UUID,
+        @QueryParam("page") @DefaultValue("1") page: Int,
+        @QueryParam("size") @DefaultValue("10") size: Int
+    ): Response {
+        logger.info("POST /api/v1/texts/$id/tokenize - page: $page, size: $size")
+        
+        if (page < 1) {
+            throw AppException(AppError.ValidationError.InvalidPageNumber(page))
+        }
+        if (size < 1) {
+            throw AppException(AppError.ValidationError.InvalidPageSize(size))
+        }
+        
+        val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
+        val response = textService.tokenizeAndFindWords(id, zeroBasedPage, size)
+        
+        // Convert zero-based page back to one-based for response
+        val adjustedResponse = PaginatedResponse(
+            items = response.items,
+            totalCount = response.totalCount,
+            page = page,
+            pageSize = response.pageSize
+        )
+        
+        return Response.ok(adjustedResponse).build()
+    }
 }

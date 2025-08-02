@@ -57,15 +57,17 @@
 
 <script setup lang="ts">
 import type { Word } from '@/types'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 import VocabularyContent from '../components/vocabulary/VocabularyContent.vue'
 import VocabularyHeader from '../components/vocabulary/VocabularyHeader.vue'
 import WordDeleteModal from '../components/vocabulary/WordDeleteModal.vue'
 import WordForm from '../components/vocabulary/WordForm.vue'
 import { useWordStore } from '../stores/wordStore'
 
-// Store
+// Store and route
 const wordStore = useWordStore()
+const route = useRoute()
 
 // Modal state
 const showWordModal = ref(false)
@@ -163,9 +165,22 @@ const handleRelatedWordClick = async (word: Partial<Word>) => {
   }
 }
 
+// Handle query parameters
+watchEffect(() => {
+  const searchParam = route.query.search as string
+  if (searchParam && searchParam !== wordStore.filters.search) {
+    wordStore.updateFilters({ search: searchParam })
+  }
+})
+
 // Lifecycle
 onMounted(() => {
-  wordStore.fetchWords()
+  const searchParam = route.query.search as string
+  if (searchParam) {
+    wordStore.updateFilters({ search: searchParam })
+  } else {
+    wordStore.fetchWords()
+  }
 })
 </script>
 

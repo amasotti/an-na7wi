@@ -47,6 +47,14 @@
           >
             {{ word.dialect }}
           </BaseBadge>
+
+          <BaseBadge
+            v-if="word.root"
+            variant="neutral"
+            size="sm"
+          >
+            Root: {{ word.root }}
+          </BaseBadge>
         </div>
       </div>
 
@@ -73,10 +81,10 @@
 <script setup lang="ts">
 import BaseBadge from '@/components/common/BaseBadge.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import type { WordSummary } from '@/types'
+import type { Word } from '@/types'
 
 interface Props {
-  word: WordSummary
+  word: Word
 }
 
 type Emits = (e: 'click', arabic: string) => void
