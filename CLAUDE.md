@@ -82,8 +82,9 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 - Pinia stores for state management (textStore, wordStore, userStore, searchStore)
 - Vue Router for navigation
 - Axios for API communication through centralized services
-- Tailwind utility classes for styling
+- Tailwind utility classes for styling grouped in readable css classes
 - RTL-aware layouts for Arabic text display
+- Mobile friendly, with responsive design principles
 
 ### Testing
 - Backend: JUnit 5 with Testcontainers for integration tests
