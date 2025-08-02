@@ -73,4 +73,5 @@ class SearchController {
         logger.info("GET /api/v1/search/suggestions - query: $query, limit: $limit")
         return Response.ok(searchService.getSearchSuggestions(query, limit)).build()
     }
+
 }

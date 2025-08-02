@@ -4,16 +4,8 @@
       <div class="vocabulary-header">
         <div>
           <h1 class="vocabulary-title">Vocabulary Manager</h1>
-          <p class="vocabulary-subtitle">
-            Build and manage your Arabic vocabulary with root analysis, frequency tracking, and contextual learning.
-          </p>
         </div>
-        <BaseButton @click="openWordForm()" class="flex items-center">
-          <BaseIcon size="sm" class="mr-2">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </BaseIcon>
-          Add New Word
-        </BaseButton>
+        <BaseButton @click="openWordForm()">Add New Word</BaseButton>
       </div>
 
       <!-- Filters -->
