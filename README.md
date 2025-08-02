@@ -2,7 +2,7 @@
 
 Arabic learning application for creating and managing learning materials with text analysis, vocabulary management, and annotations.
 
-**Stack**: Kotlin/Quarkus backend, Vue.js 3/TypeScript frontend, PostgreSQL database
+**Stack**: Kotlin/Quarkus backend, Nuxt 4/TypeScript frontend, PostgreSQL database
 
 ## Quick Start
 

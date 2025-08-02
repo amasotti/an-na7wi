@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build**: `cd backend && ./gradlew quarkusBuild`
 - **Test**: `cd backend && ./gradlew test`
 
-### Frontend (Vue.js/TypeScript)
+### Frontend (Nuxt 4/TypeScript)
 - **Development**: `cd frontend && pnpm run dev`
 - **Build**: `cd frontend && pnpm run build`
 - **Test**: `cd frontend && pnpm run test`
@@ -39,12 +39,12 @@ The file `docs/requirements.md` contains the detailed requirements and specifica
 - **Package structure**: `com.tonihacks.annahwi.*`
 - **Key features**: Full-text search for Arabic content, RESTful APIs, OpenAPI documentation
 
-### Frontend (Vue.js 3 + TypeScript)
-- **Framework**: Vue 3 with Composition API, TypeScript, Vite
-- APIs: Axios for API communication
-- **Styling**: Tailwind CSS
-- **State management**: Pinia stores
-- **Key features**: RTL support for Arabic text, text editor, vocabulary management, annotations
+### Frontend (Nuxt 4 + TypeScript)
+- **Framework**: Nuxt 4.0.2 with Vue 3 Composition API, TypeScript, file-based routing
+- **APIs**: Axios via Nuxt plugin for API communication
+- **Styling**: Tailwind CSS with PostCSS
+- **State management**: Pinia stores (textStore, wordStore, userStore, searchStore)
+- **Key features**: RTL support for Arabic text, auto-imports, SSR-ready, vocabulary management
 
 ### Core Entities
 - **Text**: Arabic content with transliteration, translation, tags, difficulty levels
@@ -77,16 +77,17 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 - Exception handling through global exception handler
 - Quarkus dev mode for hot reload during development
 
-### Frontend Patterns
+### Frontend Patterns (Nuxt)
 - Composition API with TypeScript for all components
+- File-based routing in `pages/` directory with dynamic routes
 - Pinia stores for state management (textStore, wordStore, userStore, searchStore)
-- Vue Router for navigation
-- The pages or views (under `frontend/src/views/`) should only contain the main layout and structure, while components (under `frontend/src/components/`) should contain reusable UI elements
-- Axios for API communication through centralized services
+- Pages (under `frontend/pages/`) for routing structure, components (under `components/`) for reusable UI
+- Nuxt auto-imports for Vue/Nuxt composables, no need to import useRouter, useState, etc.
+- API communication via Nuxt plugin (`plugins/api.client.ts`) with Axios
 - Tailwind utility classes for styling grouped in readable css classes
-- RTL-aware layouts for Arabic text display
-- Mobile friendly, with responsive design principles
-- A good max length for lines of code in a file is 200 characters, but try to keep it shorter when possible
+- RTL-aware layouts for Arabic text display using `layouts/default.vue`
+- Mobile friendly, responsive design principles
+- Line length max 200 characters, prefer shorter when possible
 
 ### Testing
 - Backend: JUnit 5 with Testcontainers for integration tests
