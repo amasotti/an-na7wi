@@ -1,4 +1,5 @@
 import { wordService } from '@/services/wordService'
+import type { PaginatedResponse, Word } from '@/types'
 import * as stringUtils from '@/utils/stringUtils'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -71,7 +72,7 @@ describe('wordStore', () => {
         totalCount: 2,
         page: 1,
         pageSize: 10,
-      }
+      } as unknown as PaginatedResponse<Word>
 
       vi.mocked(wordService.getWords).mockResolvedValue(mockResponse)
 
@@ -152,9 +153,15 @@ describe('wordStore', () => {
     it('should search Arabic text using Arabic endpoint', async () => {
       const store = useWordStore()
       const mockResults = [{ id: '1', arabic: 'كتاب', translation: 'book' }]
+      const mockResponse = {
+        items: mockResults,
+        totalCount: 1,
+        page: 1,
+        pageSize: 50,
+      } as PaginatedResponse<Word>
 
       vi.mocked(stringUtils.isArabicText).mockReturnValue(true)
-      vi.mocked(wordService.searchByArabic).mockResolvedValue(mockResults)
+      vi.mocked(wordService.searchByArabic).mockResolvedValue(mockResponse)
 
       await store.searchWords('كتاب')
 
@@ -167,9 +174,15 @@ describe('wordStore', () => {
     it('should search English text using translation endpoint', async () => {
       const store = useWordStore()
       const mockResults = [{ id: '1', arabic: 'كتاب', translation: 'book' }]
+      const mockResponse = {
+        items: mockResults,
+        totalCount: 1,
+        page: 1,
+        pageSize: 50,
+      } as PaginatedResponse<Word>
 
       vi.mocked(stringUtils.isArabicText).mockReturnValue(false)
-      vi.mocked(wordService.searchByTranslation).mockResolvedValue(mockResults)
+      vi.mocked(wordService.searchByTranslation).mockResolvedValue(mockResponse)
 
       await store.searchWords('book')
 
@@ -181,7 +194,7 @@ describe('wordStore', () => {
 
     it('should clear search results for empty query', async () => {
       const store = useWordStore()
-      store.searchResults = [{ id: '1', arabic: 'كتاب', translation: 'book' }] as any
+      store.searchResults = [{ id: '1', arabic: 'كتاب', translation: 'book' }] as Word[]
 
       await store.searchWords('')
 
@@ -213,7 +226,7 @@ describe('wordStore', () => {
       const wordData = { arabic: 'مدرسة', translation: 'school' }
       const newWord = { id: '3', ...wordData }
 
-      vi.mocked(wordService.createWord).mockResolvedValue(newWord as any)
+      vi.mocked(wordService.createWord).mockResolvedValue(newWord as Word)
 
       const result = await store.createWord(wordData)
 
@@ -229,7 +242,7 @@ describe('wordStore', () => {
       const wordData = { arabic: 'مدرسة', translation: 'school' }
       const newWord = { id: '3', ...wordData }
 
-      vi.mocked(wordService.createWord).mockResolvedValue(newWord as any)
+      vi.mocked(wordService.createWord).mockResolvedValue(newWord as Word)
 
       await store.createWord(wordData)
 
@@ -244,10 +257,10 @@ describe('wordStore', () => {
       const originalWord = { id: '1', arabic: 'كتاب', translation: 'book' }
       const updatedWord = { id: '1', arabic: 'كتاب', translation: 'updated book' }
 
-      store.words = [originalWord as any]
-      store.currentWord = originalWord as any
+      store.words = [originalWord as Word]
+      store.currentWord = originalWord as Word
 
-      vi.mocked(wordService.updateWord).mockResolvedValue(updatedWord as any)
+      vi.mocked(wordService.updateWord).mockResolvedValue(updatedWord as Word)
 
       const result = await store.updateWord('1', { translation: 'updated book' })
 
@@ -262,9 +275,9 @@ describe('wordStore', () => {
       const originalWord = { id: '1', arabic: 'كتاب', translation: 'book' }
       const updatedWord = { id: '1', arabic: 'كتاب', translation: 'updated book' }
 
-      store.searchResults = [originalWord as any]
+      store.searchResults = [originalWord as Word]
 
-      vi.mocked(wordService.updateWord).mockResolvedValue(updatedWord as any)
+      vi.mocked(wordService.updateWord).mockResolvedValue(updatedWord as Word)
 
       await store.updateWord('1', { translation: 'updated book' })
 
@@ -277,9 +290,9 @@ describe('wordStore', () => {
       const store = useWordStore()
       const word = { id: '1', arabic: 'كتاب', translation: 'book' }
 
-      store.words = [word as any]
-      store.searchResults = [word as any]
-      store.currentWord = word as any
+      store.words = [word as Word]
+      store.searchResults = [word as Word]
+      store.currentWord = word as Word
       store.pagination.totalCount = 1
 
       vi.mocked(wordService.deleteWord).mockResolvedValue()
@@ -298,7 +311,9 @@ describe('wordStore', () => {
     it('should trigger search when search filter is updated', async () => {
       const store = useWordStore()
       vi.mocked(stringUtils.isArabicText).mockReturnValue(true)
-      vi.mocked(wordService.searchByArabic).mockResolvedValue([])
+      vi.mocked(wordService.searchByArabic).mockResolvedValue(
+        [] as unknown as PaginatedResponse<Word>
+      )
 
       store.updateFilters({ search: 'كتاب' })
 
@@ -308,7 +323,7 @@ describe('wordStore', () => {
 
     it('should clear search results when search is empty', async () => {
       const store = useWordStore()
-      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as any
+      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as Word[]
 
       store.updateFilters({ search: '' })
 
@@ -340,8 +355,8 @@ describe('wordStore', () => {
       const words = [{ id: '1', arabic: 'كتاب' }]
       const searchResults = [{ id: '2', arabic: 'مدرسة' }]
 
-      store.words = words as any
-      store.searchResults = searchResults as any
+      store.words = words as Word[]
+      store.searchResults = searchResults as Word[]
       store.filters.search = 'test'
 
       expect(store.displayWords).toEqual(searchResults)
@@ -351,7 +366,7 @@ describe('wordStore', () => {
       const store = useWordStore()
       const words = [{ id: '1', arabic: 'كتاب' }]
 
-      store.words = words as any
+      store.words = words as Word[]
       store.filters.search = ''
 
       expect(store.displayWords).toEqual(words)
@@ -376,7 +391,7 @@ describe('wordStore', () => {
     it('should clear search correctly', () => {
       const store = useWordStore()
       store.filters.search = 'test'
-      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as any
+      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as Word[]
 
       store.clearSearch()
 
@@ -393,7 +408,7 @@ describe('wordStore', () => {
         masteryLevel: 'FAMILIAR',
         partOfSpeech: 'NOUN',
       }
-      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as any
+      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as Word[]
 
       const mockResponse = {
         items: [],
@@ -421,9 +436,9 @@ describe('wordStore', () => {
       const store = useWordStore()
 
       // Set some state
-      store.words = [{ id: '1', arabic: 'كتاب' }] as any
-      store.currentWord = { id: '1', arabic: 'كتاب' } as any
-      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as any
+      store.words = [{ id: '1', arabic: 'كتاب' }] as Word[]
+      store.currentWord = { id: '1', arabic: 'كتاب' } as Word
+      store.searchResults = [{ id: '1', arabic: 'كتاب' }] as Word[]
       store.loading = true
       store.pagination.totalCount = 5
       store.filters.search = 'test'

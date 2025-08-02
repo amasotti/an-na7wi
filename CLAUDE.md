@@ -81,10 +81,12 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 - Composition API with TypeScript for all components
 - Pinia stores for state management (textStore, wordStore, userStore, searchStore)
 - Vue Router for navigation
+- The pages or views (under `frontend/src/views/`) should only contain the main layout and structure, while components (under `frontend/src/components/`) should contain reusable UI elements
 - Axios for API communication through centralized services
 - Tailwind utility classes for styling grouped in readable css classes
 - RTL-aware layouts for Arabic text display
 - Mobile friendly, with responsive design principles
+- A good max length for lines of code in a file is 200 characters, but try to keep it shorter when possible
 
 ### Testing
 - Backend: JUnit 5 with Testcontainers for integration tests

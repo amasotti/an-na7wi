@@ -151,7 +151,7 @@
 
 <script setup lang="ts">
 import type { SelectOption, Word } from '@/types'
-import { Dialect, Difficulty, MasteryLevel, type PartOfSpeech } from '@/types/enums'
+import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { computed, ref, watch } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseInput from '../common/BaseInput.vue'
@@ -175,7 +175,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   close: []
-  submit: [formData: any]
+  submit: [formData: Partial<Word>]
 }>()
 
 const isEditing = computed(() => !!props.word)
@@ -187,7 +187,7 @@ const form = ref({
   example: '',
   root: '',
   notes: '',
-  partOfSpeech: '',
+  partOfSpeech: PartOfSpeech.UNKNOWN,
   difficulty: Difficulty.BEGINNER,
   dialect: Dialect.MSA,
   masteryLevel: MasteryLevel.NEW,
@@ -208,7 +208,7 @@ watch(
         translation: newWord.translation || '',
         example: newWord.example || '',
         root: newWord.root || '',
-        partOfSpeech: newWord.partOfSpeech || '',
+        partOfSpeech: newWord.partOfSpeech || PartOfSpeech.UNKNOWN,
         notes: newWord.notes || '',
         difficulty: newWord.difficulty,
         dialect: newWord.dialect,
@@ -225,7 +225,7 @@ watch(
         translation: '',
         example: '',
         root: '',
-        partOfSpeech: '',
+        partOfSpeech: PartOfSpeech.UNKNOWN,
         notes: '',
         difficulty: Difficulty.BEGINNER,
         dialect: Dialect.MSA,

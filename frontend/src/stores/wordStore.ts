@@ -1,5 +1,5 @@
 import { wordService } from '@/services/wordService'
-import type {PaginatedResponse, SelectOption, Word} from '@/types'
+import type { PaginatedResponse, SelectOption, Word } from '@/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { isArabicText } from '@/utils/stringUtils'
 import { defineStore } from 'pinia'

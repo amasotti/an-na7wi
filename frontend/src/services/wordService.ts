@@ -1,4 +1,4 @@
-import type {PaginatedResponse, Word} from '@/types'
+import type { PaginatedResponse, Word } from '@/types'
 import { isAxiosError } from 'axios'
 import apiClient from './api'
 

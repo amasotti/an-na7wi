@@ -11,6 +11,9 @@
               Translation
             </th>
             <th scope="col" class="word-table-header">
+              Links
+            </th>
+            <th scope="col" class="word-table-header">
               Difficulty
             </th>
             <th scope="col" class="word-table-header">
@@ -25,17 +28,51 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="word in words" :key="word.id" class="hover:bg-gray-50">
+          <tr v-for="word in words" :key="word.id" class="hover:bg-gray-50 transition-colors duration-150">
             <td class="word-table-cell">
               <div class="flex items-center">
-                <div>
-                  <div class="text-lg font-medium text-gray-900 rtl">{{ word.arabic }}</div>
-                  <div class="text-sm text-gray-500">{{ word.transliteration }}</div>
+                <div class="cursor-pointer hover:bg-blue-50 rounded-lg p-2 -m-2 transition-colors" @click="$emit('word-click', word)">
+                  <div class="text-lg font-medium text-gray-900 rtl hover:text-blue-600 transition-colors">{{ word.arabic }}</div>
+                  <div class="text-sm text-gray-500">{{ word.transliteration || 'No transliteration' }}</div>
                 </div>
               </div>
             </td>
             <td class="word-table-cell">
-              <div class="text-sm text-gray-900">{{ word.translation }}</div>
+              <div 
+                class="text-sm text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                @click="$emit('word-click', word)"
+              >
+                {{ word.translation || 'No translation' }}
+              </div>
+            </td>
+            <td class="word-table-cell">
+              <div class="flex items-center space-x-2">
+                <button
+                  v-if="word.pronunciationLink"
+                  @click="openLink(word.pronunciationLink)"
+                  class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors"
+                  title="Listen to pronunciation"
+                >
+                  <BaseIcon size="xs" class="mr-1">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 12.536a9 9 0 01-2.828-2.828M12 6v12m-8-6a8 8 0 108 8" />
+                  </BaseIcon>
+                  Audio
+                </button>
+                <button
+                  v-if="word.dictionaryLinks"
+                  @click="openLink(word.dictionaryLinks)"
+                  class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-600 bg-green-100 rounded-full hover:bg-green-200 transition-colors"
+                  title="Open dictionary"
+                >
+                  <BaseIcon size="xs" class="mr-1">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </BaseIcon>
+                  Dict
+                </button>
+                <span v-if="!word.pronunciationLink && !word.dictionaryLinks" class="text-xs text-gray-400">
+                  No links
+                </span>
+              </div>
             </td>
             <td class="word-table-cell whitespace-nowrap">
               <span :class="getDifficultyBadgeClass(word.difficulty)">
@@ -50,19 +87,27 @@
             <td class="word-table-cell whitespace-nowrap text-sm text-gray-500">
               {{ word.dialect }}
             </td>
-            <td class="word-table-cell whitespace-nowrap text-right text-sm font-medium">
-              <button 
-                @click="$emit('edit', word)" 
-                class="word-table-action-btn word-table-edit-btn"
-              >
-                Edit
-              </button>
-              <button 
-                @click="$emit('delete', word)" 
-                class="word-table-action-btn word-table-delete-btn"
-              >
-                Delete
-              </button>
+            <td class="word-table-cell whitespace-nowrap text-right">
+              <div class="flex items-center justify-end space-x-2">
+                <button 
+                  @click="$emit('edit', word)" 
+                  class="action-btn edit-btn"
+                  title="Edit word"
+                >
+                  <BaseIcon size="sm">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </BaseIcon>
+                </button>
+                <button 
+                  @click="$emit('delete', word)" 
+                  class="action-btn delete-btn"
+                  title="Delete word"
+                >
+                  <BaseIcon size="sm">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </BaseIcon>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -74,6 +119,7 @@
 <script setup lang="ts">
 import type { Word } from '@/types'
 import { Difficulty, MasteryLevel } from '@/types/enums'
+import BaseIcon from '../common/BaseIcon.vue'
 
 interface Props {
   words: Word[]
@@ -84,6 +130,7 @@ defineProps<Props>()
 defineEmits<{
   edit: [word: Word]
   delete: [word: Word]
+  'word-click': [word: Word]
 }>()
 
 // Utility methods for styling
@@ -116,6 +163,11 @@ const getMasteryBadgeClass = (masteryLevel?: MasteryLevel) => {
       return `${baseClasses} bg-blue-100 text-blue-800`
   }
 }
+
+// Utility method for opening links
+const openLink = (url: string) => {
+  window.open(url, '_blank', 'noopener,noreferrer')
+}
 </script>
 
 <style scoped>
@@ -131,16 +183,16 @@ const getMasteryBadgeClass = (masteryLevel?: MasteryLevel) => {
   @apply px-6 py-4;
 }
 
-.word-table-action-btn {
-  @apply text-sm font-medium;
+.action-btn {
+  @apply inline-flex items-center justify-center w-8 h-8 rounded-lg border border-transparent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
 }
 
-.word-table-edit-btn {
-  @apply text-primary-600 hover:text-primary-900 mr-3;
+.edit-btn {
+  @apply text-blue-600 hover:text-blue-700 hover:bg-blue-50 focus:ring-blue-500;
 }
 
-.word-table-delete-btn {
-  @apply text-red-600 hover:text-red-900;
+.delete-btn {
+  @apply text-red-600 hover:text-red-700 hover:bg-red-50 focus:ring-red-500;
 }
 
 .rtl {
