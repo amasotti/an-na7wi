@@ -1,5 +1,5 @@
-import { isArabicText } from '@/utils/stringUtils.ts'
 import { describe, expect, it } from 'vitest'
+import { isArabicText } from '../stringUtils'
 
 describe('stringUtils', () => {
   it('should recognize arabic text', () => {
