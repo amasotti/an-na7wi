@@ -68,7 +68,12 @@ Phase 2: Enhanced Word Management
 3. Add root validation to word forms
 
 Phase 3: Frontend Root System
-1. Create root input component
+1. Improve root input component in VocabularyView / VocabularyContent
+   - Add real-time normalization
+   - Display formatted root
+   - Add a section below with a delay of 1 second to avoid excessive API calls, that shows related words with the same root
+   - Displayed related words should be clickable and lead to the word detail page
+2. 
 2. Implement root study section
 3. Integrate root picker in word forms
 4. Add root-based navigation

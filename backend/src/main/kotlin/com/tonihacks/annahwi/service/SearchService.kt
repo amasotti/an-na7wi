@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.Text
 import com.tonihacks.annahwi.entity.Word
@@ -29,7 +30,7 @@ class SearchService {
      */
     data class GlobalSearchResult(
         val texts: List<Text>,
-        val words: List<Word>,
+        val words: List<WordResponseDTO>,
         val annotations: List<Annotation>
     )
     

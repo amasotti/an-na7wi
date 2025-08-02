@@ -1,6 +1,7 @@
 package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.dto.request.WordRequestDTO
+import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.MasteryLevel
@@ -35,14 +36,15 @@ class WordService {
     /**
      * Find all words with pagination
      */
-    fun findAll(page: Int, size: Int, sortField: String = "arabic"): List<Word> {
+    fun findAll(page: Int, size: Int, sortField: String = "arabic"): List<WordResponseDTO> {
         logger.info("Finding all words, page: $page, size: $size, sortField: $sortField")
         val sortOption = Sort.by(sortField)
         val paginationOption = Page.of(page, size)
-        return wordRepository
+        val words = wordRepository
             .findAll(sortOption)
             .page(paginationOption)
             .list()
+        return WordResponseDTO.fromEntities(words)
     }
 
     fun countAll(): Long {
@@ -62,12 +64,13 @@ class WordService {
         partOfSpeech: PartOfSpeech? = null,
         masteryLevel: MasteryLevel? = null,
         verified: Boolean? = null
-    ): List<Word> {
+    ): List<WordResponseDTO> {
         logger.info(
             "Finding words with filters - page: $page, size: $size, sort: $sortField, " +
             "difficulty: $difficulty, dialect: $dialect, partOfSpeech: $partOfSpeech, masteryLevel: $masteryLevel, verified: $verified"
         )
-        return wordRepository.findAllWithFilters(Page.of(page, size), sortField, difficulty, dialect, partOfSpeech, masteryLevel, verified)
+        val words = wordRepository.findAllWithFilters(Page.of(page, size), sortField, difficulty, dialect, partOfSpeech, masteryLevel, verified)
+        return WordResponseDTO.fromEntities(words)
     }
 
     /**
@@ -88,82 +91,91 @@ class WordService {
     /**
      * Find a word by its ID
      */
-    fun findById(id: UUID): Word {
+    fun findById(id: UUID): WordResponseDTO {
         logger.info("Finding word by ID: $id")
-        return wordRepository.findById(id)
+        val word = wordRepository.findById(id)
             ?: throw AppException(AppError.NotFound.Word(id.toString()))
+        return WordResponseDTO.fromEntity(word)
     }
     
     /**
      * Find a word by Arabic text (exact match)
      */
-    fun findByArabic(arabic: String): Optional<Word> {
+    fun findByArabic(arabic: String): Optional<WordResponseDTO> {
         logger.info("Finding word by Arabic text: $arabic")
         return wordRepository.findByArabic(arabic)
-            .let { Optional.ofNullable(it) }
+            ?.let { Optional.of(WordResponseDTO.fromEntity(it)) }
+            ?: Optional.empty()
     }
     
     /**
      * Search words by Arabic text (partial match)
      */
-    fun searchByArabic(arabic: String, page: Int, size: Int): List<Word> {
+    fun searchByArabic(arabic: String, page: Int, size: Int): List<WordResponseDTO> {
         logger.info("Searching words by Arabic text: $arabic, page: $page, size: $size")
-        return wordRepository.searchByArabic(arabic, Page.of(page, size))
+        val words = wordRepository.searchByArabic(arabic, Page.of(page, size))
+        return WordResponseDTO.fromEntities(words)
     }
     
     /**
      * Find words by root
      */
-    fun findByRoot(root: String, page: Int, size: Int): List<Word> {
+    fun findByRoot(root: String, page: Int, size: Int): List<WordResponseDTO> {
         logger.info("Finding words by root: $root, page: $page, size: $size")
-        return wordRepository.findByRoot(root, Page.of(page, size))
+        val words = wordRepository.findByRoot(root, Page.of(page, size))
+        return WordResponseDTO.fromEntities(words)
     }
     
     /**
      * Find words by part of speech
      */
-    fun findByPartOfSpeech(partOfSpeech: PartOfSpeech, page: Int, size: Int): List<Word> {
+    fun findByPartOfSpeech(partOfSpeech: PartOfSpeech, page: Int, size: Int): List<WordResponseDTO> {
         logger.info("Finding words by part of speech: $partOfSpeech, page: $page, size: $size")
-        return wordRepository.findByPartOfSpeech(partOfSpeech, Page.of(page, size))
+        val words = wordRepository.findByPartOfSpeech(partOfSpeech, Page.of(page, size))
+        return WordResponseDTO.fromEntities(words)
     }
     
     /**
      * Find words by dialect
      */
-    fun findByDialect(dialect: Dialect, page: Int, size: Int): List<Word> {
+    fun findByDialect(dialect: Dialect, page: Int, size: Int): List<WordResponseDTO> {
         logger.info("Finding words by dialect: $dialect, page: $page, size: $size")
-        return wordRepository.findByDialect(dialect, Page.of(page, size))
+        val words = wordRepository.findByDialect(dialect, Page.of(page, size))
+        return WordResponseDTO.fromEntities(words)
     }
     
     /**
      * Find words by difficulty
      */
-    fun findByDifficulty(difficulty: Difficulty, page: Int, size: Int): List<Word> {
+    fun findByDifficulty(difficulty: Difficulty, page: Int, size: Int): List<WordResponseDTO> {
         logger.info("Finding words by difficulty: $difficulty, page: $page, size: $size")
-        return wordRepository.findByDifficulty(difficulty, Page.of(page, size))
+        val words = wordRepository.findByDifficulty(difficulty, Page.of(page, size))
+        return WordResponseDTO.fromEntities(words)
     }
     
     /**
      * Find verified words
      */
-    fun findVerified(page: Int, size: Int): List<Word> {
+    fun findVerified(page: Int, size: Int): List<WordResponseDTO> {
         logger.info("Finding verified words, page: $page, size: $size")
-        return wordRepository.findVerified(Page.of(page, size))
+        val words = wordRepository.findVerified(Page.of(page, size))
+        return WordResponseDTO.fromEntities(words)
     }
     
     /**
      * Search words by translation or transliteration
      */
-    fun searchByTranslation(query: String, page: Int, size: Int): List<Word> {
+    fun searchByTranslation(query: String, page: Int, size: Int): List<WordResponseDTO> {
         logger.info("Searching words by translation or transliteration: $query, page: $page, size: $size")
-        return wordRepository.searchByTranslation(query, Page.of(page, size))
+        val words = wordRepository.searchByTranslation(query, Page.of(page, size))
+        return WordResponseDTO.fromEntities(words)
     }
     
     /**
      * Create a new word from DTO
      */
     @Transactional
-    fun create(wordDTO: WordRequestDTO): Word {
+    fun create(wordDTO: WordRequestDTO): WordResponseDTO {
         logger.info("Creating new word: ${wordDTO.arabic}")
         
         val word = wordDTO.toEntity()
@@ -185,7 +197,7 @@ class WordService {
         // Persist the word
         wordRepository.persist(word)
         
-        return word
+        return WordResponseDTO.fromEntity(word)
     }
     
     /**
@@ -208,10 +220,11 @@ class WordService {
      * Update an existing word using DTO
      */
     @Transactional
-    fun update(id: UUID, wordDTO: WordRequestDTO): Word {
+    fun update(id: UUID, wordDTO: WordRequestDTO): WordResponseDTO {
         logger.info("Updating word with ID: $id")
         
-        val existingWord = findById(id)
+        val existingWord = wordRepository.findById(id)
+            ?: throw AppException(AppError.NotFound.Word(id.toString()))
         wordDTO.updateEntity(existingWord)
         
         // Handle root assignment
@@ -234,7 +247,7 @@ class WordService {
         // Persist the updated word
         wordRepository.persist(existingWord)
         
-        return existingWord
+        return WordResponseDTO.fromEntity(existingWord)
     }
     
     /**
@@ -244,7 +257,8 @@ class WordService {
     fun update(id: UUID, word: Word): Word {
         logger.info("Updating word with ID: $id")
         
-        val existingWord = findById(id)
+        val existingWord = wordRepository.findById(id)
+            ?: throw AppException(AppError.NotFound.Word(id.toString()))
         
         // Update fields
         existingWord.arabic = word.arabic
