@@ -3,7 +3,6 @@ package com.tonihacks.annahwi.service
 import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.Text
-import com.tonihacks.annahwi.entity.Word
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.jboss.logging.Logger
