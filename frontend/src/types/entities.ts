@@ -1,4 +1,4 @@
-import type { AnnotationType, Dialect, Difficulty, MasteryLevel } from './enums'
+import type { AnnotationType, Dialect, Difficulty, MasteryLevel, PartOfSpeech } from './enums'
 
 // Core entities
 export interface Text {
@@ -15,6 +15,26 @@ export interface Text {
   createdAt: string
   updatedAt: string
   currentVersionId?: string
+}
+
+export interface Word {
+  id: string
+  arabic: string
+  transliteration?: string
+  translation?: string
+  example?: string
+  root?: string
+  partOfSpeech?: PartOfSpeech
+  notes?: string
+  frequency: number
+  difficulty: Difficulty
+  dialect: Dialect
+  masteryLevel?: MasteryLevel
+  dictionaryLinks?: string
+  pronunciationLink?: string
+  relatedWords?: string
+  isVerified: boolean
+  createdAt: string
 }
 
 export interface Annotation {

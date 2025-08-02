@@ -36,6 +36,9 @@ class Word : PanacheEntityBase {
     @Column(name = "translation")
     var translation: String? = null
     
+    @Column(name = "example", columnDefinition = "TEXT")
+    var example: String? = null
+    
     @Column(name = "root")
     var root: String? = null
     
@@ -56,6 +59,19 @@ class Word : PanacheEntityBase {
     @Enumerated(EnumType.STRING)
     @Column(name = "dialect", nullable = false)
     lateinit var dialect: Dialect
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mastery_level")
+    var masteryLevel: MasteryLevel? = MasteryLevel.NEW
+    
+    @Column(name = "dictionary_links", columnDefinition = "TEXT")
+    var dictionaryLinks: String? = null
+    
+    @Column(name = "pronunciation_link")
+    var pronunciationLink: String? = null
+    
+    @Column(name = "related_words", columnDefinition = "TEXT")
+    var relatedWords: String? = null
     
     @Column(name = "is_verified", nullable = false)
     var isVerified: Boolean = false

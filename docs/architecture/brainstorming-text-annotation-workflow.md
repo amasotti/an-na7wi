@@ -8,38 +8,6 @@ architecture with loose coupling between annotations and text positions.
 
 ## Core Requirements
 
-### Three-Mode System
-
-#### 1. Create/Edit Mode
-
-- **Create/Edit Mode**: Form-based text entry: A title, then 3 text areas (arabic, transliteration, translation) and
-  an optional comments field for note about the text.
-- **Auto-save**: Persist changes on blur/timer
-- Versioned. Texts are versioned, so that I can go back to previous versions of the text.
-- The frontend displays a dropdown to select the version of the text to display, restore or delete a version.
-- **Simple CRUD**: Create, read, update, delete texts
-- Clean interface without annotation interference
-
-#### 2. Annotate Mode
-
-- Text display only (non-editable)
-- "New Annotation" button to create annotations
-- Manual annotation entry (not click on the word to annotate)
-- Dynamic highlighting of annotation matches in text
-- In the backend we don't save the position of the annotation in the text, but rather the anchor text
-
-Annotation are in some sense loosely coupled to the text, meaning that if the text changes, the annotation may not be
-valid anymore. It's up to the user to delete the annotation if the anchor text is no longer present in the text.
-The frontend has some matching logic to highlight the anchor text in the text and make the relevant annotations visible
-or more prominent.
-
-#### 3. Learn Mode
-
-- Translation/transliteration blurred by default
-- Hover to reveal content
-- Annotations hidden unless explicitly toggled by hovering or clicking on an indicator (matched anchor text, see above)
-- Focus on comprehension testing
-
 ## Functional Requirements
 
 ### Text Operations

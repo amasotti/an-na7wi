@@ -40,6 +40,11 @@ class WordService {
             .page(paginationOption)
             .list()
     }
+
+    fun countAll(): Long {
+        logger.info("Counting all words")
+        return wordRepository.count()
+    }
     
     /**
      * Find a word by its ID

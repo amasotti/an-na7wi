@@ -1,6 +1,7 @@
 package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.dto.request.WordRequestDTO
+import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.PartOfSpeech
@@ -43,7 +44,16 @@ class WordController {
         @QueryParam("sort") @DefaultValue("arabic") sort: String
     ): Response {
         logger.info("GET /api/v1/words - page: $page, size: $size, sort: $sort")
-        return Response.ok(wordService.findAll(PaginationUtil.toZeroBasedPage(page), size, sort)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val words = wordService.findAll(pagination, size, sort)
+        val paginatedResponse = PaginatedResponse(
+            items = words,
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
     
     @GET
@@ -102,7 +112,15 @@ class WordController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/search/arabic/$arabic - page: $page, size: $size")
-        return Response.ok(wordService.searchByArabic(arabic, PaginationUtil.toZeroBasedPage(page), size)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val paginatedResponse = PaginatedResponse(
+            items = wordService.searchByArabic(arabic, pagination, size),
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
     
     @GET
@@ -114,7 +132,15 @@ class WordController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/root/$root - page: $page, size: $size")
-        return Response.ok(wordService.findByRoot(root, PaginationUtil.toZeroBasedPage(page), size)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val paginatedResponse = PaginatedResponse(
+            items = wordService.findByRoot(root, pagination, size),
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
     
     @GET
@@ -126,7 +152,15 @@ class WordController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/part-of-speech/$partOfSpeech - page: $page, size: $size")
-        return Response.ok(wordService.findByPartOfSpeech(partOfSpeech, PaginationUtil.toZeroBasedPage(page), size)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val paginatedResponse = PaginatedResponse(
+            items = wordService.findByPartOfSpeech(partOfSpeech, pagination, size),
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
     
     @GET
@@ -138,7 +172,15 @@ class WordController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/dialect/$dialect - page: $page, size: $size")
-        return Response.ok(wordService.findByDialect(dialect, PaginationUtil.toZeroBasedPage(page), size)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val paginatedResponse = PaginatedResponse(
+            items = wordService.findByDialect(dialect, pagination, size),
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
     
     @GET
@@ -150,7 +192,15 @@ class WordController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/difficulty/$difficulty - page: $page, size: $size")
-        return Response.ok(wordService.findByDifficulty(difficulty, PaginationUtil.toZeroBasedPage(page), size)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val paginatedResponse = PaginatedResponse(
+            items = wordService.findByDifficulty(difficulty, pagination, size),
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
     
     @GET
@@ -161,7 +211,15 @@ class WordController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/verified - page: $page, size: $size")
-        return Response.ok(wordService.findVerified(PaginationUtil.toZeroBasedPage(page), size)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val paginatedResponse = PaginatedResponse(
+            items = wordService.findVerified(pagination, size),
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
     
     @GET
@@ -173,14 +231,14 @@ class WordController {
         @QueryParam("size") @DefaultValue("10") size: Int
     ): Response {
         logger.info("GET /api/v1/words/search/translation/$query - page: $page, size: $size")
-        return Response.ok(wordService.searchByTranslation(query, PaginationUtil.toZeroBasedPage(page), size)).build()
-    }
-    
-    @GET
-    @Path("/most-frequent/{limit}")
-    @Operation(summary = "Find most frequent words", description = "Returns the most frequently used words")
-    fun findMostFrequent(@PathParam("limit") @DefaultValue("10") limit: Int): Response {
-        logger.info("GET /api/v1/words/most-frequent/$limit")
-        return Response.ok(wordService.findMostFrequent(limit)).build()
+        val pagination = PaginationUtil.toZeroBasedPage(page)
+        val total = wordService.countAll()
+        val paginatedResponse = PaginatedResponse(
+            items = wordService.searchByTranslation(query, pagination, size),
+            totalCount = total,
+            page = page,
+            pageSize = size
+        )
+        return Response.ok(paginatedResponse).build()
     }
 }

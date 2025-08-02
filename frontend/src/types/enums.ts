@@ -13,6 +13,7 @@ export enum Dialect {
 }
 
 export enum PartOfSpeech {
+  UNKNOWN = 'UNKNOWN',
   NOUN = 'NOUN',
   VERB = 'VERB',
   ADJECTIVE = 'ADJECTIVE',

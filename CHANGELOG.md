@@ -2,9 +2,44 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [0.4.0] - 2025-07-28
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/125041ac2af62c86469d605785eec6b32961a247..)
+### 🚀 Features
+
+
+- Annotation handling ([1894eff](https://github.com/amasotti/an-na7wi/commit/1894eff296de44f4564d6236c62b59b0b87d72ec))
+
+- Annotation handling ([f62f9f2](https://github.com/amasotti/an-na7wi/commit/f62f9f2a08586b99985c8ed4249f077c5bc1bb76))
+
+- UI for annotations ([9fe1f18](https://github.com/amasotti/an-na7wi/commit/9fe1f185603ce1f26b2990692bcdd38a1bbbf1ad))
+
+- Enlarge annotation dialog ([11e145f](https://github.com/amasotti/an-na7wi/commit/11e145fbfffa9c0efea0a6b03fc09f4c6b0f5a32))
+
+- Add sample data ([8dacbf1](https://github.com/amasotti/an-na7wi/commit/8dacbf1edca5fa2057c90cb9d87faccbc2554737))
+
+### 🐛 Bug Fixes
+
+
+- Make fk constraint deferrable ([c326e8e](https://github.com/amasotti/an-na7wi/commit/c326e8e676df76b7c6fb8b62e9254da124a73f5a))
+
+### 🚜 Refactor
+
+
+- Switch to modern vuejs syntax for router transitions ([6da30cf](https://github.com/amasotti/an-na7wi/commit/6da30cfe27b5ffccbd9637102eef16e926b52898))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Refactor and cleanup errors ([7c2b752](https://github.com/amasotti/an-na7wi/commit/7c2b752207fda362caf7e29c40ce40a3f9eefdbe))
+
+- Remove unused imports ([e4aed7f](https://github.com/amasotti/an-na7wi/commit/e4aed7fba0836f8bf59be7b8a788a0924413aaec))
+
+- Add command for backup before I forget ([eb19f2b](https://github.com/amasotti/an-na7wi/commit/eb19f2b327599cd78c4ada4c6ea78b06272288b5))
+
 ## [0.3.0] - 2025-07-27
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/2acf5a649e2d367edb5ca250ee6c64e870787373..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/2acf5a649e2d367edb5ca250ee6c64e870787373..125041ac2af62c86469d605785eec6b32961a247)
 ### 🚀 Features
 
 
