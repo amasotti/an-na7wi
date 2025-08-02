@@ -159,5 +159,4 @@ watch(
     await rootStore.fetchRoots({ sort: newSort })
   }
 )
-
 </script>
