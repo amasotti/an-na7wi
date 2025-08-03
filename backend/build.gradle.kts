@@ -18,7 +18,8 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
-    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
+    val quarkusBomString = "${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"
+    implementation(enforcedPlatform (quarkusBomString))
     implementation(libs.quarkus.arc)
     implementation(libs.quarkus.flyway)
     implementation(libs.quarkus.docker)
@@ -68,9 +69,3 @@ kotlin {
         )
     }
 }
-
-tasks.build {
-    // set property for disabling quarkus native
-    systemProperty("quarkus.native.enabled", "false")
-}
-
