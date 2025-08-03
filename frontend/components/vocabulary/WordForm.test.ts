@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderWithStore } from '~/test/test-utils'
-import type { SelectOption, Word } from '~/types'
+import type { SelectOption, Word, ExampleGenerationResponse } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 import { VocabularyWordForm as WordForm } from '#components'
+import { exampleService } from '~/composables/exampleService'
 
 // Mock the services
 vi.mock('~/composables/rootService', () => ({
@@ -28,6 +29,13 @@ vi.mock('~/composables/wordService', () => ({
         totalCount: 0,
       })
     ),
+  },
+}))
+
+// Mock the example service
+vi.mock('~/composables/exampleService', () => ({
+  exampleService: {
+    generateExamples: vi.fn()
   },
 }))
 
@@ -120,5 +128,130 @@ describe('WordForm', () => {
     expect(screen.getByDisplayValue('كتاب')).toBeInTheDocument()
     expect(screen.getByDisplayValue('kitab')).toBeInTheDocument()
     expect(screen.getByDisplayValue('book')).toBeInTheDocument()
+  })
+
+  describe('Example Generation', () => {
+    beforeEach(() => {
+      vi.clearAllMocks()
+    })
+
+    it('shows generate examples button when arabic text is present', () => {
+      renderWithStore(WordForm, {
+        props: { ...defaultProps, word: mockWord },
+      })
+
+      expect(screen.getByText('Generate Examples')).toBeInTheDocument()
+    })
+
+    it('hides generate examples button when arabic text is empty', () => {
+      const emptyWord = { ...mockWord, arabic: '' }
+      renderWithStore(WordForm, {
+        props: { ...defaultProps, word: emptyWord },
+      })
+
+      expect(screen.queryByText('Generate Examples')).not.toBeInTheDocument()
+    })
+
+    it('calls example service with arabic word and part of speech context', async () => {
+      const mockResponse: ExampleGenerationResponse = {
+        examples: [
+          {
+            arabic: 'هذا كتاب مفيد',
+            english: 'This is a useful book'
+          }
+        ]
+      }
+      const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
+      mockedGenerateExamples.mockResolvedValue(mockResponse)
+
+      renderWithStore(WordForm, {
+        props: { ...defaultProps, word: mockWord },
+      })
+
+      const generateButton = screen.getByText('Generate Examples')
+      await generateButton.click()
+
+      expect(mockedGenerateExamples).toHaveBeenCalledWith({
+        arabic: 'كتاب',
+        context: PartOfSpeech.NOUN
+      })
+    })
+
+    it('uses undefined context when part of speech is unknown', async () => {
+      const wordWithUnknownPos = { ...mockWord, partOfSpeech: PartOfSpeech.UNKNOWN }
+      const mockResponse: ExampleGenerationResponse = {
+        examples: [
+          {
+            arabic: 'هذا كتاب',
+            english: 'This is a book'
+          }
+        ]
+      }
+      const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
+      mockedGenerateExamples.mockResolvedValue(mockResponse)
+
+      renderWithStore(WordForm, {
+        props: { ...defaultProps, word: wordWithUnknownPos },
+      })
+
+      const generateButton = screen.getByText('Generate Examples')
+      await generateButton.click()
+
+      expect(mockedGenerateExamples).toHaveBeenCalledWith({
+        arabic: 'كتاب',
+        context: undefined
+      })
+    })
+
+    it('displays generated examples with click instructions', async () => {
+      const mockResponse: ExampleGenerationResponse = {
+        examples: [
+          {
+            arabic: 'هذا كتاب مفيد',
+            english: 'This is a useful book'
+          },
+          {
+            arabic: 'أقرأ الكتاب',
+            english: 'I read the book'
+          }
+        ]
+      }
+      const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
+      mockedGenerateExamples.mockResolvedValue(mockResponse)
+
+      renderWithStore(WordForm, {
+        props: { ...defaultProps, word: mockWord },
+      })
+
+      const generateButton = screen.getByText('Generate Examples')
+      await generateButton.click()
+
+      // Wait for examples to be displayed
+      await vi.waitFor(() => {
+        expect(screen.getByText('Generated Examples:')).toBeInTheDocument()
+        expect(screen.getByText('هذا كتاب مفيد')).toBeInTheDocument()
+        expect(screen.getByText('This is a useful book')).toBeInTheDocument()
+        expect(screen.getByText('أقرأ الكتاب')).toBeInTheDocument()
+        expect(screen.getByText('I read the book')).toBeInTheDocument()
+        expect(screen.getByText('Click on an example to add it to the example field')).toBeInTheDocument()
+      })
+    })
+
+    it('handles example generation errors gracefully', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
+      mockedGenerateExamples.mockRejectedValue(new Error('API Error'))
+
+      renderWithStore(WordForm, {
+        props: { ...defaultProps, word: mockWord },
+      })
+
+      const generateButton = screen.getByText('Generate Examples')
+      await generateButton.click()
+
+      expect(consoleSpy).toHaveBeenCalledWith('Failed to generate examples:', expect.any(Error))
+      
+      consoleSpy.mockRestore()
+    })
   })
 })

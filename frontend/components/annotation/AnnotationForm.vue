@@ -27,9 +27,22 @@
 
       <!-- Content -->
       <div>
-        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
-          Content <span class="text-red-500">*</span>
-        </label>
+        <div class="flex justify-between items-center mb-1">
+          <label for="content" class="block text-sm font-medium text-gray-700">
+            Content <span class="text-red-500">*</span>
+          </label>
+          <BaseButton
+            v-if="form.anchorText"
+            type="button"
+            variant="outline"
+            size="sm"
+            :loading="loadingExamples"
+            @click="generateExamples"
+          >
+            <BaseIcon name="lightbulb" class="w-4 h-4 mr-1" />
+            Generate Examples
+          </BaseButton>
+        </div>
         <textarea
           id="content"
           v-model="form.content"
@@ -37,6 +50,23 @@
           required
           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 resize-y"
         ></textarea>
+        <div v-if="generatedExamples.length > 0" class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <h4 class="text-sm font-medium text-blue-900 mb-2">Generated Examples:</h4>
+          <div class="space-y-2">
+            <div
+              v-for="(example, index) in generatedExamples"
+              :key="index"
+              class="p-2 bg-white rounded border cursor-pointer hover:bg-blue-50 transition-colors"
+              @click="addExampleToContent(example)"
+            >
+              <div class="text-sm">
+                <div class="font-medium text-blue-900 rtl mb-1">{{ example.arabic }}</div>
+                <div class="text-gray-600">{{ example.english }}</div>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">Click on an example to add it to the content field</p>
+        </div>
       </div>
 
       <!-- Type -->
@@ -128,9 +158,10 @@
 
 <script setup lang="ts">
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import type { Annotation, AnnotationType, MasteryLevel } from '@/types'
+import type { Annotation, AnnotationType, MasteryLevel, ExampleDTO } from '@/types'
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
 import { computed, ref, watch } from 'vue'
+import { exampleService } from '~/composables/exampleService'
 import BaseButton from '../common/BaseButton.vue'
 import BaseModal from '../common/BaseModal.vue'
 
@@ -175,6 +206,10 @@ const form = ref({
   needsReview: false,
   color: '#32a7cf',
 })
+
+// Example generation state
+const loadingExamples = ref(false)
+const generatedExamples = ref<ExampleDTO[]>([])
 
 // Computed properties
 const isEditing = computed(() => !!props.annotation)
@@ -267,4 +302,44 @@ const handleDelete = () => {
     }
   }
 }
+
+// Example generation methods
+const generateExamples = async () => {
+  if (!form.value.anchorText?.trim()) return
+  
+  loadingExamples.value = true
+  try {
+    const response = await exampleService.generateExamples({
+      arabic: form.value.anchorText.trim(),
+      context: form.value.type === AnnotationTypeEnum.VOCABULARY ? 'vocabulary' : undefined
+    })
+    generatedExamples.value = response.examples
+  } catch (error) {
+    console.error('Failed to generate examples:', error)
+    // TODO: Show user-friendly error message
+  } finally {
+    loadingExamples.value = false
+  }
+}
+
+const addExampleToContent = (example: ExampleDTO) => {
+  const exampleText = `Arabic: ${example.arabic}\nEnglish: ${example.english}\n\n`
+  
+  if (form.value.content) {
+    form.value.content += '\n\n' + exampleText
+  } else {
+    form.value.content = exampleText
+  }
+}
+
+// Clear examples when modal closes or anchor text changes
+watch(() => props.open, (isOpen) => {
+  if (!isOpen) {
+    generatedExamples.value = []
+  }
+})
+
+watch(() => form.value.anchorText, () => {
+  generatedExamples.value = []
+})
 </script>

@@ -32,3 +32,17 @@ export interface TransliterationResponse {
   originalText: string
   transliteratedText: string
 }
+
+export interface ExampleGenerationRequest {
+  arabic: string
+  context?: string
+}
+
+export interface ExampleDTO {
+  arabic: string
+  english: string
+}
+
+export interface ExampleGenerationResponse {
+  examples: ExampleDTO[]
+}

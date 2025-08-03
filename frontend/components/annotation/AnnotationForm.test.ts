@@ -1,8 +1,9 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
-import type { Annotation } from '~/types'
-import { AnnotationType, Dialect, Difficulty, MasteryLevel } from '~/types'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
+import type { Annotation, ExampleGenerationResponse } from '~/types'
+import { AnnotationType, MasteryLevel } from '~/types'
 import { AnnotationForm } from '#components'
+import { exampleService } from '~/composables/exampleService'
 
 // Mock child components
 vi.mock('../common/BaseModal.vue', () => ({
@@ -17,8 +18,22 @@ vi.mock('../common/BaseButton.vue', () => ({
   default: {
     template:
       '<button data-testid="base-button" :type="type" @click="$emit(\'click\')"><slot /></button>',
-    props: ['type', 'variant', 'loading'],
+    props: ['type', 'variant', 'loading', 'size'],
     emits: ['click'],
+  },
+}))
+
+vi.mock('../common/BaseIcon.vue', () => ({
+  default: {
+    template: '<span data-testid="base-icon" :class="name"></span>',
+    props: ['name'],
+  },
+}))
+
+// Mock the example service
+vi.mock('~/composables/exampleService', () => ({
+  exampleService: {
+    generateExamples: vi.fn(),
   },
 }))
 
@@ -33,6 +48,10 @@ describe('AnnotationForm', () => {
     masteryLevel: MasteryLevel.MASTERED,
     createdAt: '2024-01-01T00:00:00Z',
   }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
 
   it('renders correctly when closed', () => {
     const wrapper = mount(AnnotationForm, {
@@ -302,5 +321,211 @@ describe('AnnotationForm', () => {
 
     expect(typeOptions.length).toBe(Object.values(AnnotationType).length)
     expect(masteryOptions.length).toBe(Object.values(MasteryLevel).length)
+  })
+
+  describe('Example Generation', () => {
+    it('shows generate examples button when anchor text is present', async () => {
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+          selectedText: 'كتاب',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const generateButton = wrapper
+        .findAll('[data-testid="base-button"]')
+        .find(button => button.text().includes('Generate Examples'))
+      
+      expect(generateButton).toBeDefined()
+    })
+
+    it('hides generate examples button when anchor text is empty', () => {
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+        },
+      })
+
+      const generateButton = wrapper
+        .findAll('[data-testid="base-button"]')
+        .find(button => button.text().includes('Generate Examples'))
+      
+      expect(generateButton).toBeUndefined()
+    })
+
+    it('calls example service when generate button is clicked', async () => {
+      const mockResponse: ExampleGenerationResponse = {
+        examples: [
+          {
+            arabic: 'هذا كتاب مفيد',
+            english: 'This is a useful book'
+          }
+        ]
+      }
+      vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
+
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+          selectedText: 'كتاب',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      const generateButton = wrapper
+        .findAll('[data-testid="base-button"]')
+        .find(button => button.text().includes('Generate Examples'))
+      
+      await generateButton!.trigger('click')
+
+      expect(vi.mocked(exampleService.generateExamples)).toHaveBeenCalledWith({
+        arabic: 'كتاب',
+        context: 'vocabulary'
+      })
+    })
+
+    it('displays generated examples', async () => {
+      const mockResponse: ExampleGenerationResponse = {
+        examples: [
+          {
+            arabic: 'هذا كتاب مفيد',
+            english: 'This is a useful book'
+          },
+          {
+            arabic: 'أقرأ الكتاب',
+            english: 'I read the book'
+          }
+        ]
+      }
+      vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
+
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+          selectedText: 'كتاب',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      // Generate examples
+      // @ts-ignore
+      await wrapper.vm.generateExamples()
+      await wrapper.vm.$nextTick()
+
+      const exampleElements = wrapper.findAll('.p-2.bg-white.rounded.border')
+      expect(exampleElements).toHaveLength(2)
+      
+      expect(wrapper.text()).toContain('هذا كتاب مفيد')
+      expect(wrapper.text()).toContain('This is a useful book')
+      expect(wrapper.text()).toContain('أقرأ الكتاب')
+      expect(wrapper.text()).toContain('I read the book')
+    })
+
+    it('adds example to content when clicked', async () => {
+      const mockResponse: ExampleGenerationResponse = {
+        examples: [
+          {
+            arabic: 'هذا كتاب مفيد',
+            english: 'This is a useful book'
+          }
+        ]
+      }
+      vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
+
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+          selectedText: 'كتاب',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      // Generate examples
+      // @ts-ignore
+      await wrapper.vm.generateExamples()
+      await wrapper.vm.$nextTick()
+
+      // Click on first example
+      const firstExample = wrapper.find('.p-2.bg-white.rounded.border')
+      await firstExample.trigger('click')
+
+      const contentTextarea = wrapper.find('#content').element as HTMLTextAreaElement
+      expect(contentTextarea.value).toContain('Arabic: هذا كتاب مفيد')
+      expect(contentTextarea.value).toContain('English: This is a useful book')
+    })
+
+    it('clears examples when anchor text changes', async () => {
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+          selectedText: 'كتاب',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      // Set some generated examples
+      // @ts-ignore
+      wrapper.vm.generatedExamples = [
+        { arabic: 'test', english: 'test' }
+      ]
+      await wrapper.vm.$nextTick()
+
+      // Change anchor text
+      await wrapper.find('#anchorText').setValue('جديد')
+
+      // @ts-ignore
+      expect(wrapper.vm.generatedExamples).toHaveLength(0)
+    })
+
+    it('clears examples when modal closes', async () => {
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+          selectedText: 'كتاب',
+        },
+      })
+
+      // Set some generated examples
+      // @ts-ignore
+      wrapper.vm.generatedExamples = [
+        { arabic: 'test', english: 'test' }
+      ]
+      await wrapper.vm.$nextTick()
+
+      // Close modal
+      await wrapper.setProps({ open: false })
+
+      // @ts-ignore
+      expect(wrapper.vm.generatedExamples).toHaveLength(0)
+    })
+
+    it('handles example generation errors', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.mocked(exampleService.generateExamples).mockRejectedValue(new Error('API Error'))
+
+      const wrapper = mount(AnnotationForm, {
+        props: {
+          open: true,
+          selectedText: 'كتاب',
+        },
+      })
+
+      await wrapper.vm.$nextTick()
+
+      // Generate examples
+      // @ts-ignore
+      await wrapper.vm.generateExamples()
+      await wrapper.vm.$nextTick()
+
+      expect(consoleSpy).toHaveBeenCalledWith('Failed to generate examples:', expect.any(Error))
+      
+      consoleSpy.mockRestore()
+    })
   })
 })

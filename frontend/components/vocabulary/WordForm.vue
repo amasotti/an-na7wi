@@ -36,12 +36,42 @@
 
         <!-- Example -->
         <div class="col-span-2">
-          <label class="form-label">Example Sentence</label>
+          <div class="flex justify-between items-center mb-1">
+            <label class="form-label">Example Sentence</label>
+            <BaseButton
+              v-if="form.arabic"
+              type="button"
+              variant="outline"
+              size="sm"
+              :loading="loadingExamples"
+              @click="generateExamples"
+            >
+              <BaseIcon name="lightbulb" class="w-4 h-4 mr-1" />
+              Generate Examples
+            </BaseButton>
+          </div>
           <textarea 
             v-model="form.example" 
             rows="2"
             class="form-textarea rtl"
           ></textarea>
+          <div v-if="generatedExamples.length > 0" class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+            <h4 class="text-sm font-medium text-blue-900 mb-2">Generated Examples:</h4>
+            <div class="space-y-2">
+              <div
+                v-for="(example, index) in generatedExamples"
+                :key="index"
+                class="p-2 bg-white rounded border cursor-pointer hover:bg-blue-50 transition-colors"
+                @click="addExampleToField(example)"
+              >
+                <div class="text-sm">
+                  <div class="font-medium text-blue-900 rtl mb-1">{{ example.arabic }}</div>
+                  <div class="text-gray-600">{{ example.english }}</div>
+                </div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Click on an example to add it to the example field</p>
+          </div>
         </div>
 
         <!-- Root -->
@@ -180,12 +210,14 @@
 </template>
 
 <script setup lang="ts">
-import type { SelectOption, Word } from '@/types'
+import type { SelectOption, Word, ExampleDTO } from '@/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { computed, ref, watch } from 'vue'
 import { rootService } from '~/composables/rootService'
 import { wordService } from '~/composables/wordService'
+import { exampleService } from '~/composables/exampleService'
 import BaseButton from '../common/BaseButton.vue'
+import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
 import BaseModal from '../common/BaseModal.vue'
 import BaseSelect from '../common/BaseSelect.vue'
@@ -217,6 +249,10 @@ const isEditing = computed(() => !!props.word)
 const rootValidationError = ref<string>('')
 const relatedWords = ref<Partial<Word>[]>([])
 const loadingRelatedWords = ref(false)
+
+// Example generation state
+const loadingExamples = ref(false)
+const generatedExamples = ref<ExampleDTO[]>([])
 
 const form = ref({
   arabic: '',
@@ -363,9 +399,44 @@ watch(
   isOpen => {
     if (isOpen) {
       rootValidationError.value = ''
+      generatedExamples.value = []
     }
   }
 )
+
+// Example generation methods
+const generateExamples = async () => {
+  if (!form.value.arabic?.trim()) return
+  
+  loadingExamples.value = true
+  try {
+    const response = await exampleService.generateExamples({
+      arabic: form.value.arabic.trim(),
+      context: form.value.partOfSpeech !== PartOfSpeech.UNKNOWN ? form.value.partOfSpeech : undefined
+    })
+    generatedExamples.value = response.examples
+  } catch (error) {
+    console.error('Failed to generate examples:', error)
+    // TODO: Show user-friendly error message
+  } finally {
+    loadingExamples.value = false
+  }
+}
+
+const addExampleToField = (example: ExampleDTO) => {
+  const exampleText = `${example.arabic} (${example.english})`
+  
+  if (form.value.example) {
+    form.value.example += '\n' + exampleText
+  } else {
+    form.value.example = exampleText
+  }
+}
+
+// Clear examples when arabic word changes
+watch(() => form.value.arabic, () => {
+  generatedExamples.value = []
+})
 </script>
 
 <style scoped>
