@@ -87,4 +87,14 @@ class ArabicRootRepository : PanacheRepository<ArabicRoot> {
     fun existsByNormalizedForm(normalizedForm: String): Boolean {
         return count("normalizedForm", normalizedForm) > 0
     }
+    
+    /**
+     * Get word count for a specific root
+     */
+    fun getWordCountForRoot(rootId: java.util.UUID): Int {
+        return getEntityManager()
+            .createQuery("SELECT COUNT(w) FROM Word w WHERE w.arabicRoot.id = :rootId", Long::class.java)
+            .setParameter("rootId", rootId)
+            .singleResult.toInt()
+    }
 }

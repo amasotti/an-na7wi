@@ -28,7 +28,7 @@ class RootService {
     internal lateinit var rootNormalizationService: RootNormalizationService
 
     @Inject
-    private lateinit var rootRepository: ArabicRootRepository
+    internal lateinit var rootRepository: ArabicRootRepository
     
     @Inject
     private lateinit var normalizationService: RootNormalizationService
@@ -46,7 +46,10 @@ class RootService {
         val pagination = Page.of(page, size)
         
         return rootRepository.findAllPaginated(pagination, sort)
-            .map { RootResponseDTO.fromEntity(it) }
+            .map { root ->
+                val wordCount = rootRepository.getWordCountForRoot(root.id!!)
+                RootResponseDTO.fromEntity(root, wordCount)
+            }
     }
     
     /**
@@ -90,7 +93,10 @@ class RootService {
         
         // Combine and deduplicate results
         return (displayResults + normalizedResults).distinctBy { it.id }
-            .map { RootResponseDTO.fromEntity(it) }
+            .map { root ->
+                val wordCount = rootRepository.getWordCountForRoot(root.id!!)
+                RootResponseDTO.fromEntity(root, wordCount)
+            }
     }
     
     /**
@@ -104,7 +110,10 @@ class RootService {
         val pagination = Page.of(page, size)
         
         return rootRepository.findByLetterCount(letterCount, pagination, sort)
-            .map { RootResponseDTO.fromEntity(it) }
+            .map { root ->
+                val wordCount = rootRepository.getWordCountForRoot(root.id!!)
+                RootResponseDTO.fromEntity(root, wordCount)
+            }
     }
     
     /**
@@ -206,7 +215,7 @@ class RootService {
     }
 
     @Transactional
-    fun updateRoot(id: UUID, updateDto: RootRequestDTO): ArabicRoot {
+    fun updateRoot(id: UUID, updateDto: RootRequestDTO): RootResponseDTO {
         logger.info("Updating root with ID: $id, input: '${updateDto.input}'")
 
         val root = findById(id)
@@ -232,6 +241,8 @@ class RootService {
             logger.info("Updated root: ${root.displayForm} with ID: ${root.id}")
         }
 
-        return root
+        // Get word count without triggering lazy initialization
+        val wordCount = rootRepository.getWordCountForRoot(id)
+        return RootResponseDTO.fromEntity(root, wordCount)
     }
 }

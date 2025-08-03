@@ -20,7 +20,7 @@ data class RootResponseDTO(
     val updatedAt: LocalDateTime
 ) {
     companion object {
-        fun fromEntity(root: ArabicRoot): RootResponseDTO {
+        fun fromEntity(root: ArabicRoot, wordCount: Int? = null): RootResponseDTO {
             return RootResponseDTO(
                 id = root.id!!,
                 letters = root.letters,
@@ -28,7 +28,7 @@ data class RootResponseDTO(
                 displayForm = root.displayForm,
                 letterCount = root.letterCount,
                 meaning = root.meaning,
-                wordCount = root.words.size,
+                wordCount = wordCount ?: try { root.words.size } catch (e: Exception) { 0 },
                 createdAt = root.createdAt,
                 updatedAt = root.updatedAt
             )

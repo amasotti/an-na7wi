@@ -71,7 +71,8 @@ class RootController {
     fun getRootById(@PathParam("id") id: UUID): Response {
         logger.info("GET /api/v1/roots/$id")
         val root = rootService.findById(id)
-        val rootDTO = RootResponseDTO.fromEntity(root)
+        val wordCount = rootService.rootRepository.getWordCountForRoot(id)
+        val rootDTO = RootResponseDTO.fromEntity(root, wordCount)
         return Response.ok(rootDTO).build()
     }
     
@@ -179,7 +180,8 @@ class RootController {
         logger.info("POST /api/v1/roots - input: '${request.input}'")
         try {
             val root = rootService.createRoot(request)
-            return Response.status(Response.Status.CREATED).entity(RootResponseDTO.fromEntity(root)).build()
+            val wordCount = rootService.rootRepository.getWordCountForRoot(root.id!!)
+            return Response.status(Response.Status.CREATED).entity(RootResponseDTO.fromEntity(root, wordCount)).build()
         }  catch (e: AppException) {
             logger.debug("Error creating root: ${e.message}")
             return Response.status(Response.Status.BAD_REQUEST).entity(e.error).build()
@@ -208,7 +210,7 @@ class RootController {
     @Operation(summary = "Update root", description = "Updates an existing Arabic root")
     fun updateRoot(@PathParam("id") id: UUID, request: RootRequestDTO): Response {
         logger.info("PUT /api/v1/roots/$id - input: '${request.input}'")
-        val updatedRoot = rootService.updateRoot(id, request)
-        return Response.ok(RootResponseDTO.fromEntity(updatedRoot)).build()
+        val updatedRootDTO = rootService.updateRoot(id, request)
+        return Response.ok(updatedRootDTO).build()
     }
 }
