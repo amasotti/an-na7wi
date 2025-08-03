@@ -2,13 +2,11 @@ package com.tonihacks.annahwi.exception
 
 import com.tonihacks.annahwi.dto.response.ErrorResponseDTO
 import com.tonihacks.annahwi.dto.response.ValidationErrorResponseDTO
-import io.quarkus.test.junit.QuarkusTest
 import jakarta.ws.rs.core.Response
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 
-@QuarkusTest
 class GlobalExceptionHandlerTest {
 
     private lateinit var handler: GlobalExceptionHandler
