@@ -74,7 +74,7 @@ describe('RootCard', () => {
 
   it('shows delete button when showDeleteButton is true and wordCount is 0', () => {
     renderWithStore(RootCard, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: true,
       },
@@ -86,7 +86,7 @@ describe('RootCard', () => {
 
   it('hides delete button when wordCount > 0', () => {
     renderWithStore(RootCard, {
-      props: { 
+      props: {
         root: mockRoot,
         showDeleteButton: true,
       },
@@ -97,7 +97,7 @@ describe('RootCard', () => {
 
   it('hides delete button when showDeleteButton is false', () => {
     renderWithStore(RootCard, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: false,
       },
@@ -108,7 +108,7 @@ describe('RootCard', () => {
 
   it('emits delete event when delete button is clicked', async () => {
     const { emitted } = renderWithStore(RootCard, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: true,
       },
@@ -123,7 +123,7 @@ describe('RootCard', () => {
 
   it('prevents event propagation when delete button is clicked', async () => {
     const { emitted } = renderWithStore(RootCard, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: true,
       },
@@ -138,7 +138,7 @@ describe('RootCard', () => {
 
   it('applies mobile styling when mobile prop is true', () => {
     renderWithStore(RootCard, {
-      props: { 
+      props: {
         root: mockRoot,
         mobile: true,
       },
@@ -150,7 +150,7 @@ describe('RootCard', () => {
 
   it('applies desktop styling when mobile prop is false', () => {
     renderWithStore(RootCard, {
-      props: { 
+      props: {
         root: mockRoot,
         mobile: false,
       },

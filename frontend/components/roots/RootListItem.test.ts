@@ -2,7 +2,7 @@ import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderWithStore } from '~/test/test-utils'
 import type { Root } from '~/types'
-import {RootsRootListItem as RootListItem} from '#components'
+import { RootsRootListItem as RootListItem } from '#components'
 
 const mockRoot: Root = {
   id: '1',
@@ -74,7 +74,7 @@ describe('RootListItem', () => {
 
   it('shows delete button when showDeleteButton is true and wordCount is 0', () => {
     renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: true,
       },
@@ -86,7 +86,7 @@ describe('RootListItem', () => {
 
   it('hides delete button when wordCount > 0', () => {
     renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: mockRoot,
         showDeleteButton: true,
       },
@@ -97,7 +97,7 @@ describe('RootListItem', () => {
 
   it('hides delete button when showDeleteButton is false', () => {
     renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: false,
       },
@@ -108,7 +108,7 @@ describe('RootListItem', () => {
 
   it('emits delete event when delete button is clicked', async () => {
     const { emitted } = renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: true,
       },
@@ -123,7 +123,7 @@ describe('RootListItem', () => {
 
   it('prevents event propagation when delete button is clicked', async () => {
     const { emitted } = renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: mockEmptyRoot,
         showDeleteButton: true,
       },

@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderWithStore } from '~/test/test-utils'
 import type { Root, RootNormalization } from '~/types'
-import {RootsAddRootModal as AddRootModal} from '#components'
+import { RootsAddRootModal as AddRootModal } from '#components'
 
 // Mock rootService
 vi.mock('~/composables/rootService', () => ({
@@ -89,7 +89,7 @@ describe('AddRootModal', () => {
 
   it('calls normalizeRoot when user types in root input', async () => {
     mockNormalizeRoot.mockResolvedValue(validNormalization)
-    
+
     renderWithStore(AddRootModal, {
       props: { show: true },
     })
@@ -104,7 +104,7 @@ describe('AddRootModal', () => {
 
   it('shows preview when valid root is entered', async () => {
     mockNormalizeRoot.mockResolvedValue(validNormalization)
-    
+
     renderWithStore(AddRootModal, {
       props: { show: true },
     })
@@ -121,7 +121,7 @@ describe('AddRootModal', () => {
 
   it('shows error message for invalid root', async () => {
     mockNormalizeRoot.mockResolvedValue(invalidNormalization)
-    
+
     renderWithStore(AddRootModal, {
       props: { show: true },
     })
@@ -130,7 +130,9 @@ describe('AddRootModal', () => {
     await fireEvent.update(rootInput, 'invalid')
 
     await waitFor(() => {
-      expect(screen.getByText('Invalid root format. Please enter 2-5 Arabic letters.')).toBeInTheDocument()
+      expect(
+        screen.getByText('Invalid root format. Please enter 2-5 Arabic letters.')
+      ).toBeInTheDocument()
     })
   })
 
@@ -145,7 +147,7 @@ describe('AddRootModal', () => {
 
   it('enables submit button when form is valid', async () => {
     mockNormalizeRoot.mockResolvedValue(validNormalization)
-    
+
     renderWithStore(AddRootModal, {
       props: { show: true },
     })
@@ -161,7 +163,7 @@ describe('AddRootModal', () => {
 
   it('can interact with form elements', async () => {
     mockNormalizeRoot.mockResolvedValue(validNormalization)
-    
+
     renderWithStore(AddRootModal, {
       props: { show: true },
     })
@@ -199,7 +201,7 @@ describe('AddRootModal', () => {
     renderWithStore(AddRootModal, {
       props: { show: true },
     })
-    
+
     const rootInput = screen.getByLabelText('Root Letters')
     await fireEvent.update(rootInput, 'كتب')
 
@@ -224,7 +226,7 @@ describe('AddRootModal', () => {
 
   it('handles normalization service error', async () => {
     mockNormalizeRoot.mockRejectedValue(new Error('Service error'))
-    
+
     renderWithStore(AddRootModal, {
       props: { show: true },
     })

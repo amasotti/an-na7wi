@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { exampleService } from '~/composables/exampleService'
 import type { Annotation, ExampleGenerationResponse } from '~/types'
 import { AnnotationType, MasteryLevel } from '~/types'
 import { AnnotationForm } from '#components'
-import { exampleService } from '~/composables/exampleService'
 
 // Mock child components
 vi.mock('../common/BaseModal.vue', () => ({
@@ -122,8 +122,8 @@ describe('AnnotationForm', () => {
     expect(contentInput.value).toBe(mockAnnotation.content)
     expect(typeSelect.value).toBe(mockAnnotation.type)
     expect(masteryLevelSelect.value).toBe(mockAnnotation.masteryLevel)
-    expect(needsReviewCheckbox.value).toBe("on")
-    expect(colorInput.value).toBe("")
+    expect(needsReviewCheckbox.value).toBe('on')
+    expect(colorInput.value).toBe('')
   })
 
   it('uses selectedText for new annotation', async () => {
@@ -337,7 +337,7 @@ describe('AnnotationForm', () => {
       const generateButton = wrapper
         .findAll('[data-testid="base-button"]')
         .find(button => button.text().includes('Generate Examples'))
-      
+
       expect(generateButton).toBeDefined()
     })
 
@@ -351,7 +351,7 @@ describe('AnnotationForm', () => {
       const generateButton = wrapper
         .findAll('[data-testid="base-button"]')
         .find(button => button.text().includes('Generate Examples'))
-      
+
       expect(generateButton).toBeUndefined()
     })
 
@@ -360,9 +360,9 @@ describe('AnnotationForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book'
-          }
-        ]
+            english: 'This is a useful book',
+          },
+        ],
       }
       vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
 
@@ -378,12 +378,12 @@ describe('AnnotationForm', () => {
       const generateButton = wrapper
         .findAll('[data-testid="base-button"]')
         .find(button => button.text().includes('Generate Examples'))
-      
+
       await generateButton!.trigger('click')
 
       expect(vi.mocked(exampleService.generateExamples)).toHaveBeenCalledWith({
         arabic: 'كتاب',
-        context: 'vocabulary'
+        context: 'vocabulary',
       })
     })
 
@@ -392,13 +392,13 @@ describe('AnnotationForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book'
+            english: 'This is a useful book',
           },
           {
             arabic: 'أقرأ الكتاب',
-            english: 'I read the book'
-          }
-        ]
+            english: 'I read the book',
+          },
+        ],
       }
       vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
 
@@ -418,7 +418,7 @@ describe('AnnotationForm', () => {
 
       const exampleElements = wrapper.findAll('.p-2.bg-white.rounded.border')
       expect(exampleElements).toHaveLength(2)
-      
+
       expect(wrapper.text()).toContain('هذا كتاب مفيد')
       expect(wrapper.text()).toContain('This is a useful book')
       expect(wrapper.text()).toContain('أقرأ الكتاب')
@@ -430,9 +430,9 @@ describe('AnnotationForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book'
-          }
-        ]
+            english: 'This is a useful book',
+          },
+        ],
       }
       vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
 
@@ -471,9 +471,7 @@ describe('AnnotationForm', () => {
 
       // Set some generated examples
       // @ts-ignore
-      wrapper.vm.generatedExamples = [
-        { arabic: 'test', english: 'test' }
-      ]
+      wrapper.vm.generatedExamples = [{ arabic: 'test', english: 'test' }]
       await wrapper.vm.$nextTick()
 
       // Change anchor text
@@ -493,9 +491,7 @@ describe('AnnotationForm', () => {
 
       // Set some generated examples
       // @ts-ignore
-      wrapper.vm.generatedExamples = [
-        { arabic: 'test', english: 'test' }
-      ]
+      wrapper.vm.generatedExamples = [{ arabic: 'test', english: 'test' }]
       await wrapper.vm.$nextTick()
 
       // Close modal
@@ -524,7 +520,7 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       expect(consoleSpy).toHaveBeenCalledWith('Failed to generate examples:', expect.any(Error))
-      
+
       consoleSpy.mockRestore()
     })
   })

@@ -158,7 +158,7 @@
 
 <script setup lang="ts">
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import type { Annotation, AnnotationType, MasteryLevel, ExampleDTO } from '@/types'
+import type { Annotation, AnnotationType, ExampleDTO, MasteryLevel } from '@/types'
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
 import { computed, ref, watch } from 'vue'
 import { exampleService } from '~/composables/exampleService'
@@ -306,12 +306,12 @@ const handleDelete = () => {
 // Example generation methods
 const generateExamples = async () => {
   if (!form.value.anchorText?.trim()) return
-  
+
   loadingExamples.value = true
   try {
     const response = await exampleService.generateExamples({
       arabic: form.value.anchorText.trim(),
-      context: form.value.type === AnnotationTypeEnum.VOCABULARY ? 'vocabulary' : undefined
+      context: form.value.type === AnnotationTypeEnum.VOCABULARY ? 'vocabulary' : undefined,
     })
     generatedExamples.value = response.examples
   } catch (error) {
@@ -324,22 +324,28 @@ const generateExamples = async () => {
 
 const addExampleToContent = (example: ExampleDTO) => {
   const exampleText = `Arabic: ${example.arabic}\nEnglish: ${example.english}\n\n`
-  
+
   if (form.value.content) {
-    form.value.content += '\n\n' + exampleText
+    form.value.content += `\n\n${exampleText}`
   } else {
     form.value.content = exampleText
   }
 }
 
 // Clear examples when modal closes or anchor text changes
-watch(() => props.open, (isOpen) => {
-  if (!isOpen) {
+watch(
+  () => props.open,
+  isOpen => {
+    if (!isOpen) {
+      generatedExamples.value = []
+    }
+  }
+)
+
+watch(
+  () => form.value.anchorText,
+  () => {
     generatedExamples.value = []
   }
-})
-
-watch(() => form.value.anchorText, () => {
-  generatedExamples.value = []
-})
+)
 </script>

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { exampleService } from './exampleService'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ExampleGenerationRequest, ExampleGenerationResponse } from '~/types'
+import { exampleService } from './exampleService'
 
 // Mock the useApiClient composable
 const mockPost = vi.fn()
@@ -21,19 +21,19 @@ describe('exampleService', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book'
+            english: 'This is a useful book',
           },
           {
             arabic: 'أقرأ الكتاب كل يوم',
-            english: 'I read the book every day'
-          }
-        ]
+            english: 'I read the book every day',
+          },
+        ],
       }
 
       mockPost.mockResolvedValue({ data: mockResponse })
 
       const request: ExampleGenerationRequest = {
-        arabic: 'كتاب'
+        arabic: 'كتاب',
       }
 
       const result = await exampleService.generateExamples(request)
@@ -50,16 +50,16 @@ describe('exampleService', () => {
         examples: [
           {
             arabic: 'يدرس الطالب في المدرسة',
-            english: 'The student studies at school'
-          }
-        ]
+            english: 'The student studies at school',
+          },
+        ],
       }
 
       mockPost.mockResolvedValue({ data: mockResponse })
 
       const request: ExampleGenerationRequest = {
         arabic: 'يدرس',
-        context: 'education'
+        context: 'education',
       }
 
       const result = await exampleService.generateExamples(request)
@@ -74,7 +74,7 @@ describe('exampleService', () => {
       mockPost.mockRejectedValue(new Error(errorMessage))
 
       const request: ExampleGenerationRequest = {
-        arabic: 'كتاب'
+        arabic: 'كتاب',
       }
 
       await expect(exampleService.generateExamples(request)).rejects.toThrow(errorMessage)
@@ -83,13 +83,13 @@ describe('exampleService', () => {
 
     it('should handle empty examples response', async () => {
       const mockResponse: ExampleGenerationResponse = {
-        examples: []
+        examples: [],
       }
 
       mockPost.mockResolvedValue({ data: mockResponse })
 
       const request: ExampleGenerationRequest = {
-        arabic: 'كتاب'
+        arabic: 'كتاب',
       }
 
       const result = await exampleService.generateExamples(request)

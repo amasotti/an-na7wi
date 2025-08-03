@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { exampleService } from '~/composables/exampleService'
 import { renderWithStore } from '~/test/test-utils'
-import type { SelectOption, Word, ExampleGenerationResponse } from '~/types'
+import type { ExampleGenerationResponse, SelectOption, Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 import { VocabularyWordForm as WordForm } from '#components'
-import { exampleService } from '~/composables/exampleService'
 
 // Mock the services
 vi.mock('~/composables/rootService', () => ({
@@ -35,7 +35,7 @@ vi.mock('~/composables/wordService', () => ({
 // Mock the example service
 vi.mock('~/composables/exampleService', () => ({
   exampleService: {
-    generateExamples: vi.fn()
+    generateExamples: vi.fn(),
   },
 }))
 
@@ -157,9 +157,9 @@ describe('WordForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book'
-          }
-        ]
+            english: 'This is a useful book',
+          },
+        ],
       }
       const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
       mockedGenerateExamples.mockResolvedValue(mockResponse)
@@ -173,7 +173,7 @@ describe('WordForm', () => {
 
       expect(mockedGenerateExamples).toHaveBeenCalledWith({
         arabic: 'كتاب',
-        context: PartOfSpeech.NOUN
+        context: PartOfSpeech.NOUN,
       })
     })
 
@@ -183,9 +183,9 @@ describe('WordForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب',
-            english: 'This is a book'
-          }
-        ]
+            english: 'This is a book',
+          },
+        ],
       }
       const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
       mockedGenerateExamples.mockResolvedValue(mockResponse)
@@ -199,7 +199,7 @@ describe('WordForm', () => {
 
       expect(mockedGenerateExamples).toHaveBeenCalledWith({
         arabic: 'كتاب',
-        context: undefined
+        context: undefined,
       })
     })
 
@@ -208,13 +208,13 @@ describe('WordForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book'
+            english: 'This is a useful book',
           },
           {
             arabic: 'أقرأ الكتاب',
-            english: 'I read the book'
-          }
-        ]
+            english: 'I read the book',
+          },
+        ],
       }
       const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
       mockedGenerateExamples.mockResolvedValue(mockResponse)
@@ -233,7 +233,9 @@ describe('WordForm', () => {
         expect(screen.getByText('This is a useful book')).toBeInTheDocument()
         expect(screen.getByText('أقرأ الكتاب')).toBeInTheDocument()
         expect(screen.getByText('I read the book')).toBeInTheDocument()
-        expect(screen.getByText('Click on an example to add it to the example field')).toBeInTheDocument()
+        expect(
+          screen.getByText('Click on an example to add it to the example field')
+        ).toBeInTheDocument()
       })
     })
 
@@ -250,7 +252,7 @@ describe('WordForm', () => {
       await generateButton.click()
 
       expect(consoleSpy).toHaveBeenCalledWith('Failed to generate examples:', expect.any(Error))
-      
+
       consoleSpy.mockRestore()
     })
   })

@@ -198,7 +198,7 @@ describe('AnnotationPanel', () => {
   it('handles unknown annotation types gracefully', () => {
     const annotationWithUnknownType = {
       ...mockAnnotations[0],
-      type: 'UNKNOWN' as any,
+      type: 'UNKNOWN' as unknown as AnnotationType,
     }
 
     const wrapper = mount(AnnotationPanel, {

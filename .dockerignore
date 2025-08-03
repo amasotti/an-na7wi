@@ -1,0 +1,133 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Documentation and project files
+*.md
+README*
+CHANGELOG*
+LICENCE*
+LICENSE*
+TODO*
+docs/
+.vscode/
+.idea/
+*.iml
+
+# CI/CD and development
+.github/
+scripts/
+Makefile
+
+# Environment and configuration
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependencies (will be installed in container)
+node_modules/
+**/node_modules/
+
+# Build outputs and caches
+dist/
+build/
+coverage/
+.cache/
+.nuxt/
+.output/
+.next/
+.tmp/
+temp/
+
+# Testing
+test/
+tests/
+**/*.test.*
+**/*.spec.*
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+__tests__/
+vitest.config.*
+jest.config.*
+
+# Database and backups
+database/
+*.sql
+*.db
+*.sqlite
+*.sqlite3
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# Editor files
+*.swp
+*.swo
+*~
+.vim/
+.emacs.d/
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Package manager locks (keep these for reproducible builds)
+# Note: We keep package-lock.json, yarn.lock, pnpm-lock.yaml for reproducible builds
+
+# Development tools config
+.eslintrc*
+.prettierrc*
+.editorconfig
+tsconfig*.json
+!tsconfig.json
+biome.json
+detekt.yml
+detekt-baseline.xml
+
+# Gradle (backend specific)
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+gradlew
+gradlew.bat
+
+# Backend build artifacts
+backend/build/
+**/build/
+target/
+
+# Frontend specific
+frontend/coverage/
+frontend/.nuxt/
+frontend/.output/
+frontend/dist/
+
+# IDE files
+.vscode/
+.idea/
+*.iws
+*.ipr
+*.iml
+
+# OS and editor
+*.orig
+.tern-port

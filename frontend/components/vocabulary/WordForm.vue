@@ -210,12 +210,12 @@
 </template>
 
 <script setup lang="ts">
-import type { SelectOption, Word, ExampleDTO } from '@/types'
+import type { ExampleDTO, SelectOption, Word } from '@/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { computed, ref, watch } from 'vue'
+import { exampleService } from '~/composables/exampleService'
 import { rootService } from '~/composables/rootService'
 import { wordService } from '~/composables/wordService'
-import { exampleService } from '~/composables/exampleService'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
@@ -340,9 +340,9 @@ const handleSubmit = async () => {
 }
 
 // Handle clicking on related words - emit event to parent
-const handleRelatedWordClick = (word: Partial<Word>) => {
-  emit('related-word-click', word)
-}
+// const handleRelatedWordClick = (word: Partial<Word>) => {
+//   emit('related-word-click', word)
+// }
 
 // Load related words when editing a word with a root
 const loadRelatedWords = async (root: string) => {
@@ -407,12 +407,13 @@ watch(
 // Example generation methods
 const generateExamples = async () => {
   if (!form.value.arabic?.trim()) return
-  
+
   loadingExamples.value = true
   try {
     const response = await exampleService.generateExamples({
       arabic: form.value.arabic.trim(),
-      context: form.value.partOfSpeech !== PartOfSpeech.UNKNOWN ? form.value.partOfSpeech : undefined
+      context:
+        form.value.partOfSpeech !== PartOfSpeech.UNKNOWN ? form.value.partOfSpeech : undefined,
     })
     generatedExamples.value = response.examples
   } catch (error) {
@@ -425,18 +426,21 @@ const generateExamples = async () => {
 
 const addExampleToField = (example: ExampleDTO) => {
   const exampleText = `${example.arabic} (${example.english})`
-  
+
   if (form.value.example) {
-    form.value.example += '\n' + exampleText
+    form.value.example += `\n ${exampleText}`
   } else {
     form.value.example = exampleText
   }
 }
 
 // Clear examples when arabic word changes
-watch(() => form.value.arabic, () => {
-  generatedExamples.value = []
-})
+watch(
+  () => form.value.arabic,
+  () => {
+    generatedExamples.value = []
+  }
+)
 </script>
 
 <style scoped>
