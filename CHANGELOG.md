@@ -2,6 +2,142 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [1.0.0] - 2025-08-03
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/a456955a92caa96de07957abc84e34f7a786a52a..92b13b997ce15aa051c5c7115e42e7e96a603c78)
+### 🚀 Features
+
+
+- *(frontend)* Migrate to Nuxt ([a676a65](https://github.com/amasotti/an-na7wi/commit/a676a65335b0832a2bbb5bbb9a3b8de0df1da14e))
+
+- *(BREAKING!)* Rm old backend and fix subpages ([fdae681](https://github.com/amasotti/an-na7wi/commit/fdae6815c1d893a86ffe86c21f5ed9371b410621))
+
+- Add index pages for texts and words ([98687ec](https://github.com/amasotti/an-na7wi/commit/98687ec28c2241fc3d8ef553aaf125d5a7237bcf))
+
+- Move to frontend dir ([055b945](https://github.com/amasotti/an-na7wi/commit/055b94525ac8f51af32db3e1c49803c5b6cb353f))
+
+- Move to frontend dir ([378e532](https://github.com/amasotti/an-na7wi/commit/378e5320133ca0413caeafda06713c3e112893b6))
+
+- Add possibility to add a word from the text. ([c8df106](https://github.com/amasotti/an-na7wi/commit/c8df1069fac9e7c5dcc44e653c47e25e11d3bad3))
+
+- Base test setup ([93b1891](https://github.com/amasotti/an-na7wi/commit/93b1891fff3f166a0643982b7907e5d51f87b59e))
+
+- Add example generation ([a38ae73](https://github.com/amasotti/an-na7wi/commit/a38ae73cbda5765975487cfb7fe3c8e17fab1f3d))
+
+- Add example generation feature ([b9d88ea](https://github.com/amasotti/an-na7wi/commit/b9d88ea1c51bd4f7b5cf08e076555efff8769f45))
+
+- Add xxl size option to BaseModal and update TextCreateModal ([8c88f3c](https://github.com/amasotti/an-na7wi/commit/8c88f3c02e501d4e7f7f8097fccc5f4d9ba11bd4))
+
+- Add test profile configuration and disable native mode for tests ([dcbb09b](https://github.com/amasotti/an-na7wi/commit/dcbb09b7a3aa020f1c966aba815808ed429be759))
+
+- Enhance error handling by introducing AppErrorResponse for consistent API responses ([fae19ec](https://github.com/amasotti/an-na7wi/commit/fae19ecc4ef0b98fd75c51fa1c1bf2f46870874d))
+
+- Add PostgreSQL test resource to improve test environment setup ([8e56bd1](https://github.com/amasotti/an-na7wi/commit/8e56bd1a3b53a7f15dbf318b131bedee32057e73))
+
+- Add support for Anthropic API key in development and test environments ([525d39c](https://github.com/amasotti/an-na7wi/commit/525d39c89ee2f9d39774ac69e93fcdd570156a51))
+
+### 🐛 Bug Fixes
+
+
+- Configuration for tests QUARKUS ([808c5d0](https://github.com/amasotti/an-na7wi/commit/808c5d0cf61607641488cbddc5991d30bfa09ad6))
+
+- Rename 'valid' to 'isValid' for consistency in RootNormalization and related components ([6f1e73c](https://github.com/amasotti/an-na7wi/commit/6f1e73cdb7061a56a53dd6a10ee04cf1a1908787))
+
+### 🚜 Refactor
+
+
+- Implement GlobalTestProfile for consistent test environment setup and update error handling in controllers ([fa18b4d](https://github.com/amasotti/an-na7wi/commit/fa18b4d4d15d1ac2f96b0994e49f9ea1802e340b))
+
+### 🧪 Testing
+
+
+- Implement simple tests ([2f6f763](https://github.com/amasotti/an-na7wi/commit/2f6f7634fcdce5695029a8da0653a351da0dd903))
+
+- Add tooling for ts errors and testing ([813ef36](https://github.com/amasotti/an-na7wi/commit/813ef365dbe277f73b9588decb5a38da1790080c))
+
+- *(frontend)* Solid test foundation ([d7101db](https://github.com/amasotti/an-na7wi/commit/d7101db579fdc5d7008c19faac15319167f1321f))
+
+- Add more unit tests for the frontend ([f0d0ab6](https://github.com/amasotti/an-na7wi/commit/f0d0ab6b62ef915e08776d9a501f85eba2fc0ea4))
+
+- Add more tests ([31316fc](https://github.com/amasotti/an-na7wi/commit/31316fc518f204fad4040a86ba913ade480cc307))
+
+- Keep increasing coverage ([64b8aa4](https://github.com/amasotti/an-na7wi/commit/64b8aa4415b79df437845069ec9d1e9474ece9e4))
+
+- Keep increasing coverage ([a5dd4a1](https://github.com/amasotti/an-na7wi/commit/a5dd4a1dcc0c86d656cdab47e83ee3d17f7de2cf))
+
+- Keep increasing coverage (Vocabulary components) ([23575e1](https://github.com/amasotti/an-na7wi/commit/23575e1b764fa5d7c2d3354df60d43ac1b9f29d5))
+
+- Keep increasing coverage (Root components) ([d2522d4](https://github.com/amasotti/an-na7wi/commit/d2522d485dbad8037b803841941e3e8b0913c41e))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Lint frontend ([3874e12](https://github.com/amasotti/an-na7wi/commit/3874e125df9c3bbbe6ff410a3611eb7014b52857))
+
+- Fix import for util tests ([dbf1e3d](https://github.com/amasotti/an-na7wi/commit/dbf1e3dd68eaf6aac154928accd85677989fc6cd))
+
+- Improve quarkus setup for non dev environment ([b5dcbe7](https://github.com/amasotti/an-na7wi/commit/b5dcbe71d4a8bb656c94495b270a6c9598a2ecda))
+
+- Remove husky ([3f8fc6d](https://github.com/amasotti/an-na7wi/commit/3f8fc6d049b4fae0cacabf279dcc03f7040a43c1))
+
+- Improve nuxt config ([8a9d230](https://github.com/amasotti/an-na7wi/commit/8a9d230431d6ff307c5f6f393f8c1fdd9379ab36))
+
+- Adjust configuration, add sync to s3 for backups ([9b18ac4](https://github.com/amasotti/an-na7wi/commit/9b18ac4df16f076ef70abebe80060bd2b3e3385b))
+
+- Add api key env var to build vars ([3c7e2e0](https://github.com/amasotti/an-na7wi/commit/3c7e2e04c68a10a84d242b4eabbc8cced9791d3c))
+
+- Add empty line at the end of the file ([65a4885](https://github.com/amasotti/an-na7wi/commit/65a4885c4290bd321dc4f8ae9a03e7000319d9ed))
+
+- Run linting and fix errors ([389826d](https://github.com/amasotti/an-na7wi/commit/389826dc41135515ea757ee8c631435c6e4a84ee))
+
+- Simplify pipeline ([bb5ab42](https://github.com/amasotti/an-na7wi/commit/bb5ab424a267a79cb7c282c79d8fad8c6b2abc6a))
+
+- Simplify setup pipeline ([fe34f4b](https://github.com/amasotti/an-na7wi/commit/fe34f4bce9f6e9840a44f6730dff8987183b8716))
+
+- Remove unused import for Dialect in TextControllerErrorTest ([affd633](https://github.com/amasotti/an-na7wi/commit/affd63335d24dc972e47c3b7d1c46dff670f0e4d))
+
+- Remove unused QuarkusTest import in GlobalExceptionHandlerTest ([cfb1383](https://github.com/amasotti/an-na7wi/commit/cfb1383e3d48b34c5ed40971f7bdc88dfaa5ae94))
+
+- Update CI configuration to use Amazon Corretto JDK 21 and add test results upload step ([a08ea0c](https://github.com/amasotti/an-na7wi/commit/a08ea0c2133908638552d4cae152613ad7fe1526))
+
+- Remove unused test case for invalid JSON in TextControllerErrorTest ([8ee431b](https://github.com/amasotti/an-na7wi/commit/8ee431b02f70f1e05a66b8de2e99b2459888d7d0))
+
+- New line EOF ([5664115](https://github.com/amasotti/an-na7wi/commit/56641151e819d1e090a470e57df71d76a9f7b314))
+
+- Fix env var ([92b13b9](https://github.com/amasotti/an-na7wi/commit/92b13b997ce15aa051c5c7115e42e7e96a603c78))
+
+## [0.5.1] - 2025-08-02
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/4168e8da03ac9f0b2494f160d0bd021a0fd187f9..a456955a92caa96de07957abc84e34f7a786a52a)
+### 🚀 Features
+
+
+- Start adding root handling functionality ([8ec31d7](https://github.com/amasotti/an-na7wi/commit/8ec31d73336962c983b13a42d89a8e1cd78d0370))
+
+- Related words feature ([076fd41](https://github.com/amasotti/an-na7wi/commit/076fd41e033c214095d3d0c87edf694cb5284fbc))
+
+- Root section and study features ([d36abd9](https://github.com/amasotti/an-na7wi/commit/d36abd9f059d8ca812c60b05ff67d576c31a7208))
+
+- Tokenization of texts ([108a1fd](https://github.com/amasotti/an-na7wi/commit/108a1fdd2d84ddfaf11b7fae1ae9e9af87f5f920))
+
+- Icon and link for roots ([383bf88](https://github.com/amasotti/an-na7wi/commit/383bf88612d22af967db02848013f7dcf8d26938))
+
+- Improve handling of roots in the backend and allow creation in the frontend ([11e50b5](https://github.com/amasotti/an-na7wi/commit/11e50b58fe2b5f67e77804eabce83ab568142d96))
+
+### 🐛 Bug Fixes
+
+
+- Circular loop roots ([9beed33](https://github.com/amasotti/an-na7wi/commit/9beed33702034ee3424ae19f932cf28f469b328c))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Improve backup scripts ([b57cd9e](https://github.com/amasotti/an-na7wi/commit/b57cd9e3a019c3edbb99018fc8ede018469d19a8))
+
+- Removed unused import ([7e7ff78](https://github.com/amasotti/an-na7wi/commit/7e7ff789d07011c281843dd64db0958f7819102d))
+
+- Remove unused import ([a456955](https://github.com/amasotti/an-na7wi/commit/a456955a92caa96de07957abc84e34f7a786a52a))
+
 ## [0.5.0] - 2025-08-02
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/eb19f2b327599cd78c4ada4c6ea78b06272288b5..4168e8da03ac9f0b2494f160d0bd021a0fd187f9)
