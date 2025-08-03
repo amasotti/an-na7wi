@@ -1,7 +1,6 @@
 package com.tonihacks.annahwi.controller
 
 import com.tonihacks.annahwi.config.PostgreSQLTestResource
-import com.tonihacks.annahwi.entity.Dialect
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
