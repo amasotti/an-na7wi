@@ -1,7 +1,16 @@
 {
   "files": {
-    "include": ["src/**/*", "*.ts", "*.js", "*.vue"],
-    "ignore": ["node_modules/**", "dist/**", "build/**"]
+    "include": ["**/*.ts", "**/*.js", "**/*.vue"],
+    "ignore": [
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      ".output/**",
+      ".nuxt/**",
+      "coverage/**",
+      "*.min.js",
+      "*.d.ts"
+    ]
   },
   "vcs": {
     "enabled": true,

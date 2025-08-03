@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { useApiClient } from './api'
 
 vi.mock('#app', () => ({
-  useNuxtApp: () => ({ $apiClient: { get: vi.fn(), post: vi.fn() } })
+  useNuxtApp: () => ({ $apiClient: { get: vi.fn(), post: vi.fn() } }),
 }))
 
 describe('useApiClient', () => {
@@ -12,4 +12,3 @@ describe('useApiClient', () => {
     expect(apiClient).toHaveProperty('post')
   })
 })
-
