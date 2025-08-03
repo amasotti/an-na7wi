@@ -218,6 +218,35 @@ export const useRootStore = defineStore('root', () => {
     }
   }
 
+  const updateRoot = async (id: string, input: string, meaning?: string) => {
+    try {
+      setLoading(true)
+      clearError()
+      const updatedRoot = await rootService.updateRoot(id, input, meaning)
+      
+      const index = roots.value.findIndex(root => root.id === id)
+      if (index !== -1) {
+        roots.value[index] = updatedRoot
+      }
+      
+      if (currentRoot.value?.id === id) {
+        currentRoot.value = updatedRoot
+      }
+      
+      if (currentRootWithWords.value?.root.id === id) {
+        currentRootWithWords.value.root = updatedRoot
+      }
+      
+      return updatedRoot
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update root'
+      console.error('Error updating root:', err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const deleteRoot = async (id: string) => {
     try {
       setLoading(true)
@@ -256,6 +285,7 @@ export const useRootStore = defineStore('root', () => {
     resetFilters,
     setPage,
     createRoot,
+    updateRoot,
     deleteRoot,
   }
 })

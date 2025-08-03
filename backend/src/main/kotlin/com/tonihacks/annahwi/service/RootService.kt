@@ -139,7 +139,12 @@ class RootService {
     fun normalizeRoot(input: String): NormalizedRoot? {
         logger.info("Normalizing root input: '$input'")
 
-        return rootNormalizationService.normalize(input)
+        return try {
+            rootNormalizationService.normalize(input)
+        } catch (e: AppException) {
+            logger.debug("Invalid root input: '${input}' - ${e.message}")
+            null
+        }
     }
     
     /**
@@ -198,5 +203,35 @@ class RootService {
         
         rootRepository.delete(root)
         return true
+    }
+
+    @Transactional
+    fun updateRoot(id: UUID, updateDto: RootRequestDTO): ArabicRoot {
+        logger.info("Updating root with ID: $id, input: '${updateDto.input}'")
+
+        val root = findById(id)
+
+        // Normalize the input
+        val normalized = normalizationService.normalize(updateDto.input)
+
+        // Check if normalized form already exists
+        val existing = findByNormalizedForm(normalized.normalizedForm)
+        if (existing != null && existing.id != id) {
+            throw AppException(AppError.ValidationError.ExistingRoot(existing.displayForm))
+        }
+
+        // Update root properties
+        root.apply {
+            displayForm = normalized.displayForm
+            normalizedForm = normalized.normalizedForm
+            letters = normalized.letters
+            meaning = updateDto.meaning
+        }
+
+        rootRepository.persistAndFlush(root).also {
+            logger.info("Updated root: ${root.displayForm} with ID: ${root.id}")
+        }
+
+        return root
     }
 }

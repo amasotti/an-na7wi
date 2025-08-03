@@ -2,11 +2,14 @@ package com.tonihacks.annahwi.controller
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.tonihacks.annahwi.config.GlobalTestProfile
 import com.tonihacks.annahwi.dto.request.TextRequestDTO
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
+import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -17,6 +20,8 @@ import java.util.UUID
  * Simple test class to verify that our DTOs can be properly serialized and deserialized
  * without circular reference issues.
  */
+@QuarkusTest
+@TestProfile(GlobalTestProfile::class)
 class TextControllerTest {
 
     private val objectMapper = ObjectMapper().findAndRegisterModules()

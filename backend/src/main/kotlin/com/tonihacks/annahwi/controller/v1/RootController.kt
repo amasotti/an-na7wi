@@ -15,6 +15,7 @@ import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.DefaultValue
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
+import jakarta.ws.rs.PUT
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
@@ -200,5 +201,14 @@ class RootController {
         } else {
             Response.status(Response.Status.NOT_FOUND).build()
         }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Operation(summary = "Update root", description = "Updates an existing Arabic root")
+    fun updateRoot(@PathParam("id") id: UUID, request: RootRequestDTO): Response {
+        logger.info("PUT /api/v1/roots/$id - input: '${request.input}'")
+        val updatedRoot = rootService.updateRoot(id, request)
+        return Response.ok(RootResponseDTO.fromEntity(updatedRoot)).build()
     }
 }

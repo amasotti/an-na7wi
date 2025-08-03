@@ -32,7 +32,10 @@
         </nav>
 
         <!-- Root Header -->
-        <RootDetailHeader :root="rootStore.currentRootWithWords.root" />
+        <RootDetailHeader 
+          :root="rootStore.currentRootWithWords.root" 
+          @edit="showEditModal = true"
+        />
 
         <!-- Root Words -->
         <RootWordsList 
@@ -52,23 +55,48 @@
         </NuxtLink>
       </div>
     </div>
+
+    <!-- Edit Root Modal -->
+    <EditRootModal
+      :show="showEditModal"
+      :root="rootStore.currentRootWithWords?.root || null"
+      @close="showEditModal = false"
+      @root-updated="handleRootUpdated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
+import EditRootModal from '~/components/roots/EditRootModal.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
 import RootWordsList from '~/components/roots/RootWordsList.vue'
 import { useRootStore } from '~/stores/rootStore'
+import type { Root } from '~/types'
 
 const route = useRoute()
 const rootStore = useRootStore()
+
+const showEditModal = ref(false)
 
 const loadRootData = async (rootId: string) => {
   if (rootId) {
     rootStore.clearError()
     await rootStore.fetchRootWithWords(rootId)
+  }
+}
+
+const handleRootUpdated = async (updatedRoot: Root) => {
+  try {
+    await rootStore.updateRoot(updatedRoot.id, updatedRoot.displayForm, updatedRoot.meaning)
+    // Refresh the root data to get updated info including word associations
+    const id = route.params.id as string
+    if (id) {
+      await loadRootData(id)
+    }
+  } catch (error) {
+    console.error('Error handling root update:', error)
   }
 }
 

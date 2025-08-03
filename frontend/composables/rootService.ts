@@ -65,7 +65,7 @@ export const rootService = {
       sort?: string
     } = {}
   ): Promise<PaginatedResponse<Root>> {
-    const response = await useApiClient().get(`/roots/letters/${letterCount}`, {
+    const response = await useApiClient().get(`/roots/letter-count/${letterCount}`, {
       params,
     })
     return response.data
@@ -92,6 +92,17 @@ export const rootService = {
    */
   async createRoot(input: string, meaning?: string): Promise<Root> {
     const response = await useApiClient().post('/roots', {
+      input,
+      meaning,
+    })
+    return response.data
+  },
+
+  /**
+   * Update an existing root
+   */
+  async updateRoot(id: string, input: string, meaning?: string): Promise<Root> {
+    const response = await useApiClient().put(`/roots/${id}`, {
       input,
       meaning,
     })

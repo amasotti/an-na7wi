@@ -193,6 +193,55 @@ describe('rootStore', () => {
       expect(store.roots[0]).toEqual(result)
     })
 
+    it('updates root successfully', async () => {
+      const originalRoot = { ...mockRoot, id: '1' }
+      const updatedRoot = { ...mockRoot, id: '1', meaning: 'updated meaning' }
+      
+      store.roots = [originalRoot]
+      store.currentRoot = originalRoot
+      store.currentRootWithWords = { root: originalRoot, words: [] }
+
+      const rootService = await import('~/composables/rootService')
+      vi.mocked(rootService.rootService.updateRoot).mockResolvedValueOnce(updatedRoot)
+
+      const result = await store.updateRoot('1', 'ك-ت-ب', 'updated meaning')
+
+      expect(result).toEqual(updatedRoot)
+      expect(store.roots[0]).toEqual(updatedRoot)
+      expect(store.currentRoot).toEqual(updatedRoot)
+      expect(store.currentRootWithWords?.root).toEqual(updatedRoot)
+      expect(store.loading).toBe(false)
+      expect(store.error).toBeNull()
+    })
+
+    it('handles update root error', async () => {
+      const rootService = await import('~/composables/rootService')
+      vi.mocked(rootService.rootService.updateRoot).mockRejectedValueOnce(new Error('Update failed'))
+
+      await expect(store.updateRoot('1', 'ك-ت-ب', 'meaning')).rejects.toThrow('Update failed')
+
+      expect(store.loading).toBe(false)
+      expect(store.error).toBe('Update failed')
+    })
+
+    it('updates only roots array when root not in current state', async () => {
+      const originalRoot = { ...mockRoot, id: '1' }
+      const updatedRoot = { ...mockRoot, id: '1', meaning: 'updated meaning' }
+      
+      store.roots = [originalRoot]
+      // currentRoot and currentRootWithWords are null
+
+      const rootService = await import('~/composables/rootService')
+      vi.mocked(rootService.rootService.updateRoot).mockResolvedValueOnce(updatedRoot)
+
+      const result = await store.updateRoot('1', 'ك-ت-ب', 'updated meaning')
+
+      expect(result).toEqual(updatedRoot)
+      expect(store.roots[0]).toEqual(updatedRoot)
+      expect(store.currentRoot).toBeNull()
+      expect(store.currentRootWithWords).toBeNull()
+    })
+
     it('deletes root successfully', async () => {
       store.roots = [mockRoot]
 

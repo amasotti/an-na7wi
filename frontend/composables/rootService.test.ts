@@ -17,6 +17,7 @@ import { rootService } from './rootService'
 const mockApiClient = {
   get: vi.fn(),
   post: vi.fn(),
+  put: vi.fn(),
   delete: vi.fn(),
 }
 
@@ -150,7 +151,7 @@ describe('rootService', () => {
 
       const result = await rootService.getRootsByLetterCount(3)
 
-      expect(mockApiClient.get).toHaveBeenCalledWith('/roots/letters/3', {
+      expect(mockApiClient.get).toHaveBeenCalledWith('/roots/letter-count/3', {
         params: {},
       })
       expect(result).toEqual(mockPaginatedResponse)
@@ -166,7 +167,7 @@ describe('rootService', () => {
 
       const result = await rootService.getRootsByLetterCount(4, params)
 
-      expect(mockApiClient.get).toHaveBeenCalledWith('/roots/letters/4', {
+      expect(mockApiClient.get).toHaveBeenCalledWith('/roots/letter-count/4', {
         params,
       })
       expect(result).toEqual(mockPaginatedResponse)
@@ -237,6 +238,59 @@ describe('rootService', () => {
         meaning: 'writing',
       })
       expect(result).toEqual(mockRoot)
+    })
+  })
+
+  describe('updateRoot', () => {
+    it('should update a root with input only', async () => {
+      const updatedRoot: Root = {
+        ...mockRoot,
+        meaning: 'updated meaning',
+      }
+      mockApiClient.put.mockResolvedValue({ data: updatedRoot })
+
+      const result = await rootService.updateRoot('1', 'ك-ت-ب')
+
+      expect(mockApiClient.put).toHaveBeenCalledWith('/roots/1', {
+        input: 'ك-ت-ب',
+        meaning: undefined,
+      })
+      expect(result).toEqual(updatedRoot)
+    })
+
+    it('should update a root with input and meaning', async () => {
+      const updatedRoot: Root = {
+        ...mockRoot,
+        meaning: 'updated writing meaning',
+      }
+      mockApiClient.put.mockResolvedValue({ data: updatedRoot })
+
+      const result = await rootService.updateRoot('1', 'ك-ت-ب', 'updated writing meaning')
+
+      expect(mockApiClient.put).toHaveBeenCalledWith('/roots/1', {
+        input: 'ك-ت-ب',
+        meaning: 'updated writing meaning',
+      })
+      expect(result).toEqual(updatedRoot)
+    })
+
+    it('should handle update with different root form', async () => {
+      const updatedRoot: Root = {
+        ...mockRoot,
+        displayForm: 'ق-ر-أ',
+        normalizedForm: 'قرأ',
+        letters: ['ق', 'ر', 'أ'],
+        meaning: 'reading',
+      }
+      mockApiClient.put.mockResolvedValue({ data: updatedRoot })
+
+      const result = await rootService.updateRoot('1', 'ق-ر-أ', 'reading')
+
+      expect(mockApiClient.put).toHaveBeenCalledWith('/roots/1', {
+        input: 'ق-ر-أ',
+        meaning: 'reading',
+      })
+      expect(result).toEqual(updatedRoot)
     })
   })
 
