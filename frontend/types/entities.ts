@@ -68,7 +68,7 @@ export interface RootNormalization {
   normalizedForm: string
   displayForm: string
   letterCount: number
-  valid: boolean
+  isValid: boolean
 }
 
 export interface RootStatistics {

@@ -119,7 +119,7 @@ const error = ref('')
 const loading = ref(false)
 
 const canSubmit = computed(() => {
-  return rootInput.value.trim() !== '' && preview.value?.valid && !inputError.value
+  return rootInput.value.trim() !== '' && preview.value?.isValid && !inputError.value
 })
 
 const handleInput = async () => {
@@ -132,7 +132,7 @@ const handleInput = async () => {
 
   try {
     preview.value = await rootService.normalizeRoot(input)
-    if (!preview.value.valid) {
+    if (!preview.value.isValid) {
       inputError.value = 'Invalid root format. Please enter 2-5 Arabic letters.'
     }
   } catch (err) {

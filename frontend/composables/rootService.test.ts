@@ -181,7 +181,7 @@ describe('rootService', () => {
         letters: ['ك', 'ت', 'ب'],
         displayForm: 'ك-ت-ب',
         letterCount: 3,
-        valid: true,
+        isValid: true,
       }
       mockApiClient.post.mockResolvedValue({ data: mockNormalization })
 

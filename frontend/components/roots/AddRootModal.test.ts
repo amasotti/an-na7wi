@@ -22,7 +22,7 @@ const validNormalization: RootNormalization = {
   normalizedForm: 'كتب',
   displayForm: 'ك-ت-ب',
   letterCount: 3,
-  valid: true,
+  isValid: true,
 }
 
 const invalidNormalization: RootNormalization = {
@@ -31,7 +31,7 @@ const invalidNormalization: RootNormalization = {
   normalizedForm: '',
   displayForm: '',
   letterCount: 0,
-  valid: false,
+  isValid: false,
 }
 
 const mockRoot: Root = {
