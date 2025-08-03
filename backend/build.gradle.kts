@@ -1,8 +1,10 @@
+import org.gradle.internal.classpath.Instrumented.systemProperty
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.quarkus)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.kover)
+    //alias(libs.plugins.kover)
     alias(libs.plugins.kotlinAllopen)
 }
 
@@ -67,6 +69,8 @@ kotlin {
     }
 }
 
-//tasks.named("quarkusDev") {
-//    dependsOn("compileQuarkusGeneratedSourcesJava")
-//}
+tasks.build {
+    // set property for disabling quarkus native
+    systemProperty("quarkus.native.enabled", "false")
+}
+

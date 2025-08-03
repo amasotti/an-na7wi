@@ -10,7 +10,7 @@ import java.time.Duration
  * This ensures the database container starts before Quarkus application context
  * and provides proper connection configuration.
  */
-class PostgreSQLTestResource : QuarkusTestResourceLifecycleManager {
+class PostgreSQLTestResource : QuarkusTestResourceLifecycleManager, AutoCloseable {
     
     private var postgreSQLContainer: PostgreSQLContainer<*>? = null
     
@@ -30,11 +30,17 @@ class PostgreSQLTestResource : QuarkusTestResourceLifecycleManager {
             "quarkus.datasource.jdbc.url" to postgreSQLContainer!!.jdbcUrl,
             "quarkus.datasource.username" to postgreSQLContainer!!.username,
             "quarkus.datasource.password" to postgreSQLContainer!!.password,
-            "quarkus.datasource.db-kind" to "postgresql"
+            "quarkus.datasource.db-kind" to "postgresql",
+            "quarkus.native.enabled" to "false" // Disable native mode for tests
         )
     }
     
     override fun stop() {
         postgreSQLContainer?.stop()
+    }
+
+    override fun close() {
+        postgreSQLContainer?.close()
+        postgreSQLContainer = null
     }
 }
