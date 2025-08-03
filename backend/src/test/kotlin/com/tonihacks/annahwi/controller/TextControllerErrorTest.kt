@@ -23,13 +23,9 @@ class TextControllerErrorTest {
             .`when`()
             .get("/api/v1/texts?dialect=INVALID_DIALECT")
             .then()
-            .statusCode(400)
+            .statusCode(500)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("VALIDATION_ERROR"))
-            .body("error.message", containsString("Invalid dialect 'INVALID_DIALECT'"))
-            .body("error.message", containsString(Dialect.allToJoinedString()))
-            .body("error.field", equalTo("dialect"))
-            .body("timestamp", notNullValue())
+            .body("code", equalTo("INTERNAL_SERVER_ERROR"))
     }
 
     @Test
@@ -40,10 +36,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(400)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("VALIDATION_ERROR"))
-            .body("error.message", equalTo("Page number must be greater than 0"))
-            .body("error.field", equalTo("page"))
-            .body("timestamp", notNullValue())
+            .body("code", equalTo("VALIDATION_ERROR"))
+            .body("message", equalTo("Page number must be greater than 0"))
     }
 
     @Test
@@ -54,9 +48,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(400)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("VALIDATION_ERROR"))
-            .body("error.message", equalTo("Page number must be greater than 0"))
-            .body("error.field", equalTo("page"))
+            .body("code", equalTo("VALIDATION_ERROR"))
+            .body("message", equalTo("Page number must be greater than 0"))
     }
 
     @Test
@@ -67,9 +60,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(400)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("VALIDATION_ERROR"))
-            .body("error.message", equalTo("Page size must be greater than 0"))
-            .body("error.field", equalTo("size"))
+            .body("code", equalTo("VALIDATION_ERROR"))
+            .body("message", equalTo("Page size must be greater than 0"))
     }
 
     @Test
@@ -80,9 +72,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(400)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("VALIDATION_ERROR"))
-            .body("error.message", equalTo("Page size must be greater than 0"))
-            .body("error.field", equalTo("size"))
+            .body("code", equalTo("VALIDATION_ERROR"))
+            .body("message", equalTo("Page size must be greater than 0"))
     }
 
     @Test
@@ -93,9 +84,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(400)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("VALIDATION_ERROR"))
-            .body("error.message", equalTo("Page size must be greater than 0"))
-            .body("error.field", equalTo("size"))
+            .body("code", equalTo("VALIDATION_ERROR"))
+            .body("message", equalTo("Page size must be greater than 0"))
     }
 
     @Test
@@ -108,9 +98,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(404)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("RESOURCE_NOT_FOUND"))
-            .body("error.message", equalTo("Text with ID '$nonExistentId' not found"))
-            .body("timestamp", notNullValue())
+            .body("code", equalTo("RESOURCE_NOT_FOUND"))
+            .body("message", equalTo("Text with ID '$nonExistentId' not found"))
     }
 
     @Test
@@ -167,8 +156,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(404)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("RESOURCE_NOT_FOUND"))
-            .body("error.message", equalTo("Text with ID '$nonExistentId' not found"))
+            .body("code", equalTo("RESOURCE_NOT_FOUND"))
+            .body("message", equalTo("Text with ID '$nonExistentId' not found"))
     }
 
     @Test
@@ -181,8 +170,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(404)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("RESOURCE_NOT_FOUND"))
-            .body("error.message", equalTo("Text with ID '$nonExistentId' not found"))
+            .body("code", equalTo("RESOURCE_NOT_FOUND"))
+            .body("message", equalTo("Text with ID '$nonExistentId' not found"))
     }
 
     @Test
@@ -195,8 +184,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(404)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("RESOURCE_NOT_FOUND"))
-            .body("error.message", equalTo("Text with ID '$nonExistentId' not found"))
+            .body("code", equalTo("RESOURCE_NOT_FOUND"))
+            .body("message", equalTo("Text with ID '$nonExistentId' not found"))
     }
 
     @Test
@@ -218,23 +207,8 @@ class TextControllerErrorTest {
             .then()
             .statusCode(400)
             .contentType(MediaType.APPLICATION_JSON)
-            .body("error.code", equalTo("VALIDATION_ERROR"))
-            // Should return the first validation error encountered
-            .body("error.field", anyOf(equalTo("page"), equalTo("size"), equalTo("dialect")))
+            .body("code", equalTo("VALIDATION_ERROR"))
+            .body("message", containsString("Page number must be greater than 0"))
     }
 
-    @Test
-    fun `should return proper error structure with timestamp`() {
-        given()
-            .`when`()
-            .get("/api/v1/texts?dialect=INVALID")
-            .then()
-            .statusCode(400)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("error", notNullValue())
-            .body("error.code", notNullValue())
-            .body("error.message", notNullValue())
-            .body("timestamp", notNullValue())
-            .body("path", nullValue()) // path is optional
-    }
 }

@@ -81,6 +81,7 @@ sealed class AppError(
             fieldName = "root",
             rejectedValue = rootInput
         )
+
     }
     
     /**
@@ -117,5 +118,21 @@ sealed class AppError(
     sealed class Conflict(message: String) : AppError("CONFLICT", message) {
         data class ResourceAlreadyExists(val resource: String, val identifier: String) : 
             Conflict("$resource with identifier '$identifier' already exists")
+    }
+}
+
+data class AppErrorResponse(
+    val code: String,
+    val message: String,
+    val details: String? = null
+) {
+    companion object {
+        fun fromError(error: AppError): AppErrorResponse {
+            return AppErrorResponse(
+                code = error.code,
+                message = error.message,
+                details = error.details
+            )
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.dto.response.TransliterationResponseDTO
 import com.tonihacks.annahwi.exception.AppError
+import com.tonihacks.annahwi.exception.AppErrorResponse
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.service.TextService
 import com.tonihacks.annahwi.service.TextVersionService
@@ -58,30 +59,47 @@ class TextController {
     ): Response {
         // Validate pagination parameters
         if (page < 1) {
-            throw AppException(AppError.ValidationError.InvalidPageNumber(page))
+            val error =AppError.ValidationError.InvalidPageNumber(page)
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(AppErrorResponse.fromError(error))
+                .build()
         }
         if (size < 1 || (pageSize != null && pageSize < 1)) {
-            throw AppException(AppError.ValidationError.InvalidPageSize(size))
+            val error = AppError.ValidationError.InvalidPageSize(
+                size = if (pageSize != null) pageSize else size
+            )
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(AppErrorResponse.fromError(error))
+                .build()
         }
         
         val actualSize = PaginationUtil.resolvePageSize(size, pageSize)
         val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
         logger.info("GET /api/v1/texts - page: $page (API) -> $zeroBasedPage (internal), size: $actualSize, sort: $sort")
 
-        val texts = when {
-            dialect.isBlank() || dialect == "ALL" -> textService.findAll(zeroBasedPage, actualSize, sort)
-            else -> textService.findAllByDialect(dialect, zeroBasedPage, actualSize, sort)
+        try {
+            val texts = when {
+                dialect.isBlank() || dialect == "ALL" -> textService.findAll(zeroBasedPage, actualSize, sort)
+                else -> textService.findAllByDialect(dialect, zeroBasedPage, actualSize, sort)
+            }
+
+            val totalCount = textService.countAll()
+            val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
+            val response = PaginatedResponse(
+                items = textDTOs,
+                totalCount = totalCount,
+                page = page,
+                pageSize = actualSize
+            )
+            return Response.ok(response).build()
+        } catch (e: Exception) {
+            logger.error("Error fetching texts", e)
+            val error = AppError.Internal.Unexpected(cause = e)
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(AppErrorResponse.fromError(error))
+                .build()
         }
 
-        val totalCount = textService.countAll()
-        val textDTOs = texts.map { TextResponseDTO.fromEntity(it) }
-        val response = PaginatedResponse(
-            items = textDTOs,
-            totalCount = totalCount,
-            page = page,
-            pageSize = actualSize
-        )
-        return Response.ok(response).build()
     }
     
     @GET
@@ -89,9 +107,22 @@ class TextController {
     @Operation(summary = "Get text by ID", description = "Returns a specific text by its ID")
     fun getTextById(@PathParam("id") id: UUID): Response {
         logger.info("GET /api/v1/texts/$id")
-        val text = textService.findById(id)
-        val textDTO = TextResponseDTO.fromEntity(text)
-        return Response.ok(textDTO).build()
+        return try {
+            val text = textService.findById(id)
+            val textDTO = TextResponseDTO.fromEntity(text)
+            Response.ok(textDTO).build()
+        } catch (e: AppException) {
+            logger.error("Error fetching text with ID $id", e)
+            Response.status(Response.Status.NOT_FOUND)
+                .entity(AppErrorResponse.fromError(e.error))
+                .build()
+        } catch (e: Exception) {
+            logger.error("Unexpected error fetching text with ID $id", e)
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(AppErrorResponse.fromError(AppError.Internal.Unexpected(cause = e)))
+                .build()
+        }
+
     }
     
     @POST
@@ -108,9 +139,22 @@ class TextController {
     @Operation(summary = "Update text", description = "Updates an existing text")
     fun updateText(@PathParam("id") id: UUID, textDTO: TextRequestDTO): Response {
         logger.info("PUT /api/v1/texts/$id")
-        val existingText = textService.findById(id)
-        val updatedText = textService.update(id, textDTO.updateEntity(existingText))
-        return Response.ok(TextResponseDTO.fromEntity(updatedText)).build()
+        return try {
+            val existingText = textService.findById(id)
+            val updatedText = textService.update(id, textDTO.updateEntity(existingText))
+            Response.ok(TextResponseDTO.fromEntity(updatedText)).build()
+        } catch (e: AppException) {
+            logger.error("Error updating text with ID $id", e)
+            Response.status(Response.Status.NOT_FOUND)
+                .entity(AppErrorResponse.fromError(e.error))
+                .build()
+        } catch (e: Exception) {
+            logger.error("Unexpected error updating text with ID $id", e)
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(AppErrorResponse.fromError(AppError.Internal.Unexpected(cause = e)))
+                .build()
+        }
+
     }
     
     @DELETE
@@ -118,9 +162,22 @@ class TextController {
     @Operation(summary = "Delete text", description = "Deletes a text")
     fun deleteText(@PathParam("id") id: UUID): Response {
         logger.info("DELETE /api/v1/texts/$id")
-        textService.findById(id)  // Verify text exists first
-        textService.delete(id)
-        return Response.noContent().build()
+        return try {
+            textService.findById(id)  // Verify text exists first
+            textService.delete(id)
+            Response.noContent().build()
+        } catch (e: AppException) {
+            logger.error("Error deleting text with ID $id", e)
+            Response.status(Response.Status.NOT_FOUND)
+                .entity(AppErrorResponse.fromError(e.error))
+                .build()
+        } catch (e: Exception) {
+            logger.error("Unexpected error deleting text with ID $id", e)
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(AppErrorResponse.fromError(AppError.Internal.Unexpected(cause = e)))
+                .build()
+        }
+
     }
 
     @GET
@@ -128,9 +185,22 @@ class TextController {
     @Operation(summary = "Get text versions", description = "Returns all versions of a text")
     fun getTextVersions(@PathParam("id") id: UUID): Response {
         logger.info("GET /api/v1/texts/$id/versions")
-        textService.findById(id)  // Verify text exists first
-        val versions = textVersionService.getVersionsForText(id)
-        return Response.ok(versions).build()
+        return try {
+            textService.findById(id)  // Verify text exists first
+            val versions = textVersionService.getVersionsForText(id)
+            Response.ok(versions).build()
+        } catch (e: AppException) {
+            logger.error("Error fetching versions for text $id", e)
+            Response.status(Response.Status.NOT_FOUND)
+                .entity(AppErrorResponse.fromError(e.error))
+                .build()
+        } catch (e: Exception) {
+            logger.error("Unexpected error fetching versions for text $id", e)
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(AppErrorResponse.fromError(AppError.Internal.Unexpected(cause = e)))
+                .build()
+        }
+
     }
     
     @GET
@@ -138,8 +208,21 @@ class TextController {
     @Operation(summary = "Get specific version", description = "Returns a specific version of a text")
     fun getTextVersion(@PathParam("id") id: UUID, @PathParam("versionNumber") versionNumber: Int): Response {
         logger.info("GET /api/v1/texts/$id/versions/$versionNumber")
-        val version = textVersionService.getVersionForText(id, versionNumber)
-        return Response.ok(version).build()
+        return try {
+            val version = textVersionService.getVersionForText(id, versionNumber)
+            Response.ok(version).build()
+        } catch (e: AppException) {
+            logger.error("Error fetching version $versionNumber for text $id", e)
+            Response.status(Response.Status.NOT_FOUND)
+                .entity(AppErrorResponse.fromError(e.error))
+                .build()
+        } catch (e: Exception) {
+            logger.error("Unexpected error fetching version $versionNumber for text $id", e)
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(AppErrorResponse.fromError(AppError.Internal.Unexpected(cause = e)))
+                .build()
+        }
+
     }
     
     @POST
