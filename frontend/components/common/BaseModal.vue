@@ -53,6 +53,7 @@ const modalSizeClasses = computed(() => {
     md: 'modal-md',
     lg: 'modal-lg',
     xl: 'modal-xl',
+    xxl: 'modal-xxl',
   }
   return sizeMap[props.size]
 })
@@ -116,6 +117,10 @@ watch(
 
 .modal-xl {
   @apply max-w-4xl w-full;
+}
+
+.modal-xxl {
+  @apply max-w-7xl w-full;
 }
 
 .modal-header {
