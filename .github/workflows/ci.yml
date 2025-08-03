@@ -10,6 +10,9 @@ on:
     branches: [ main ]
   workflow_dispatch:  # Allows manual triggering
 
+env:
+  ANTHROPIC_API_KEY: 'a-dummy-anthropic-api-key'
+
 jobs:
   backend:
     name: 🏗️ Backend Build and Test

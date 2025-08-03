@@ -142,4 +142,8 @@ class ExampleGenerationServiceTest {
         assertTrue(promptWithEmptyContext.contains("كتاب"))
         assertTrue(promptWithEmptyContext.contains("in the context of ''"))
     }
+
+    // Note: Integration tests that actually call the Anthropic API would require mocking
+    // the AnthropicOkHttpClient, which is complex. For now, we focus on unit testing
+    // the internal logic like prompt building and response parsing via reflection.
 }

@@ -9,6 +9,9 @@ permissions:
     contents: write  # Required for creating releases
     id-token: write  # Required for OIDC token generation if needed
 
+env:
+  ANTHROPIC_API_KEY: 'a-dummy-anthropic-api-key'
+
 jobs:
   build:
     name: 🏗️ Build and Test
