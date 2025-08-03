@@ -3,7 +3,7 @@
 ## 📊 Current State Analysis
 
 **What we have:**
-- Basic Vitest setup with only 2 utility test files (10 tests total)
+- Basic Nuxt Test Utils setup with Vitest but only 2 utility test files
 - TypeScript configuration for testing
 - No component, store, or integration tests
 - Lost ~70% coverage during migration
@@ -13,7 +13,6 @@
 - 3 Pinia stores with complex business logic untested  
 - No E2E tests for user workflows
 - No visual regression testing
-- Missing CI/CD quality gates
 
 ## 🎯 Modern Testing Strategy (2025 Best Practices)
 
@@ -28,26 +27,27 @@
 
 ### 2. **Technology Stack Recommendations**
 
-| Layer | Tool | Purpose |
-|-------|------|---------|
-| **Unit** | Vitest | Pure functions, utilities, services |
-| **Component** | Vitest + @vue/test-utils + @nuxt/test-utils | Isolated component behavior |
-| **Integration** | Vitest + MSW | Store + API interactions |
-| **E2E** | Playwright | Critical user journeys |
-| **Visual** | Chromatic/Percy | UI regression detection |
-| **Performance** | Lighthouse CI | Core Web Vitals tracking |
+- [Nuxt test utils](https://nuxt.com/docs/4.x/getting-started/testing)
+
+| Layer           | Tool                                        | Purpose                             |
+|-----------------|---------------------------------------------|-------------------------------------|
+| **Unit**        | Vitest / Nuxt Test Utils                    | Pure functions, utilities, services |
+| **Component**   | Vitest + @nuxt/test-utils | Isolated component behavior         |
+| **Integration** | Vitest + MSW                                | Store + API interactions            |
+| **E2E**         | Playwright                                  | Critical user journeys              |
+
 
 ## 🏗️ Implementation Roadmap
 
 ### Phase 1: Foundation (Week 1-2)
 ```bash
 # Enhanced testing setup
-pnpm add -D @nuxt/test-utils @playwright/test msw chromatic
-pnpm add -D @testing-library/vue @testing-library/jest-dom
+pnpm add -D @nuxt/test-utils vitest @vue/test-utils happy-dom playwright-core msw chromatic
 ```
 
 **Configure:**
-- Vitest config with coverage thresholds (80% minimum)
+- Vitest/Nuxt config with coverage thresholds (80% minimum)
+  - Do not use pure vitest, as this is integrated with Nuxt
 - MSW for API mocking
 - Playwright for E2E
 - Component test helpers
@@ -58,38 +58,8 @@ pnpm add -D @testing-library/vue @testing-library/jest-dom
 2. **Business Components** (`WordForm`, `TextCard`, `AnnotationForm`) - Core features  
 3. **Layout Components** (`TheNavigation`, `Pagination`) - User experience
 
-**Example test structure:**
-```typescript
-// components/common/BaseButton.spec.ts
-import { mountSuspended } from '@nuxt/test-utils/runtime'
-import BaseButton from './BaseButton.vue'
-
-describe('BaseButton', () => {
-  it('renders with correct variant classes', async () => {
-    const component = await mountSuspended(BaseButton, {
-      props: { variant: 'primary' }
-    })
-    expect(component.classes()).toContain('btn-primary')
-  })
-})
-```
 
 ### Phase 3: Store & Integration Testing (Week 5)
-**Test complex business logic:**
-```typescript
-// stores/wordStore.spec.ts
-import { createPinia } from 'pinia'
-import { useWordStore } from './wordStore'
-import { setupServer } from 'msw/node'
-
-describe('WordStore', () => {
-  it('creates word and updates local state', async () => {
-    const store = useWordStore()
-    await store.createWord({ arabic: 'كتاب', translation: 'book' })
-    expect(store.words).toHaveLength(1)
-  })
-})
-```
 
 ### Phase 4: E2E Critical Paths (Week 6)
 **Key user journeys:**
@@ -128,26 +98,6 @@ test('user can create text and add vocabulary', async ({ page }) => {
 {
   "lint-staged": {
     "*.{vue,ts,js}": ["biome check --write", "vitest related --run"]
-  }
-}
-```
-
-### 3. **Visual Regression Testing**
-- Chromatic integration for component stories
-- Automated screenshot comparison
-- Cross-browser compatibility testing
-
-### 4. **Performance Monitoring**
-```typescript
-// lighthouse.config.js
-module.exports = {
-  ci: {
-    assert: {
-      assertions: {
-        'first-contentful-paint': ['error', { maxNumericValue: 2000 }],
-        'largest-contentful-paint': ['error', { maxNumericValue: 2500 }]
-      }
-    }
   }
 }
 ```
@@ -214,15 +164,6 @@ pnpm tdd ComponentName  # Creates component + test template
 pnpm test:ui  # Vitest UI for interactive testing
 ```
 
-## 💡 Implementation Strategy
-
-**Week 1:** Setup & configuration
-**Week 2-4:** Component tests (10-15 per week)
-**Week 5:** Store & integration tests
-**Week 6:** E2E tests & CI/CD integration
-
-**Expected outcome:** Transform from 5% to 80%+ coverage with robust, maintainable tests that catch bugs before production and support confident refactoring.
-
 ## 📋 Component Testing Priority List
 
 ### Tier 1: Foundation Components (Critical)
@@ -285,5 +226,3 @@ pnpm test:ui  # Vitest UI for interactive testing
    - View tokenized words
    - Create annotations
    - Manage text versions
-
-This modern approach ensures your Arabic learning application maintains the highest quality standards while supporting rapid, confident development cycles.

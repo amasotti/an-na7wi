@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { annotationService } from '~/composables/annotationService'
 import { textService } from '~/composables/textService'

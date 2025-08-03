@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { wordService } from '~/composables/wordService'
 import type { PaginatedResponse, SelectOption, Word } from '~/types'
