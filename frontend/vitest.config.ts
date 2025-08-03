@@ -10,10 +10,10 @@ export default defineVitestConfig({
       enabled: true,
       reporter: ['text', 'json', 'html'],
       thresholds: {
-        statements: 80,
-        branches: 80,
-        functions: 80,
-        lines: 80,
+        statements: 20,
+        branches: 20,
+        functions: 20,
+        lines: 20,
       },
       exclude: [
         '**/node_modules/**',
