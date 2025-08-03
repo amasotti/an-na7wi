@@ -16,7 +16,12 @@
     "test": "vitest run",
     "test:ui": "vitest run --ui",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "npx tsc --noEmit",
+    "typecheck:go": "npx tsgo --noEmit",
+    "typecheck:vue": "npx vue-tsc --noEmit",
+    "precommit": "lint-staged",
+    "prepare": "husky"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "latest",
@@ -35,6 +40,7 @@
     "@tsconfig/node18": "^18.2.4",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.16.5",
+    "@typescript/native-preview": "7.0.0-dev.20250802.1",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "3.2.4",
@@ -42,7 +48,9 @@
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.21",
     "happy-dom": "^18.0.1",
+    "husky": "^9.1.7",
     "jsdom": "^26.1.0",
+    "lint-staged": "^16.1.2",
     "msw": "^2.10.4",
     "playwright-core": "^1.54.2",
     "postcss": "^8.5.6",
@@ -50,5 +58,16 @@
     "typescript": "~5.8.3",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "biome check --write"
+    ],
+    "*.{test,spec}.{js,ts}": [
+      "vitest run --reporter=verbose --passWithNoTests"
+    ],
+    "**/*": [
+      "pnpm run typecheck:go"
+    ]
   }
 }
