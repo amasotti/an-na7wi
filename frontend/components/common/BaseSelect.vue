@@ -30,7 +30,7 @@ import { computed } from 'vue'
 import BaseIcon from './BaseIcon.vue'
 
 interface Option {
-  value: string | number
+  value: string | number | null
   label: string
 }
 

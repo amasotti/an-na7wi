@@ -66,6 +66,7 @@
           :options="letterCountOptions"
           placeholder="Letter Count"
           class="min-w-32"
+          aria-label="Letter Count Filter"
           @update:model-value="handleFilterChange"
         />
 

@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/vue'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { renderWithStore } from '~/test/test-utils'
 import type { Root } from '~/types'
 import { RootsRootListItem as RootListItem } from '#components'
@@ -8,43 +8,34 @@ const mockRoot: Root = {
   id: '1',
   letters: ['ك', 'ت', 'ب'],
   normalizedForm: 'كتب',
-  displayForm: 'ك-ت-ب',
+  displayForm: 'ك ت ب',
   letterCount: 3,
   meaning: 'related to writing',
-  wordCount: 5,
+  wordCount: 15,
   createdAt: '2023-01-01T00:00:00Z',
   updatedAt: '2023-01-01T00:00:00Z',
 }
 
-const mockRootWithoutMeaning: Root = {
-  ...mockRoot,
-  meaning: undefined,
-}
-
-const mockEmptyRoot: Root = {
-  ...mockRoot,
-  wordCount: 0,
+const defaultProps = {
+  root: mockRoot,
+  showDeleteButton: false,
 }
 
 describe('RootListItem', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
   it('renders root information correctly', () => {
     renderWithStore(RootListItem, {
-      props: { root: mockRoot },
+      props: defaultProps,
     })
 
-    expect(screen.getByText('ك-ت-ب')).toBeInTheDocument()
-    expect(screen.getByText('related to writing')).toBeInTheDocument()
+    expect(screen.getByText('ك ت ب')).toBeInTheDocument()
     expect(screen.getByText('3 letters')).toBeInTheDocument()
-    expect(screen.getByText('5 words')).toBeInTheDocument()
+    expect(screen.getByText('15 words')).toBeInTheDocument()
+    expect(screen.getByText('related to writing')).toBeInTheDocument()
   })
 
-  it('renders root letters individually', () => {
+  it('renders individual root letters', () => {
     renderWithStore(RootListItem, {
-      props: { root: mockRoot },
+      props: defaultProps,
     })
 
     expect(screen.getByText('ك')).toBeInTheDocument()
@@ -52,30 +43,31 @@ describe('RootListItem', () => {
     expect(screen.getByText('ب')).toBeInTheDocument()
   })
 
-  it('handles root without meaning', () => {
+  it('does not show meaning when not provided', () => {
+    const rootWithoutMeaning = { ...mockRoot, meaning: undefined }
     renderWithStore(RootListItem, {
-      props: { root: mockRootWithoutMeaning },
+      props: { ...defaultProps, root: rootWithoutMeaning },
     })
 
-    expect(screen.getByText('ك-ت-ب')).toBeInTheDocument()
     expect(screen.queryByText('related to writing')).not.toBeInTheDocument()
   })
 
   it('emits click event when item is clicked', async () => {
     const { emitted } = renderWithStore(RootListItem, {
-      props: { root: mockRoot },
+      props: defaultProps,
     })
 
-    const item = screen.getByText('ك-ت-ب').closest('div')
-    await fireEvent.click(item!)
+    const listItem = screen.getByText('ك ت ب').closest('[class*="p-4"]')
+    await fireEvent.click(listItem!)
 
     expect(emitted('click')).toBeTruthy()
   })
 
   it('shows delete button when showDeleteButton is true and wordCount is 0', () => {
+    const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     renderWithStore(RootListItem, {
-      props: {
-        root: mockEmptyRoot,
+      props: { 
+        root: rootWithNoWords,
         showDeleteButton: true,
       },
     })
@@ -84,21 +76,11 @@ describe('RootListItem', () => {
     expect(deleteButton).toBeInTheDocument()
   })
 
-  it('hides delete button when wordCount > 0', () => {
+  it('does not show delete button when showDeleteButton is false', () => {
+    const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     renderWithStore(RootListItem, {
-      props: {
-        root: mockRoot,
-        showDeleteButton: true,
-      },
-    })
-
-    expect(screen.queryByTitle('Delete root')).not.toBeInTheDocument()
-  })
-
-  it('hides delete button when showDeleteButton is false', () => {
-    renderWithStore(RootListItem, {
-      props: {
-        root: mockEmptyRoot,
+      props: { 
+        root: rootWithNoWords,
         showDeleteButton: false,
       },
     })
@@ -106,10 +88,22 @@ describe('RootListItem', () => {
     expect(screen.queryByTitle('Delete root')).not.toBeInTheDocument()
   })
 
+  it('does not show delete button when wordCount is greater than 0', () => {
+    renderWithStore(RootListItem, {
+      props: { 
+        ...defaultProps,
+        showDeleteButton: true,
+      },
+    })
+
+    expect(screen.queryByTitle('Delete root')).not.toBeInTheDocument()
+  })
+
   it('emits delete event when delete button is clicked', async () => {
+    const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     const { emitted } = renderWithStore(RootListItem, {
-      props: {
-        root: mockEmptyRoot,
+      props: { 
+        root: rootWithNoWords,
         showDeleteButton: true,
       },
     })
@@ -121,10 +115,11 @@ describe('RootListItem', () => {
     expect(emitted('delete')[0]).toEqual(['1'])
   })
 
-  it('prevents event propagation when delete button is clicked', async () => {
+  it('stops propagation when delete button is clicked', async () => {
+    const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     const { emitted } = renderWithStore(RootListItem, {
-      props: {
-        root: mockEmptyRoot,
+      props: { 
+        root: rootWithNoWords,
         showDeleteButton: true,
       },
     })
@@ -132,56 +127,145 @@ describe('RootListItem', () => {
     const deleteButton = screen.getByTitle('Delete root')
     await fireEvent.click(deleteButton)
 
-    expect(emitted('click')).toBeFalsy()
+    // Delete event should be emitted but click event should not
     expect(emitted('delete')).toBeTruthy()
+    expect(emitted('click')).toBeFalsy()
   })
 
-  it('shows hover indicator on mouse enter', () => {
+  it('applies correct CSS classes for hover effects', () => {
     renderWithStore(RootListItem, {
-      props: { root: mockRoot },
+      props: defaultProps,
     })
 
-    const container = screen.getByText('ك-ت-ب').closest('div[class*="hover:bg-gray-50"]')
-    expect(container).toHaveClass('hover:bg-gray-50')
+    const listItem = screen.getByText('ك ت ب').closest('[class*="p-4"]')
+    expect(listItem).toHaveClass('hover:bg-gray-50', 'cursor-pointer', 'transition-colors', 'group')
   })
 
-  it('displays different letter counts correctly', () => {
-    const quadriliteralRoot: Root = {
+  it('displays navigation arrow', () => {
+    renderWithStore(RootListItem, {
+      props: defaultProps,
+    })
+
+    const arrow = document.querySelector('svg')
+    expect(arrow).toBeInTheDocument()
+  })
+
+  it('handles root with different letter counts', () => {
+    const quadriliteralRoot = {
       ...mockRoot,
-      letters: ['ف', 'ع', 'ل', 'ن'],
+      letters: ['ج', 'م', 'ه', 'ر'],
       letterCount: 4,
-      displayForm: 'ف-ع-ل-ن',
+      displayForm: 'ج م ه ر',
     }
 
     renderWithStore(RootListItem, {
-      props: { root: quadriliteralRoot },
+      props: { ...defaultProps, root: quadriliteralRoot },
     })
 
+    expect(screen.getByText('ج م ه ر')).toBeInTheDocument()
     expect(screen.getByText('4 letters')).toBeInTheDocument()
-    expect(screen.getByText('ف')).toBeInTheDocument()
-    expect(screen.getByText('ع')).toBeInTheDocument()
-    expect(screen.getByText('ل')).toBeInTheDocument()
-    expect(screen.getByText('ن')).toBeInTheDocument()
+    expect(screen.getByText('ج')).toBeInTheDocument()
+    expect(screen.getByText('م')).toBeInTheDocument()
+    expect(screen.getByText('ه')).toBeInTheDocument()
+    expect(screen.getByText('ر')).toBeInTheDocument()
   })
 
-  it('handles zero word count correctly', () => {
+  it('handles root with zero words correctly', () => {
+    const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     renderWithStore(RootListItem, {
-      props: { root: mockEmptyRoot },
+      props: { ...defaultProps, root: rootWithNoWords },
     })
 
     expect(screen.getByText('0 words')).toBeInTheDocument()
   })
 
-  it('handles large word count correctly', () => {
-    const rootWithManyWords: Root = {
+  it('handles root with single word correctly', () => {
+    const rootWithOneWord = { ...mockRoot, wordCount: 1 }
+    renderWithStore(RootListItem, {
+      props: { ...defaultProps, root: rootWithOneWord },
+    })
+
+    expect(screen.getByText('1 words')).toBeInTheDocument()
+  })
+
+  it('applies arabic class to display form', () => {
+    renderWithStore(RootListItem, {
+      props: defaultProps,
+    })
+
+    const displayForm = screen.getByText('ك ت ب')
+    expect(displayForm).toHaveClass('arabic')
+  })
+
+  it('applies arabic class to individual letters', () => {
+    renderWithStore(RootListItem, {
+      props: defaultProps,
+    })
+
+    const letterElements = screen.getAllByText(/^[كتب]$/)
+    letterElements.forEach(element => {
+      expect(element).toHaveClass('arabic')
+    })
+  })
+
+  it('shows correct letter styling', () => {
+    renderWithStore(RootListItem, {
+      props: defaultProps,
+    })
+
+    const letterK = screen.getByText('ك')
+    expect(letterK).toHaveClass(
+      'inline-flex',
+      'items-center',
+      'justify-center',
+      'w-6',
+      'h-6',
+      'bg-gray-100',
+      'text-gray-700',
+      'text-sm',
+      'font-medium',
+      'rounded',
+      'arabic'
+    )
+  })
+
+  it('handles very long meaning text', () => {
+    const rootWithLongMeaning = {
       ...mockRoot,
-      wordCount: 100,
+      meaning: 'This is a very long meaning text that describes the semantic field of this Arabic root in great detail with many descriptive words',
     }
 
     renderWithStore(RootListItem, {
-      props: { root: rootWithManyWords },
+      props: { ...defaultProps, root: rootWithLongMeaning },
     })
 
-    expect(screen.getByText('100 words')).toBeInTheDocument()
+    expect(screen.getByText(/This is a very long meaning text/)).toBeInTheDocument()
+  })
+
+  it('handles special characters in meaning', () => {
+    const rootWithSpecialMeaning = {
+      ...mockRoot,
+      meaning: 'meaning with "quotes" & symbols',
+    }
+
+    renderWithStore(RootListItem, {
+      props: { ...defaultProps, root: rootWithSpecialMeaning },
+    })
+
+    expect(screen.getByText('meaning with "quotes" & symbols')).toBeInTheDocument()
+  })
+
+  it('maintains consistent layout structure', () => {
+    renderWithStore(RootListItem, {
+      props: defaultProps,
+    })
+
+    // Check main layout structure - get the root container
+    const container = screen.getByText('ك ت ب').closest('[class*="p-4"]')
+    expect(container).toHaveClass('p-4')
+
+    // Check flex layout
+    const flexContainer = container?.querySelector('.flex.items-center.justify-between')
+    expect(flexContainer).toBeInTheDocument()
   })
 })
