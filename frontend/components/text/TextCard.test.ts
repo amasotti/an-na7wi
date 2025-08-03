@@ -1,9 +1,9 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { TextCard } from '#components'
+import { renderWithStore } from '~/test/test-utils'
 import type { Text } from '~/types'
 import { Dialect, Difficulty } from '~/types/enums'
-import { renderWithStore } from '~/test/test-utils'
+import { TextCard } from '#components'
 
 // Mock router
 const mockPush = vi.fn()
@@ -104,7 +104,7 @@ describe('TextCard', () => {
 
     const actionsButton = screen.getByRole('button')
     await fireEvent.click(actionsButton)
-    
+
     const viewText = screen.getByText('View Text')
     expect(viewText).toBeInTheDocument()
   })
@@ -116,7 +116,7 @@ describe('TextCard', () => {
 
     const actionsButton = screen.getByRole('button')
     await fireEvent.click(actionsButton)
-    
+
     const editButton = screen.getByText('Edit Text')
     await fireEvent.click(editButton)
 
@@ -131,7 +131,7 @@ describe('TextCard', () => {
 
     const actionsButton = screen.getByRole('button')
     await fireEvent.click(actionsButton)
-    
+
     const deleteButton = screen.getByText('Delete')
     await fireEvent.click(deleteButton)
 
@@ -146,12 +146,12 @@ describe('TextCard', () => {
 
     const actionsButton = screen.getByRole('button')
     await fireEvent.click(actionsButton)
-    
+
     expect(screen.getByText('View Text')).toBeInTheDocument()
 
     // Click outside the dropdown
     await fireEvent.click(document.body)
-    
+
     expect(screen.queryByText('View Text')).not.toBeInTheDocument()
   })
 
@@ -168,9 +168,10 @@ describe('TextCard', () => {
     const longText = {
       ...mockText,
       arabicContent: 'هذا نص طويل جداً يحتوي على كلمات كثيرة ويجب أن يظهر بشكل مناسب في البطاقة',
-      translation: 'This is a very long text that contains many words and should display properly in the card',
+      translation:
+        'This is a very long text that contains many words and should display properly in the card',
     }
-    
+
     renderWithStore(TextCard, {
       props: { text: longText },
     })

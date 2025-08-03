@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import NavLink from './NavLink.vue'
 import { renderWithStore } from '~/test/test-utils'
+import { LayoutNavLink as NavLink } from '#components'
 
 // Mock useRoute composable
 const mockRoute = { path: '/texts' }
@@ -25,9 +25,9 @@ describe('NavLink', () => {
 
   it('renders with icon', () => {
     renderWithStore(NavLink, {
-      props: { 
+      props: {
         to: '/texts',
-        icon: 'DocumentTextIcon'
+        icon: 'DocumentTextIcon',
       },
       slots: { default: 'Texts' },
     })
@@ -50,9 +50,9 @@ describe('NavLink', () => {
 
   it('applies mobile styles when mobile prop is true', () => {
     renderWithStore(NavLink, {
-      props: { 
+      props: {
         to: '/texts',
-        mobile: true
+        mobile: true,
       },
       slots: { default: 'Texts' },
     })
@@ -63,9 +63,9 @@ describe('NavLink', () => {
 
   it('applies desktop styles when mobile prop is false', () => {
     renderWithStore(NavLink, {
-      props: { 
+      props: {
         to: '/texts',
-        mobile: false
+        mobile: false,
       },
       slots: { default: 'Texts' },
     })
@@ -76,9 +76,9 @@ describe('NavLink', () => {
 
   it('shows different icons correctly', () => {
     renderWithStore(NavLink, {
-      props: { 
+      props: {
         to: '/texts',
-        icon: 'HomeIcon'
+        icon: 'HomeIcon',
       },
       slots: { default: 'Home' },
     })

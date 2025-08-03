@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { TextFilters } from '#components'
 import { renderWithStore } from '~/test/test-utils'
+import { TextFilters } from '#components'
 
 const defaultProps = {
   searchQuery: '',
@@ -11,12 +11,12 @@ const defaultProps = {
   hasActiveFilters: false,
   dialectOptions: [
     { value: 'MSA', label: 'MSA' },
-    { value: 'EGYPTIAN', label: 'Egyptian' }
+    { value: 'EGYPTIAN', label: 'Egyptian' },
   ],
   difficultyOptions: [
     { value: 'BEGINNER', label: 'Beginner' },
-    { value: 'INTERMEDIATE', label: 'Intermediate' }
-  ]
+    { value: 'INTERMEDIATE', label: 'Intermediate' },
+  ],
 }
 
 describe('TextFilters', () => {
@@ -26,31 +26,31 @@ describe('TextFilters', () => {
 
   it('renders search input', () => {
     renderWithStore(TextFilters, { props: defaultProps })
-    
+
     const searchInput = screen.getByPlaceholderText('Search texts, titles, or content...')
     expect(searchInput).toBeInTheDocument()
   })
 
   it('renders dialect select', () => {
     renderWithStore(TextFilters, { props: defaultProps })
-    
+
     const dialectSelect = screen.getByText('All Dialects')
     expect(dialectSelect).toBeInTheDocument()
   })
 
   it('renders difficulty select', () => {
     renderWithStore(TextFilters, { props: defaultProps })
-    
+
     const difficultySelect = screen.getByText('All Difficulties')
     expect(difficultySelect).toBeInTheDocument()
   })
 
   it('emits search query updates', async () => {
     const { emitted } = renderWithStore(TextFilters, { props: defaultProps })
-    
+
     const searchInput = screen.getByPlaceholderText('Search texts, titles, or content...')
     await fireEvent.update(searchInput, 'test search')
-    
+
     expect(emitted('update:searchQuery')).toBeTruthy()
     expect(emitted('update:searchQuery')[0]).toEqual(['test search'])
   })
@@ -59,10 +59,10 @@ describe('TextFilters', () => {
     renderWithStore(TextFilters, {
       props: {
         ...defaultProps,
-        activeTags: ['grammar', 'vocabulary']
-      }
+        activeTags: ['grammar', 'vocabulary'],
+      },
     })
-    
+
     expect(screen.getByText('grammar')).toBeInTheDocument()
     expect(screen.getByText('vocabulary')).toBeInTheDocument()
   })
@@ -71,10 +71,10 @@ describe('TextFilters', () => {
     renderWithStore(TextFilters, {
       props: {
         ...defaultProps,
-        hasActiveFilters: true
-      }
+        hasActiveFilters: true,
+      },
     })
-    
+
     expect(screen.getByText('Clear All')).toBeInTheDocument()
   })
 
@@ -82,10 +82,10 @@ describe('TextFilters', () => {
     renderWithStore(TextFilters, {
       props: {
         ...defaultProps,
-        hasActiveFilters: false
-      }
+        hasActiveFilters: false,
+      },
     })
-    
+
     expect(screen.queryByText('Clear All')).not.toBeInTheDocument()
   })
 
@@ -93,13 +93,13 @@ describe('TextFilters', () => {
     const { emitted } = renderWithStore(TextFilters, {
       props: {
         ...defaultProps,
-        hasActiveFilters: true
-      }
+        hasActiveFilters: true,
+      },
     })
-    
+
     const clearButton = screen.getByText('Clear All')
     await fireEvent.click(clearButton)
-    
+
     expect(emitted('clearFilters')).toBeTruthy()
   })
 })
