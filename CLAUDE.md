@@ -101,3 +101,6 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 
 ## Claude Interaction Patterns
 - When I ask you to make a plan, you always create a Markdown with the proposal and steps 
+
+## Frontend Development Notes
+- Import of components in Nuxt is always done with the tilde or hashtag syntax. Tilde syntax refers to src directory for file import and hashtag syntax (e.g. #components) reads the exposed components from .nuxt folder. Before creating mocks, always check the declaration of the types to ensure correct mapping.
