@@ -102,7 +102,9 @@ describe('VocabularyContent', () => {
     })
 
     expect(screen.getByText('No words found')).toBeInTheDocument()
-    expect(screen.getByText('Start building your vocabulary by adding new words.')).toBeInTheDocument()
+    expect(
+      screen.getByText('Start building your vocabulary by adding new words.')
+    ).toBeInTheDocument()
     expect(screen.getByText('Add Your First Word')).toBeInTheDocument()
   })
 
@@ -184,9 +186,8 @@ describe('VocabularyContent', () => {
     expect(screen.queryByText(/Showing [0-9]+ to [0-9]+ of [0-9]+ results/)).not.toBeInTheDocument()
     // Should have fewer buttons when pagination is hidden
     const buttons = screen.getAllByRole('button')
-    const nonWordTableButtons = buttons.filter(btn => 
-      !btn.getAttribute('title')?.includes('word') && 
-      !btn.textContent?.includes('كتاب')
+    const nonWordTableButtons = buttons.filter(
+      btn => !btn.getAttribute('title')?.includes('word') && !btn.textContent?.includes('كتاب')
     )
     expect(nonWordTableButtons.length).toBeLessThan(5) // Only filter and action buttons, no pagination
   })
@@ -296,7 +297,7 @@ describe('VocabularyContent', () => {
     // Just check that pagination info text is present
     expect(screen.getByText(/Showing/)).toBeInTheDocument()
     expect(screen.getByText(/results/)).toBeInTheDocument()
-    
+
     // Check that we have pagination buttons (find buttons with numeric content)
     const buttons = screen.getAllByRole('button')
     const numericButtons = buttons.filter(btn => /^\d+$/.test(btn.textContent || ''))

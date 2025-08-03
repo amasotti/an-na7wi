@@ -19,6 +19,7 @@ const defaultProps = {
 
 // Mock lodash debounce to make it synchronous for testing
 vi.mock('lodash-es', () => ({
+  // biome-ignore lint/suspicious/noExplicitAny: This is a test mock
   debounce: (fn: any) => fn,
 }))
 
@@ -95,7 +96,9 @@ describe('RootsHeader', () => {
       props: defaultProps,
     })
 
-    const select = screen.getByRole('combobox', { name: 'Letter Count Filter' }) as HTMLSelectElement
+    const select = screen.getByRole('combobox', {
+      name: 'Letter Count Filter',
+    }) as HTMLSelectElement
     expect(select).toBeInTheDocument()
     expect(select.selectedOptions[0]!).toHaveTextContent('Letter Count')
   })
@@ -109,7 +112,7 @@ describe('RootsHeader', () => {
     const selects = screen.getAllByRole('combobox')
     if (selects.length > 0) {
       await fireEvent.update(selects[0]!, '3')
-      
+
       await waitFor(() => {
         expect(emitted('filter-changed')).toBeTruthy()
       })
@@ -268,7 +271,7 @@ describe('RootsHeader', () => {
     })
 
     const searchInput = screen.getByPlaceholderText('Search roots by letters, form, or meaning...')
-    
+
     // Type something
     await fireEvent.update(searchInput, 'test')
     expect(searchInput).toHaveValue('test')
@@ -310,7 +313,7 @@ describe('RootsHeader', () => {
 
     await waitFor(() => {
       expect(emitted('search')).toBeTruthy()
-      const lastEmit = emitted('search')[emitted('search').length - 1] as any[]
+      const lastEmit = emitted('search')[emitted('search').length - 1] as string[]
       expect(lastEmit).toMatchObject(['test'])
     })
   })

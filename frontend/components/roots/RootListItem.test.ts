@@ -66,7 +66,7 @@ describe('RootListItem', () => {
   it('shows delete button when showDeleteButton is true and wordCount is 0', () => {
     const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: rootWithNoWords,
         showDeleteButton: true,
       },
@@ -79,7 +79,7 @@ describe('RootListItem', () => {
   it('does not show delete button when showDeleteButton is false', () => {
     const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: rootWithNoWords,
         showDeleteButton: false,
       },
@@ -90,7 +90,7 @@ describe('RootListItem', () => {
 
   it('does not show delete button when wordCount is greater than 0', () => {
     renderWithStore(RootListItem, {
-      props: { 
+      props: {
         ...defaultProps,
         showDeleteButton: true,
       },
@@ -102,7 +102,7 @@ describe('RootListItem', () => {
   it('emits delete event when delete button is clicked', async () => {
     const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     const { emitted } = renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: rootWithNoWords,
         showDeleteButton: true,
       },
@@ -118,7 +118,7 @@ describe('RootListItem', () => {
   it('stops propagation when delete button is clicked', async () => {
     const rootWithNoWords = { ...mockRoot, wordCount: 0 }
     const { emitted } = renderWithStore(RootListItem, {
-      props: { 
+      props: {
         root: rootWithNoWords,
         showDeleteButton: true,
       },
@@ -203,9 +203,10 @@ describe('RootListItem', () => {
     })
 
     const letterElements = screen.getAllByText(/^[كتب]$/)
-    letterElements.forEach(element => {
-      expect(element).toHaveClass('arabic')
-    })
+
+    for (const letter of letterElements) {
+      expect(letter).toHaveClass('arabic')
+    }
   })
 
   it('shows correct letter styling', () => {
@@ -232,7 +233,8 @@ describe('RootListItem', () => {
   it('handles very long meaning text', () => {
     const rootWithLongMeaning = {
       ...mockRoot,
-      meaning: 'This is a very long meaning text that describes the semantic field of this Arabic root in great detail with many descriptive words',
+      meaning:
+        'This is a very long meaning text that describes the semantic field of this Arabic root in great detail with many descriptive words',
     }
 
     renderWithStore(RootListItem, {

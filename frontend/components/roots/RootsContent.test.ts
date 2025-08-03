@@ -6,7 +6,7 @@ import { RootsContent } from '#components'
 
 const mockRoot: Root = {
   id: '1',
-  letters: ["ر", "و", "ح"],
+  letters: ['ر', 'و', 'ح'],
   normalizedForm: 'روج',
   displayForm: 'ر-و-ح',
   letterCount: 3,
@@ -21,7 +21,7 @@ const mockRoots: Root[] = [
   {
     ...mockRoot,
     id: '2',
-    letters: ["ش", "م", "ش"],
+    letters: ['ش', 'م', 'ش'],
     normalizedForm: 'شمس',
     displayForm: 'ش-م-س',
     meaning: 'related to reading',
@@ -55,8 +55,8 @@ describe('RootsContent', () => {
 
   it('displays error state', () => {
     renderWithStore(RootsContent, {
-      props: { 
-        ...defaultProps, 
+      props: {
+        ...defaultProps,
         loading: false,
         error: 'Failed to load roots',
       },
@@ -68,8 +68,8 @@ describe('RootsContent', () => {
 
   it('displays empty state when no roots', () => {
     renderWithStore(RootsContent, {
-      props: { 
-        ...defaultProps, 
+      props: {
+        ...defaultProps,
         roots: [],
         loading: false,
         error: null,
@@ -123,9 +123,9 @@ describe('RootsContent', () => {
     })
 
     // Check pagination is present
-    const paginationButtons = screen.getAllByRole('button').filter(btn => 
-      /^\d+$/.test(btn.textContent || '')
-    )
+    const paginationButtons = screen
+      .getAllByRole('button')
+      .filter(btn => /^\d+$/.test(btn.textContent || ''))
     expect(paginationButtons.length).toBeGreaterThan(0)
   })
 
@@ -142,9 +142,7 @@ describe('RootsContent', () => {
 
     // Pagination should be hidden
     const buttons = screen.getAllByRole('button')
-    const paginationButtons = buttons.filter(btn => 
-      /^\d+$/.test(btn.textContent || '')
-    )
+    const paginationButtons = buttons.filter(btn => /^\d+$/.test(btn.textContent || ''))
     expect(paginationButtons.length).toBe(0)
   })
 
@@ -199,8 +197,8 @@ describe('RootsContent', () => {
 
   it('shows empty state icon', () => {
     renderWithStore(RootsContent, {
-      props: { 
-        ...defaultProps, 
+      props: {
+        ...defaultProps,
         roots: [],
       },
     })
@@ -211,8 +209,8 @@ describe('RootsContent', () => {
 
   it('handles error state styling', () => {
     renderWithStore(RootsContent, {
-      props: { 
-        ...defaultProps, 
+      props: {
+        ...defaultProps,
         loading: false,
         error: 'Test error',
       },

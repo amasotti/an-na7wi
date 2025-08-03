@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { renderWithStore } from '~/test/test-utils'
-import type { WordSummary } from '~/types'
+import { Dialect, Difficulty, type WordSummary } from '~/types'
 import { RootsRootWordItem as RootWordItem } from '#components'
 
 const mockWord: WordSummary = {
@@ -184,7 +184,7 @@ describe('RootWordItem', () => {
   it('handles special characters in text fields', () => {
     const specialWord = {
       ...mockWord,
-        arabic: 'كتب "مميّز"',
+      arabic: 'كتب "مميّز"',
       transliteration: 'kitab "mumayyaz"',
       translation: 'special "book" & symbols',
     }
@@ -275,9 +275,9 @@ describe('RootWordItem', () => {
       transliteration: null,
       translation: null,
       partOfSpeech: null,
-      difficulty: 'BEGINNER',
-      dialect: 'MSA',
-    } as any
+      difficulty: Difficulty.BEGINNER,
+      dialect: Dialect.MSA,
+    } as unknown as WordSummary
 
     renderWithStore(RootWordItem, {
       props: { word: nullPropsWord },

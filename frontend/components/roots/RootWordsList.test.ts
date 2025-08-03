@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { renderWithStore } from '~/test/test-utils'
-import {Dialect, Difficulty, type WordSummary} from '~/types'
+import { Dialect, Difficulty, type WordSummary } from '~/types'
 import { RootsRootWordsList as RootWordsList } from '#components'
 
 const mockWords: WordSummary[] = [
@@ -70,7 +70,9 @@ describe('RootWordsList', () => {
     })
 
     expect(screen.getByText('No words found')).toBeInTheDocument()
-    expect(screen.getByText('No words are currently associated with this root.')).toBeInTheDocument()
+    expect(
+      screen.getByText('No words are currently associated with this root.')
+    ).toBeInTheDocument()
   })
 
   it('shows empty state icon when no words', () => {
@@ -93,16 +95,16 @@ describe('RootWordsList', () => {
     // Verify clickable elements are present
     const wordItems = document.querySelectorAll('.cursor-pointer')
     expect(wordItems).toHaveLength(3)
-    
+
     // Verify each word item has the expected content
     expect(screen.getByText('كتب')).toBeInTheDocument()
-    expect(screen.getByText('كتيب')).toBeInTheDocument() 
+    expect(screen.getByText('كتيب')).toBeInTheDocument()
     expect(screen.getByText('EC*(')).toBeInTheDocument()
-    
+
     // Verify the items have proper hover styling
-    wordItems.forEach(item => {
+    for (const item of wordItems) {
       expect(item).toHaveClass('hover:bg-gray-50', 'cursor-pointer')
-    })
+    }
   })
 
   it('handles single word correctly', () => {
@@ -198,16 +200,16 @@ describe('RootWordsList', () => {
 
     // Verify part of speech badges
     expect(screen.getAllByText('NOUN')).toHaveLength(3)
-    
+
     // Verify difficulty badges
     expect(screen.getAllByText('BEGINNER')).toHaveLength(2)
     expect(screen.getByText('INTERMEDIATE')).toBeInTheDocument()
-    
-    // Verify transliterations 
+
+    // Verify transliterations
     expect(screen.getByText('kitab')).toBeInTheDocument()
     expect(screen.getByText('katib')).toBeInTheDocument()
     expect(screen.getByText('maktab')).toBeInTheDocument()
-    
+
     // Verify translations
     expect(screen.getByText('book')).toBeInTheDocument()
     expect(screen.getByText('writer')).toBeInTheDocument()
@@ -299,5 +301,4 @@ describe('RootWordsList', () => {
     expect(screen.getByText('كتب')).toBeInTheDocument()
     expect(screen.getByText('1 words')).toBeInTheDocument()
   })
-
 })
