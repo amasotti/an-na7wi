@@ -1,16 +1,16 @@
 package com.tonihacks.annahwi.controller
 
-import com.tonihacks.annahwi.config.PostgreSQLTestResource
+import com.tonihacks.annahwi.config.GlobalTestProfile
 import com.tonihacks.annahwi.dto.request.TransliterationRequestDTO
-import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 
 @QuarkusTest
-@QuarkusTestResource(PostgreSQLTestResource::class)
+@TestProfile(GlobalTestProfile::class)
 class TransliterationControllerTest {
 
     @Test

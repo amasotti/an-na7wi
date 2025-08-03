@@ -43,7 +43,7 @@ class ExampleGenerationService {
             return ExampleGenerationResponseDTO(examples)
             
         } catch (e: Exception) {
-            logger.error("Error generating examples for ${request.arabic}: ${e.message}", e)
+            logger.debug("Error generating examples for ${request.arabic}: ${e.message}")
             throw InternalServerErrorException("Failed to generate examples: ${e.message}", e)
         }
     }

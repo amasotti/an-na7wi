@@ -1,11 +1,14 @@
 package com.tonihacks.annahwi.exception
 
+import com.tonihacks.annahwi.config.GlobalTestProfile
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 
 @QuarkusTest
+@TestProfile(GlobalTestProfile::class)
 class ResultTest {
 
     @Test

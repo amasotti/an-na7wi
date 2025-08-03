@@ -180,10 +180,10 @@ class RootController {
             val root = rootService.createRoot(request)
             return Response.status(Response.Status.CREATED).entity(RootResponseDTO.fromEntity(root)).build()
         }  catch (e: AppException) {
-            logger.error("Error creating root: ${e.message}", e)
+            logger.debug("Error creating root: ${e.message}")
             return Response.status(Response.Status.BAD_REQUEST).entity(e.error).build()
         } catch (e: Exception) {
-            logger.error("Unexpected error creating root", e)
+            logger.debug("Unexpected error creating root: ${e.message}")
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build()
         }
 

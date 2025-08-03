@@ -1,7 +1,9 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.config.GlobalTestProfile
 import com.tonihacks.annahwi.dto.request.ExampleGenerationRequestDTO
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import jakarta.inject.Inject
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import java.lang.reflect.Field
 
 @QuarkusTest
+@TestProfile(GlobalTestProfile::class)
 class ExampleGenerationServiceTest {
 
     @Inject

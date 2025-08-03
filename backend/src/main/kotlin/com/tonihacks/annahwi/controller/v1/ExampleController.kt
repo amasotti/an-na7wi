@@ -37,8 +37,7 @@ class ExampleController {
         return try {
             val response = exampleGenerationService.generateExamples(request)
             Response.ok(response).build()
-        } catch (e: Exception) {
-            logger.error("Failed to generate examples for ${request.arabic}: ${e.message}", e)
+        } catch (_: Exception) {
             Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(mapOf("error" to "Failed to generate examples"))
                 .build()

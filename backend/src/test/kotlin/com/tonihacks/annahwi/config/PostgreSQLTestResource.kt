@@ -6,9 +6,9 @@ import org.testcontainers.containers.wait.strategy.Wait
 import java.time.Duration
 
 /**
- * TestResource to manage PostgreSQL TestContainer lifecycle for Quarkus tests.
- * This ensures the database container starts before Quarkus application context
- * and provides proper connection configuration.
+ * Global TestResource to manage PostgreSQL TestContainer lifecycle for all Quarkus integration tests.
+ * This ensures consistent database setup across all @QuarkusTest classes while avoiding
+ * configuration conflicts with DevServices.
  */
 class PostgreSQLTestResource : QuarkusTestResourceLifecycleManager, AutoCloseable {
     
@@ -19,9 +19,9 @@ class PostgreSQLTestResource : QuarkusTestResourceLifecycleManager, AutoCloseabl
             .withDatabaseName("testdb")
             .withUsername("testuser")
             .withPassword("testpass")
-            .withReuse(false)
+            .withReuse(false) // Explicitly disable reuse to avoid CI issues
             .waitingFor(Wait.forListeningPort())
-            .withStartupTimeout(Duration.ofMinutes(2))
+            .withStartupTimeout(Duration.ofMinutes(3)) // Increased timeout for CI
         
         postgreSQLContainer!!.start()
         

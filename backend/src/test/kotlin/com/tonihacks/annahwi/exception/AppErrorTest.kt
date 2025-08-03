@@ -1,14 +1,14 @@
 package com.tonihacks.annahwi.exception
 
-import com.tonihacks.annahwi.config.PostgreSQLTestResource
+import com.tonihacks.annahwi.config.GlobalTestProfile
 import com.tonihacks.annahwi.entity.Dialect
-import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.TestProfile
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
 @QuarkusTest
-@QuarkusTestResource(PostgreSQLTestResource::class)
+@TestProfile(GlobalTestProfile::class)
 class AppErrorTest {
 
     @Test

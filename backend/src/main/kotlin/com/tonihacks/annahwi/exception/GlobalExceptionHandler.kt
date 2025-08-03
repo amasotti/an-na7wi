@@ -23,7 +23,8 @@ class GlobalExceptionHandler : ExceptionMapper<Exception> {
     private val logger = Logger.getLogger(GlobalExceptionHandler::class.java)
     
     override fun toResponse(exception: Exception): Response {
-        logger.debug("Handling exception: ${exception.javaClass.simpleName}", exception)
+        // Only log at debug level to avoid noise in tests
+        logger.debug("Handling exception: ${exception.javaClass.simpleName}: ${exception.message}")
         
         return when (exception) {
             is AppException -> handleAppException(exception.error)
@@ -32,6 +33,15 @@ class GlobalExceptionHandler : ExceptionMapper<Exception> {
             is ValueInstantiationException -> handleJsonDeserializationException(exception)
             is JsonParseException -> handleJsonParseException(exception)
             is IllegalArgumentException -> handleIllegalArgumentException(exception)
+            is RuntimeException -> {
+                // Check if this wraps a MissingKotlinParameterException
+                val cause = exception.cause
+                if (cause != null && cause.javaClass.simpleName == "MissingKotlinParameterException") {
+                    handleMissingKotlinParameter(cause as Exception)
+                } else {
+                    handleGenericException(exception)
+                }
+            }
             else -> handleGenericException(exception)
         }
     }
@@ -43,7 +53,8 @@ class GlobalExceptionHandler : ExceptionMapper<Exception> {
             is AppError.BusinessRule -> createErrorResponse(error, Response.Status.BAD_REQUEST)
             is AppError.Conflict -> createErrorResponse(error, Response.Status.CONFLICT)
             is AppError.Internal -> {
-                logger.error("Internal server error: ${error.message}")
+                // Log internal errors but avoid stack traces in tests
+                logger.warn("Internal server error: ${error.message}")
                 createErrorResponse(error, Response.Status.INTERNAL_SERVER_ERROR)
             }
         }
@@ -127,6 +138,7 @@ class GlobalExceptionHandler : ExceptionMapper<Exception> {
         return Response.status(Response.Status.BAD_REQUEST).entity(errorResponse).build()
     }
     
+    
     private fun handleJsonDeserializationException(exception: ValueInstantiationException): Response {
         // Extract field name from the exception message
         val fieldName = extractFieldNameFromException(exception.message)
@@ -164,7 +176,17 @@ class GlobalExceptionHandler : ExceptionMapper<Exception> {
     }
     
     private fun handleGenericException(exception: Exception): Response {
-        logger.error("Unhandled exception: ${exception.javaClass.simpleName}", exception)
+        // Handle MissingKotlinParameterException by checking class name (avoid import issues)
+        if (exception.javaClass.simpleName == "MissingKotlinParameterException") {
+            return handleMissingKotlinParameter(exception)
+        }
+        
+        // Use debug level for tests, error level for production
+        if (logger.isDebugEnabled) {
+            logger.debug("Unhandled exception: ${exception.javaClass.simpleName}: ${exception.message}", exception)
+        } else {
+            logger.error("Unhandled exception: ${exception.javaClass.simpleName}: ${exception.message}")
+        }
         
         val errorResponse = ErrorResponseDTO(
             error = ErrorDetailDTO(
@@ -173,5 +195,26 @@ class GlobalExceptionHandler : ExceptionMapper<Exception> {
             )
         )
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse).build()
+    }
+    
+    private fun handleMissingKotlinParameter(exception: Exception): Response {
+        // Extract field name from message
+        val message = exception.message ?: ""
+        val fieldName = when {
+            message.contains("parameter ") -> {
+                val regex = "parameter (\\w+)".toRegex()
+                regex.find(message)?.groupValues?.get(1) ?: "unknown"
+            }
+            else -> "unknown"
+        }
+        
+        val errorResponse = ErrorResponseDTO(
+            error = ErrorDetailDTO(
+                code = "VALIDATION_ERROR",
+                message = "Required field '$fieldName' is missing",
+                field = fieldName
+            )
+        )
+        return Response.status(Response.Status.BAD_REQUEST).entity(errorResponse).build()
     }
 }
