@@ -47,11 +47,11 @@ jobs:
 
       - name: 🔍 Run Gradle check
         working-directory: backend
-        run: ./gradlew check
+        run: ./gradlew test detekt
 
       - name: 🐳 Build Docker image
         working-directory: backend
-        run: ./gradlew build -Dquarkus.container-image.build=true -Dquarkus.container-image.tag=${{ github.sha }}
+        run: ./gradlew quarkusBuild
 
       - name: 📝 Backend Build Summary
         if: always()

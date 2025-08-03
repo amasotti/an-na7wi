@@ -49,11 +49,11 @@ jobs:
 
       - name: 🔍 Run Gradle check
         working-directory: backend
-        run: ./gradlew check
+        run: ./gradlew detekt test
 
       - name: 🐳 Build Docker image
         working-directory: backend
-        run: ./gradlew build -Dquarkus.container-image.build=true -Dquarkus.container-image.tag=${{ github.ref_name }}
+        run: ./gradlew quarkusBuild
 
       - name: 📊 Upload test results
         if: always()
@@ -68,7 +68,7 @@ jobs:
         with:
           name: build-reports
           path: backend/build/reports/
-          retention-days: 7
+          retention-days: 2
 
   release:
     name: 📝 Create Release
