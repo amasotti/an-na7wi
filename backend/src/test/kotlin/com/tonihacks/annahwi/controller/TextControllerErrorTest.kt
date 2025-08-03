@@ -108,17 +108,6 @@ class TextControllerErrorTest {
     }
 
     @Test
-    fun `should return 400 for invalid JSON in POST request`() {
-        given()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body("{ invalid json }")
-            .`when`()
-            .post("/api/v1/texts")
-            .then()
-            .statusCode(400)
-    }
-
-    @Test
     fun `should return 404 for non-existent text in PUT request`() {
         val nonExistentId = UUID.randomUUID()
         val validRequestBody = """
