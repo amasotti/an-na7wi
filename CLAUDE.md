@@ -13,6 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Development mode**: `cd backend && ./gradlew quarkusDev`
 - **Build**: `cd backend && ./gradlew quarkusBuild`
 - **Test**: `cd backend && ./gradlew test`
+- **IMPORTANT**: Never run `gradlew build` for checking for errors or compilation. Always use "gradlew test" or "gradlew quarkusBuild". The `gradlew build` task will always also attempt to build the native image, using 16 processors and taking 30min to complete**
 
 ### Frontend (Nuxt 4/TypeScript)
 - **Development**: `cd frontend && pnpm run dev`

@@ -1,0 +1,38 @@
+### Generate Arabic examples for a word
+POST http://localhost:8080/api/v1/examples/generate
+Content-Type: application/json
+
+{
+  "arabic": "كتاب"
+}
+
+### Expected Response:
+### {
+###   "examples": [
+###     {
+###       "arabic": "هذا كتاب مفيد",
+###       "english": "This is a useful book"
+###     },
+###     {
+###       "arabic": "أقرأ الكتاب كل يوم",
+###       "english": "I read the book every day"
+###     }
+###   ]
+### }
+
+### Generate Arabic examples with context
+POST http://localhost:8080/api/v1/examples/generate
+Content-Type: application/json
+
+{
+  "arabic": "يدرس",
+  "context": "education"
+}
+
+### Generate examples for an expression
+POST http://localhost:8080/api/v1/examples/generate
+Content-Type: application/json
+
+{
+  "arabic": "صباح الخير"
+}

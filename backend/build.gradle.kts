@@ -32,6 +32,7 @@ dependencies {
     implementation(libs.quarkus.resteasy.jackson)
     implementation(libs.quarkus.smallrye.openapi)
     implementation(libs.quarkus.kotlin)
+    implementation(libs.anthropic.java)
 
     testImplementation(libs.quarkus.junit5)
     testImplementation(libs.restassured)
