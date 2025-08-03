@@ -19,7 +19,7 @@
     "test:coverage": "vitest run --coverage",
     "typecheck": "npx tsc --noEmit",
     "typecheck:go": "npx tsgo --noEmit",
-    "typecheck:vue": "npx vue-tsc --noEmit",
+    "typecheck:vue": "npx vue-tsc --noEmit"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "latest",
