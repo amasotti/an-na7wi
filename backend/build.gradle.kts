@@ -17,7 +17,21 @@ val quarkusPlatformVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    implementation(libs.bundles.quarkus)
+    implementation(libs.quarkus.arc)
+    implementation(libs.quarkus.flyway)
+    implementation(libs.quarkus.docker)
+    implementation(libs.quarkus.hibernate.orm.panache)
+    implementation(libs.quarkus.hibernate.validator)
+    implementation(libs.quarkus.hibernate.orm)
+    implementation(libs.quarkus.loggins.json)
+    implementation(libs.quarkus.smallrye.health)
+    implementation(libs.quarkus.jdbc.postgresql)
+    implementation(libs.quarkus.micrometer)
+    implementation(libs.quarkus.micrometer.registry.prometheus)
+    implementation(libs.quarkus.resteasy)
+    implementation(libs.quarkus.resteasy.jackson)
+    implementation(libs.quarkus.smallrye.openapi)
+    implementation(libs.quarkus.kotlin)
 
     testImplementation(libs.quarkus.junit5)
     testImplementation(libs.restassured)
@@ -26,7 +40,7 @@ dependencies {
 }
 
 group = "com.tonihacks"
-version = "0.0.1"
+version = "0.5.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -40,7 +54,6 @@ allOpen {
     annotation("jakarta.ws.rs.Path")
     annotation("jakarta.enterprise.context.ApplicationScoped")
     annotation("jakarta.persistence.Entity")
-    annotation("io.quarkus.test.junit.QuarkusTest")
 }
 
 kotlin {
