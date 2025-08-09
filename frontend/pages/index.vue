@@ -3,9 +3,7 @@
     <!-- Hero Section -->
     <div class="text-center mb-16">
       <div class="inline-block mb-6">
-        <div class="w-20 h-20 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-lg mb-4 mx-auto ring-2 ring-primary-200">
-          <span class="text-white font-bold text-3xl">ن</span>
-        </div>
+        <ArabicCalligraphy />
       </div>
       
       <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-2">
@@ -113,6 +111,7 @@
 </template>
 
 <script setup lang="ts">
+import ArabicCalligraphy from '~/components/common/ArabicCalligraphy.vue'
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseCard from '~/components/common/BaseCard.vue'
