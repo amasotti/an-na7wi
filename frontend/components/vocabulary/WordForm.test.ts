@@ -5,6 +5,7 @@ import { renderWithStore } from '~/test/test-utils'
 import type { ExampleGenerationResponse, SelectOption, Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 import { VocabularyWordForm as WordForm } from '#components'
+import {mockDictionaryLinks} from "~/test/mocks/server";
 
 // Mock the services
 vi.mock('~/composables/rootService', () => ({
@@ -54,6 +55,7 @@ const mockWord: Word = {
   isVerified: true,
   createdAt: new Date().toISOString(),
   frequency: 1,
+  dictionaryLinks: mockDictionaryLinks
 }
 
 const defaultProps = {

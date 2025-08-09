@@ -140,7 +140,7 @@ describe('WordCard', () => {
       await fireEvent.click(editButton)
 
       expect(emitted().edit).toHaveLength(1)
-      expect(emitted().edit[0]).toEqual([word])
+      expect(emitted().edit!![0]).toEqual([word])
     })
 
     it('emits delete event when delete button is clicked', async () => {
@@ -151,7 +151,7 @@ describe('WordCard', () => {
       await fireEvent.click(deleteButton)
 
       expect(emitted().delete).toHaveLength(1)
-      expect(emitted().delete[0]).toEqual([word])
+      expect(emitted().delete!![0]).toEqual([word])
     })
 
     it('emits click event when card is clicked', async () => {
@@ -162,7 +162,7 @@ describe('WordCard', () => {
       await fireEvent.click(card!)
 
       expect(emitted().click).toHaveLength(1)
-      expect(emitted().click[0]).toEqual([word])
+      expect(emitted().click!![0]).toEqual([word])
     })
   })
 

@@ -1,5 +1,5 @@
 import { DictionaryType } from '@/types/enums'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import {
   detectDictionaryType,
   dictionaryLinksToString,
@@ -9,6 +9,7 @@ import {
   migrateDictionaryLinks,
   validateDictionaryLinks,
 } from '../dictionaryMigration'
+import type {DictionaryLink, Word} from "~/types";
 
 // Mock crypto.randomUUID for consistent test results
 Object.defineProperty(global, 'crypto', {
@@ -46,12 +47,12 @@ describe('dictionaryMigration', () => {
     it('migrates multiple URLs correctly', () => {
       const input =
         'https://www.almaany.com/test, https://derja.ninja/word, https://example.com/custom'
-      const result = migrateDictionaryLinks(input)
+      const result: DictionaryLink[] = migrateDictionaryLinks(input)
 
       expect(result).toHaveLength(3)
-      expect(result[0].type).toBe(DictionaryType.ALMANY)
-      expect(result[1].type).toBe(DictionaryType.DERJA_NINJA)
-      expect(result[2].type).toBe(DictionaryType.CUSTOM)
+      expect(result[0]!!.type).toBe(DictionaryType.ALMANY)
+      expect(result[1]!!.type).toBe(DictionaryType.DERJA_NINJA)
+      expect(result[2]!!.type).toBe(DictionaryType.CUSTOM)
     })
 
     it('filters out empty URLs after splitting', () => {
@@ -66,8 +67,8 @@ describe('dictionaryMigration', () => {
       const result = migrateDictionaryLinks(input)
 
       expect(result).toHaveLength(2)
-      expect(result[0].url).toBe('https://www.almaany.com/test')
-      expect(result[1].url).toBe('https://derja.ninja/word')
+      expect(result[0]!!.url).toBe('https://www.almaany.com/test')
+      expect(result[1]!!.url).toBe('https://derja.ninja/word')
     })
   })
 
@@ -75,12 +76,6 @@ describe('dictionaryMigration', () => {
     it('detects AlMaany URLs', () => {
       expect(detectDictionaryType('https://www.almaany.com/test')).toBe(DictionaryType.ALMANY)
       expect(detectDictionaryType('http://almaany.com/test')).toBe(DictionaryType.ALMANY)
-    })
-
-    it('detects Al-Lughatuna URLs', () => {
-      expect(detectDictionaryType('https://al-lughatuna.com/test')).toBe(
-        DictionaryType.AL_LUGHATUNA
-      )
     })
 
     it('detects Living Arabic URLs', () => {
@@ -301,14 +296,15 @@ describe('dictionaryMigration', () => {
         id: '1',
         arabic: 'كتاب',
         dictionaryLinks: 'https://www.almaany.com/test, https://example.com/custom',
-      }
+      } as unknown as Partial<Word>
 
       const result = ensureModernDictionaryLinks(oldWord)
+      const dictionaryLinks = result.dictionaryLinks as DictionaryLink[]
 
-      expect(Array.isArray(result.dictionaryLinks)).toBe(true)
-      expect(result.dictionaryLinks).toHaveLength(2)
-      expect(result.dictionaryLinks[0].type).toBe(DictionaryType.ALMANY)
-      expect(result.dictionaryLinks[1].type).toBe(DictionaryType.CUSTOM)
+      expect(Array.isArray(dictionaryLinks)).toBe(true)
+      expect(dictionaryLinks).toHaveLength(2)
+      expect(dictionaryLinks[0]!!.type).toBe(DictionaryType.ALMANY)
+      expect(dictionaryLinks[1]!!.type).toBe(DictionaryType.CUSTOM)
     })
 
     it('ensures empty array when dictionaryLinks is missing', () => {
@@ -328,7 +324,7 @@ describe('dictionaryMigration', () => {
         id: '1',
         arabic: 'كتاب',
         dictionaryLinks: null,
-      }
+      } as unknown as Partial<Word>
 
       const result = ensureModernDictionaryLinks(word)
 
@@ -362,7 +358,7 @@ describe('dictionaryMigration', () => {
         translation: 'book',
         difficulty: 'BEGINNER',
         dictionaryLinks: 'https://www.almaany.com/test',
-      }
+      } as unknown as Partial<Word>
 
       const result = ensureModernDictionaryLinks(word)
 

@@ -34,24 +34,30 @@ export const wordService = {
    * Get a single word by ID
    */
   async getWord(id: string): Promise<Word> {
-    const response = await useApiClient().get(`/words/${id}`)
-    return ensureModernDictionaryLinks(response.data)
+    try {
+      const response = await useApiClient().get(`/words/${id}`);
+      return response.data;
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        console.log('Word not found:', id);
+        throw new Error(`Word not found: ${id}`);
+      }
+      throw error;
+    }
   },
 
   /**
    * Create a new word
    */
   async createWord(wordData: Partial<Word>): Promise<Word> {
-    const response = await useApiClient().post('/words', wordData)
-    return ensureModernDictionaryLinks(response.data)
+    return useApiClient().post('/words', wordData)
   },
 
   /**
    * Update an existing word
    */
   async updateWord(id: string, word: Partial<Word>): Promise<Word> {
-    const response = await useApiClient().put(`/words/${id}`, word)
-    return ensureModernDictionaryLinks(response.data)
+    return await useApiClient().put(`/words/${id}`, word)
   },
 
   /**

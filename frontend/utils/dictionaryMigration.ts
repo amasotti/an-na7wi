@@ -1,4 +1,4 @@
-import type { DictionaryLink } from '@/types'
+import type {DictionaryLink, Word} from '@/types'
 import { DictionaryType } from '@/types/enums'
 
 /**
@@ -33,9 +33,6 @@ export function detectDictionaryType(url: string): DictionaryType {
 
     if (hostname.includes('almaany.com')) {
       return DictionaryType.ALMANY
-    }
-    if (hostname.includes('al-lughatuna.com')) {
-      return DictionaryType.AL_LUGHATUNA
     }
     if (hostname.includes('livingarabic.com')) {
       return DictionaryType.LIVING_ARABIC
@@ -122,14 +119,12 @@ export function validateDictionaryLinks(links: DictionaryLink[]): {
  * Helper to ensure Word entities have the new dictionary links format
  */
 export function ensureModernDictionaryLinks(
-  word: Record<string, unknown>
-): Record<string, unknown> {
+  word: Partial<Word>
+): Partial<Word> {
   // If word has old string format, migrate it
   if (typeof word.dictionaryLinks === 'string') {
-    return {
-      ...word,
-      dictionaryLinks: migrateDictionaryLinks(word.dictionaryLinks),
-    }
+    word.dictionaryLinks = migrateDictionaryLinks(word.dictionaryLinks)
+    return word
   }
 
   // If word has new format but missing, ensure empty array

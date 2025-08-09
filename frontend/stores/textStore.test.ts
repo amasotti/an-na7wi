@@ -59,6 +59,7 @@ const mockWord: Word = {
   frequency: 1,
   isVerified: true,
   createdAt: new Date().toISOString(),
+  dictionaryLinks: [],
 }
 
 const mockTextResponse: PaginatedResponse<Text> = {

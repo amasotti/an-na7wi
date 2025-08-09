@@ -1,9 +1,9 @@
-import { fireEvent, screen } from '@testing-library/vue'
-import { describe, expect, it } from 'vitest'
-import { renderWithStore } from '~/test/test-utils'
-import type { SelectOption, Word } from '~/types'
-import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
-import { VocabularyContent } from '#components'
+import {fireEvent, screen} from '@testing-library/vue'
+import {describe, expect, it} from 'vitest'
+import {renderWithStore} from '~/test/test-utils'
+import {DictionaryType, type SelectOption, type Word} from '~/types'
+import {Dialect, Difficulty, MasteryLevel, PartOfSpeech} from '~/types/enums'
+import {VocabularyContent} from '#components'
 
 const mockWord: Word = {
   id: '1',
@@ -20,6 +20,14 @@ const mockWord: Word = {
   isVerified: true,
   createdAt: '2023-01-01T00:00:00Z',
   frequency: 1,
+  dictionaryLinks: [
+    {
+      url: 'https://example.com/dictionary/kitab',
+      type: DictionaryType.ALMANY,
+      displayName: 'Example Dictionary',
+      id: '1',
+    },
+  ],
 }
 
 const mockWords: Word[] = [

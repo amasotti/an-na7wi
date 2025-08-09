@@ -4,6 +4,7 @@ import { renderWithStore } from '~/test/test-utils'
 import type { Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 import { VocabularyWordDeleteModal as WordDeleteModal } from '#components'
+import {mockDictionaryLinks} from "~/test/mocks/server";
 
 const mockWord: Word = {
   id: '1',
@@ -20,6 +21,7 @@ const mockWord: Word = {
   isVerified: true,
   createdAt: '2023-01-01T00:00:00Z',
   frequency: 1,
+  dictionaryLinks: mockDictionaryLinks
 }
 
 const defaultProps = {

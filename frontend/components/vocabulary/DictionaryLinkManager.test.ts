@@ -85,8 +85,10 @@ describe('DictionaryLinkManager', () => {
       const addButton = screen.getByText('Add Dictionary')
       await fireEvent.click(addButton)
 
-      expect(emitted()['update:modelValue']).toHaveLength(1)
-      expect(emitted()['update:modelValue'][0][0]).toEqual([
+      const emittedArray = emitted()['update:modelValue'] as Array<Array<DictionaryLink>>
+
+      expect(emittedArray).toHaveLength(1)
+      expect(emittedArray[0]!![0]).toEqual([
         {
           id: 'test-uuid-123',
           type: DictionaryType.CUSTOM,

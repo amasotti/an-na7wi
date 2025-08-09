@@ -8,6 +8,7 @@ import {
   type Word,
 } from '~/types'
 import { wordService } from './wordService'
+import {mockDictionaryLinks} from "~/test/mocks/server";
 
 // Mock the API client
 const mockApiClient = {
@@ -37,9 +38,9 @@ describe('wordService', () => {
     masteryLevel: MasteryLevel.LEARNING,
     frequency: 100,
     root: 'ك-ت-ب',
-    dictionaryLinks: [],
     createdAt: '2024-01-01T00:00:00Z',
     isVerified: true,
+    dictionaryLinks: mockDictionaryLinks
   }
 
   const mockPaginatedResponse: PaginatedResponse<Word> = {
@@ -78,7 +79,7 @@ describe('wordService', () => {
 
   describe('getWord', () => {
     it('should fetch a single word by ID', async () => {
-      mockApiClient.get.mockResolvedValue({ data: mockWord })
+      mockApiClient.get.mockResolvedValue({ mockWord })
 
       const result = await wordService.getWord('1')
 

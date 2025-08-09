@@ -12,6 +12,7 @@ import {
   type Word,
 } from '~/types'
 import { rootService } from './rootService'
+import {mockDictionaryLinks} from "~/test/mocks/server";
 
 // Mock the API client
 const mockApiClient = {
@@ -55,6 +56,7 @@ describe('rootService', () => {
     isVerified: true,
     root: 'ك-ت-ب',
     createdAt: '2024-01-01T00:00:00Z',
+    dictionaryLinks: mockDictionaryLinks
   }
 
   const mockRootWithWords: RootWithWords = {
