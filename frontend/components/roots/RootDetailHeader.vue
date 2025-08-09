@@ -29,17 +29,12 @@
         </BaseButton>
       </div>
 
-      <!-- Root Display -->
       <div class="space-y-3">
-        <h1 class="text-5xl font-bold text-gray-900 arabic">
+        <h1 class="text-5xl font-bold text-gray-900 arabic text-center">
           {{ root.displayForm }}
         </h1>
         <div v-if="root.meaning" class="text-xl text-gray-700 font-medium">
           {{ root.meaning }}
-        </div>
-        <div v-if="root.analysis" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 class="text-sm font-semibold text-blue-900 mb-2">Linguistic Analysis</h3>
-          <p class="text-sm text-blue-800 whitespace-pre-wrap">{{ root.analysis }}</p>
         </div>
       </div>
 
@@ -93,6 +88,14 @@
             <span class="text-gray-600">Updated:</span>
             <span>{{ formatDate(root.updatedAt) }}</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Root Display -->
+      <div class="space-y-3">
+        <div v-if="root.analysis" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-blue-900 mb-2">Linguistic Analysis</h3>
+          <div class="text-left text-blue-800 prose prose-sm max-w-none prose-headings:text-blue-900 prose-strong:text-blue-900" v-html="$markdownit.render(root.analysis)"></div>
         </div>
       </div>
     </div>

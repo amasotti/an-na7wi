@@ -41,6 +41,7 @@ const mockRoot: Root = {
   displayForm: 'ك-ت-ب',
   letterCount: 3,
   meaning: 'related to writing',
+  analysis: '',
   wordCount: 0,
   createdAt: '2023-01-01T00:00:00Z',
   updatedAt: '2023-01-01T00:00:00Z',
@@ -190,7 +191,7 @@ describe('EditRootModal', () => {
     await fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(mockUpdateRoot).toHaveBeenCalledWith('1', 'ك-ت-ب', 'updated meaning')
+      expect(mockUpdateRoot).toHaveBeenCalledWith('1', 'ك-ت-ب', 'updated meaning', "")
     })
   })
 
