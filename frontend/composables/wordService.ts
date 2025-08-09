@@ -56,7 +56,7 @@ export const wordService = {
     } catch (error) {
       if (isAxiosError(error) && error.response?.status === 400) {
         console.error('Validation error:', error.response.data)
-        throw new Error('Validation error: ' + JSON.stringify(error.response.data))
+        throw new Error(`Validation error: ${JSON.stringify(error.response.data)}`)
       }
       throw error
     }
@@ -72,7 +72,7 @@ export const wordService = {
     } catch (error) {
       if (isAxiosError(error) && error.response?.status === 400) {
         console.error('Validation error:', error.response.data)
-        throw new Error('Validation error: ' + JSON.stringify(error.response.data))
+        throw new Error(`Validation error: ${JSON.stringify(error.response.data)}`)
       }
       throw error
     }
