@@ -3,7 +3,6 @@ import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
   devtools: {
     enabled: true,
-
     timeline: {
       enabled: true,
     },
@@ -41,9 +40,11 @@ export default defineNuxtConfig({
   },
   vite: {
     server: {
-      strictPort: true,
-      watch: {
-        usePolling: true,
+      hmr: {
+        protocol: "http",
+        host: 'localhost',
+        clientPort: 3000,
+        port: 3000,
       },
     },
   },
