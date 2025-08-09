@@ -60,6 +60,7 @@ class RootControllerTest {
             displayForm = "ك-ت-ب",
             letterCount = 3,
             meaning = "to write",
+            analysis = "Root related to writing and written materials",
             wordCount = 5,
             createdAt = java.time.LocalDateTime.now(),
             updatedAt = java.time.LocalDateTime.now()
@@ -131,6 +132,7 @@ class RootControllerTest {
             displayForm = "ك-ت-ب",
             letterCount = 3,
             meaning = "to write",
+            analysis = "Root related to writing and written materials",
             wordCount = 1,
             createdAt = java.time.LocalDateTime.now(),
             updatedAt = java.time.LocalDateTime.now()
