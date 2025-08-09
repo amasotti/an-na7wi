@@ -5,7 +5,7 @@
       <div>
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Arabic Text</h2>
         <div 
-          class="text-2xl leading-relaxed text-gray-900 font-arabic text-right bg-gray-50 p-6 rounded-lg relative"
+          class="arabic-text-display"
           dir="rtl"
           lang="ar"
           ref="arabicContentRef"
@@ -314,6 +314,29 @@ onUnmounted(() => {
 <style scoped>
 .font-arabic {
   font-family: 'Noto Naskh Arabic', 'Arabic Typesetting', 'Times New Roman', serif;
+}
+
+/* Enhanced Arabic Text Display */
+.arabic-text-display {
+  @apply text-2xl leading-relaxed text-gray-900 font-arabic text-right bg-gradient-to-br from-emerald-50/50 to-green-50/50 p-8 rounded-xl relative border border-emerald-100/30 shadow-sm;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 2;
+  word-spacing: 0.1em;
+  min-height: 150px;
+  
+  /* Selection styling */
+  &::selection {
+    @apply bg-yellow-200/60;
+  }
+  
+  /* Focus and interaction states */
+  &:hover {
+    @apply bg-gradient-to-br from-emerald-50/70 to-green-50/70 shadow-md;
+    transition: all 0.3s ease;
+  }
 }
 
 :deep(.annotation-highlight) {

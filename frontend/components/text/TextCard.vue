@@ -60,11 +60,16 @@
         </BaseBadge>
       </div>
 
-      <!-- Arabic Content -->
+      <!-- Arabic Content Preview -->
       <div class="mb-4">
         <p :class="arabicContentClasses">
-          {{ text.arabicContent }}
+          {{ truncatedArabicContent }}
         </p>
+        <div v-if="isArabicContentTruncated" class="text-center mt-2">
+          <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            {{ remainingWordsCount }} more words...
+          </span>
+        </div>
       </div>
 
       <!-- Transliteration (if available and in list mode) -->
@@ -187,7 +192,13 @@ const dropdownClasses = computed(
   () =>
     'absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20'
 )
-const arabicContentClasses = computed(() => combineClasses(textClasses.arabic.base, 'line-clamp-3'))
+const arabicContentClasses = computed(() =>
+  combineClasses(
+    textClasses.arabic.base,
+    'text-lg leading-relaxed font-arabic',
+    props.viewMode === 'grid' ? 'line-clamp-4' : 'line-clamp-3'
+  )
+)
 const transliterationClasses = computed(() => 'text-gray-600 italic text-sm line-clamp-2')
 const tagsContainerClasses = computed(() => `${layoutClasses.flex.wrap} gap-1`)
 
@@ -212,6 +223,28 @@ const dialectLabel = computed(() => {
     [Dialect.MSA]: 'MSA',
   }
   return labels[props.text.dialect]
+})
+
+// Arabic content handling for better readability
+const maxWordsInPreview = computed(() => (props.viewMode === 'grid' ? 15 : 25))
+
+const arabicWords = computed(() => {
+  return props.text.arabicContent.trim().split(/\s+/)
+})
+
+const truncatedArabicContent = computed(() => {
+  if (arabicWords.value.length <= maxWordsInPreview.value) {
+    return props.text.arabicContent
+  }
+  return `${arabicWords.value.slice(0, maxWordsInPreview.value).join(' ')}...`
+})
+
+const isArabicContentTruncated = computed(() => {
+  return arabicWords.value.length > maxWordsInPreview.value
+})
+
+const remainingWordsCount = computed(() => {
+  return Math.max(0, arabicWords.value.length - maxWordsInPreview.value)
 })
 
 const formattedDate = computed(() => {
