@@ -14,7 +14,7 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'AlMaany',
     icon: '📚',
     baseUrl: 'https://www.almaany.com',
-    urlTemplate: 'https://www.almaany.com/en/dict/ar-en/<arabic_query>',
+    urlTemplate: 'https://www.almaany.com/en/dict/ar-en/####arabic-query####',
     color: 'blue',
     description: 'Arabic-English dictionary with comprehensive definitions',
   },
@@ -22,7 +22,7 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'Living Arabic',
     icon: '📙',
     baseUrl: 'https://www.livingarabic.com',
-    urlTemplate: 'https://www.livingarabic.com/en/search?q=<arabic_query>',
+    urlTemplate: 'https://www.livingarabic.com/en/search?q=####arabic-query####',
     color: 'indigo',
     description: 'Modern Arabic language resources and dictionary',
   },
@@ -30,7 +30,7 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'Derja Ninja',
     icon: '🥷',
     baseUrl: 'https://derja.ninja',
-    urlTemplate: 'https://derja.ninja/search?search=<arabic_query>&script=arabic',
+    urlTemplate: 'https://derja.ninja/search?search=####arabic-query####&script=arabic',
     color: 'purple',
     description: 'Tunisian dialect dictionary',
   },
@@ -38,7 +38,7 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'Reverso',
     icon: '🔄',
     baseUrl: 'https://dictionary.reverso.net',
-    urlTemplate: 'https://dictionary.reverso.net/arabic-english/<arabic_query>',
+    urlTemplate: 'https://dictionary.reverso.net/arabic-english/####arabic-query####',
     color: 'orange',
     description: 'Context-based translations',
   },
@@ -46,7 +46,7 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'Wiktionary',
     icon: '📖',
     baseUrl: 'https://en.wiktionary.org',
-    urlTemplate: 'https://en.wiktionary.org/wiki/<arabic_query>',
+    urlTemplate: 'https://en.wiktionary.org/wiki/####arabic-query####',
     color: 'gray',
     description: 'Free multilingual dictionary',
   },
@@ -54,7 +54,7 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'Arabic Student Dictionary',
     icon: '🎓',
     baseUrl: 'https://www.arabicstudentsdictionary.com',
-    urlTemplate: 'https://www.arabicstudentsdictionary.com/search/<arabic_query>',
+    urlTemplate: 'https://www.arabicstudentsdictionary.com/search?q=####arabic-query####',
     color: 'green',
     description: 'Dictionary for Arabic language students',
   },
@@ -62,7 +62,7 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'Langenscheidt',
     icon: '🇩🇪',
     baseUrl: 'https://de.langenscheidt.com',
-    urlTemplate: 'https://de.langenscheidt.com/arabisch-deutsch/<arabic_query>',
+    urlTemplate: 'https://de.langenscheidt.com/arabisch-deutsch/####arabic-query####',
     color: 'red',
     description: 'Arabic-German dictionary',
   },
@@ -137,7 +137,7 @@ export const generateDictionaryUrl = (type: DictionaryType, arabicText: string):
 
   // URL encode the Arabic text for safe URL usage
   const encodedText = encodeURIComponent(arabicText)
-  return config.urlTemplate.replace('<arabic_query>', encodedText)
+  return config.urlTemplate.replace('####arabic-query####', encodedText)
 }
 
 /**

@@ -2,7 +2,7 @@
   <BaseModal
     :open="open"
     title="Edit Text"
-    size="lg"
+    size="xxl"
     @close="handleClose"
   >
     <form @submit.prevent="handleSubmit" class="text-edit-form">
@@ -53,7 +53,7 @@
           <textarea
             v-model="form.arabicContent"
             class="text-input rtl-text"
-            rows="6"
+            rows="10"
             placeholder="أدخل النص العربي هنا..."
             dir="rtl"
             required
@@ -77,7 +77,7 @@
           <textarea
             v-model="form.transliteration"
             class="text-input"
-            rows="4"
+            rows="10"
             placeholder="Enter transliteration..."
           />
         </div>
@@ -88,7 +88,7 @@
           <textarea
             v-model="form.translation"
             class="text-input"
-            rows="4"
+            rows="10"
             placeholder="Enter translation..."
           />
         </div>

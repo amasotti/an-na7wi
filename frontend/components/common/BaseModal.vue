@@ -34,7 +34,7 @@ import BaseIcon from './BaseIcon.vue'
 interface Props {
   open: boolean
   title?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
   persistent?: boolean
 }
 
