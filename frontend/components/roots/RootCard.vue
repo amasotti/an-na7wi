@@ -101,7 +101,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
-const mobileClasses = computed(() => 
+const mobileClasses = computed(() =>
   props.mobile ? 'border rounded-lg' : 'border-b lg:border-r last:border-r-0'
 )
 
@@ -115,9 +115,7 @@ const meaningClasses = computed(() => [
   props.mobile ? 'text-xs' : 'text-small',
 ])
 
-const detailsClasses = computed(() => 
-  props.mobile ? 'space-xs' : 'space-sm'
-)
+const detailsClasses = computed(() => (props.mobile ? 'space-xs' : 'space-sm'))
 
 const actionButtonsClasses = computed(() => [
   'absolute flex items-center gap-xs',

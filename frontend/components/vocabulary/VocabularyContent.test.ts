@@ -191,7 +191,8 @@ describe('VocabularyContent', () => {
       },
     })
 
-    expect(screen.getByText(/Showing 2 search results for "test"/)).toBeInTheDocument()
+    expect(screen.getByText(/Showing 2 search results/)).toBeInTheDocument()
+    expect(screen.getByText('test')).toBeInTheDocument()
   })
 
   it('shows singular search result info for one result', () => {
@@ -204,7 +205,10 @@ describe('VocabularyContent', () => {
       },
     })
 
-    expect(screen.getByText(/Showing 1 search result for "book"/)).toBeInTheDocument()
+    expect(screen.getByText(/Showing 1 search result/)).toBeInTheDocument()
+    // Check that the search term appears in a strong tag (results footer)
+    const searchTermElements = screen.getAllByText('book')
+    expect(searchTermElements.length).toBeGreaterThan(0)
   })
 
   it('calculates pagination info correctly', () => {
@@ -252,8 +256,8 @@ describe('VocabularyContent', () => {
       props: defaultProps,
     })
 
-    const container = document.querySelector('.vocabulary-content')
-    expect(container).toHaveClass('vocabulary-content')
+    const container = document.querySelector('.content-main')
+    expect(container).toHaveClass('content-main')
   })
 
   it('emits search-input event from filters', async () => {
@@ -348,8 +352,8 @@ describe('VocabularyContent', () => {
       props: { ...defaultProps, displayWords: [] },
     })
 
-    const emptyState = document.querySelector('.empty-state')
+    const emptyState = document.querySelector('.empty-state-card')
     expect(emptyState).toBeInTheDocument()
-    expect(emptyState).toHaveClass('empty-state')
+    expect(emptyState).toHaveClass('empty-state-card')
   })
 })

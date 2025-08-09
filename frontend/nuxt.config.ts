@@ -41,7 +41,7 @@ export default defineNuxtConfig({
   vite: {
     server: {
       hmr: {
-        protocol: "http",
+        protocol: 'http',
         host: 'localhost',
         clientPort: 3000,
         port: 3000,

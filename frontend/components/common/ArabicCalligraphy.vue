@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 interface Verse {
   arabic: string[]
@@ -48,8 +48,8 @@ interface Verse {
 
 const verse: Verse = {
   arabic: ['معرفة', 'اللغات', 'مدخل', 'إلى', 'الحكمة'],
-  transliteration: ['ma\'rifat', 'al-lughat', 'madkhal', 'ila', 'al-hikma'],
-  translation: 'Knowledge of languages is the doorway to wisdom.'
+  transliteration: ["ma'rifat", 'al-lughat', 'madkhal', 'ila', 'al-hikma'],
+  translation: 'Knowledge of languages is the doorway to wisdom.',
 }
 
 const showVerse = ref(false)
@@ -58,10 +58,18 @@ const showTranslation = ref(false)
 const showFlourishes = ref(false)
 
 onMounted(() => {
-  setTimeout(() => { showVerse.value = true }, 200)
-  setTimeout(() => { showTransliteration.value = true }, 2000)
-  setTimeout(() => { showTranslation.value = true }, 3500)
-  setTimeout(() => { showFlourishes.value = true }, 4000)
+  setTimeout(() => {
+    showVerse.value = true
+  }, 200)
+  setTimeout(() => {
+    showTransliteration.value = true
+  }, 2000)
+  setTimeout(() => {
+    showTranslation.value = true
+  }, 3500)
+  setTimeout(() => {
+    showFlourishes.value = true
+  }, 4000)
 })
 </script>
 

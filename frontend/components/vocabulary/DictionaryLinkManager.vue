@@ -268,13 +268,16 @@ const removeDictionaryLink = (index: number) => {
 }
 
 const pasteContent = (index: number) => {
-  navigator.clipboard.readText().then(text => {
-    if (text) {
-      links.value[index]!!.url = text
-    }
-  }).catch(err => {
-    console.error('Failed to read clipboard contents:', err)
-  })
+  navigator.clipboard
+    .readText()
+    .then(text => {
+      if (text) {
+        links.value[index]!.url = text
+      }
+    })
+    .catch(err => {
+      console.error('Failed to read clipboard contents:', err)
+    })
 }
 
 const isValidUrl = (url: string): boolean => {
@@ -282,7 +285,7 @@ const isValidUrl = (url: string): boolean => {
     new URL(url)
     return true
   } catch {
-    console.error("Invalid URL:", url)
+    console.error('Invalid URL:', url)
     return false
   }
 }

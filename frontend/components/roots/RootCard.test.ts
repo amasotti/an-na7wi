@@ -66,7 +66,7 @@ describe('RootCard', () => {
       props: { root: mockRoot },
     })
 
-    const card = screen.getByText('ك-ت-ب').closest('div')
+    const card = screen.getByText('ك-ت-ب').closest('article')
     await fireEvent.click(card!)
 
     expect(emitted('click')).toBeTruthy()

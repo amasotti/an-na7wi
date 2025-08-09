@@ -1,7 +1,7 @@
 <template>
-  <div class="vocabulary-content">
-    <!-- Filters and View Toggle -->
-    <div class="filters-and-controls">
+  <main class="content-main" aria-label="Vocabulary management">
+    <!-- Filters and Controls -->
+    <header class="content-filters">
       <WordFilters
         v-model:search="filters.search"
         v-model:difficulty="filters.difficulty"
@@ -14,25 +14,26 @@
         @filter-change="$emit('filter-change')"
       />
       
-      <div class="view-controls">
+      <div class="content-controls">
         <ViewToggle
           :model-value="viewMode"
           @update:model-value="handleViewModeChange"
+          aria-label="Switch between table and grid view"
         />
       </div>
-    </div>
+    </header>
 
-    <!-- Loading state -->
-    <div v-if="loading || searchLoading" class="loading-indicator">
-      <div class="loading-spinner"></div>
-      <p class="text-sm text-gray-500 mt-2">
+    <!-- Loading State -->
+    <section v-if="loading || searchLoading" class="loading-container" aria-live="polite">
+      <div class="loading-spinner" role="status" aria-label="Loading content"></div>
+      <p class="loading-text">
         {{ searchLoading ? 'Searching words...' : 'Loading words...' }}
       </p>
-    </div>
+    </section>
 
-    <!-- Empty state -->
-    <div v-else-if="!displayWords || displayWords.length === 0" class="empty-state">
-      <div class="empty-state-icon">
+    <!-- Empty State -->
+    <section v-else-if="!displayWords || displayWords.length === 0" class="empty-state-card" aria-live="polite">
+      <div class="empty-state-icon" role="img" aria-label="No content">
         <BaseIcon size="lg" class="text-gray-400">
           <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </BaseIcon>
@@ -46,21 +47,30 @@
           : 'Start building your vocabulary by adding new words.' 
         }}
       </p>
-      <div class="flex gap-2 justify-center">
-        <BaseButton v-if="isSearching" @click="$emit('clear-search')" variant="outline">
+      <div class="empty-state-actions">
+        <BaseButton 
+          v-if="isSearching" 
+          @click="$emit('clear-search')" 
+          variant="outline"
+          aria-label="Clear current search and filters"
+        >
           Clear Search
         </BaseButton>
-        <BaseButton @click="$emit('add-word')" class="flex items-center">
+        <BaseButton 
+          @click="$emit('add-word')" 
+          class="flex items-center"
+          aria-label="Add a new word to vocabulary"
+        >
           <BaseIcon size="sm" class="mr-2">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </BaseIcon>
           Add {{ isSearching ? '' : 'Your First ' }}Word
         </BaseButton>
       </div>
-    </div>
+    </section>
 
-    <!-- Word list -->
-    <template v-else>
+    <!-- Word Content -->
+    <section v-else aria-label="Word list">
       <!-- Table View -->
       <WordTable 
         v-if="viewMode === 'table'"
@@ -68,10 +78,12 @@
         @edit="$emit('edit-word', $event)" 
         @delete="$emit('delete-word', $event)"
         @word-click="$emit('edit-word', $event)"
+        role="table"
+        aria-label="Words in table format"
       />
       
-      <!-- Card View -->
-      <div v-else :class="cardGridClasses">
+      <!-- Grid View -->
+      <div v-else class="grid-responsive-3" role="grid" aria-label="Words in card format">
         <WordCard
           v-for="word in displayWords"
           :key="word.id"
@@ -79,13 +91,14 @@
           @edit="$emit('edit-word', $event)"
           @delete="$emit('delete-word', $event)"
           @click="$emit('edit-word', $event)"
+          role="gridcell"
         />
       </div>
 
-      <!-- Pagination (only show for non-search results) -->
-      <div v-if="!isSearching" class="pagination-container">
+      <!-- Pagination Footer (only show for non-search results) -->
+      <footer v-if="!isSearching" class="pagination-container">
         <div class="pagination-info">
-          <p class="text-sm text-gray-700">
+          <p class="pagination-text">
             Showing <span class="font-medium">{{ (pagination.page - 1) * pagination.pageSize + 1 }}</span> to 
             <span class="font-medium">{{ Math.min(pagination.page * pagination.pageSize, pagination.totalCount) }}</span> of 
             <span class="font-medium">{{ pagination.totalCount }}</span> results
@@ -95,18 +108,19 @@
           :current-page="pagination.page"
           :total-pages="Math.ceil(pagination.totalCount / pagination.pageSize)"
           @page-change="$emit('page-change', $event)"
+          aria-label="Navigate between pages"
         />
-      </div>
+      </footer>
 
-      <!-- Search results info -->
-      <div v-else class="search-results-info">
-        <p class="text-sm text-gray-600">
+      <!-- Search Results Info -->
+      <footer v-else class="results-info">
+        <p class="results-text">
           Showing {{ displayWords.length }} search result{{ displayWords.length !== 1 ? 's' : '' }}
-          for "{{ filters.search }}"
+          for "<strong>{{ filters.search }}</strong>"
         </p>
-      </div>
-    </template>
-  </div>
+      </footer>
+    </section>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -162,61 +176,8 @@ const emit = defineEmits<{
   'view-mode-change': [mode: 'table' | 'grid']
 }>()
 
-const cardGridClasses = computed(() => {
-  return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-})
-
 const handleViewModeChange = (mode: 'table' | 'grid') => {
   emit('view-mode-change', mode)
 }
 </script>
 
-<style scoped>
-.vocabulary-content {
-  @apply animate-fade-in;
-}
-
-.loading-indicator {
-  @apply flex flex-col justify-center items-center py-12;
-}
-
-.loading-spinner {
-  @apply animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600;
-}
-
-.empty-state {
-  @apply bg-white rounded-xl shadow-sm p-12 text-center;
-}
-
-.empty-state-icon {
-  @apply w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center;
-}
-
-.empty-state-title {
-  @apply text-lg font-medium text-gray-900 mb-2;
-}
-
-.empty-state-message {
-  @apply text-gray-500 mb-6;
-}
-
-.pagination-container {
-  @apply px-6 py-4 flex items-center justify-between border-t border-gray-200;
-}
-
-.pagination-info {
-  @apply flex-1;
-}
-
-.search-results-info {
-  @apply px-6 py-4 text-center border-t border-gray-200;
-}
-
-.filters-and-controls {
-  @apply flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6;
-}
-
-.view-controls {
-  @apply flex items-center justify-end;
-}
-</style>

@@ -126,8 +126,8 @@ describe('DictionaryLinkManager', () => {
       const allButtons = screen.getAllByRole('button')
       expect(allButtons.length).toBeGreaterThan(1) // Add button + at least one delete button
 
-      // Should have a button with red styling (delete button)
-      const hasDeleteButton = allButtons.some(btn => btn.className.includes('text-red-600'))
+      // Should have a button with danger styling (delete button)
+      const hasDeleteButton = allButtons.some(btn => btn.className.includes('action-button-danger'))
       expect(hasDeleteButton).toBe(true)
     })
   })

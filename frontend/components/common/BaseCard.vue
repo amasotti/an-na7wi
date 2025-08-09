@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type {CardPadding, CardVariants} from "~/styles/components/cards";
+import type { CardPadding, CardVariants } from '~/styles/components/cards'
 
 interface Props {
   variant?: CardVariants

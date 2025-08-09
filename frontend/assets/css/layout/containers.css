@@ -23,3 +23,38 @@
 .content-footer {
   @apply mt-8 pt-6 border-t border-gray-200;
 }
+
+/* Content Layouts */
+.content-main {
+  @apply fade-in;
+}
+
+.content-filters {
+  @apply flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6;
+}
+
+.content-controls {
+  @apply flex items-center justify-end;
+}
+
+/* Pagination */
+.pagination-container {
+  @apply px-6 py-4 flex items-center justify-between border-t border-gray-200;
+}
+
+.pagination-info {
+  @apply flex-1;
+}
+
+.pagination-text {
+  @apply text-small text-gray-700;
+}
+
+/* Results Info */
+.results-info {
+  @apply px-6 py-4 text-center border-t border-gray-200;
+}
+
+.results-text {
+  @apply text-small text-muted;
+}
