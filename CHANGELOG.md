@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [unreleased]
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/92b13b997ce15aa051c5c7115e42e7e96a603c78..)
+### 🚀 Features
+
+
+- Implement root update functionality with modal support ([b5f8de6](https://github.com/amasotti/an-na7wi/commit/b5f8de6991d3b283faba5feb2d35c53c4039921b))
+
+- Add word count retrieval for Arabic roots in response DTO ([e116a5d](https://github.com/amasotti/an-na7wi/commit/e116a5d9e19857964ac7d1a0fbbda930fb6475dd))
+
+- Configure app metadata and favicon in nuxt.config.ts ([484d997](https://github.com/amasotti/an-na7wi/commit/484d997cad95ac4619d3e66dad38bcd4d0aeeacc))
+
+- Implement dictionary links feature with migration and UI components ([0ee57af](https://github.com/amasotti/an-na7wi/commit/0ee57afedacce38d02d5eb472057634e597293b5))
+
+- Add support for dictionary links in WordRequestDTO and update logic in WordService ([ca01b40](https://github.com/amasotti/an-na7wi/commit/ca01b40a69183afad63853e44cb6f0df9063c972))
+
+- Add URL templates and auto-generation for dictionary links in DictionaryLinkManager ([a1b11a2](https://github.com/amasotti/an-na7wi/commit/a1b11a2e03e4a7ae1b25d57ff13543f02370b3bd))
+
+- Update backup and restore scripts to include dictionary_links table and enhance sync script with argument parsing ([510b71e](https://github.com/amasotti/an-na7wi/commit/510b71e04492fd74df7c1b28db5cc461154422aa))
+
+### 🚜 Refactor
+
+
+- Enhance ExampleDTO and parsing logic for Anthropic response ([dbd8408](https://github.com/amasotti/an-na7wi/commit/dbd840878f10387183bdb68686c8a37c27222525))
+
+- Improve type safety in DictionaryLinkManager tests and enhance error handling in wordService ([372ab4a](https://github.com/amasotti/an-na7wi/commit/372ab4a3f3a86e6dbd8fc8558293acbd68bf5420))
+
+- Enhance type safety in various components and update text handling logic ([4a3ca13](https://github.com/amasotti/an-na7wi/commit/4a3ca1338ee7417ebbc4e3faed83b13f9e30c4fe))
+
+### 🧪 Testing
+
+
+- Update tests to improve type safety ([601bf8e](https://github.com/amasotti/an-na7wi/commit/601bf8ea892ac9a966ccc6c193b633e9f913b1a7))
+
+- Update tests to improve type safety, run formatter ([708205e](https://github.com/amasotti/an-na7wi/commit/708205e0f147eea3c893ebcb42e658ac34f2a93e))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Fix table list syntax in backup and restore scripts to include dictionary_links ([e518c95](https://github.com/amasotti/an-na7wi/commit/e518c950a731692ae360291cccd637f94ac9a78c))
+
 ## [1.0.0] - 2025-08-03
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/a456955a92caa96de07957abc84e34f7a786a52a..92b13b997ce15aa051c5c7115e42e7e96a603c78)
