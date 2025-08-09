@@ -1,4 +1,4 @@
-import type {DictionaryLink, Word} from '@/types'
+import type { DictionaryLink, Word } from '@/types'
 import { DictionaryType } from '@/types/enums'
 
 /**
@@ -118,9 +118,7 @@ export function validateDictionaryLinks(links: DictionaryLink[]): {
 /**
  * Helper to ensure Word entities have the new dictionary links format
  */
-export function ensureModernDictionaryLinks(
-  word: Partial<Word>
-): Partial<Word> {
+export function ensureModernDictionaryLinks(word: Partial<Word>): Partial<Word> {
   // If word has old string format, migrate it
   if (typeof word.dictionaryLinks === 'string') {
     word.dictionaryLinks = migrateDictionaryLinks(word.dictionaryLinks)

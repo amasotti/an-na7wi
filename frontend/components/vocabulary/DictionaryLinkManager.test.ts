@@ -88,7 +88,7 @@ describe('DictionaryLinkManager', () => {
       const emittedArray = emitted()['update:modelValue'] as Array<Array<DictionaryLink>>
 
       expect(emittedArray).toHaveLength(1)
-      expect(emittedArray[0]!![0]).toEqual([
+      expect(emittedArray[0]![0]).toEqual([
         {
           id: 'test-uuid-123',
           type: DictionaryType.CUSTOM,

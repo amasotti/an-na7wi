@@ -1,5 +1,6 @@
 import { DictionaryType } from '@/types/enums'
 import { describe, expect, it } from 'vitest'
+import type { DictionaryLink, Word } from '~/types'
 import {
   detectDictionaryType,
   dictionaryLinksToString,
@@ -9,7 +10,6 @@ import {
   migrateDictionaryLinks,
   validateDictionaryLinks,
 } from '../dictionaryMigration'
-import type {DictionaryLink, Word} from "~/types";
 
 // Mock crypto.randomUUID for consistent test results
 Object.defineProperty(global, 'crypto', {
@@ -50,9 +50,9 @@ describe('dictionaryMigration', () => {
       const result: DictionaryLink[] = migrateDictionaryLinks(input)
 
       expect(result).toHaveLength(3)
-      expect(result[0]!!.type).toBe(DictionaryType.ALMANY)
-      expect(result[1]!!.type).toBe(DictionaryType.DERJA_NINJA)
-      expect(result[2]!!.type).toBe(DictionaryType.CUSTOM)
+      expect(result[0]!.type).toBe(DictionaryType.ALMANY)
+      expect(result[1]!.type).toBe(DictionaryType.DERJA_NINJA)
+      expect(result[2]!.type).toBe(DictionaryType.CUSTOM)
     })
 
     it('filters out empty URLs after splitting', () => {
@@ -67,8 +67,8 @@ describe('dictionaryMigration', () => {
       const result = migrateDictionaryLinks(input)
 
       expect(result).toHaveLength(2)
-      expect(result[0]!!.url).toBe('https://www.almaany.com/test')
-      expect(result[1]!!.url).toBe('https://derja.ninja/word')
+      expect(result[0]!.url).toBe('https://www.almaany.com/test')
+      expect(result[1]!.url).toBe('https://derja.ninja/word')
     })
   })
 
@@ -303,8 +303,8 @@ describe('dictionaryMigration', () => {
 
       expect(Array.isArray(dictionaryLinks)).toBe(true)
       expect(dictionaryLinks).toHaveLength(2)
-      expect(dictionaryLinks[0]!!.type).toBe(DictionaryType.ALMANY)
-      expect(dictionaryLinks[1]!!.type).toBe(DictionaryType.CUSTOM)
+      expect(dictionaryLinks[0]!.type).toBe(DictionaryType.ALMANY)
+      expect(dictionaryLinks[1]!.type).toBe(DictionaryType.CUSTOM)
     })
 
     it('ensures empty array when dictionaryLinks is missing', () => {

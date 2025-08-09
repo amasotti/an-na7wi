@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockDictionaryLinks } from '~/test/mocks/server'
 import {
   Dialect,
   Difficulty,
@@ -8,7 +9,6 @@ import {
   type Word,
 } from '~/types'
 import { wordService } from './wordService'
-import {mockDictionaryLinks} from "~/test/mocks/server";
 
 // Mock the API client
 const mockApiClient = {
@@ -40,7 +40,7 @@ describe('wordService', () => {
     root: 'ك-ت-ب',
     createdAt: '2024-01-01T00:00:00Z',
     isVerified: true,
-    dictionaryLinks: mockDictionaryLinks
+    dictionaryLinks: mockDictionaryLinks,
   }
 
   const mockPaginatedResponse: PaginatedResponse<Word> = {
@@ -79,7 +79,7 @@ describe('wordService', () => {
 
   describe('getWord', () => {
     it('should fetch a single word by ID', async () => {
-      mockApiClient.get.mockResolvedValue({ mockWord })
+      mockApiClient.get.mockResolvedValue({ data: mockWord })
 
       const result = await wordService.getWord('1')
 

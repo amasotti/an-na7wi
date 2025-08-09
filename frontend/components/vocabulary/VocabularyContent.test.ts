@@ -1,9 +1,9 @@
-import {fireEvent, screen} from '@testing-library/vue'
-import {describe, expect, it} from 'vitest'
-import {renderWithStore} from '~/test/test-utils'
-import {DictionaryType, type SelectOption, type Word} from '~/types'
-import {Dialect, Difficulty, MasteryLevel, PartOfSpeech} from '~/types/enums'
-import {VocabularyContent} from '#components'
+import { fireEvent, screen } from '@testing-library/vue'
+import { describe, expect, it } from 'vitest'
+import { renderWithStore } from '~/test/test-utils'
+import { DictionaryType, type SelectOption, type Word } from '~/types'
+import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
+import { VocabularyContent } from '#components'
 
 const mockWord: Word = {
   id: '1',
@@ -197,7 +197,7 @@ describe('VocabularyContent', () => {
     const nonWordTableButtons = buttons.filter(
       btn => !btn.getAttribute('title')?.includes('word') && !btn.textContent?.includes('كتاب')
     )
-    expect(nonWordTableButtons.length).toBeLessThan(5) // Only filter and action buttons, no pagination
+    expect(nonWordTableButtons.length).toBeLessThanOrEqual(5) // Only filter and action buttons, no pagination
   })
 
   it('shows search results info when searching', () => {

@@ -71,7 +71,7 @@ describe('ViewToggle', () => {
 
       expect(emitted()['update:modelValue']).toHaveLength(1)
       expect(emitted()['update:modelValue']).toBeDefined()
-      expect(emitted()['update:modelValue']!![0]).toEqual(['table'])
+      expect(emitted()['update:modelValue']![0]).toEqual(['table'])
     })
 
     it('emits update:modelValue with grid when grid button is clicked', async () => {
@@ -81,7 +81,7 @@ describe('ViewToggle', () => {
       await fireEvent.click(gridButton)
 
       expect(emitted()['update:modelValue']).toHaveLength(1)
-      expect(emitted()['update:modelValue']!![0]).toEqual(['grid'])
+      expect(emitted()['update:modelValue']![0]).toEqual(['grid'])
     })
 
     it('does not emit when clicking already active button', async () => {
@@ -91,7 +91,7 @@ describe('ViewToggle', () => {
       await fireEvent.click(tableButton)
 
       expect(emitted()['update:modelValue']).toHaveLength(1)
-      expect(emitted()['update:modelValue']!![0]).toEqual(['table'])
+      expect(emitted()['update:modelValue']![0]).toEqual(['table'])
     })
   })
 

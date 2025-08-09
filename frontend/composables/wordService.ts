@@ -35,14 +35,14 @@ export const wordService = {
    */
   async getWord(id: string): Promise<Word> {
     try {
-      const response = await useApiClient().get(`/words/${id}`);
-      return response.data;
+      const response = await useApiClient().get(`/words/${id}`)
+      return response.data
     } catch (error) {
       if (isAxiosError(error) && error.response?.status === 404) {
-        console.log('Word not found:', id);
-        throw new Error(`Word not found: ${id}`);
+        console.log('Word not found:', id)
+        throw new Error(`Word not found: ${id}`)
       }
-      throw error;
+      throw error
     }
   },
 
@@ -50,14 +50,32 @@ export const wordService = {
    * Create a new word
    */
   async createWord(wordData: Partial<Word>): Promise<Word> {
-    return useApiClient().post('/words', wordData)
+    try {
+      const response = await useApiClient().post('/words', wordData)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 400) {
+        console.error('Validation error:', error.response.data)
+        throw new Error('Validation error: ' + JSON.stringify(error.response.data))
+      }
+      throw error
+    }
   },
 
   /**
    * Update an existing word
    */
   async updateWord(id: string, word: Partial<Word>): Promise<Word> {
-    return await useApiClient().put(`/words/${id}`, word)
+    try {
+      const response = await useApiClient().put(`/words/${id}`, word)
+      return response.data
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 400) {
+        console.error('Validation error:', error.response.data)
+        throw new Error('Validation error: ' + JSON.stringify(error.response.data))
+      }
+      throw error
+    }
   },
 
   /**

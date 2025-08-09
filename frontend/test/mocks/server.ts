@@ -1,21 +1,21 @@
-import {http, HttpResponse} from 'msw'
-import {setupServer} from 'msw/node'
-import {type DictionaryLink, DictionaryType, type PaginatedResponse, type Word} from '~/types'
-import {Dialect, Difficulty, MasteryLevel, PartOfSpeech} from '~/types/enums'
+import { http, HttpResponse } from 'msw'
+import { setupServer } from 'msw/node'
+import { type DictionaryLink, DictionaryType, type PaginatedResponse, type Word } from '~/types'
+import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 
 export const mockDictionaryLinks: DictionaryLink[] = [
   {
     url: 'https://example.com/dictionary/kitab',
     type: DictionaryType.ALMANY,
     displayName: 'Example Dictionary',
-    id: ""
+    id: '',
   },
   {
     url: 'https://anotherexample.com/kitab',
     type: DictionaryType.ARABIC_STUDENT_DICTIONARY,
     displayName: 'Another Example Dictionary',
-    id: ""
-  }
+    id: '',
+  },
 ]
 
 // Mock data
@@ -34,7 +34,7 @@ export const mockWord: Word = {
   isVerified: true,
   createdAt: new Date().toISOString(),
   frequency: 1,
-  dictionaryLinks: mockDictionaryLinks
+  dictionaryLinks: mockDictionaryLinks,
 }
 
 export const mockWordResponse: PaginatedResponse<Word> = {
