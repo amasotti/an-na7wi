@@ -73,7 +73,7 @@ describe('BaseIcon', () => {
     const svg = document.querySelector('svg')
     expect(svg).toHaveStyle({
       flexShrink: '0',
-      display: 'block',
+      display: 'inline-block',
     })
   })
 

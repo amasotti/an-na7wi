@@ -11,7 +11,7 @@ TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_${TIMESTAMP}.sql"
 
 # Tables to include
-TABLES=("annotations" "texts" "text_versions" "arabic_roots" "words")
+TABLES=("annotations" "texts" "text_versions" "arabic_roots" "words", "dictionary_links")
 
 # Create backup directory if it doesn't exist
 mkdir -p "${BACKUP_DIR}"
@@ -38,7 +38,3 @@ docker exec "${CONTAINER_NAME}" pg_dump \
 
 
 echo "Backup completed successfully: ${BACKUP_FILE}"
-
-# Update symlink to latest
-ln -sf "${BACKUP_FILE}" "${BACKUP_DIR}/${DB_NAME}_latest.sql"
-echo "Symlink updated: ${DB_NAME}_latest.sql -> ${BACKUP_FILE}"

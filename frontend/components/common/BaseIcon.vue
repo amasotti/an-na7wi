@@ -32,7 +32,7 @@ const iconStyle = computed(() => {
   return {
     ...sizes[props.size],
     flexShrink: '0',
-    display: 'block',
+    display: 'inline-block',
   }
 })
 </script>
