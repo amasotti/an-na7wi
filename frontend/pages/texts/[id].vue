@@ -279,7 +279,7 @@ const tokenizedWordsCurrentPage = computed(() => textStore.tokenizedWordsCurrent
 const tokenizedWordsPageSize = computed(() => textStore.tokenizedWordsPageSize)
 
 // Display the current text or selected version
-const displayText = computed((): Text => textStore.displayText)
+const displayText = computed(() => textStore.displayText)
 
 // Computed UI properties
 const difficultyColor = computed(() => {
@@ -419,7 +419,7 @@ const handleEditText = async (formData: {
     await textStore.updateText(currentText.value.id, formData)
     closeEditModal()
     // Refresh the current text
-    await textStore.fetchTextById(props.id)
+    await textStore.fetchTextById(route.params.id as string)
   } catch (error) {
     console.error('Failed to update text:', error)
   }

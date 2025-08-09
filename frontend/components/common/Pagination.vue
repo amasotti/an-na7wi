@@ -99,9 +99,9 @@ const visiblePages = computed(() => {
 
 const showFirstPage = computed(() => props.totalPages > 1)
 const showLastPage = computed(() => props.totalPages > 1 && props.totalPages !== 1)
-const showFirstEllipsis = computed(() => visiblePages.value[0] > 2)
+const showFirstEllipsis = computed(() => visiblePages.value[0]! > 2)
 const showLastEllipsis = computed(
-  () => visiblePages.value[visiblePages.value.length - 1] < props.totalPages - 1
+  () => visiblePages.value[visiblePages.value.length - 1]! < props.totalPages - 1
 )
 
 const goToPage = (page: number) => {

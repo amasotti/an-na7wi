@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { computed, h } from 'vue'
-import { cardClasses, combineClasses } from '~/styles/component-classes.ts'
+import { cardClasses, combineClasses } from '~/styles/component-classes'
 import BaseCard from '../common/BaseCard.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 

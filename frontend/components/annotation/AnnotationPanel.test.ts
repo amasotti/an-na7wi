@@ -171,7 +171,7 @@ describe('AnnotationPanel', () => {
   it('formats annotation dates correctly', () => {
     const wrapper = mount(AnnotationPanel, {
       props: {
-        annotations: [mockAnnotations[0]],
+        annotations: [mockAnnotations[0]!],
       },
     })
 
@@ -183,10 +183,10 @@ describe('AnnotationPanel', () => {
     const wrapper = mount(AnnotationPanel, {
       props: {
         annotations: [
-          { ...mockAnnotations[0], type: AnnotationType.GRAMMAR },
-          { ...mockAnnotations[0], type: AnnotationType.VOCABULARY },
-          { ...mockAnnotations[0], type: AnnotationType.CULTURAL },
-          { ...mockAnnotations[0], type: AnnotationType.OTHER },
+          { ...mockAnnotations[0]!, type: AnnotationType.GRAMMAR },
+          { ...mockAnnotations[0]!, type: AnnotationType.VOCABULARY },
+          { ...mockAnnotations[0]!, type: AnnotationType.CULTURAL },
+          { ...mockAnnotations[0]!, type: AnnotationType.OTHER },
         ],
       },
     })
@@ -197,7 +197,7 @@ describe('AnnotationPanel', () => {
 
   it('handles unknown annotation types gracefully', () => {
     const annotationWithUnknownType = {
-      ...mockAnnotations[0],
+      ...mockAnnotations[0]!,
       type: 'UNKNOWN' as unknown as AnnotationType,
     }
 
@@ -224,7 +224,7 @@ describe('AnnotationPanel', () => {
 
   it('does not show needs review indicator for annotations that do not need review', () => {
     const annotationWithoutReview = {
-      ...mockAnnotations[0],
+      ...mockAnnotations[0]!,
       needsReview: false,
     }
 

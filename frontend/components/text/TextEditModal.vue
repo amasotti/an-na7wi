@@ -165,9 +165,9 @@ interface Props {
 interface TextForm {
   title: string
   arabicContent: string
-  transliteration: string
-  translation: string
-  comments: string
+  transliteration?: string
+  translation?: string
+  comments?: string
   tags: string[]
   difficulty: Difficulty | ''
   dialect: Dialect | ''
@@ -189,9 +189,9 @@ const emit = defineEmits<{
 const form = ref<TextForm>({
   title: '',
   arabicContent: '',
-  transliteration: '',
-  translation: '',
-  comments: '',
+  transliteration: undefined,
+  translation: undefined,
+  comments: undefined,
   tags: [],
   difficulty: '',
   dialect: '',
@@ -306,9 +306,9 @@ const handleSubmit = () => {
     emit('submit', {
       title: form.value.title.trim(),
       arabicContent: form.value.arabicContent.trim(),
-      transliteration: form.value.transliteration.trim() || undefined,
-      translation: form.value.translation.trim() || undefined,
-      comments: form.value.comments.trim() || undefined,
+      transliteration: form.value.transliteration?.trim() || undefined,
+      translation: form.value.translation?.trim() || undefined,
+      comments: form.value.comments?.trim() || undefined,
       tags: form.value.tags,
       difficulty: form.value.difficulty,
       dialect: form.value.dialect,

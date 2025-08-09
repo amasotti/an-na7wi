@@ -135,12 +135,7 @@
 import BaseBadge from '@/components/common/BaseBadge.vue'
 import BaseCard from '@/components/common/BaseCard.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import {
-  cardClasses,
-  combineClasses,
-  layoutClasses,
-  textClasses,
-} from '@/styles/component-classes.ts'
+import { cardClasses, combineClasses, layoutClasses, textClasses } from '@/styles/component-classes'
 import type { Text } from '@/types'
 import { Dialect, Difficulty } from '@/types'
 import type { BadgeVariant } from '@/types'
