@@ -33,7 +33,7 @@ updates:
           - "org.jetbrains.kotlin"           # Kotlin libraries
 
   - package-ecosystem: "npm"
-    directory: "frontend"
+    directory: "/frontend"
     schedule:
       interval: "weekly"
     commit-message:

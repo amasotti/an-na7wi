@@ -97,7 +97,7 @@ an-nahwi/
 ## Backend Requirements (Kotlin + Quarkus)
 
 - Kotlin v. 2.2.0
-- Quarkus v. 3.24.5
+- Quarkus v. 3.25.2
 - JDK 21 (LTS)
 
 ### Core Dependencies:
