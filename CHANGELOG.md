@@ -4,7 +4,29 @@ All notable changes to this project will be documented in this file (created wit
 
 ## [unreleased]
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/92b13b997ce15aa051c5c7115e42e7e96a603c78..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/4a3ca1338ee7417ebbc4e3faed83b13f9e30c4fe..)
+### 🚀 Features
+
+
+- Add notes section to WordCard and enhance example label styling ([ff1697c](https://github.com/amasotti/an-na7wi/commit/ff1697c95328f1f3923c5a3fe3ec94fcd5d04ffe))
+
+- Extend BaseModal size options and update URL templates for Arabic dictionaries ([706ed9d](https://github.com/amasotti/an-na7wi/commit/706ed9d92205970007ca34147c0b77f7c6068028))
+
+- Add pronunciation link functionality to DictionaryLinkManager and update related components ([92c4c2e](https://github.com/amasotti/an-na7wi/commit/92c4c2e1767e3a66d68cc3435c53c22ab4ffadb7))
+
+### 🚜 Refactor
+
+
+- Remove ensureModernDictionaryLinks mapping from wordService responses ([3afef65](https://github.com/amasotti/an-na7wi/commit/3afef6525fdd354c92b24045672d3ef89d1f8562))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Update dependencies to Quarkus 3.25.2 and Anthropic 2.4.0, adjust frontend directory path ([2b43484](https://github.com/amasotti/an-na7wi/commit/2b43484b9b0abc7f8cd1ae16afbe69ef28570a81))
+
+## [1.1.0] - 2025-08-09
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/92b13b997ce15aa051c5c7115e42e7e96a603c78..4a3ca1338ee7417ebbc4e3faed83b13f9e30c4fe)
 ### 🚀 Features
 
 
