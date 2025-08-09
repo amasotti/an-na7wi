@@ -1,12 +1,15 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.dto.request.DictionaryLinkRequestDTO
 import com.tonihacks.annahwi.dto.request.WordRequestDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
+import com.tonihacks.annahwi.entity.DictionaryType
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.entity.Word
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.UUID
@@ -166,5 +169,102 @@ class WordServiceDTOTest {
         assertEquals(null, updatedWord.notes) // Should be cleared
         assertEquals(250, updatedWord.frequency) // Should be updated
         assertEquals(originalCreatedAt, updatedWord.createdAt) // Should remain unchanged
+    }
+
+    @Test
+    fun testWordWithDictionaryLinks() {
+        val dictionaryLinks = listOf(
+            DictionaryLinkRequestDTO(
+                type = DictionaryType.WIKTIONARY,
+                url = "https://en.wiktionary.org/wiki/كتاب",
+                displayName = "Wiktionary"
+            ),
+            DictionaryLinkRequestDTO(
+                type = DictionaryType.ALMANY,
+                url = "https://www.almaany.com/ar/dict/ar-en/كتاب",
+                displayName = "Almany"
+            )
+        )
+
+        val wordDTO = WordRequestDTO(
+            arabic = "كتاب",
+            transliteration = "kitab",
+            translation = "book",
+            root = "ك-ت-ب",
+            partOfSpeech = PartOfSpeech.NOUN,
+            frequency = 200,
+            difficulty = Difficulty.BEGINNER,
+            dialect = Dialect.MSA,
+            dictionaryLinks = dictionaryLinks,
+            isVerified = true
+        )
+
+        // Test DTO to entity conversion with dictionary links
+        val word = wordDTO.toEntity()
+
+        assertNotNull(word)
+        assertEquals(2, word.dictionaryLinks.size)
+        assertEquals(DictionaryType.WIKTIONARY, word.dictionaryLinks[0].type)
+        assertEquals("https://en.wiktionary.org/wiki/كتاب", word.dictionaryLinks[0].url)
+        assertEquals(DictionaryType.ALMANY, word.dictionaryLinks[1].type)
+        assertEquals("https://www.almaany.com/ar/dict/ar-en/كتاب", word.dictionaryLinks[1].url)
+        
+        // Verify that dictionary links reference the word correctly
+        assertTrue(word.dictionaryLinks.all { it.word === word })
+    }
+
+    @Test
+    fun testWordUpdateWithDictionaryLinks() {
+        val existingWord = Word().apply {
+            arabic = "كتاب"
+            transliteration = "kitab"
+            translation = "book"
+            root = "ك-ت-ب"
+            partOfSpeech = PartOfSpeech.NOUN
+            frequency = 200
+            difficulty = Difficulty.BEGINNER
+            dialect = Dialect.MSA
+            isVerified = true
+            createdAt = LocalDateTime.now()
+        }
+
+        val newDictionaryLinks = listOf(
+            DictionaryLinkRequestDTO(
+                type = DictionaryType.LIVING_ARABIC,
+                url = "https://livingarabic.com/كتاب",
+                displayName = "Living Arabic"
+            ),
+            DictionaryLinkRequestDTO(
+                type = DictionaryType.REVERSO,
+                url = "https://dictionary.reverso.net/arabic-english/كتاب",
+                displayName = "Reverso"
+            )
+        )
+
+        val updateDTO = WordRequestDTO(
+            arabic = "كتاب",
+            transliteration = "kitab", 
+            translation = "book, textbook",
+            root = "ك-ت-ب",
+            partOfSpeech = PartOfSpeech.NOUN,
+            frequency = 250,
+            difficulty = Difficulty.BEGINNER,
+            dialect = Dialect.MSA,
+            dictionaryLinks = newDictionaryLinks,
+            isVerified = true
+        )
+
+        // Test update with dictionary links
+        val updatedWord = updateDTO.updateEntity(existingWord)
+
+        assertNotNull(updatedWord)
+        assertEquals(2, updatedWord.dictionaryLinks.size)
+        assertEquals(DictionaryType.LIVING_ARABIC, updatedWord.dictionaryLinks[0].type)
+        assertEquals("https://livingarabic.com/كتاب", updatedWord.dictionaryLinks[0].url)
+        assertEquals(DictionaryType.REVERSO, updatedWord.dictionaryLinks[1].type)
+        assertEquals("https://dictionary.reverso.net/arabic-english/كتاب", updatedWord.dictionaryLinks[1].url)
+        
+        // Verify that all dictionary links reference the word correctly
+        assertTrue(updatedWord.dictionaryLinks.all { it.word === updatedWord })
     }
 }

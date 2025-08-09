@@ -268,9 +268,36 @@ class WordService {
                     input = wordDTO.root,
                     meaning = ""
                 )
-                val arabicRoot = rootService.createRoot(rootDto)
-                existingWord.arabicRoot = arabicRoot
-                logger.debug("Updated root to ${arabicRoot.displayForm} for word ${existingWord.arabic}")
+
+                // see if the root already exists
+                val normalizedRoot = rootService.normalizeRoot(wordDTO.root)?.let {
+                    RootNormalizationResponseDTO(
+                        input = wordDTO.root,
+                        letters = it.letters,
+                        normalizedForm = it.normalizedForm,
+                        displayForm = it.displayForm,
+                        letterCount = it.letterCount,
+                        isValid = true
+                    )
+                } ?: RootNormalizationResponseDTO(
+                    input = wordDTO.root,
+                    letters = emptyList(),
+                    normalizedForm = "",
+                    displayForm = "",
+                    letterCount = 0,
+                    isValid = false
+                )
+                val existingRoot = rootService.findByNormalizedForm(normalizedRoot.normalizedForm)
+                val root = when (existingRoot) {
+                    null -> rootService.createRoot(rootDto)
+                    else -> {
+                        logger.debug("Root already exists: ${existingRoot.displayForm}")
+                        existingRoot
+                    }
+                }
+
+                existingWord.arabicRoot = root
+                logger.debug("Updated root to ${root.displayForm} for word ${existingWord.arabic}")
             } catch (e: Exception) {
                 logger.warn("Failed to create/find root for '${wordDTO.root}': ${e.message}")
                 // Keep the original root string for backward compatibility

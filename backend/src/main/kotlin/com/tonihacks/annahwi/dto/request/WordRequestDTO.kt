@@ -71,10 +71,14 @@ data class WordRequestDTO(
             isVerified = this@WordRequestDTO.isVerified
             
             // Update dictionary links - clear existing and add new ones
+            // Clear existing links (orphanRemoval will handle deletion)
             dictionaryLinks.clear()
-            dictionaryLinks.addAll(
-                this@WordRequestDTO.dictionaryLinks.map { it.toEntity(this) }
-            )
+            
+            // Add new dictionary links and set the word reference properly
+            this@WordRequestDTO.dictionaryLinks.forEach { linkDto ->
+                val newLink = linkDto.toEntity(this)
+                dictionaryLinks.add(newLink)
+            }
         }
     }
 }
