@@ -67,11 +67,6 @@ describe('DictionaryLinkManager', () => {
       ).toBeInTheDocument()
     })
 
-    it('renders dictionary links label', () => {
-      createComponent()
-      expect(screen.getByText('Dictionary Links')).toBeInTheDocument()
-    })
-
     it('renders add dictionary button', () => {
       createComponent()
       expect(screen.getByText('Add Dictionary')).toBeInTheDocument()

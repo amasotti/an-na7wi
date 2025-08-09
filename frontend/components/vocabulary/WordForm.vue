@@ -134,20 +134,12 @@
           />
         </div>
 
-        <!-- Dictionary Links -->
+        <!-- Dictionary & Pronunciation Links -->
         <div class="col-span-2">
           <DictionaryLinkManager 
             v-model="form.dictionaryLinks" 
+            v-model:pronunciation-url="form.pronunciationLink"
             :arabic-text="form.arabic"
-          />
-        </div>
-
-        <!-- Pronunciation Link -->
-        <div>
-          <BaseInput
-            v-model="form.pronunciationLink"
-            label="Pronunciation Link"
-            placeholder="URL to audio pronunciation"
           />
         </div>
 

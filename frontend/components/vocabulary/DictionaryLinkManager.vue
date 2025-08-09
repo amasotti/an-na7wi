@@ -1,14 +1,14 @@
 <template>
   <div class="dictionary-link-manager">
     <div class="flex justify-between items-center mb-3">
-      <label class="form-label">Dictionary Links</label>
+      <label class="form-label">Dictionary & Pronunciation Links</label>
       <div class="flex gap-2">
         <BaseButton
           v-if="arabicText"
           type="button"
           variant="outline"
           size="sm"
-          @click="generateDictionaryLinks"
+          @click="generateAllLinks"
           :title="'Auto-generate links for: ' + arabicText"
           class="whitespace-nowrap"
         >
@@ -75,11 +75,43 @@
         No dictionary links added yet. Click "Add Dictionary" to get started.
       </div>
     </div>
+
+    <!-- Pronunciation Link Section -->
+    <div class="mt-6">
+      <label class="form-label mb-3">Pronunciation Link</label>
+      <div class="flex gap-2 items-center p-3 bg-gray-50 rounded-lg">
+        <div class="flex items-center gap-2 w-40">
+          <span class="text-lg">🔊</span>
+          <span class="text-sm font-medium text-gray-700">Forvo</span>
+        </div>
+        <div class="flex-1">
+          <BaseInput
+            v-model="pronunciationLink"
+            placeholder="Pronunciation URL (auto-generated if empty)"
+            :error="getPronunciationUrlError()"
+          />
+        </div>
+        <BaseButton
+          v-if="arabicText"
+          type="button"
+          variant="ghost"
+          size="sm"
+          @click="generatePronunciationLink"
+          title="Auto-generate Forvo pronunciation link"
+          class="flex-shrink-0"
+        >
+          <BaseIcon size="sm">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 3-1.912 5.813a2 2 0 01-1.275 1.275L3 12l5.813 1.912a2 2 0 011.275 1.275L12 21l1.912-5.813a2 2 0 011.275-1.275L21 12l-5.813-1.912a2 2 0 01-1.275-1.275L12 3zM5 3v4M3 5h4M6 17v4M4 19h4" />
+          </BaseIcon>
+        </BaseButton>
+      </div>
+    </div>
     
     <!-- Preview section -->
-    <div v-if="links.length > 0" class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+    <div v-if="links.length > 0 || pronunciationLink" class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
       <h4 class="text-sm font-medium text-blue-900 mb-2">Preview:</h4>
       <div class="flex flex-wrap gap-2">
+        <!-- Dictionary links -->
         <a
           v-for="link in validLinks"
           :key="link.id"
@@ -91,6 +123,22 @@
         >
           <span class="mr-1">{{ DICTIONARY_CONFIG[link.type].icon }}</span>
           {{ link.displayName || DICTIONARY_CONFIG[link.type].name }}
+          <BaseIcon size="xs" class="ml-1 opacity-60">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </BaseIcon>
+        </a>
+        
+        <!-- Pronunciation link -->
+        <a
+          v-if="validPronunciationLink"
+          :href="pronunciationLink"
+          target="_blank"
+          rel="noopener noreferrer"
+          :class="getForfoBadgeClass()"
+          title="Forvo Pronunciation - Click to open in new tab"
+        >
+          <span class="mr-1">🔊</span>
+          Forvo
           <BaseIcon size="xs" class="ml-1 opacity-60">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </BaseIcon>
@@ -110,6 +158,7 @@ import {
   generateAllDictionaryLinks,
   getDictionaryBadgeClass,
 } from '~/config/dictionaries'
+import { generateForvoUrl, getForfoBadgeClass } from '~/config/pronunciation'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
@@ -117,6 +166,7 @@ import BaseSelect from '../common/BaseSelect.vue'
 
 interface Props {
   modelValue: DictionaryLink[]
+  pronunciationUrl?: string
   arabicText?: string
 }
 
@@ -124,6 +174,7 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   'update:modelValue': [links: DictionaryLink[]]
+  'update:pronunciationUrl': [url?: string]
 }>()
 
 const links = computed({
@@ -131,10 +182,19 @@ const links = computed({
   set: value => emit('update:modelValue', value),
 })
 
+const pronunciationLink = computed({
+  get: () => props.pronunciationUrl || '',
+  set: value => emit('update:pronunciationUrl', value || undefined),
+})
+
 const dictionaryTypeOptions = DICTIONARY_TYPE_OPTIONS
 
 const validLinks = computed(() =>
   links.value.filter(link => link.url?.trim() && isValidUrl(link.url))
+)
+
+const validPronunciationLink = computed(
+  () => pronunciationLink.value?.trim() && isValidUrl(pronunciationLink.value)
 )
 
 const addDictionaryLink = () => {
@@ -166,6 +226,16 @@ const generateDictionaryLinks = () => {
   links.value = [...links.value, ...newLinks]
 }
 
+const generatePronunciationLink = () => {
+  if (!props.arabicText) return
+  pronunciationLink.value = generateForvoUrl(props.arabicText)
+}
+
+const generateAllLinks = () => {
+  generateDictionaryLinks()
+  generatePronunciationLink()
+}
+
 const removeDictionaryLink = (index: number) => {
   links.value = links.value.filter((_, i) => i !== index)
 }
@@ -184,6 +254,13 @@ const getUrlError = (link: DictionaryLink): string => {
     return ''
   }
   return isValidUrl(link.url) ? '' : 'Please enter a valid URL'
+}
+
+const getPronunciationUrlError = (): string => {
+  if (!pronunciationLink.value?.trim()) {
+    return ''
+  }
+  return isValidUrl(pronunciationLink.value) ? '' : 'Please enter a valid URL'
 }
 
 // Auto-set display name for known dictionary types

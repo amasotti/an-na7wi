@@ -89,6 +89,7 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 - RTL-aware layouts for Arabic text display using `layouts/default.vue`
 - Mobile friendly, responsive design principles
 - Line length max 200 characters, prefer shorter when possible
+- Import of components in Nuxt is always done with the tilde or hashtag syntax. Tilde syntax refers to src directory for file import and hashtag syntax (e.g. #components) reads the exposed components from .nuxt folder. Before creating mocks, always check the declaration of the types to ensure correct mapping.
 
 ### Testing
 - Backend: JUnit 5 with Testcontainers for integration tests
@@ -101,6 +102,3 @@ avoiding verbosity when not necessary and being kotlin and vuejs idiomatic. Verb
 
 ## Claude Interaction Patterns
 - When I ask you to make a plan, you always create a Markdown with the proposal and steps 
-
-## Frontend Development Notes
-- Import of components in Nuxt is always done with the tilde or hashtag syntax. Tilde syntax refers to src directory for file import and hashtag syntax (e.g. #components) reads the exposed components from .nuxt folder. Before creating mocks, always check the declaration of the types to ensure correct mapping.
