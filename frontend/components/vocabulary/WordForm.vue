@@ -7,16 +7,21 @@
   >
     <form @submit.prevent="handleSubmit" class="content-area" role="form" aria-label="Word form">
       <!-- Primary Information Section -->
-      <section class="form-section" aria-labelledby="primary-info-heading">
-        <h3 id="primary-info-heading" class="form-section-title">Primary Information</h3>
+      <section class="form-section section-primary" aria-labelledby="primary-info-heading">
+        <h3 id="primary-info-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-blue-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+          </BaseIcon>
+          Primary Information
+        </h3>
         <div class="form-section-grid">
           <!-- Arabic Word -->
           <div class="form-field-primary">
             <BaseInput
               v-model="form.arabic"
-              label="Arabic Word*"
+              label="Arabic Word"
               required
-              class="rtl text-lg"
+              class="arabic text-2xl"
               aria-describedby="arabic-help"
             />
             <div id="arabic-help" class="form-help">Enter the Arabic word or phrase</div>
@@ -31,7 +36,7 @@
             />
             <BaseInput
               v-model="form.translation"
-              label="Translation/Definition*"
+              label="Translation/Definition"
               required
               aria-describedby="translation-help"
             />
@@ -44,9 +49,14 @@
       </section>
 
       <!-- Example Section -->
-      <section class="form-section" aria-labelledby="example-heading">
+      <section class="form-section section-examples" aria-labelledby="example-heading">
         <div class="form-header">
-          <h3 id="example-heading" class="form-section-title">Example Usage</h3>
+          <h3 id="example-heading" class="form-section-title">
+            <BaseIcon size="sm" class="section-icon text-green-600">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </BaseIcon>
+            Example Usage
+          </h3>
           <BaseButton
             v-if="form.arabic"
             type="button"
@@ -54,11 +64,11 @@
             size="sm"
             :loading="loadingExamples"
             @click="generateExamples"
-            class="action-button"
+            class="generate-examples-btn"
             aria-label="Generate example sentences"
           >
-            <BaseIcon class="w-4 h-4 mr-1">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m0 16v2m8.485-8.485l-1.414-1.414M4.929 4.929L3.515 3.515M21 12h-2M5 12H3m15.364 6.364l-1.414-1.414m-12.728 0l-1.414 1.414M16 8a4 4 0 11-8 0 4 4 0 018 0z" />
+            <BaseIcon class="w-4 h-4 mr-2">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
             </BaseIcon>
             Generate Examples
           </BaseButton>
@@ -83,7 +93,7 @@
             <div
               v-for="(example, index) in generatedExamples"
               :key="index"
-              class="card-base card-padding-sm card-interactive"
+              class="example-item"
               @click="addExampleToField(example)"
               role="button"
               :aria-label="`Add example: ${example.arabic}`"
@@ -100,8 +110,13 @@
       </section>
 
       <!-- Root and Related Words Section -->
-      <section class="form-section" aria-labelledby="root-heading">
-        <h3 id="root-heading" class="form-section-title">Root Analysis</h3>
+      <section class="form-section section-root" aria-labelledby="root-heading">
+        <h3 id="root-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-orange-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l3.057-3L21 16l-3.057 3.057M5.353 8.978l1.414 1.414M8.978 5.353l1.414 1.414m0 9.193l1.414 1.414M5.353 15.314l1.414 1.414M8 21l8-8" />
+          </BaseIcon>
+          Root Analysis
+        </h3>
         <div class="form-group">
           <BaseInput
             v-model="form.root"
@@ -113,18 +128,23 @@
           <div id="root-help" class="form-help">Arabic root letters (usually 3 consonants)</div>
           
           <!-- Loading state for related words -->
-          <div v-if="loadingRelatedWords" class="form-preview" role="status" aria-live="polite">
-            <div class="flex items-center">
-              <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary-600 mr-2"></div>
-              <span class="text-sm text-gray-600">Loading related words...</span>
+          <div v-if="loadingRelatedWords" class="loading-state" role="status" aria-live="polite">
+            <div class="flex items-center justify-center py-4">
+              <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-orange-500 mr-3"></div>
+              <span class="text-sm text-gray-600 font-medium">Finding related words...</span>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Classification Section -->
-      <section class="form-section" aria-labelledby="classification-heading">
-        <h3 id="classification-heading" class="form-section-title">Classification</h3>
+      <section class="form-section section-classification" aria-labelledby="classification-heading">
+        <h3 id="classification-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-purple-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+          </BaseIcon>
+          Classification
+        </h3>
         <div class="form-section-grid">
           <div class="form-field-row">
             <div class="form-group">
@@ -138,7 +158,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">
-                Difficulty*
+                Difficulty
                 <span class="text-red-500 ml-1">*</span>
               </label>
               <BaseSelect
@@ -152,7 +172,7 @@
           <div class="form-field-row">
             <div class="form-group">
               <label class="form-label">
-                Dialect*
+                Dialect
                 <span class="text-red-500 ml-1">*</span>
               </label>
               <BaseSelect
@@ -171,20 +191,17 @@
               />
             </div>
           </div>
-          <div class="form-help-row">
-            <div id="pos-help" class="form-help">Grammatical category</div>
-            <div id="difficulty-help" class="form-help">Learning difficulty</div>
-          </div>
-          <div class="form-help-row">
-            <div id="dialect-help" class="form-help">Arabic variety</div>
-            <div id="mastery-help" class="form-help">Your current level</div>
-          </div>
         </div>
       </section>
 
       <!-- Resources Section -->
-      <section class="form-section" aria-labelledby="resources-heading">
-        <h3 id="resources-heading" class="form-section-title">Resources & Links</h3>
+      <section class="form-section section-resources" aria-labelledby="resources-heading">
+        <h3 id="resources-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-indigo-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </BaseIcon>
+          Resources & Links
+        </h3>
         <DictionaryLinkManager 
           v-model="form.dictionaryLinks" 
           v-model:pronunciation-url="form.pronunciationLink"
@@ -193,8 +210,13 @@
       </section>
 
       <!-- Notes Section -->
-      <section class="form-section" aria-labelledby="notes-heading">
-        <h3 id="notes-heading" class="form-section-title">Additional Notes</h3>
+      <section class="form-section section-notes" aria-labelledby="notes-heading">
+        <h3 id="notes-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-gray-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </BaseIcon>
+          Additional Notes
+        </h3>
         <div class="form-group">
           <label for="notes-field" class="form-label">Notes</label>
           <textarea
@@ -210,14 +232,19 @@
       </section>
 
       <!-- Related Words Section -->
-      <section v-if="relatedWords.length > 0" class="form-section" aria-labelledby="related-words-heading">
-        <h3 id="related-words-heading" class="form-section-title">Related Words (Same Root)</h3>
+      <section v-if="relatedWords.length > 0" class="form-section section-related" aria-labelledby="related-words-heading">
+        <h3 id="related-words-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-teal-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </BaseIcon>
+          Related Words (Same Root)
+        </h3>
         <div class="form-preview" role="region" aria-label="Related words list">
           <div class="space-y-2">
             <div
               v-for="word in relatedWords"
               :key="word.id"
-              class="card-base card-padding-sm card-interactive flex justify-between items-center"
+              class="related-word-item"
               @click="$emit('related-word-click', word)"
               role="button"
               :aria-label="`View related word: ${word.arabic}`"
@@ -495,24 +522,69 @@ watch(
 
 <style scoped>
 /* Form Structure */
+.form-section {
+  @apply relative;
+}
+
+.form-section:not(:last-child) {
+  @apply mb-8;
+}
+
 .form-section-title {
-  @apply text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100;
+  @apply flex items-center text-lg font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200;
+}
+
+.section-icon {
+  @apply mr-3 flex-shrink-0;
+}
+
+/* Section-specific styling */
+.section-primary {
+  @apply bg-gradient-to-br from-blue-50/50 to-indigo-50/50 rounded-xl p-6 border border-blue-100/50;
+}
+
+.section-examples {
+  @apply bg-gradient-to-br from-green-50/50 to-emerald-50/50 rounded-xl p-6 border border-green-100/50;
+}
+
+.section-root {
+  @apply bg-gradient-to-br from-orange-50/50 to-amber-50/50 rounded-xl p-6 border border-orange-100/50;
+}
+
+.section-classification {
+  @apply bg-gradient-to-br from-purple-50/50 to-violet-50/50 rounded-xl p-6 border border-purple-100/50;
+}
+
+.section-resources {
+  @apply bg-gradient-to-br from-indigo-50/50 to-blue-50/50 rounded-xl p-6 border border-indigo-100/50;
+}
+
+.section-notes {
+  @apply bg-gradient-to-br from-gray-50/50 to-slate-50/50 rounded-xl p-6 border border-gray-100/50;
+}
+
+.section-related {
+  @apply bg-gradient-to-br from-teal-50/50 to-cyan-50/50 rounded-xl p-6 border border-teal-100/50;
+}
+
+.loading-state {
+  @apply bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200/60 shadow-sm;
 }
 
 .form-section-grid {
-  @apply space-y-4;
+  @apply space-y-6;
 }
 
 .form-field-primary {
-  @apply space-y-2;
+  @apply space-y-3;
 }
 
 .form-field-row {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
 }
 
 .form-help-row {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6 mt-2;
 }
 
 /* RTL Support */
@@ -521,31 +593,52 @@ watch(
 }
 
 /* Enhanced Interactions */
-.action-button {
-  @apply transition-all duration-200 hover:shadow-md;
+.generate-examples-btn {
+  @apply transition-all duration-300 hover:shadow-lg hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 font-medium;
+}
+
+.example-item {
+  @apply bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-green-200/60 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-[1.02] hover:bg-white hover:border-green-300;
+}
+
+.related-word-item {
+  @apply bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-teal-200/60 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-[1.02] hover:bg-white hover:border-teal-300 flex justify-between items-center;
 }
 
 /* Form Preview Enhancements */
 .form-preview {
-  @apply bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100;
+  @apply bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 shadow-sm;
 }
 
 .form-preview-title {
-  @apply text-blue-900 font-medium;
+  @apply text-blue-900 font-semibold text-sm uppercase tracking-wide;
+}
+
+/* Loading States */
+.loading-section {
+  @apply animate-pulse;
 }
 
 /* Responsive Improvements */
 @media (max-width: 768px) {
+  .form-section {
+    @apply p-4 mb-6;
+  }
+  
   .form-field-row {
-    @apply grid-cols-1;
+    @apply grid-cols-1 gap-4;
   }
   
   .form-help-row {
-    @apply grid-cols-1;
+    @apply grid-cols-1 gap-4;
   }
   
   .form-section-title {
-    @apply text-base;
+    @apply text-base mb-4;
+  }
+  
+  .section-icon {
+    @apply mr-2;
   }
 }
 </style>
