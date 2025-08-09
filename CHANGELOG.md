@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
-## [unreleased]
+## [1.2.0] - 2025-08-09
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/4a3ca1338ee7417ebbc4e3faed83b13f9e30c4fe..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/4a3ca1338ee7417ebbc4e3faed83b13f9e30c4fe..55b8993e8c1783b15f4ac951c295a4cbe0a75e8d)
 ### 🚀 Features
 
 
