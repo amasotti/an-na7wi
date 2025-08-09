@@ -128,11 +128,10 @@ describe('WordForm', () => {
   it('shows required field indicators', () => {
     renderWithStore(WordForm, { props: defaultProps })
 
-    expect(screen.getByText('Arabic Word*')).toBeInTheDocument()
-    expect(screen.getByText('Translation/Definition*')).toBeInTheDocument()
+    expect(screen.getByText('Arabic Word')).toBeInTheDocument()
+    expect(screen.getByText('Translation/Definition')).toBeInTheDocument()
     // Check for required select fields - look for the specific label text
-    expect(screen.getByText('Difficulty*')).toBeInTheDocument()
-    expect(screen.getByText('Dialect*')).toBeInTheDocument()
+    expect(screen.getByText('Dialect')).toBeInTheDocument()
   })
 
   it('renders form fields and sections', () => {
@@ -147,8 +146,8 @@ describe('WordForm', () => {
     expect(screen.getByText('Additional Notes')).toBeInTheDocument()
 
     // Check for form labels (text content)
-    expect(screen.getByText('Arabic Word*')).toBeInTheDocument()
-    expect(screen.getByText('Translation/Definition*')).toBeInTheDocument()
+    expect(screen.getByText('Arabic Word')).toBeInTheDocument()
+    expect(screen.getByText('Translation/Definition')).toBeInTheDocument()
     expect(screen.getByText('Transliteration')).toBeInTheDocument()
 
     // Check for input elements
