@@ -44,11 +44,13 @@ a systematic cleanup to establish a cohesive design system and simplify componen
 
 ## Cleanup Strategy
 
-### Phase 1: Design System Foundation (2-3 hours)
+### Phase 1: Design System Foundation 
 
 #### 1.1 Create Semantic Design Tokens
 
-**File**: `/styles/design-tokens.ts`
+**Proposed File**: `/styles/design-tokens.ts`
+
+e.g. of content:
 
 ```typescript
 export const spacing = {
@@ -96,7 +98,7 @@ export const typography = {
 - Keep only base styles and custom animations
 - Ensure all component styles are in TypeScript system
 
-### Phase 2: Component Refactoring (4-5 hours)
+### Phase 2: Component Refactoring
 
 #### 2.1 High-Priority Components (2 hours)
 
@@ -115,51 +117,7 @@ export const typography = {
 
 #### 2.2 Template Simplification Patterns
 
-**Before (TextCard.vue):**
-
-```vue
-
-<template>
-  <BaseCard :class="computedCardClasses">
-    <h3 :class="titleClasses">{{ text.title }}</h3>
-    <div :class="tagsContainerClasses">
-      <!-- content -->
-    </div>
-  </BaseCard>
-</template>
-
-<script setup>
-  const computedCardClasses = computed(() => {
-    const baseClasses = combineClasses(
-        cardClasses.base,
-        'group relative overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col'
-    )
-    const viewModeClasses = props.viewMode === 'list' ? 'flex-1' : 'h-full'
-    return combineClasses(baseClasses, viewModeClasses)
-  })
-  // ... 5 more computed properties
-</script>
-```
-
-**After:**
-
-```vue
-
-<template>
-  <BaseCard variant="interactive" :class="props.viewMode === 'list' ? 'flex-1' : ''">
-    <h3 class="title-lg">{{ text.title }}</h3>
-    <div class="tags-container">
-      <!-- content -->
-    </div>
-  </BaseCard>
-</template>
-
-<script setup>
-  // No computed classes needed
-</script>
-```
-
-### Phase 3: Layout Standardization (2-3 hours)
+### Phase 3: Layout Standardization
 
 #### 3.1 Page Layout Consistency
 
@@ -188,98 +146,3 @@ export const layoutClasses = {
     // ...
 }
 ```
-
-### Phase 4: Validation & Testing (1-2 hours)
-
-#### 4.1 Visual Regression Testing
-
-- Take screenshots before/after each component refactor
-- Ensure no visual changes after cleanup
-- Test all component variants and states
-
-#### 4.2 Performance Validation
-
-- Measure bundle size before/after
-- Ensure no performance regression
-- Validate that styles are tree-shaken properly
-
-## Implementation Order
-
-### Week 1: Foundation
-
-1. **Day 1-2**: Create design tokens and expand component classes
-2. **Day 3**: Consolidate CSS layers and remove duplicates
-
-### Week 2: Component Refactoring
-
-1. **Day 1**: BaseCard and high-impact base components
-2. **Day 2**: TextCard and text-related components
-3. **Day 3**: RootCard and root-related components
-4. **Day 4**: Navigation and layout components
-
-### Week 3: Finalization
-
-1. **Day 1-2**: Page layouts and remaining components
-2. **Day 3**: Testing and validation
-3. **Day 4**: Documentation updates
-
-## Success Metrics
-
-### Code Quality
-
-- **Reduce template complexity**: 50-70% fewer computed class properties
-- **Improve maintainability**: Single source of truth for styling
-- **Enhance consistency**: All components use design system
-
-### Developer Experience
-
-- **Faster development**: Clear patterns for new components
-- **Easier debugging**: Predictable class names and structure
-- **Better documentation**: Self-documenting design system
-
-### Performance
-
-- **Bundle size**: No significant increase (target: <5% change)
-- **Runtime performance**: No performance regression
-- **CSS optimization**: Better tree-shaking and dead code elimination
-
-## Risk Mitigation
-
-### Visual Regressions
-
-- **Strategy**: Component-by-component refactoring with visual testing
-- **Rollback plan**: Git commits for each component refactor
-
-### Breaking Changes
-
-- **Strategy**: Maintain backward compatibility during transition
-- **Testing**: Existing test suite should pass without changes
-
-### Time Overruns
-
-- **Priority system**: Focus on high-impact components first
-- **Incremental delivery**: Each phase delivers value independently
-
-## File Structure After Cleanup
-
-```
-frontend/
-├── styles/
-│   ├── design-tokens.ts          # NEW: Semantic design tokens
-│   ├── component-classes.ts      # ENHANCED: Complete design system
-│   └── layout-primitives.ts      # NEW: Layout helper classes
-├── assets/css/
-│   └── main.css                  # CLEANED: Only base styles + animations
-└── components/
-    └── */                        # SIMPLIFIED: Reduced template complexity
-```
-
-## Conclusion
-
-This cleanup will transform the An-Na7wi frontend from a mixed styling approach to a cohesive, maintainable design
-system. The systematic approach ensures no functionality is lost while dramatically improving code quality and developer
-experience.
-
-**Estimated effort**: 10-12 hours over 2-3 weeks
-**Risk level**: Low (incremental, reversible changes)
-**Impact**: High (improved maintainability, consistency, developer experience)
