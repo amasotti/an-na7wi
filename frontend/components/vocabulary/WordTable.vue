@@ -35,8 +35,8 @@
             <td class="word-table-cell">
               <div class="flex items-center">
                 <div class="cursor-pointer hover:bg-blue-50 rounded-lg p-2 -m-2 transition-colors" @click="$emit('word-click', word)">
-                  <div class="text-lg font-medium text-gray-900 rtl hover:text-blue-600 transition-colors">{{ word.arabic }}</div>
-                  <div class="text-sm text-gray-500">{{ word.transliteration || 'No transliteration' }}</div>
+                  <div class="text-xl arabic text-left font-normal text-gray-900 rtl hover:text-blue-600 transition-colors">{{ word.arabic }}</div>
+                  <aside class="text-sm italic text-gray-500">{{ word.transliteration || 'No transliteration' }}</aside>
                 </div>
               </div>
             </td>

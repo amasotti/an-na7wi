@@ -85,6 +85,30 @@ describe('WordForm', () => {
     vi.clearAllMocks()
   })
 
+  it('has proper accessibility structure', () => {
+    renderWithStore(WordForm, { props: defaultProps })
+
+    // Check for proper form structure
+    expect(screen.getByRole('form')).toBeInTheDocument()
+
+    // Check for section headings
+    const headings = screen.getAllByRole('heading', { level: 3 })
+    expect(headings.length).toBeGreaterThanOrEqual(6) // At least 6 sections
+
+    // Check for proper aria labels
+    expect(screen.getByLabelText('Word form')).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'Form actions' })).toBeInTheDocument()
+  })
+
+  it('renders help text for form fields', () => {
+    renderWithStore(WordForm, { props: defaultProps })
+
+    expect(screen.getByText('Enter the Arabic word or phrase')).toBeInTheDocument()
+    expect(screen.getByText('Romanized pronunciation')).toBeInTheDocument()
+    expect(screen.getByText('English meaning or definition')).toBeInTheDocument()
+    expect(screen.getByText('Arabic root letters (usually 3 consonants)')).toBeInTheDocument()
+  })
+
   it('renders in create mode when no word provided', () => {
     renderWithStore(WordForm, { props: defaultProps })
 
@@ -106,11 +130,21 @@ describe('WordForm', () => {
 
     expect(screen.getByText('Arabic Word*')).toBeInTheDocument()
     expect(screen.getByText('Translation/Definition*')).toBeInTheDocument()
-    expect(screen.getByText('Example Sentence')).toBeInTheDocument()
+    // Check for required select fields - look for the specific label text
+    expect(screen.getByText('Difficulty*')).toBeInTheDocument()
+    expect(screen.getByText('Dialect*')).toBeInTheDocument()
   })
 
-  it('renders form fields', () => {
+  it('renders form fields and sections', () => {
     renderWithStore(WordForm, { props: defaultProps })
+
+    // Check for section headings
+    expect(screen.getByText('Primary Information')).toBeInTheDocument()
+    expect(screen.getByText('Example Usage')).toBeInTheDocument()
+    expect(screen.getByText('Root Analysis')).toBeInTheDocument()
+    expect(screen.getByText('Classification')).toBeInTheDocument()
+    expect(screen.getByText('Resources & Links')).toBeInTheDocument()
+    expect(screen.getByText('Additional Notes')).toBeInTheDocument()
 
     // Check for form labels (text content)
     expect(screen.getByText('Arabic Word*')).toBeInTheDocument()
@@ -130,6 +164,8 @@ describe('WordForm', () => {
     expect(screen.getByDisplayValue('كتاب')).toBeInTheDocument()
     expect(screen.getByDisplayValue('kitab')).toBeInTheDocument()
     expect(screen.getByDisplayValue('book')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('هذا كتاب جديد')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Common word for book')).toBeInTheDocument()
   })
 
   describe('Example Generation', () => {
@@ -230,7 +266,7 @@ describe('WordForm', () => {
 
       // Wait for examples to be displayed
       await vi.waitFor(() => {
-        expect(screen.getByText('Generated Examples:')).toBeInTheDocument()
+        expect(screen.getByText('Generated Examples')).toBeInTheDocument()
         expect(screen.getByText('هذا كتاب مفيد')).toBeInTheDocument()
         expect(screen.getByText('This is a useful book')).toBeInTheDocument()
         expect(screen.getByText('أقرأ الكتاب')).toBeInTheDocument()
