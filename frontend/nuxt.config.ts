@@ -8,6 +8,19 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
+  app: {
+    head: {
+      title: 'An-Nahwi Learning Arabic',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'An-Nahwi Learning Arabic Help tools' },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      ],
+    },
+  },
   sourcemap: false,
   ssr: false,
   css: ['~/assets/css/main.css'],
