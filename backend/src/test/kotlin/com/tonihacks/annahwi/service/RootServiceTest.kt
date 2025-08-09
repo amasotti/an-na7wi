@@ -2,7 +2,6 @@ package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.config.GlobalTestProfile
 import com.tonihacks.annahwi.dto.request.RootRequestDTO
-import com.tonihacks.annahwi.dto.response.RootResponseDTO
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.repository.ArabicRootRepository
 import io.quarkus.test.junit.QuarkusTest

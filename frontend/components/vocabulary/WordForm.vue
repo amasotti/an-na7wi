@@ -45,8 +45,11 @@
               size="sm"
               :loading="loadingExamples"
               @click="generateExamples"
+              class="whitespace-nowrap"
             >
-              <BaseIcon name="lightbulb" class="w-4 h-4 mr-1" />
+              <BaseIcon class="w-4 h-4 mr-1">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m0 16v2m8.485-8.485l-1.414-1.414M4.929 4.929L3.515 3.515M21 12h-2M5 12H3m15.364 6.364l-1.414-1.414m-12.728 0l-1.414 1.414M16 8a4 4 0 11-8 0 4 4 0 018 0z" />
+              </BaseIcon>
               Generate Examples
             </BaseButton>
           </div>
@@ -133,7 +136,10 @@
 
         <!-- Dictionary Links -->
         <div class="col-span-2">
-          <DictionaryLinkManager v-model="form.dictionaryLinks" />
+          <DictionaryLinkManager 
+            v-model="form.dictionaryLinks" 
+            :arabic-text="form.arabic"
+          />
         </div>
 
         <!-- Pronunciation Link -->

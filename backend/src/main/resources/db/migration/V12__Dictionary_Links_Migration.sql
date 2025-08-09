@@ -5,7 +5,7 @@
 CREATE TABLE dictionary_links (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     word_id UUID NOT NULL,
-    type VARCHAR(255) NOT NULL CHECK (type IN ('ALMANY', 'LIVING_ARABIC', 'AL_LUGHATUNA', 'DERJA_NINJA', 'REVERSO', 'WIKTIONARY', 'CUSTOM')),
+    type VARCHAR(255) NOT NULL CHECK (type IN ('ALMANY', 'LIVING_ARABIC', 'DERJA_NINJA', 'REVERSO', 'WIKTIONARY', 'ARABIC_STUDENT_DICTIONARY', 'LANGENSCHEIDT', 'CUSTOM')),
     url VARCHAR(2048) NOT NULL,
     display_name VARCHAR(255),
     FOREIGN KEY (word_id) REFERENCES words(id) ON DELETE CASCADE
@@ -30,6 +30,10 @@ BEGIN
         RETURN 'REVERSO';
     ELSIF url ILIKE '%wiktionary.org%' THEN
         RETURN 'WIKTIONARY';
+    ELSIF url ILIKE '%arabicstudentdictionary.com%' THEN
+        RETURN 'ARABIC_STUDENT_DICTIONARY';
+    ELSIF url ILIKE '%langenscheidt.com%' THEN
+        RETURN 'LANGENSCHEIDT';
     ELSE
         RETURN 'CUSTOM';
     END IF;
@@ -72,6 +76,6 @@ ALTER TABLE words DROP COLUMN IF EXISTS dictionary_links;
 
 -- Add comments for documentation
 COMMENT ON TABLE dictionary_links IS 'Dictionary links associated with Arabic words';
-COMMENT ON COLUMN dictionary_links.type IS 'Type of dictionary (ALMANY, LIVING_ARABIC, AL_LUGHATUNA, DERJA_NINJA, REVERSO, WIKTIONARY, CUSTOM)';
+COMMENT ON COLUMN dictionary_links.type IS 'Type of dictionary (ALMANY, LIVING_ARABIC, DERJA_NINJA, REVERSO, WIKTIONARY, ARABIC_STUDENT_DICTIONARY, LANGENSCHEIDT, CUSTOM)';
 COMMENT ON COLUMN dictionary_links.url IS 'URL to the dictionary entry';
 COMMENT ON COLUMN dictionary_links.display_name IS 'Custom display name for the dictionary (mainly used for CUSTOM type)';

@@ -70,9 +70,10 @@ enum class MasteryLevel {
 enum class DictionaryType {
     ALMANY,
     LIVING_ARABIC,
-    AL_LUGHATUNA,
     DERJA_NINJA,
     REVERSO,
     WIKTIONARY,
+    ARABIC_STUDENT_DICTIONARY,
+    LANGENSCHEIDT,
     CUSTOM
 }

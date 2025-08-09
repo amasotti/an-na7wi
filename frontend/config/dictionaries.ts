@@ -4,6 +4,7 @@ export interface DictionaryConfig {
   name: string
   icon: string
   baseUrl?: string
+  urlTemplate?: string
   color: string
   description?: string
 }
@@ -13,34 +14,31 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'AlMaany',
     icon: '📚',
     baseUrl: 'https://www.almaany.com',
+    urlTemplate: 'https://www.almaany.com/en/dict/ar-en/<arabic_query>',
     color: 'blue',
     description: 'Arabic-English dictionary with comprehensive definitions',
   },
   [DictionaryType.LIVING_ARABIC]: {
     name: 'Living Arabic',
     icon: '📙',
-    baseUrl: 'https://livingarabic.com',
+    baseUrl: 'https://www.livingarabic.com',
+    urlTemplate: 'https://www.livingarabic.com/en/search?q=<arabic_query>',
     color: 'indigo',
     description: 'Modern Arabic language resources and dictionary',
-  },
-  [DictionaryType.AL_LUGHATUNA]: {
-    name: 'Al-Lughatuna',
-    icon: '📖',
-    baseUrl: 'https://al-lughatuna.com',
-    color: 'green',
-    description: 'Arabic language learning platform',
   },
   [DictionaryType.DERJA_NINJA]: {
     name: 'Derja Ninja',
     icon: '🥷',
     baseUrl: 'https://derja.ninja',
+    urlTemplate: 'https://derja.ninja/search?search=<arabic_query>&script=arabic',
     color: 'purple',
     description: 'Tunisian dialect dictionary',
   },
   [DictionaryType.REVERSO]: {
     name: 'Reverso',
     icon: '🔄',
-    baseUrl: 'https://context.reverso.net',
+    baseUrl: 'https://dictionary.reverso.net',
+    urlTemplate: 'https://dictionary.reverso.net/arabic-english/<arabic_query>',
     color: 'orange',
     description: 'Context-based translations',
   },
@@ -48,8 +46,25 @@ export const DICTIONARY_CONFIG: Record<DictionaryType, DictionaryConfig> = {
     name: 'Wiktionary',
     icon: '📖',
     baseUrl: 'https://en.wiktionary.org',
+    urlTemplate: 'https://en.wiktionary.org/wiki/<arabic_query>',
     color: 'gray',
     description: 'Free multilingual dictionary',
+  },
+  [DictionaryType.ARABIC_STUDENT_DICTIONARY]: {
+    name: 'Arabic Student Dictionary',
+    icon: '🎓',
+    baseUrl: 'https://www.arabicstudentsdictionary.com',
+    urlTemplate: 'https://www.arabicstudentsdictionary.com/search/<arabic_query>',
+    color: 'green',
+    description: 'Dictionary for Arabic language students',
+  },
+  [DictionaryType.LANGENSCHEIDT]: {
+    name: 'Langenscheidt',
+    icon: '🇩🇪',
+    baseUrl: 'https://de.langenscheidt.com',
+    urlTemplate: 'https://de.langenscheidt.com/arabisch-deutsch/<arabic_query>',
+    color: 'red',
+    description: 'Arabic-German dictionary',
   },
   [DictionaryType.CUSTOM]: {
     name: 'Custom',
@@ -81,6 +96,8 @@ export const getDictionaryBadgeClass = (type: DictionaryType): string => {
       return `${baseClasses} bg-indigo-100 text-indigo-800 hover:bg-indigo-200`
     case 'orange':
       return `${baseClasses} bg-orange-100 text-orange-800 hover:bg-orange-200`
+    case 'red':
+      return `${baseClasses} bg-red-100 text-red-800 hover:bg-red-200`
     default:
       return `${baseClasses} bg-gray-100 text-gray-800 hover:bg-gray-200`
   }
@@ -102,7 +119,43 @@ export const getDictionaryCardClass = (type: DictionaryType): string => {
       return `${baseClasses} bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200`
     case 'orange':
       return `${baseClasses} bg-orange-50 text-orange-700 hover:bg-orange-100 border border-orange-200`
+    case 'red':
+      return `${baseClasses} bg-red-50 text-red-700 hover:bg-red-100 border border-red-200`
     default:
       return `${baseClasses} bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200`
   }
+}
+
+/**
+ * Generate dictionary URL for given Arabic text using URL template
+ */
+export const generateDictionaryUrl = (type: DictionaryType, arabicText: string): string => {
+  const config = DICTIONARY_CONFIG[type]
+  if (!config.urlTemplate) {
+    return config.baseUrl || ''
+  }
+
+  // URL encode the Arabic text for safe URL usage
+  const encodedText = encodeURIComponent(arabicText)
+  return config.urlTemplate.replace('<arabic_query>', encodedText)
+}
+
+/**
+ * Generate dictionary links for all available dictionaries with URL templates
+ */
+export const generateAllDictionaryLinks = (arabicText: string) => {
+  return Object.values(DictionaryType)
+    .filter(type => type !== DictionaryType.CUSTOM && DICTIONARY_CONFIG[type].urlTemplate)
+    .map(type => ({
+      type,
+      url: generateDictionaryUrl(type, arabicText),
+      displayName: DICTIONARY_CONFIG[type].name,
+    }))
+}
+
+/**
+ * Check if a dictionary type has auto-generation support
+ */
+export const hasDictionaryUrlTemplate = (type: DictionaryType): boolean => {
+  return Boolean(DICTIONARY_CONFIG[type]?.urlTemplate)
 }
