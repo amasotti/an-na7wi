@@ -58,8 +58,8 @@
     </div>
 
     <!-- Edit Root Modal -->
-    <EditRootModal
-      :show="showEditModal"
+    <RootModal
+      :open="showEditModal"
       :root="rootStore.currentRootWithWords?.root || null"
       @close="showEditModal = false"
       @root-updated="handleRootUpdated"
@@ -84,8 +84,8 @@
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { onMounted, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
-import EditRootModal from '~/components/roots/EditRootModal.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
+import RootModal from '~/components/roots/RootModal.vue'
 import RootWordsList from '~/components/roots/RootWordsList.vue'
 import WordForm from '~/components/vocabulary/WordForm.vue'
 import { wordService } from '~/composables/wordService'

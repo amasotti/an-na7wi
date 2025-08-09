@@ -5,140 +5,234 @@
     size="xxl"
     @close="handleClose"
   >
-    <form @submit.prevent="handleSubmit" class="text-edit-form">
-      <div class="form-grid">
-        <!-- Title -->
-        <div class="form-field">
-          <BaseInput
-            v-model="form.title"
-            label="Title"
-            placeholder="Enter text title..."
-            required
-            :error="errors.title"
-          />
-        </div>
-
-        <!-- Difficulty and Dialect -->
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">
-              Difficulty <span class="text-red-500">*</span>
-            </label>
-            <BaseSelect
-              v-model="form.difficulty"
-              :options="difficultyOptions"
-              placeholder="Select difficulty"
+    <form @submit.prevent="handleSubmit" class="content-area" role="form" aria-label="Text edit form">
+      <!-- Basic Information Section -->
+      <section class="form-section section-primary" aria-labelledby="basic-info-heading">
+        <h3 id="basic-info-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-blue-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </BaseIcon>
+          Basic Information
+        </h3>
+        <div class="form-section-grid">
+          <div class="form-field-primary">
+            <BaseInput
+              v-model="form.title"
+              label="Text Title"
+              placeholder="Enter a descriptive title..."
               required
+              :error="errors.title"
+              aria-describedby="title-help"
             />
+            <div id="title-help" class="form-help">Choose a clear, descriptive title for this text</div>
           </div>
 
-          <div class="form-field">
-            <label class="form-label">
-              Dialect <span class="text-red-500">*</span>
-            </label>
-            <BaseSelect
-              v-model="form.dialect"
-              :options="dialectOptions"
-              placeholder="Select dialect"
-              required
-            />
+          <div class="form-field-row">
+            <div class="form-group">
+              <label class="form-label">
+                Difficulty Level
+                <span class="text-red-500 ml-1">*</span>
+              </label>
+              <BaseSelect
+                v-model="form.difficulty"
+                :options="difficultyOptions"
+                placeholder="Select difficulty"
+                required
+                aria-describedby="difficulty-help"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                Dialect
+                <span class="text-red-500 ml-1">*</span>
+              </label>
+              <BaseSelect
+                v-model="form.dialect"
+                :options="dialectOptions"
+                placeholder="Select dialect"
+                required
+                aria-describedby="dialect-help"
+              />
+            </div>
+          </div>
+          <div class="form-help-row">
+            <div id="difficulty-help" class="form-help">Learning difficulty level</div>
+            <div id="dialect-help" class="form-help">Arabic dialect or variety</div>
           </div>
         </div>
+      </section>
 
-        <!-- Arabic Content -->
-        <div class="form-field">
-          <label class="form-label">
-            Arabic Content <span class="text-red-500">*</span>
+      <!-- Arabic Content Section -->
+      <section class="form-section section-arabic" aria-labelledby="arabic-content-heading">
+        <h3 id="arabic-content-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-green-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </BaseIcon>
+          Arabic Content
+        </h3>
+        <div class="form-group">
+          <label for="arabic-content" class="form-label">
+            Arabic Text
+            <span class="text-red-500 ml-1">*</span>
           </label>
           <textarea
+            id="arabic-content"
             v-model="form.arabicContent"
-            class="text-input rtl-text"
-            rows="10"
+            class="form-input rtl-text"
+            rows="12"
             placeholder="أدخل النص العربي هنا..."
             dir="rtl"
             required
+            aria-describedby="arabic-content-help"
           />
-        </div>
-
-        <!-- Transliteration -->
-        <div class="form-field">
-          <div class="flex items-center justify-between">
-            <label class="form-label">Transliteration</label>
-            <BaseButton
-              v-if="form.arabicContent.trim()"
-              variant="outline"
-              size="sm"
-              :loading="transliterationLoading"
-              @click="handleTransliterate"
-            >
-              Auto-transliterate
-            </BaseButton>
+          <div id="arabic-content-help" class="form-help">
+            Enter the Arabic text content. Use proper punctuation and formatting.
           </div>
-          <textarea
-            v-model="form.transliteration"
-            class="text-input"
-            rows="10"
-            placeholder="Enter transliteration..."
-          />
         </div>
+      </section>
 
-        <!-- Translation -->
-        <div class="form-field">
-          <label class="form-label">Translation</label>
-          <textarea
-            v-model="form.translation"
-            class="text-input"
-            rows="10"
-            placeholder="Enter translation..."
-          />
+      <!-- Language Support Section -->
+      <section class="form-section section-language" aria-labelledby="language-support-heading">
+        <h3 id="language-support-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-purple-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+          </BaseIcon>
+          Language Support
+        </h3>
+        <div class="form-section-grid">
+          <!-- Transliteration -->
+          <div class="form-group">
+            <div class="form-header">
+              <label for="transliteration" class="form-label">Transliteration</label>
+              <BaseButton
+                v-if="form.arabicContent.trim()"
+                type="button"
+                variant="outline"
+                size="sm"
+                :loading="transliterationLoading"
+                @click="handleTransliterate"
+                class="auto-transliterate-btn"
+                aria-label="Generate transliteration automatically"
+              >
+                <BaseIcon class="w-4 h-4 mr-2">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                </BaseIcon>
+                Auto-generate
+              </BaseButton>
+            </div>
+            <textarea
+              id="transliteration"
+              v-model="form.transliteration"
+              class="form-input italic"
+              rows="8"
+              placeholder="Enter romanized pronunciation..."
+              aria-describedby="transliteration-help"
+            />
+            <div id="transliteration-help" class="form-help">
+              Romanized version showing pronunciation (optional)
+            </div>
+          </div>
+
+          <!-- Translation -->
+          <div class="form-group">
+            <label for="translation" class="form-label">Translation</label>
+            <textarea
+              id="translation"
+              v-model="form.translation"
+              class="form-input"
+              rows="8"
+              placeholder="Enter English translation..."
+              aria-describedby="translation-help"
+            />
+            <div id="translation-help" class="form-help">
+              English translation of the Arabic text (optional)
+            </div>
+          </div>
         </div>
+      </section>
 
-        <!-- Tags -->
-        <div class="form-field">
-          <label class="form-label">Tags</label>
+      <!-- Categorization Section -->
+      <section class="form-section section-tags" aria-labelledby="categorization-heading">
+        <h3 id="categorization-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-orange-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+          </BaseIcon>
+          Categories & Tags
+        </h3>
+        <div class="form-group">
+          <label for="tags-input" class="form-label">Tags</label>
           <BaseInput
+            id="tags-input"
             v-model="tagInput"
             placeholder="Add tags (comma separated)..."
             @keydown.enter.prevent="addTag"
             @keydown.comma.prevent="addTag"
             @blur="addTag"
+            aria-describedby="tags-help"
           />
-          <div v-if="form.tags.length > 0" class="tag-list">
+          <div id="tags-help" class="form-help">
+            Add descriptive tags to help organize and find this text. Press Enter or comma to add.
+          </div>
+          
+          <!-- Tag Display -->
+          <div v-if="form.tags.length > 0" class="tag-display" role="region" aria-label="Current tags">
             <BaseBadge
               v-for="tag in form.tags"
               :key="tag"
               closable
               @close="removeTag(tag)"
+              class="tag-item"
+              :aria-label="`Remove tag: ${tag}`"
             >
               {{ tag }}
             </BaseBadge>
           </div>
         </div>
+      </section>
 
-        <!-- Comments -->
-        <div class="form-field">
-          <label class="form-label">Comments</label>
+      <!-- Additional Notes Section -->
+      <section class="form-section section-notes" aria-labelledby="notes-heading">
+        <h3 id="notes-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-gray-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </BaseIcon>
+          Additional Notes
+        </h3>
+        <div class="form-group">
+          <label for="comments" class="form-label">Comments & Notes</label>
           <textarea
+            id="comments"
             v-model="form.comments"
-            class="text-input"
-            rows="3"
-            placeholder="Add any notes or comments..."
+            class="form-input resize-none"
+            rows="4"
+            placeholder="Add contextual notes, cultural insights, teaching tips, or other comments..."
+            aria-describedby="comments-help"
           />
+          <div id="comments-help" class="form-help">
+            Personal notes, teaching context, cultural background, or any other helpful information
+          </div>
         </div>
-      </div>
+      </section>
     </form>
 
     <template #footer>
-      <div class="modal-actions">
-        <BaseButton variant="outline" @click="handleClose">
+      <div class="form-actions" role="group" aria-label="Form actions">
+        <BaseButton 
+          type="button"
+          variant="outline" 
+          @click="handleClose"
+          aria-label="Cancel and close form"
+        >
           Cancel
         </BaseButton>
         <BaseButton 
+          type="submit"
           @click="handleSubmit" 
           :disabled="!isValid || loading"
           :loading="loading"
+          :aria-label="isEditing ? 'Save changes to text' : 'Create new text'"
         >
-          Save Changes
+          {{ isEditing ? 'Save Changes' : 'Create Text' }}
         </BaseButton>
       </div>
     </template>
@@ -152,6 +246,7 @@ import { computed, ref, watch } from 'vue'
 import { textService } from '~/composables/textService'
 import BaseBadge from '../common/BaseBadge.vue'
 import BaseButton from '../common/BaseButton.vue'
+import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
 import BaseModal from '../common/BaseModal.vue'
 import BaseSelect from '../common/BaseSelect.vue'
@@ -216,6 +311,8 @@ const dialectOptions: SelectOption<Dialect>[] = [
 ]
 
 // Computed
+const isEditing = computed(() => !!props.text)
+
 const isValid = computed(() => {
   return !!(
     form.value.title.trim() &&
@@ -357,41 +454,105 @@ watch(
 </script>
 
 <style scoped>
-.text-edit-form {
+/* Form Structure */
+.form-section {
+  @apply relative;
+}
+
+.form-section:not(:last-child) {
+  @apply mb-8;
+}
+
+.form-section-title {
+  @apply flex items-center text-lg font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200;
+}
+
+.section-icon {
+  @apply mr-3 flex-shrink-0;
+}
+
+/* Section-specific styling */
+.section-primary {
+  @apply bg-gradient-to-br from-blue-50/50 to-indigo-50/50 rounded-xl p-6 border border-blue-100/50;
+}
+
+.section-arabic {
+  @apply bg-gradient-to-br from-green-50/50 to-emerald-50/50 rounded-xl p-6 border border-green-100/50;
+}
+
+.section-language {
+  @apply bg-gradient-to-br from-purple-50/50 to-violet-50/50 rounded-xl p-6 border border-purple-100/50;
+}
+
+.section-tags {
+  @apply bg-gradient-to-br from-orange-50/50 to-amber-50/50 rounded-xl p-6 border border-orange-100/50;
+}
+
+.section-notes {
+  @apply bg-gradient-to-br from-gray-50/50 to-slate-50/50 rounded-xl p-6 border border-gray-100/50;
+}
+
+.form-section-grid {
   @apply space-y-6;
 }
 
-.form-grid {
-  @apply space-y-6;
+.form-field-primary {
+  @apply space-y-3;
 }
 
-.form-row {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+.form-field-row {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
 }
 
-.form-field {
-  @apply space-y-2;
+.form-help-row {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6 mt-2;
 }
 
-.form-label {
-  @apply block text-sm font-medium text-gray-700;
-}
-
-.text-input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
-  resize: vertical;
-}
-
+/* RTL Support */
 .rtl-text {
   @apply text-right;
   font-family: 'Noto Sans Arabic', 'Arial Unicode MS', sans-serif;
+  direction: rtl;
 }
 
-.tag-list {
-  @apply flex flex-wrap gap-2 mt-2;
+/* Enhanced Interactions */
+.auto-transliterate-btn {
+  @apply transition-all duration-300 hover:shadow-lg hover:scale-105 bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white border-0 font-medium;
 }
 
-.modal-actions {
-  @apply flex gap-3 justify-end;
+/* Tag styling */
+.tag-display {
+  @apply flex flex-wrap gap-2 mt-3 p-3 bg-white/80 backdrop-blur-sm rounded-lg border border-orange-200/60;
+}
+
+.tag-item {
+  @apply transition-all duration-200 hover:scale-105 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-800 border border-orange-300/50;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+  .form-section {
+    @apply p-4 mb-6;
+  }
+  
+  .form-field-row {
+    @apply grid-cols-1 gap-4;
+  }
+  
+  .form-help-row {
+    @apply grid-cols-1 gap-4;
+  }
+  
+  .form-section-title {
+    @apply text-base mb-4;
+  }
+  
+  .section-icon {
+    @apply mr-2;
+  }
+  
+  .form-section-grid {
+    @apply space-y-4;
+  }
 }
 </style>

@@ -24,8 +24,8 @@
     </div>
 
     <!-- Add Root Modal -->
-    <AddRootModal
-      :show="showAddModal"
+    <RootModal
+      :open="showAddModal"
       @close="showAddModal = false"
       @root-created="handleRootCreated"
     />
@@ -70,7 +70,7 @@
 import { onMounted, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
-import AddRootModal from '~/components/roots/AddRootModal.vue'
+import RootModal from '~/components/roots/RootModal.vue'
 import RootsContent from '~/components/roots/RootsContent.vue'
 import RootsHeader from '~/components/roots/RootsHeader.vue'
 import { useRootStore } from '~/stores/rootStore'
