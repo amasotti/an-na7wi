@@ -35,8 +35,13 @@
       <div class="translation">{{ word.translation || 'No translation' }}</div>
       
       <div v-if="word.example" class="example">
-        <span class="example-label">Example:</span> 
+        <p class="example-label">Example:</p>
         <span class="example-text rtl">{{ word.example }}</span>
+      </div>
+
+      <div v-if="word.notes" class="example">
+        <p class="example-label">Notes:</p>
+        <span class="example-text rtl">{{ word.notes }}</span>
       </div>
       
       <!-- Metadata badges -->
@@ -226,7 +231,7 @@ const getRootDetailPath = (rootString: string) => {
 }
 
 .example-label {
-  @apply font-medium;
+  @apply font-bold italic;
 }
 
 .example-text {
