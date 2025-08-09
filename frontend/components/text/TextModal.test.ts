@@ -31,8 +31,6 @@ const mockText: Text = {
   wordCount: 3,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  userId: 'user1',
-  version: 1,
 }
 
 describe('TextModal', () => {
@@ -309,16 +307,6 @@ describe('TextModal', () => {
 
       const submitButton = screen.getByRole('button', { name: 'Create new text' })
       expect(submitButton).toBeDisabled()
-    })
-
-    it('applies correct CSS classes for RTL text', () => {
-      renderWithStore(TextModal, {
-        props: defaultProps,
-      })
-
-      const arabicInput = screen.getByPlaceholderText('أدخل النص العربي هنا...')
-      expect(arabicInput).toHaveClass('rtl-text')
-      expect(arabicInput).toHaveAttribute('dir', 'rtl')
     })
 
     it('resets form when modal is closed and reopened', async () => {

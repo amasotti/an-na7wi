@@ -394,7 +394,12 @@ const validateForm = (): boolean => {
 }
 
 const handleSubmit = () => {
-  if (!validateForm()) return
+  if (!validateForm()) {
+    console.log('Form validation failed')
+    return
+  }
+
+  console.log('Form validation passed, processing submission...')
 
   // Process any remaining tag input before submitting
   addTag()
@@ -407,6 +412,11 @@ const handleSubmit = () => {
       translation: form.value.translation?.trim() || undefined,
       comments: form.value.comments?.trim() || undefined,
       tags: form.value.tags,
+      difficulty: form.value.difficulty,
+      dialect: form.value.dialect,
+    })
+  } else {
+    console.error('Missing difficulty or dialect:', {
       difficulty: form.value.difficulty,
       dialect: form.value.dialect,
     })

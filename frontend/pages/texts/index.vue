@@ -74,7 +74,7 @@
       :loading="loading"
       :text="textToEdit"
       @close="showCreateModal ? (showCreateModal = false) : closeEditModal()"
-      @submit="textToEdit ? handleEditText : handleCreateText"
+      @submit="handleTextSubmit"
     />
 
     <!-- Text Delete Modal -->
@@ -212,7 +212,7 @@ const deleteTextConfirm = (textId: string) => {
   }
 }
 
-const handleCreateText = async (formData: {
+const handleTextSubmit = async (formData: {
   title: string
   arabicContent: string
   transliteration?: string
@@ -223,34 +223,19 @@ const handleCreateText = async (formData: {
   dialect: Dialect
 }) => {
   try {
-    await textStore.createText(formData)
-    showCreateModal.value = false
+    if (textToEdit.value) {
+      // Edit mode
+      await textStore.updateText(textToEdit.value.id, formData)
+      closeEditModal()
+    } else {
+      // Create mode
+      await textStore.createText(formData)
+      showCreateModal.value = false
+    }
     // Refresh the texts list
     await textStore.fetchTexts()
   } catch (error) {
-    console.error('Failed to create text:', error)
-  }
-}
-
-const handleEditText = async (formData: {
-  title: string
-  arabicContent: string
-  transliteration?: string
-  translation?: string
-  comments?: string
-  tags: string[]
-  difficulty: Difficulty
-  dialect: Dialect
-}) => {
-  if (!textToEdit.value) return
-
-  try {
-    await textStore.updateText(textToEdit.value.id, formData)
-    closeEditModal()
-    // Refresh the texts list
-    await textStore.fetchTexts()
-  } catch (error) {
-    console.error('Failed to update text:', error)
+    console.error('Failed to save text:', error)
   }
 }
 
