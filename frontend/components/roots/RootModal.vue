@@ -51,7 +51,7 @@
               <span
                 v-for="(letter, index) in preview.letters"
                 :key="index"
-                class="letter-badge"
+                class="letter-badge arabic"
               >
                 {{ letter }}
               </span>
@@ -180,7 +180,9 @@ const loading = ref(false)
 const isEditing = computed(() => !!props.root)
 
 const canSubmit = computed(() => {
-  return rootInput.value.trim() !== '' && preview.value?.isValid && !inputError.value && !loading.value
+  return (
+    rootInput.value.trim() !== '' && preview.value?.isValid && !inputError.value && !loading.value
+  )
 })
 
 const handleInput = async () => {
@@ -369,7 +371,7 @@ if (props.open && props.root) {
 }
 
 .letter-badge {
-  @apply inline-flex items-center justify-center w-10 h-10 bg-emerald-100 text-emerald-700 text-lg font-semibold rounded-lg arabic shadow-sm border border-emerald-200;
+  @apply inline-flex items-center justify-center w-10 h-10 bg-emerald-100 text-emerald-700 text-lg font-semibold rounded-lg shadow-sm border border-emerald-200;
 }
 
 /* Error styling */

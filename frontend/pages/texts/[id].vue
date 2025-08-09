@@ -160,7 +160,7 @@
     </div>
 
     <!-- Text Edit Modal -->
-    <TextEditModal
+    <TextModal
       :open="showEditModal"
       :loading="loading"
       :text="currentText"
@@ -232,7 +232,7 @@ import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import AnnotatedTextContent from '~/components/text/AnnotatedTextContent.vue'
 import TextDeleteModal from '~/components/text/TextDeleteModal.vue'
-import TextEditModal from '~/components/text/TextEditModal.vue'
+import TextModal from '~/components/text/TextModal.vue'
 import TextTokenizedWords from '~/components/text/TextTokenizedWords.vue'
 import TextVersionManager from '~/components/text/TextVersionManager.vue'
 import WordForm from '~/components/vocabulary/WordForm.vue'

@@ -1,14 +1,14 @@
 <template>
   <BaseModal
     :open="open"
-    title="Edit Text"
+    :title="isEditing ? 'Edit Text' : 'Create New Text'"
     size="xxl"
     @close="handleClose"
   >
-    <form @submit.prevent="handleSubmit" class="content-area" role="form" aria-label="Text edit form">
-      <!-- Basic Information Section -->
-      <section class="form-section section-primary" aria-labelledby="basic-info-heading">
-        <h3 id="basic-info-heading" class="form-section-title">
+    <form @submit.prevent="handleSubmit" class="content-area" role="form" aria-label="Text form">
+      <!-- Primary Information Section -->
+      <section class="form-section section-primary" aria-labelledby="primary-info-heading">
+        <h3 id="primary-info-heading" class="form-section-title">
           <BaseIcon size="sm" class="section-icon text-blue-600">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </BaseIcon>
@@ -78,7 +78,7 @@
           <textarea
             id="arabic-content"
             v-model="form.arabicContent"
-            class="form-input rtl-text"
+            class="form-input arabic text-xl"
             rows="12"
             placeholder="أدخل النص العربي هنا..."
             dir="rtl"
@@ -508,6 +508,10 @@ watch(
   @apply grid grid-cols-1 md:grid-cols-2 gap-6 mt-2;
 }
 
+.form-header {
+  @apply flex items-center justify-between mb-3;
+}
+
 /* RTL Support */
 .rtl-text {
   @apply text-right;
@@ -553,6 +557,10 @@ watch(
   
   .form-section-grid {
     @apply space-y-4;
+  }
+
+  .form-header {
+    @apply flex-col items-start gap-3;
   }
 }
 </style>

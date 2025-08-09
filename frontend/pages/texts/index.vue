@@ -68,21 +68,13 @@
       />
     </div>
 
-    <!-- Text Create Modal -->
-    <TextCreateModal
-      :open="showCreateModal"
-      :loading="loading"
-      @close="showCreateModal = false"
-      @submit="handleCreateText"
-    />
-
-    <!-- Text Edit Modal -->
-    <TextEditModal
-      :open="showEditModal"
+    <!-- Text Modal (unified create/edit) -->
+    <TextModal
+      :open="showCreateModal || showEditModal"
       :loading="loading"
       :text="textToEdit"
-      @close="closeEditModal"
-      @submit="handleEditText"
+      @close="showCreateModal ? (showCreateModal = false) : closeEditModal()"
+      @submit="textToEdit ? handleEditText : handleCreateText"
     />
 
     <!-- Text Delete Modal -->
@@ -105,12 +97,11 @@ import Pagination from '~/components/common/Pagination.vue'
 import EmptyState from '~/components/text/EmptyState.vue'
 import TextCard from '~/components/text/TextCard.vue'
 import TextCardSkeleton from '~/components/text/TextCardSkeleton.vue'
-import TextCreateModal from '~/components/text/TextCreateModal.vue'
 import TextDeleteModal from '~/components/text/TextDeleteModal.vue'
-import TextEditModal from '~/components/text/TextEditModal.vue'
 import TextFilters from '~/components/text/TextFilters.vue'
 import TextHeader from '~/components/text/TextHeader.vue'
 import TextListControls from '~/components/text/TextListControls.vue'
+import TextModal from '~/components/text/TextModal.vue'
 import { useTextStore } from '~/stores/textStore'
 import { layoutClasses } from '~/styles/component-classes'
 
