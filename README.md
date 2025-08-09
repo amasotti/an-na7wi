@@ -1,6 +1,9 @@
 # An-Nahwi (النحوي)
 
-Arabic learning application for creating and managing learning materials with text analysis, vocabulary management, and annotations.
+[![🚀 CI Pipeline](https://github.com/amasotti/an-na7wi/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/amasotti/an-na7wi/actions/workflows/ci.yml)
+
+An-Nahwi (Arabic for "The Grammarian") is an arabic learning application for creating and managing learning materials 
+with text analysis, vocabulary management, and annotations.
 
 **Stack**: Kotlin/Quarkus backend, Nuxt 4/TypeScript frontend, PostgreSQL database
 
