@@ -1,17 +1,26 @@
 <template>
   <div class="vocabulary-content">
-    <!-- Filters -->
-    <WordFilters
-      v-model:search="filters.search"
-      v-model:difficulty="filters.difficulty"
-      v-model:dialect="filters.dialect"
-      v-model:masteryLevel="filters.masteryLevel"
-      :difficulty-options="difficultyOptions"
-      :dialect-options="dialectOptions"
-      :mastery-level-options="masteryLevelOptions"
-      @search-input="$emit('search-input')"
-      @filter-change="$emit('filter-change')"
-    />
+    <!-- Filters and View Toggle -->
+    <div class="filters-and-controls">
+      <WordFilters
+        v-model:search="filters.search"
+        v-model:difficulty="filters.difficulty"
+        v-model:dialect="filters.dialect"
+        v-model:masteryLevel="filters.masteryLevel"
+        :difficulty-options="difficultyOptions"
+        :dialect-options="dialectOptions"
+        :mastery-level-options="masteryLevelOptions"
+        @search-input="$emit('search-input')"
+        @filter-change="$emit('filter-change')"
+      />
+      
+      <div class="view-controls">
+        <ViewToggle
+          :model-value="viewMode"
+          @update:model-value="handleViewModeChange"
+        />
+      </div>
+    </div>
 
     <!-- Loading state -->
     <div v-if="loading || searchLoading" class="loading-indicator">
@@ -52,12 +61,26 @@
 
     <!-- Word list -->
     <template v-else>
+      <!-- Table View -->
       <WordTable 
+        v-if="viewMode === 'table'"
         :words="displayWords" 
         @edit="$emit('edit-word', $event)" 
         @delete="$emit('delete-word', $event)"
         @word-click="$emit('edit-word', $event)"
       />
+      
+      <!-- Card View -->
+      <div v-else :class="cardGridClasses">
+        <WordCard
+          v-for="word in displayWords"
+          :key="word.id"
+          :word="word"
+          @edit="$emit('edit-word', $event)"
+          @delete="$emit('delete-word', $event)"
+          @click="$emit('edit-word', $event)"
+        />
+      </div>
 
       <!-- Pagination (only show for non-search results) -->
       <div v-if="!isSearching" class="pagination-container">
@@ -89,9 +112,12 @@
 <script setup lang="ts">
 import type { SelectOption, Word } from '@/types'
 import type { Dialect, Difficulty, MasteryLevel } from '@/types/enums'
+import { computed } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import Pagination from '../common/Pagination.vue'
+import ViewToggle from '../common/ViewToggle.vue'
+import WordCard from './WordCard.vue'
 import WordFilters from './WordFilters.vue'
 import WordTable from './WordTable.vue'
 
@@ -118,11 +144,14 @@ interface Props {
   difficultyOptions: SelectOption<Difficulty>[]
   dialectOptions: SelectOption<Dialect>[]
   masteryLevelOptions: SelectOption<MasteryLevel>[]
+  viewMode?: 'table' | 'grid'
 }
 
-defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  viewMode: 'table',
+})
 
-defineEmits<{
+const emit = defineEmits<{
   'search-input': []
   'filter-change': []
   'clear-search': []
@@ -130,7 +159,16 @@ defineEmits<{
   'edit-word': [word: Word]
   'delete-word': [word: Word]
   'page-change': [page: number]
+  'view-mode-change': [mode: 'table' | 'grid']
 }>()
+
+const cardGridClasses = computed(() => {
+  return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+})
+
+const handleViewModeChange = (mode: 'table' | 'grid') => {
+  emit('view-mode-change', mode)
+}
 </script>
 
 <style scoped>
@@ -172,5 +210,13 @@ defineEmits<{
 
 .search-results-info {
   @apply px-6 py-4 text-center border-t border-gray-200;
+}
+
+.filters-and-controls {
+  @apply flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6;
+}
+
+.view-controls {
+  @apply flex items-center justify-end;
 }
 </style>

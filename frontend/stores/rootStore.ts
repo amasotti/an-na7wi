@@ -223,20 +223,20 @@ export const useRootStore = defineStore('root', () => {
       setLoading(true)
       clearError()
       const updatedRoot = await rootService.updateRoot(id, input, meaning)
-      
+
       const index = roots.value.findIndex(root => root.id === id)
       if (index !== -1) {
         roots.value[index] = updatedRoot
       }
-      
+
       if (currentRoot.value?.id === id) {
         currentRoot.value = updatedRoot
       }
-      
+
       if (currentRootWithWords.value?.root.id === id) {
         currentRootWithWords.value.root = updatedRoot
       }
-      
+
       return updatedRoot
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to update root'

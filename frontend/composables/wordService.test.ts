@@ -37,6 +37,7 @@ describe('wordService', () => {
     masteryLevel: MasteryLevel.LEARNING,
     frequency: 100,
     root: 'ك-ت-ب',
+    dictionaryLinks: [],
     createdAt: '2024-01-01T00:00:00Z',
     isVerified: true,
   }

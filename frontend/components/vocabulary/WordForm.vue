@@ -132,12 +132,8 @@
         </div>
 
         <!-- Dictionary Links -->
-        <div>
-          <BaseInput
-            v-model="form.dictionaryLinks"
-            label="Dictionary Links"
-            placeholder="Comma-separated URLs"
-          />
+        <div class="col-span-2">
+          <DictionaryLinkManager v-model="form.dictionaryLinks" />
         </div>
 
         <!-- Pronunciation Link -->
@@ -210,8 +206,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ExampleDTO, SelectOption, Word } from '@/types'
-import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
+import type { DictionaryLink, ExampleDTO, SelectOption, Word } from '@/types'
+import { Dialect, DictionaryType, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { computed, ref, watch } from 'vue'
 import { exampleService } from '~/composables/exampleService'
 import { rootService } from '~/composables/rootService'
@@ -221,6 +217,7 @@ import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
 import BaseModal from '../common/BaseModal.vue'
 import BaseSelect from '../common/BaseSelect.vue'
+import DictionaryLinkManager from './DictionaryLinkManager.vue'
 
 interface Props {
   open: boolean
@@ -265,7 +262,7 @@ const form = ref({
   difficulty: Difficulty.BEGINNER,
   dialect: Dialect.MSA,
   masteryLevel: MasteryLevel.NEW,
-  dictionaryLinks: '',
+  dictionaryLinks: [] as DictionaryLink[],
   pronunciationLink: '',
   isVerified: false,
 })
@@ -286,7 +283,7 @@ watch(
         difficulty: newWord.difficulty,
         dialect: newWord.dialect,
         masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
-        dictionaryLinks: newWord.dictionaryLinks || '',
+        dictionaryLinks: newWord.dictionaryLinks || [],
         pronunciationLink: newWord.pronunciationLink || '',
         isVerified: newWord.isVerified,
       }
@@ -302,7 +299,7 @@ watch(
         difficulty: Difficulty.BEGINNER,
         dialect: Dialect.MSA,
         masteryLevel: MasteryLevel.NEW,
-        dictionaryLinks: '',
+        dictionaryLinks: [] as DictionaryLink[],
         pronunciationLink: '',
         isVerified: false,
       }

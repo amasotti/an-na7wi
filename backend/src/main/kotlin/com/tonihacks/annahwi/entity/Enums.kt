@@ -63,3 +63,16 @@ enum class MasteryLevel {
     KNOWN,
     MASTERED
 }
+
+/**
+ * Represents the type of dictionary
+ */
+enum class DictionaryType {
+    ALMANY,
+    LIVING_ARABIC,
+    AL_LUGHATUNA,
+    DERJA_NINJA,
+    REVERSO,
+    WIKTIONARY,
+    CUSTOM
+}

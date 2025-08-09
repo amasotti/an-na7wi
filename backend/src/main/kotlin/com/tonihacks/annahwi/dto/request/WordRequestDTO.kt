@@ -22,13 +22,13 @@ data class WordRequestDTO(
     val difficulty: Difficulty,
     val dialect: Dialect,
     val masteryLevel: MasteryLevel? = MasteryLevel.NEW,
-    val dictionaryLinks: String? = null,
+    val dictionaryLinks: List<DictionaryLinkRequestDTO> = emptyList(),
     val pronunciationLink: String? = null,
     val relatedWords: String? = null,
     @JsonProperty("isVerified") val isVerified: Boolean = false
 ) {
     fun toEntity(): Word {
-        return Word().apply {
+        val word = Word().apply {
             arabic = this@WordRequestDTO.arabic
             transliteration = this@WordRequestDTO.transliteration
             translation = this@WordRequestDTO.translation
@@ -40,11 +40,17 @@ data class WordRequestDTO(
             difficulty = this@WordRequestDTO.difficulty
             dialect = this@WordRequestDTO.dialect
             masteryLevel = this@WordRequestDTO.masteryLevel
-            dictionaryLinks = this@WordRequestDTO.dictionaryLinks
             pronunciationLink = this@WordRequestDTO.pronunciationLink
             relatedWords = this@WordRequestDTO.relatedWords
             isVerified = this@WordRequestDTO.isVerified
         }
+        
+        // Add dictionary links
+        word.dictionaryLinks.addAll(
+            this@WordRequestDTO.dictionaryLinks.map { it.toEntity(word) }
+        )
+        
+        return word
     }
 
     fun updateEntity(existing: Word): Word {
@@ -60,10 +66,15 @@ data class WordRequestDTO(
             difficulty = this@WordRequestDTO.difficulty
             dialect = this@WordRequestDTO.dialect
             masteryLevel = this@WordRequestDTO.masteryLevel
-            dictionaryLinks = this@WordRequestDTO.dictionaryLinks
             pronunciationLink = this@WordRequestDTO.pronunciationLink
             relatedWords = this@WordRequestDTO.relatedWords
             isVerified = this@WordRequestDTO.isVerified
+            
+            // Update dictionary links - clear existing and add new ones
+            dictionaryLinks.clear()
+            dictionaryLinks.addAll(
+                this@WordRequestDTO.dictionaryLinks.map { it.toEntity(this) }
+            )
         }
     }
 }

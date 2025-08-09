@@ -35,3 +35,13 @@ export enum MasteryLevel {
   KNOWN = 'KNOWN',
   MASTERED = 'MASTERED',
 }
+
+export enum DictionaryType {
+  ALMANY = 'ALMANY',
+  LIVING_ARABIC = 'LIVING_ARABIC',
+  AL_LUGHATUNA = 'AL_LUGHATUNA',
+  DERJA_NINJA = 'DERJA_NINJA',
+  REVERSO = 'REVERSO',
+  WIKTIONARY = 'WIKTIONARY',
+  CUSTOM = 'CUSTOM',
+}

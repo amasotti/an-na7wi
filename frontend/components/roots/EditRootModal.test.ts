@@ -81,7 +81,7 @@ describe('EditRootModal', () => {
 
     const rootInput = screen.getByDisplayValue('ك-ت-ب')
     const meaningInput = screen.getByDisplayValue('related to writing')
-    
+
     expect(rootInput).toBeInTheDocument()
     expect(meaningInput).toBeInTheDocument()
   })

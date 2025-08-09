@@ -1,6 +1,7 @@
 package com.tonihacks.annahwi.entity
 
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -12,6 +13,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.PrePersist
 import jakarta.persistence.Table
 import java.time.LocalDateTime
@@ -71,8 +73,8 @@ class Word : PanacheEntityBase {
     @Column(name = "mastery_level")
     var masteryLevel: MasteryLevel? = MasteryLevel.NEW
     
-    @Column(name = "dictionary_links", columnDefinition = "TEXT")
-    var dictionaryLinks: String? = null
+    @OneToMany(mappedBy = "word", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    var dictionaryLinks: MutableList<DictionaryLink> = mutableListOf()
     
     @Column(name = "pronunciation_link")
     var pronunciationLink: String? = null

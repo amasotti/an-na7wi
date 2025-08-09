@@ -1,5 +1,6 @@
 import { isAxiosError } from 'axios'
 import type { PaginatedResponse, Word } from '~/types'
+import { ensureModernDictionaryLinks } from '~/utils/dictionaryMigration'
 
 export const wordService = {
   /**
@@ -23,7 +24,10 @@ export const wordService = {
     pageSize: number
   }> {
     const response = await useApiClient().get('/words', { params })
-    return response.data
+    const data = response.data
+    // Ensure all words have modern dictionary links format
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -31,7 +35,7 @@ export const wordService = {
    */
   async getWord(id: string): Promise<Word> {
     const response = await useApiClient().get(`/words/${id}`)
-    return response.data
+    return ensureModernDictionaryLinks(response.data)
   },
 
   /**
@@ -39,7 +43,7 @@ export const wordService = {
    */
   async createWord(wordData: Partial<Word>): Promise<Word> {
     const response = await useApiClient().post('/words', wordData)
-    return response.data
+    return ensureModernDictionaryLinks(response.data)
   },
 
   /**
@@ -47,7 +51,7 @@ export const wordService = {
    */
   async updateWord(id: string, word: Partial<Word>): Promise<Word> {
     const response = await useApiClient().put(`/words/${id}`, word)
-    return response.data
+    return ensureModernDictionaryLinks(response.data)
   },
 
   /**
@@ -64,7 +68,9 @@ export const wordService = {
     const response = await useApiClient().get(`/words/search/arabic/${arabic}`, {
       params: { page, size },
     })
-    return response.data
+    const data = response.data
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -73,7 +79,11 @@ export const wordService = {
   async findByArabic(arabic: string): Promise<PaginatedResponse<Word> | null> {
     try {
       const response = await useApiClient().get(`/words/arabic/${arabic}`)
-      return response.data
+      const data = response.data
+      if (data) {
+        data.items = data.items.map(ensureModernDictionaryLinks)
+      }
+      return data
     } catch (error: unknown) {
       if (isAxiosError(error) && error.response?.status === 404) {
         console.log('Word not found:', arabic)
@@ -90,7 +100,9 @@ export const wordService = {
     const response = await useApiClient().get(`/words/root/${root}`, {
       params: { page, size },
     })
-    return response.data
+    const data = response.data
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -104,7 +116,9 @@ export const wordService = {
     const response = await useApiClient().get(`/words/part-of-speech/${partOfSpeech}`, {
       params: { page, size },
     })
-    return response.data
+    const data = response.data
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -114,7 +128,9 @@ export const wordService = {
     const response = await useApiClient().get(`/words/dialect/${dialect}`, {
       params: { page, size },
     })
-    return response.data
+    const data = response.data
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -128,7 +144,9 @@ export const wordService = {
     const response = await useApiClient().get(`/words/difficulty/${difficulty}`, {
       params: { page, size },
     })
-    return response.data
+    const data = response.data
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -138,7 +156,9 @@ export const wordService = {
     const response = await useApiClient().get('/words/verified', {
       params: { page, size },
     })
-    return response.data
+    const data = response.data
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -148,7 +168,9 @@ export const wordService = {
     const response = await useApiClient().get(`/words/search/translation/${query}`, {
       params: { page, size },
     })
-    return response.data
+    const data = response.data
+    data.items = data.items.map(ensureModernDictionaryLinks)
+    return data
   },
 
   /**
@@ -156,6 +178,6 @@ export const wordService = {
    */
   async findMostFrequent(limit = 10): Promise<Word[]> {
     const response = await useApiClient().get(`/words/most-frequent/${limit}`)
-    return response.data
+    return response.data.map(ensureModernDictionaryLinks)
   },
 }

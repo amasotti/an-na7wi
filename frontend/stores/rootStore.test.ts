@@ -196,7 +196,7 @@ describe('rootStore', () => {
     it('updates root successfully', async () => {
       const originalRoot = { ...mockRoot, id: '1' }
       const updatedRoot = { ...mockRoot, id: '1', meaning: 'updated meaning' }
-      
+
       store.roots = [originalRoot]
       store.currentRoot = originalRoot
       store.currentRootWithWords = { root: originalRoot, words: [] }
@@ -216,7 +216,9 @@ describe('rootStore', () => {
 
     it('handles update root error', async () => {
       const rootService = await import('~/composables/rootService')
-      vi.mocked(rootService.rootService.updateRoot).mockRejectedValueOnce(new Error('Update failed'))
+      vi.mocked(rootService.rootService.updateRoot).mockRejectedValueOnce(
+        new Error('Update failed')
+      )
 
       await expect(store.updateRoot('1', 'ك-ت-ب', 'meaning')).rejects.toThrow('Update failed')
 
@@ -227,7 +229,7 @@ describe('rootStore', () => {
     it('updates only roots array when root not in current state', async () => {
       const originalRoot = { ...mockRoot, id: '1' }
       const updatedRoot = { ...mockRoot, id: '1', meaning: 'updated meaning' }
-      
+
       store.roots = [originalRoot]
       // currentRoot and currentRootWithWords are null
 

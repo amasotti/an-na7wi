@@ -71,7 +71,8 @@
               <span v-else class="text-xs text-gray-400">No root</span>
             </td>
             <td class="word-table-cell">
-              <div class="flex items-center space-x-2">
+              <div class="flex items-center space-x-1 flex-wrap">
+                <!-- Pronunciation link -->
                 <button
                   v-if="word.pronunciationLink"
                   @click="openLink(word.pronunciationLink)"
@@ -83,18 +84,44 @@
                   </BaseIcon>
                   Audio
                 </button>
-                <button
-                  v-if="word.dictionaryLinks"
-                  @click="openLink(word.dictionaryLinks)"
-                  class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-600 bg-green-100 rounded-full hover:bg-green-200 transition-colors"
-                  title="Open dictionary"
-                >
-                  <BaseIcon size="xs" class="mr-1">
-                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </BaseIcon>
-                  Dict
-                </button>
-                <span v-if="!word.pronunciationLink && !word.dictionaryLinks" class="text-xs text-gray-400">
+                
+                <!-- Dictionary links -->
+                <template v-if="word.dictionaryLinks && word.dictionaryLinks.length > 0">
+                  <button
+                    v-for="dictLink in word.dictionaryLinks.slice(0, 3)"
+                    :key="dictLink.id"
+                    @click="openLink(dictLink.url)"
+                    :class="getDictionaryBadgeClass(dictLink.type)"
+                    :title="dictLink.displayName || DICTIONARY_CONFIG[dictLink.type].name"
+                  >
+                    <span class="mr-1">{{ DICTIONARY_CONFIG[dictLink.type].icon }}</span>
+                    <span class="hidden sm:inline">{{ (dictLink.displayName || DICTIONARY_CONFIG[dictLink.type].name).substring(0, 8) }}</span>
+                  </button>
+                  
+                  <!-- More links dropdown -->
+                  <BaseDropdown v-if="word.dictionaryLinks.length > 3" placement="bottom-end">
+                    <template #trigger>
+                      <button class="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                        +{{ word.dictionaryLinks.length - 3 }}
+                      </button>
+                    </template>
+                    <template #content>
+                      <div class="space-y-1">
+                        <button
+                          v-for="dictLink in word.dictionaryLinks.slice(3)"
+                          :key="dictLink.id"
+                          @click="openLink(dictLink.url)"
+                          class="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                          <span class="mr-2">{{ DICTIONARY_CONFIG[dictLink.type].icon }}</span>
+                          {{ dictLink.displayName || DICTIONARY_CONFIG[dictLink.type].name }}
+                        </button>
+                      </div>
+                    </template>
+                  </BaseDropdown>
+                </template>
+                
+                <span v-if="!word.pronunciationLink && (!word.dictionaryLinks || word.dictionaryLinks.length === 0)" class="text-xs text-gray-400">
                   No links
                 </span>
               </div>
@@ -144,9 +171,9 @@
 <script setup lang="ts">
 import type { Word } from '@/types'
 import { Difficulty, MasteryLevel } from '@/types/enums'
-import { ref } from 'vue'
-import { rootService } from '~/composables/rootService'
-import BaseIcon from '../common/BaseIcon.vue'
+import BaseDropdown from '~/components/common/BaseDropdown.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
+import { DICTIONARY_CONFIG, getDictionaryBadgeClass } from '~/config/dictionaries'
 
 interface Props {
   words: Word[]

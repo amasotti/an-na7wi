@@ -206,7 +206,6 @@ class RootServiceTest {
         val roots = rootService.findAll(0, 10)
         
         assertEquals(3, roots.size)
-        assertTrue(roots.all { it is RootResponseDTO })
     }
 
     @Test

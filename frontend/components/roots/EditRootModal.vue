@@ -178,14 +178,14 @@ const initializeForm = () => {
   if (props.root) {
     rootInput.value = props.root.displayForm
     meaningInput.value = props.root.meaning || ''
-    
+
     preview.value = {
       input: props.root.displayForm,
       letters: props.root.letters,
       normalizedForm: props.root.normalizedForm,
       displayForm: props.root.displayForm,
       letterCount: props.root.letterCount,
-      isValid: true
+      isValid: true,
     }
   }
 }

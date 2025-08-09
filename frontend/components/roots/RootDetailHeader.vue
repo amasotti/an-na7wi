@@ -91,9 +91,7 @@ interface Props {
   root: Root
 }
 
-interface Emits {
-  (e: 'edit'): void
-}
+type Emits = (e: 'edit') => void
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()

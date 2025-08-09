@@ -20,6 +20,7 @@
         :difficulty-options="wordStore.difficultyOptions"
         :dialect-options="wordStore.dialectOptions"
         :mastery-level-options="wordStore.masteryLevelOptions"
+        :view-mode="viewMode"
         @search-input="debouncedSearch"
         @filter-change="handleFilterChange"
         @clear-search="clearSearch"
@@ -27,6 +28,7 @@
         @edit-word="openWordForm"
         @delete-word="confirmDelete"
         @page-change="wordStore.changePage"
+        @view-mode-change="viewMode = $event"
       />
     </div>
 
@@ -76,6 +78,9 @@ const formLoading = ref(false)
 const deleteLoading = ref(false)
 const editingWord = ref<Word | null>(null)
 const wordToDelete = ref<Word | null>(null)
+
+// View mode state
+const viewMode = ref<'table' | 'grid'>('table')
 
 // Search debouncing
 let searchTimeout: number | null = null
