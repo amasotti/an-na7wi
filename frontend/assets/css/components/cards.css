@@ -1,0 +1,41 @@
+/* Card Components */
+
+.card-base {
+  @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 transition-all duration-300;
+}
+
+.card-hover {
+  @apply hover:shadow-xl hover:scale-[1.02];
+}
+
+.card-elevated {
+  @apply shadow-2xl border-0;
+}
+
+.card-glass {
+  @apply bg-white/20 backdrop-blur-md border border-white/30;
+}
+
+.card-interactive {
+  @apply cursor-pointer hover:bg-gradient-to-br hover:from-primary-50 hover:to-blue-50 hover:border-primary-200 hover:shadow-md;
+}
+
+.card-padding {
+  @apply p-6;
+}
+
+.card-padding-sm {
+  @apply p-4;
+}
+
+.card-padding-lg {
+  @apply p-8;
+}
+
+.card-header {
+  @apply px-6 py-4 border-b border-gray-100 bg-gray-50/50 rounded-t-2xl;
+}
+
+.card-footer {
+  @apply px-6 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-2xl mt-auto;
+}

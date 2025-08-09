@@ -1,0 +1,25 @@
+/* Layout Classes */
+
+.container-page {
+  @apply container mx-auto px-4 py-8;
+}
+
+.container-section {
+  @apply container mx-auto px-4;
+}
+
+.section-spacing {
+  @apply py-8 mb-6;
+}
+
+.content-area {
+  @apply space-y-6;
+}
+
+.content-header {
+  @apply mb-8 text-center;
+}
+
+.content-footer {
+  @apply mt-8 pt-6 border-t border-gray-200;
+}

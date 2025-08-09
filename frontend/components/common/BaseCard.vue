@@ -1,25 +1,26 @@
 <template>
-  <div :class="cardClasses">
-    <div v-if="$slots.header" class="card-header">
+  <article :class="cardClasses">
+    <header v-if="$slots.header" class="card-header">
       <slot name="header" />
-    </div>
+    </header>
     
-    <div :class="bodyClasses">
+    <section :class="bodyClasses">
       <slot />
-    </div>
+    </section>
     
-    <div v-if="$slots.footer" class="card-footer">
+    <footer v-if="$slots.footer" class="card-footer">
       <slot name="footer" />
-    </div>
-  </div>
+    </footer>
+  </article>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type {CardPadding, CardVariants} from "~/styles/components/cards";
 
 interface Props {
-  variant?: 'default' | 'elevated' | 'glass'
-  padding?: 'none' | 'sm' | 'md' | 'lg'
+  variant?: CardVariants
+  padding?: CardPadding
   hover?: boolean
 }
 
@@ -30,15 +31,15 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const cardClasses = computed(() => {
-  const base = 'card overflow-hidden'
+  const base = 'card-base overflow-hidden'
 
   const variants = {
     default: '',
     elevated: 'card-elevated',
-    glass: 'glass',
+    glass: 'card-glass',
   }
 
-  const hover = props.hover ? 'hover:shadow-xl transition-all duration-300' : ''
+  const hover = props.hover ? 'card-hover' : ''
 
   return [base, variants[props.variant], hover].filter(Boolean).join(' ')
 })
@@ -46,21 +47,11 @@ const cardClasses = computed(() => {
 const bodyClasses = computed(() => {
   const paddings = {
     none: '',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
+    sm: 'card-padding-sm',
+    md: 'card-padding',
+    lg: 'card-padding-lg',
   }
 
   return paddings[props.padding]
 })
 </script>
-
-<style scoped>
-.card-header {
-  @apply px-6 py-4 border-b border-gray-100 bg-gray-50/50;
-}
-
-.card-footer {
-  @apply px-6 py-4 border-t border-gray-100 bg-gray-50/50;
-}
-</style>

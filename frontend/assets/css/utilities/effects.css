@@ -1,0 +1,53 @@
+/* Effects and Animations */
+
+/* Transitions */
+.transition-fast {
+  @apply transition-all duration-150 ease-out;
+}
+
+.transition-medium {
+  @apply transition-all duration-300 ease-out;
+}
+
+.transition-slow {
+  @apply transition-all duration-500 ease-out;
+}
+
+/* Glass Effects */
+.glass-light {
+  @apply bg-white/20 backdrop-blur-md border border-white/30;
+}
+
+.glass-dark {
+  @apply bg-gray-900/20 backdrop-blur-md border border-gray-800/30;
+}
+
+/* Shadow Utilities */
+.shadow-soft {
+  @apply shadow-lg;
+}
+
+.shadow-medium {
+  @apply shadow-xl;
+}
+
+.shadow-strong {
+  @apply shadow-2xl;
+}
+
+.shadow-glow {
+  @apply shadow-xl shadow-primary-500/20;
+}
+
+/* Animations */
+.fade-in {
+  @apply animate-fade-in;
+}
+
+.slide-up {
+  @apply animate-slide-up;
+}
+
+.scale-in {
+  @apply animate-scale-in;
+}

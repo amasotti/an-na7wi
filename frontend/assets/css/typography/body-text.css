@@ -1,0 +1,29 @@
+/* Typography - Body Text */
+
+.text-lead {
+  @apply text-xl md:text-2xl text-gray-600 leading-relaxed;
+}
+
+.text-body {
+  @apply text-gray-700 leading-relaxed;
+}
+
+.text-small {
+  @apply text-sm text-gray-600;
+}
+
+.text-muted {
+  @apply text-gray-500;
+}
+
+.text-truncate {
+  @apply truncate;
+}
+
+.text-clamp-2 {
+  @apply line-clamp-2;
+}
+
+.text-clamp-3 {
+  @apply line-clamp-3;
+}

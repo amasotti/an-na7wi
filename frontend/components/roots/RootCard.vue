@@ -1,75 +1,81 @@
 <template>
-  <div
-    :class="cardClasses"
+  <article 
+    class="card-base card-interactive card-padding-sm group"
+    :class="mobileClasses"
     @click="handleClick"
   >
-    <div class="p-4 space-y-3">
-      <!-- Root Display -->
-      <div class="text-center">
-        <div :class="rootTextClasses">
-          {{ root.displayForm }}
-        </div>
-        <div v-if="root.meaning" :class="meaningClasses">
-          {{ root.meaning }}
-        </div>
-      </div>
+    <!-- Root Display -->
+    <header class="text-center">
+      <h3 :class="rootTextClasses">
+        {{ root.displayForm }}
+      </h3>
+      <p v-if="root.meaning" :class="meaningClasses">
+        {{ root.meaning }}
+      </p>
+    </header>
 
-      <!-- Root Details -->
-      <div :class="detailsClasses">
-        <div class="flex items-center justify-between text-xs text-gray-600">
-          <span>{{ root.letterCount }} letters</span>
-          <span>{{ root.wordCount }} words</span>
+    <!-- Root Details -->
+    <section :class="detailsClasses">
+      <dl class="flex-between text-small text-muted">
+        <div>
+          <dt class="sr-only">Letter count</dt>
+          <dd>{{ root.letterCount }} letters</dd>
         </div>
-        
-        <!-- Root Letters -->
-        <div class="flex justify-center space-x-2 mt-2">
-          <span
-            v-for="(letter, index) in root.letters"
-            :key="index"
-            class="inline-flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-700 text-sm font-medium rounded arabic"
-          >
-            {{ letter }}
-          </span>
+        <div>
+          <dt class="sr-only">Word count</dt>
+          <dd>{{ root.wordCount }} words</dd>
         </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div :class="actionButtonsClasses">
-        <!-- Delete Button -->
-        <button
-          v-if="showDeleteButton && root.wordCount === 0"
-          @click.stop="handleDelete"
-          class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-full bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-700"
-          title="Delete root"
+      </dl>
+      
+      <!-- Root Letters -->
+      <div class="flex justify-center gap-sm mt-2">
+        <span
+          v-for="(letter, index) in root.letters"
+          :key="index"
+          class="flex-center w-6 h-6 bg-gray-100 text-gray-700 text-sm font-medium rounded arabic"
         >
-          <BaseIcon size="xs">
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </BaseIcon>
-        </button>
-
-        <!-- Hover Indicator -->
-        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <BaseIcon size="xs" class="text-primary-400">
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            />
-          </BaseIcon>
-        </div>
+          {{ letter }}
+        </span>
       </div>
-    </div>
-  </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <aside :class="actionButtonsClasses" aria-label="Root actions">
+      <!-- Delete Button -->
+      <button
+        v-if="showDeleteButton && root.wordCount === 0"
+        @click.stop="handleDelete"
+        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 action-button text-red-600 hover:bg-red-100"
+        title="Delete root"
+        aria-label="Delete root"
+      >
+        <BaseIcon size="xs">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          />
+        </BaseIcon>
+      </button>
+
+      <!-- Hover Indicator -->
+      <div class="opacity-0 group-hover:opacity-100 transition-medium">
+        <BaseIcon size="xs" class="text-primary-400">
+          <path
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
+        </BaseIcon>
+      </div>
+    </aside>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -95,29 +101,27 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
-const cardClasses = computed(() => [
-  'bg-white border-gray-200 cursor-pointer relative transition-all duration-200',
-  'hover:bg-gradient-to-br hover:from-primary-50 hover:to-blue-50',
-  'hover:border-primary-200 hover:shadow-md',
-  'group',
-  props.mobile ? 'border rounded-lg' : 'border-b lg:border-r last:border-r-0',
-])
+const mobileClasses = computed(() => 
+  props.mobile ? 'border rounded-lg' : 'border-b lg:border-r last:border-r-0'
+)
 
 const rootTextClasses = computed(() => [
-  'font-bold text-gray-900 arabic',
+  'arabic-root font-bold',
   props.mobile ? 'text-xl' : 'text-2xl',
 ])
 
 const meaningClasses = computed(() => [
-  'text-gray-600 font-medium',
-  props.mobile ? 'text-xs' : 'text-sm',
+  'text-muted font-medium',
+  props.mobile ? 'text-xs' : 'text-small',
 ])
 
-const detailsClasses = computed(() => [props.mobile ? 'space-y-1' : 'space-y-2'])
+const detailsClasses = computed(() => 
+  props.mobile ? 'space-xs' : 'space-sm'
+)
 
 const actionButtonsClasses = computed(() => [
-  'absolute top-2 right-2 flex items-center space-x-1',
-  props.mobile ? 'top-1 right-1' : '',
+  'absolute flex items-center gap-xs',
+  props.mobile ? 'top-1 right-1' : 'top-2 right-2',
 ])
 
 const handleClick = () => {

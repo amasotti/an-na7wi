@@ -1,0 +1,17 @@
+/* Grid Layouts */
+
+.grid-responsive-2 {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.grid-responsive-3 {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.grid-responsive-4 {
+  @apply grid grid-cols-2 md:grid-cols-4 gap-6;
+}
+
+.grid-auto-fit {
+  @apply grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6;
+}

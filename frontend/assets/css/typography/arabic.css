@@ -1,0 +1,22 @@
+/* Arabic Text */
+
+.arabic-base {
+  @apply font-arabic text-right leading-loose text-gray-900;
+  direction: rtl;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.arabic-large {
+  @apply arabic-base text-2xl;
+}
+
+.arabic-display {
+  @apply arabic-base text-4xl md:text-5xl font-bold;
+}
+
+.arabic-root {
+  @apply arabic-base text-xl font-medium;
+}

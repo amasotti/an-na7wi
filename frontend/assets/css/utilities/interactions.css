@@ -1,0 +1,43 @@
+/* Interactive Elements */
+
+.action-button {
+  @apply p-2 rounded-full hover:bg-gray-100 transition-colors duration-200;
+}
+
+.action-button-primary {
+  @apply p-1.5 rounded-full bg-primary-500 text-white hover:bg-primary-400 shadow-md hover:shadow-lg transition-all duration-200;
+}
+
+.action-button-danger {
+  @apply text-red-700 hover:text-red-700 hover:bg-red-700 border border-transparent hover:border-red-200 flex-shrink-0;
+}
+
+.dropdown-menu {
+  @apply absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20;
+}
+
+.dropdown-item {
+  @apply flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150;
+}
+
+.dropdown-item-danger {
+  @apply text-red-600 hover:bg-red-50;
+}
+
+/* External Links */
+.external-link {
+  @apply inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-150;
+}
+
+.external-link-icon {
+  @apply ml-1 opacity-60;
+}
+
+/* Navigation */
+.nav-link {
+  @apply flex items-center px-4 py-2 text-gray-700 hover:text-primary-700 hover:bg-primary-50 rounded-xl transition-all duration-200;
+}
+
+.nav-link-active {
+  @apply bg-primary-100 text-primary-800 font-medium;
+}
