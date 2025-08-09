@@ -32,6 +32,7 @@
             <BaseInput
               v-model="form.transliteration"
               label="Transliteration"
+              class="italic"
               aria-describedby="transliteration-help"
             />
             <BaseInput
@@ -121,12 +122,12 @@
           <BaseInput
             v-model="form.root"
             label="Root"
-            class="rtl"
+            class="arabic text-xl"
             :error="rootValidationError"
             aria-describedby="root-help"
           />
           <div id="root-help" class="form-help">Arabic root letters (usually 3 consonants)</div>
-          
+
           <!-- Loading state for related words -->
           <div v-if="loadingRelatedWords" class="loading-state" role="status" aria-live="polite">
             <div class="flex items-center justify-center py-4">
@@ -134,6 +135,38 @@
               <span class="text-sm text-gray-600 font-medium">Finding related words...</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- Related Words Section -->
+      <section v-if="relatedWords.length > 0" class="form-section section-related" aria-labelledby="related-words-heading">
+        <h3 id="related-words-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-teal-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </BaseIcon>
+          Related Words (Same Root)
+        </h3>
+        <div class="form-preview" role="region" aria-label="Related words list">
+          <div class="space-y-2">
+            <div
+              v-for="word in relatedWords"
+              :key="word.id"
+              class="related-word-item"
+              @click="$emit('related-word-click', word)"
+              role="button"
+              :aria-label="`View related word: ${word.arabic}`"
+              tabindex="0"
+              @keydown.enter="$emit('related-word-click', word)"
+              @keydown.space.prevent="$emit('related-word-click', word)"
+            >
+              <div class="flex-1">
+                <span class="font-medium text-gray-900 rtl block">{{ word.arabic }}</span>
+                <span v-if="word.transliteration" class="text-sm text-gray-600">{{ word.transliteration }}</span>
+              </div>
+              <span class="text-sm text-gray-500 text-right">{{ word.translation }}</span>
+            </div>
+          </div>
+          <p class="form-help mt-3">Click on a word to view its details</p>
         </div>
       </section>
 
@@ -194,21 +227,6 @@
         </div>
       </section>
 
-      <!-- Resources Section -->
-      <section class="form-section section-resources" aria-labelledby="resources-heading">
-        <h3 id="resources-heading" class="form-section-title">
-          <BaseIcon size="sm" class="section-icon text-indigo-600">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-          </BaseIcon>
-          Resources & Links
-        </h3>
-        <DictionaryLinkManager 
-          v-model="form.dictionaryLinks" 
-          v-model:pronunciation-url="form.pronunciationLink"
-          :arabic-text="form.arabic"
-        />
-      </section>
-
       <!-- Notes Section -->
       <section class="form-section section-notes" aria-labelledby="notes-heading">
         <h3 id="notes-heading" class="form-section-title">
@@ -231,36 +249,19 @@
         </div>
       </section>
 
-      <!-- Related Words Section -->
-      <section v-if="relatedWords.length > 0" class="form-section section-related" aria-labelledby="related-words-heading">
-        <h3 id="related-words-heading" class="form-section-title">
-          <BaseIcon size="sm" class="section-icon text-teal-600">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      <!-- Resources Section -->
+      <section class="form-section section-resources" aria-labelledby="resources-heading">
+        <h3 id="resources-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-indigo-600">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
           </BaseIcon>
-          Related Words (Same Root)
+          Resources & Links
         </h3>
-        <div class="form-preview" role="region" aria-label="Related words list">
-          <div class="space-y-2">
-            <div
-              v-for="word in relatedWords"
-              :key="word.id"
-              class="related-word-item"
-              @click="$emit('related-word-click', word)"
-              role="button"
-              :aria-label="`View related word: ${word.arabic}`"
-              tabindex="0"
-              @keydown.enter="$emit('related-word-click', word)"
-              @keydown.space.prevent="$emit('related-word-click', word)"
-            >
-              <div class="flex-1">
-                <span class="font-medium text-gray-900 rtl block">{{ word.arabic }}</span>
-                <span v-if="word.transliteration" class="text-sm text-gray-600">{{ word.transliteration }}</span>
-              </div>
-              <span class="text-sm text-gray-500 text-right">{{ word.translation }}</span>
-            </div>
-          </div>
-          <p class="form-help mt-3">Click on a word to view its details</p>
-        </div>
+        <DictionaryLinkManager 
+          v-model="form.dictionaryLinks" 
+          v-model:pronunciation-url="form.pronunciationLink"
+          :arabic-text="form.arabic"
+        />
       </section>
 
       <!-- Form Actions -->
