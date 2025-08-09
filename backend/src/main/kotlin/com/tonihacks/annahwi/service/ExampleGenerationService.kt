@@ -1,6 +1,7 @@
 package com.tonihacks.annahwi.service
 
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.models.messages.ContentBlock
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.messages.Model
@@ -61,44 +62,64 @@ class ExampleGenerationService {
             - Show the word/expression in different grammatical contexts when possible
             - For each example, provide the Arabic sentence followed by its English translation
             
-            Format your response as exactly 4 lines:
+            Format your response as exactly 5 lines:
             Line 1: First Arabic sentence
             Line 2: English translation of first sentence
-            Line 3: Second Arabic sentence
-            Line 4: English translation of second sentence
+            Line 3: Six dashes (------) to separate examples
+            Line 4: Second Arabic sentence
+            Line 5: English translation of second sentence
             
             Example format:
+            ```
             هذا كتاب مفيد
             This is a useful book
+            ------
             أقرأ الكتاب كل يوم
             I read the book every day
+            ```
         """.trimIndent()
     }
 
-    private fun parseExamplesFromResponse(response: Message): List<ExampleDTO> {
-        val content = response.content().firstOrNull()
-        
-        return if (content != null) {
-            val lines = content.toString()
-                .lines()
-                .map { it.trim() }
-                .filter { it.isNotBlank() }
-            
-            val examples = mutableListOf<ExampleDTO>()
-            
-            // Parse pairs of lines (Arabic, English)
-            for (i in 0 until lines.size step 2) {
-                if (i + 1 < lines.size) {
-                    val arabic = lines[i]
-                    val english = lines[i + 1]
-                    examples.add(ExampleDTO(arabic = arabic, english = english))
+    /**
+     * Parses the examples from the Anthropic response.
+     */
+    private fun parseExamplesFromResponse(response: Message): List<ExampleDTO> =
+        response.firstContentOrNull()
+            ?.extractExampleLines()
+            ?.let { lines ->
+                if (lines.hasEnoughExampleData()) {
+                    listOf(
+                        lines.extractExample(0, 2),
+                        lines.extractExample(3, 5)
+                    )
+                } else {
+                    logger.warn("Response does not contain enough lines for examples: ${lines.size}")
+                    listOf(ExampleDTO(arabic = lines.toString(), english = ""))
                 }
             }
-            
-            examples.take(2)
-        } else {
-            logger.warn("No content in Anthropic response")
-            emptyList()
-        }
-    }
+            ?: run {
+                logger.warn("No content found in Anthropic response")
+                emptyList()
+            }
+
+    /** Checks if there are enough lines to form two complete examples. */
+    private fun List<String>.hasEnoughExampleData() = size >= 5
+
+    /** Extracts an ExampleDTO from the given range in the list. */
+    private fun List<String>.extractExample(start: Int, end: Int): ExampleDTO =
+        ExampleDTO.fromAntrhopicWordExampleResponse(subListSafe(start, end))
+
+    /** Returns a safe sublist within bounds, trimming each entry. */
+    private fun List<String>.subListSafe(fromIndex: Int, toIndex: Int): List<String> =
+        subList(fromIndex.coerceAtLeast(0), toIndex.coerceAtMost(size))
+            .map { it.trim() }
+
+    private fun ContentBlock.extractExampleLines(): List<String> =
+        this.asText()
+            .text()
+            .lines()
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+
+    private fun Message.firstContentOrNull() = content().firstOrNull()
 }

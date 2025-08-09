@@ -20,6 +20,7 @@ data class RootResponseDTO(
     val updatedAt: LocalDateTime
 ) {
     companion object {
+        @Suppress("SwallowedException")
         fun fromEntity(root: ArabicRoot, wordCount: Int? = null): RootResponseDTO {
             return RootResponseDTO(
                 id = root.id!!,
