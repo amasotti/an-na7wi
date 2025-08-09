@@ -191,7 +191,7 @@ describe('EditRootModal', () => {
     await fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(mockUpdateRoot).toHaveBeenCalledWith('1', 'ك-ت-ب', 'updated meaning', "")
+      expect(mockUpdateRoot).toHaveBeenCalledWith('1', 'ك-ت-ب', 'updated meaning', '')
     })
   })
 

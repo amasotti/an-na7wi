@@ -1,4 +1,4 @@
-import MarkdownIt from "markdown-it";
+import MarkdownIt from 'markdown-it'
 
 export default defineNuxtPlugin(() => {
   const md = new MarkdownIt({
@@ -9,7 +9,7 @@ export default defineNuxtPlugin(() => {
 
   return {
     provide: {
-      markdownit: md
-    }
+      markdownit: md,
+    },
   }
 })
