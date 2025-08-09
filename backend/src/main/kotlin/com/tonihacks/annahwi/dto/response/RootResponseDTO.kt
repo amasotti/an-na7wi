@@ -15,6 +15,7 @@ data class RootResponseDTO(
     val displayForm: String,
     val letterCount: Int,
     val meaning: String?,
+    val analysis: String?,
     val wordCount: Int,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
@@ -29,6 +30,7 @@ data class RootResponseDTO(
                 displayForm = root.displayForm,
                 letterCount = root.letterCount,
                 meaning = root.meaning,
+                analysis = root.analysis,
                 wordCount = wordCount ?: try { root.words.size } catch (e: Exception) { 0 },
                 createdAt = root.createdAt,
                 updatedAt = root.updatedAt
@@ -44,6 +46,7 @@ data class RootResponseDTO(
                 displayForm = normalizedRoot.displayForm,
                 letterCount = normalizedRoot.letterCount,
                 meaning = null, // Meaning is not part of normalization
+                analysis = null, // Analysis is not part of normalization
                 wordCount = 0, // Word count will be set when words are added
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now()

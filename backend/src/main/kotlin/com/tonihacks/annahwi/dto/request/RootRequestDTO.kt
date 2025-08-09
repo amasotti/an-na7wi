@@ -5,7 +5,8 @@ package com.tonihacks.annahwi.dto.request
  */
 data class RootRequestDTO(
     val input: String,
-    val meaning: String = ""
+    val meaning: String = "",
+    val analysis: String = ""
 )
 
 /**

@@ -37,6 +37,10 @@
         <div v-if="root.meaning" class="text-xl text-gray-700 font-medium">
           {{ root.meaning }}
         </div>
+        <div v-if="root.analysis" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-blue-900 mb-2">Linguistic Analysis</h3>
+          <p class="text-sm text-blue-800 whitespace-pre-wrap">{{ root.analysis }}</p>
+        </div>
       </div>
 
       <!-- Root Letters -->

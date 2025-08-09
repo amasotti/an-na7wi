@@ -37,6 +37,19 @@
         />
       </div>
 
+      <div>
+        <label for="analysisInput" class="block text-sm font-medium text-gray-700 mb-1">
+          Analysis (Optional)
+        </label>
+        <textarea
+          id="analysisInput"
+          v-model="analysisInput"
+          placeholder="Enter detailed linguistic analysis, cognitive metaphors, grammatical explanations, verb forms, etc."
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+          rows="4"
+        />
+      </div>
+
       <!-- Preview -->
       <div v-if="preview" class="bg-gray-50 rounded-lg p-4">
         <h4 class="text-sm font-medium text-gray-700 mb-2">Preview:</h4>
@@ -113,6 +126,7 @@ const emit = defineEmits<Emits>()
 
 const rootInput = ref('')
 const meaningInput = ref('')
+const analysisInput = ref('')
 const preview = ref<RootNormalization | null>(null)
 const inputError = ref('')
 const error = ref('')
@@ -148,7 +162,11 @@ const handleSubmit = async () => {
     loading.value = true
     error.value = ''
 
-    const newRoot = await rootService.createRoot(rootInput.value.trim(), meaningInput.value.trim())
+    const newRoot = await rootService.createRoot(
+      rootInput.value.trim(),
+      meaningInput.value.trim(),
+      analysisInput.value.trim()
+    )
     emit('root-created', newRoot)
     handleClose()
   } catch (err) {
@@ -162,6 +180,7 @@ const handleSubmit = async () => {
 const handleClose = () => {
   rootInput.value = ''
   meaningInput.value = ''
+  analysisInput.value = ''
   preview.value = null
   inputError.value = ''
   error.value = ''
@@ -175,6 +194,7 @@ watch(
     if (newShow) {
       rootInput.value = ''
       meaningInput.value = ''
+      analysisInput.value = ''
       preview.value = null
       inputError.value = ''
       error.value = ''

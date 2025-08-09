@@ -90,10 +90,11 @@ export const rootService = {
   /**
    * Create a new root
    */
-  async createRoot(input: string, meaning?: string): Promise<Root> {
+  async createRoot(input: string, meaning?: string, analysis?: string): Promise<Root> {
     const response = await useApiClient().post('/roots', {
       input,
       meaning,
+      analysis,
     })
     return response.data
   },
@@ -101,10 +102,11 @@ export const rootService = {
   /**
    * Update an existing root
    */
-  async updateRoot(id: string, input: string, meaning?: string): Promise<Root> {
+  async updateRoot(id: string, input: string, meaning?: string, analysis?: string): Promise<Root> {
     const response = await useApiClient().put(`/roots/${id}`, {
       input,
       meaning,
+      analysis,
     })
     return response.data
   },

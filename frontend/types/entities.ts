@@ -71,6 +71,7 @@ export interface Root {
   displayForm: string
   letterCount: number
   meaning?: string
+  analysis?: string
   wordCount: number
   createdAt: string
   updatedAt: string

@@ -18,7 +18,8 @@ enum class Dialect {
     EGYPTIAN,
     GULF,
     LEVANTINE,
-    MSA; // Modern Standard Arabic
+    MSA, // Modern Standard Arabic
+    IRAQI;
 
     companion object {
         fun fromString(value: String): Dialect? =
@@ -36,12 +37,16 @@ enum class Dialect {
  * Represents the part of speech of a word
  */
 enum class PartOfSpeech {
+    UNKNOWN,
     NOUN,
     VERB,
     ADJECTIVE,
     ADVERB,
     PREPOSITION,
-    PARTICLE
+    PARTICLE,
+    INTERJECTION,
+    CONJUNCTION,
+    PRONOUN
 }
 
 /**

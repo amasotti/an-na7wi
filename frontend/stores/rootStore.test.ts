@@ -10,6 +10,8 @@ const mockRoot: Root = {
   normalizedForm: 'كتب',
   letterCount: 3,
   meaning: 'writing, book',
+  analysis:
+    'Root related to writing, scribing, and written materials. Forms include كتب (to write), كتاب (book), مكتب (office/desk), كاتب (writer).',
   wordCount: 5,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
@@ -49,7 +51,7 @@ vi.mock('~/composables/rootService', () => ({
     getRoots: vi.fn(() => Promise.resolve(mockRootResponse)),
     getRoot: vi.fn((id: string) => Promise.resolve({ ...mockRoot, id })),
     getRootWithWords: vi.fn((id: string) => Promise.resolve({ ...mockRootWithWords, id })),
-    createRoot: vi.fn((_input: string, _meaning?: string) =>
+    createRoot: vi.fn((_input: string, _meaning?: string, _analysis?: string) =>
       Promise.resolve({ ...mockRoot, id: 'new-id' })
     ),
     updateRoot: vi.fn((id: string, data: Partial<Root>) =>

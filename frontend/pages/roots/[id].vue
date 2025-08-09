@@ -145,7 +145,12 @@ const loadRootData = async (rootId: string) => {
 
 const handleRootUpdated = async (updatedRoot: Root) => {
   try {
-    await rootStore.updateRoot(updatedRoot.id, updatedRoot.displayForm, updatedRoot.meaning)
+    await rootStore.updateRoot(
+      updatedRoot.id,
+      updatedRoot.displayForm,
+      updatedRoot.meaning,
+      updatedRoot.analysis
+    )
     // Refresh the root data to get updated info including word associations
     const id = route.params.id as string
     if (id) {

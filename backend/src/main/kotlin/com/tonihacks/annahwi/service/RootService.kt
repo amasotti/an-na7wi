@@ -189,6 +189,7 @@ class RootService {
         
         // Create new root
         val newRoot = ArabicRoot.create(normalized.letters, createDto.meaning)
+        newRoot.analysis = createDto.analysis.takeIf { it.isNotBlank() }
         rootRepository.persist(newRoot).also {
             logger.info("Created new root: ${newRoot.displayForm} with ID: ${newRoot.id}")
         }
@@ -235,6 +236,7 @@ class RootService {
             normalizedForm = normalized.normalizedForm
             letters = normalized.letters
             meaning = updateDto.meaning
+            analysis = updateDto.analysis.takeIf { it.isNotBlank() }
         }
 
         rootRepository.persistAndFlush(root).also {

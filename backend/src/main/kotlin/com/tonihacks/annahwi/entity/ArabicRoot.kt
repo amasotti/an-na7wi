@@ -47,6 +47,9 @@ class ArabicRoot : PanacheEntityBase {
     @Column(name = "meaning")
     var meaning: String? = null
     
+    @Column(name = "analysis", columnDefinition = "TEXT")
+    var analysis: String? = null
+    
     @OneToMany(mappedBy = "arabicRoot")
     @com.fasterxml.jackson.annotation.JsonIgnore
     var words: MutableList<Word> = mutableListOf()

@@ -2,6 +2,7 @@
   <BaseModal
     :open="show"
     title="Edit Root"
+    size="xl"
     @close="handleClose"
   >
     <form @submit.prevent="handleSubmit" class="space-y-4">
@@ -34,6 +35,19 @@
           v-model="meaningInput"
           placeholder="Enter root meaning or definition"
           class="text-sm"
+        />
+      </div>
+
+      <div>
+        <label for="analysisInput" class="block text-sm font-medium text-gray-700 mb-1">
+          Analysis (Optional)
+        </label>
+        <textarea
+          id="analysisInput"
+          v-model="analysisInput"
+          placeholder="Enter detailed linguistic analysis, cognitive metaphors, grammatical explanations, verb forms, etc."
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+          rows="10"
         />
       </div>
 
@@ -114,6 +128,7 @@ const emit = defineEmits<Emits>()
 
 const rootInput = ref('')
 const meaningInput = ref('')
+const analysisInput = ref('')
 const preview = ref<RootNormalization | null>(null)
 const inputError = ref('')
 const error = ref('')
@@ -152,7 +167,8 @@ const handleSubmit = async () => {
     const updatedRoot = await rootService.updateRoot(
       props.root.id,
       rootInput.value.trim(),
-      meaningInput.value.trim()
+      meaningInput.value.trim(),
+      analysisInput.value.trim()
     )
     emit('root-updated', updatedRoot)
     handleClose()
@@ -167,6 +183,7 @@ const handleSubmit = async () => {
 const handleClose = () => {
   rootInput.value = ''
   meaningInput.value = ''
+  analysisInput.value = ''
   preview.value = null
   inputError.value = ''
   error.value = ''
@@ -178,6 +195,7 @@ const initializeForm = () => {
   if (props.root) {
     rootInput.value = props.root.displayForm
     meaningInput.value = props.root.meaning || ''
+    analysisInput.value = props.root.analysis || ''
 
     preview.value = {
       input: props.root.displayForm,
@@ -198,6 +216,7 @@ watch(
     } else {
       rootInput.value = ''
       meaningInput.value = ''
+      analysisInput.value = ''
       preview.value = null
       inputError.value = ''
       error.value = ''

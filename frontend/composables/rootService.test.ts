@@ -38,6 +38,7 @@ describe('rootService', () => {
     letters: ['ك', 'ت', 'ب'],
     letterCount: 3,
     meaning: 'writing',
+    analysis: 'Root related to writing and written materials',
     wordCount: 15,
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',

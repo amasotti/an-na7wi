@@ -201,11 +201,11 @@ export const useRootStore = defineStore('root', () => {
     pagination.value.page = page
   }
 
-  const createRoot = async (input: string, meaning?: string) => {
+  const createRoot = async (input: string, meaning?: string, analysis?: string) => {
     try {
       setLoading(true)
       clearError()
-      const newRoot = await rootService.createRoot(input, meaning)
+      const newRoot = await rootService.createRoot(input, meaning, analysis)
       roots.value.unshift(newRoot)
       pagination.value.totalCount += 1
       return newRoot
@@ -218,11 +218,11 @@ export const useRootStore = defineStore('root', () => {
     }
   }
 
-  const updateRoot = async (id: string, input: string, meaning?: string) => {
+  const updateRoot = async (id: string, input: string, meaning?: string, analysis?: string) => {
     try {
       setLoading(true)
       clearError()
-      const updatedRoot = await rootService.updateRoot(id, input, meaning)
+      const updatedRoot = await rootService.updateRoot(id, input, meaning, analysis)
 
       const index = roots.value.findIndex(root => root.id === id)
       if (index !== -1) {
