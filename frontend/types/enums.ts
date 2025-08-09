@@ -10,6 +10,9 @@ export enum Dialect {
   MOROCCAN = 'MOROCCAN',
   EGYPTIAN = 'EGYPTIAN',
   MSA = 'MSA',
+  GULF = 'GULF',
+  LEVANTINE = 'LEVANTINE',
+  IRAQI = 'IRAQI',
 }
 
 export enum PartOfSpeech {
@@ -20,6 +23,9 @@ export enum PartOfSpeech {
   ADVERB = 'ADVERB',
   PREPOSITION = 'PREPOSITION',
   PARTICLE = 'PARTICLE',
+  INTERJECTION = 'INTERJECTION',
+  CONJUNCTION = 'CONJUNCTION',
+  PRONOUN = 'PRONOUN',
 }
 
 export enum AnnotationType {

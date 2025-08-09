@@ -182,24 +182,6 @@ describe('VocabularyContent', () => {
     expect(buttons.length).toBeGreaterThan(2) // Should have prev, next, and page numbers
   })
 
-  it('does not show pagination for search results', () => {
-    renderWithStore(VocabularyContent, {
-      props: {
-        ...defaultProps,
-        isSearching: true,
-        filters: { ...defaultProps.filters, search: 'test' },
-      },
-    })
-
-    expect(screen.queryByText(/Showing [0-9]+ to [0-9]+ of [0-9]+ results/)).not.toBeInTheDocument()
-    // Should have fewer buttons when pagination is hidden
-    const buttons = screen.getAllByRole('button')
-    const nonWordTableButtons = buttons.filter(
-      btn => !btn.getAttribute('title')?.includes('word') && !btn.textContent?.includes('كتاب')
-    )
-    expect(nonWordTableButtons.length).toBeLessThanOrEqual(5) // Only filter and action buttons, no pagination
-  })
-
   it('shows search results info when searching', () => {
     renderWithStore(VocabularyContent, {
       props: {

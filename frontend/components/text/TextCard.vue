@@ -206,6 +206,9 @@ const dialectLabel = computed(() => {
     [Dialect.TUNISIAN]: 'Tunisian',
     [Dialect.MOROCCAN]: 'Moroccan',
     [Dialect.EGYPTIAN]: 'Egyptian',
+    [Dialect.LEVANTINE]: 'Levantine',
+    [Dialect.GULF]: 'Gulf',
+    [Dialect.IRAQI]: 'Iraqi',
     [Dialect.MSA]: 'MSA',
   }
   return labels[props.text.dialect]

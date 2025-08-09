@@ -142,6 +142,15 @@
             <td class="word-table-cell whitespace-nowrap text-right">
               <div class="flex items-center justify-end space-x-2">
                 <button 
+                  @click="openAllDictionaries(word.arabic)" 
+                  class="action-btn dict-btn"
+                  title="Open all dictionaries"
+                >
+                  <BaseIcon size="sm">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </BaseIcon>
+                </button>
+                <button 
                   @click="$emit('edit', word)" 
                   class="action-btn edit-btn"
                   title="Edit word"
@@ -173,7 +182,11 @@ import type { Word } from '@/types'
 import { Difficulty, MasteryLevel } from '@/types/enums'
 import BaseDropdown from '~/components/common/BaseDropdown.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
-import { DICTIONARY_CONFIG, getDictionaryBadgeClass } from '~/config/dictionaries'
+import {
+  DICTIONARY_CONFIG,
+  generateAllDictionaryLinks,
+  getDictionaryBadgeClass,
+} from '~/config/dictionaries'
 
 interface Props {
   words: Word[]
@@ -223,6 +236,17 @@ const openLink = (url: string) => {
   window.open(url, '_blank', 'noopener,noreferrer')
 }
 
+// Open all dictionaries for a word
+const openAllDictionaries = (arabicText: string) => {
+  const dictionaryLinks = generateAllDictionaryLinks(arabicText)
+  // Use setTimeout to avoid popup blockers and ensure all tabs open
+  dictionaryLinks.forEach((link, index) => {
+    setTimeout(() => {
+      window.open(link.url, '_blank', 'noopener,noreferrer')
+    }, index * 100) // Small delay between each tab opening
+  })
+}
+
 // Create root link path - this is a simplified approach for demo
 // In production, you'd want to get the actual root ID from the backend
 const getRootDetailPath = (rootString: string) => {
@@ -255,6 +279,10 @@ const getRootDetailPath = (rootString: string) => {
 
 .delete-btn {
   @apply text-red-600 hover:text-red-700 hover:bg-red-50 focus:ring-red-500;
+}
+
+.dict-btn {
+  @apply text-green-600 hover:text-green-700 hover:bg-green-50 focus:ring-green-500;
 }
 
 .rtl {

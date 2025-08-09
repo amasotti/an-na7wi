@@ -9,6 +9,17 @@
         <BaseButton 
           variant="ghost" 
           size="sm" 
+          @click.stop="openAllDictionaries(word.arabic)"
+          class="action-button dict-button"
+          title="Open all dictionaries"
+        >
+          <BaseIcon size="sm">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </BaseIcon>
+        </BaseButton>
+        <BaseButton 
+          variant="ghost" 
+          size="sm" 
           @click.stop="$emit('edit', word)"
           class="action-button"
           title="Edit word"
@@ -119,7 +130,11 @@
 import type { Word } from '@/types'
 import { Difficulty, MasteryLevel } from '@/types/enums'
 import { computed } from 'vue'
-import { DICTIONARY_CONFIG, getDictionaryCardClass } from '~/config/dictionaries'
+import {
+  DICTIONARY_CONFIG,
+  generateAllDictionaryLinks,
+  getDictionaryCardClass,
+} from '~/config/dictionaries'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 
@@ -178,6 +193,17 @@ const openLink = (url: string) => {
   window.open(url, '_blank', 'noopener,noreferrer')
 }
 
+// Open all dictionaries for a word
+const openAllDictionaries = (arabicText: string) => {
+  const dictionaryLinks = generateAllDictionaryLinks(arabicText)
+  // Use setTimeout to avoid popup blockers and ensure all tabs open
+  dictionaryLinks.forEach((link, index) => {
+    setTimeout(() => {
+      window.open(link.url, '_blank', 'noopener,noreferrer')
+    }, index * 100) // Small delay between each tab opening
+  })
+}
+
 // Create root link path
 const getRootDetailPath = (rootString: string) => {
   return `/roots?search=${encodeURIComponent(rootString)}`
@@ -216,6 +242,10 @@ const getRootDetailPath = (rootString: string) => {
 
 .delete-button {
   @apply hover:text-red-600;
+}
+
+.dict-button {
+  @apply hover:text-green-600;
 }
 
 .word-card-content {

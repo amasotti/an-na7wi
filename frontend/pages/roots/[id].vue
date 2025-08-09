@@ -35,6 +35,7 @@
         <RootDetailHeader 
           :root="rootStore.currentRootWithWords.root" 
           @edit="showEditModal = true"
+          @add-word="showWordModal = true"
         />
 
         <!-- Root Words -->
@@ -63,22 +64,77 @@
       @close="showEditModal = false"
       @root-updated="handleRootUpdated"
     />
+
+    <!-- Add Word Modal -->
+    <WordForm
+      :open="showWordModal"
+      :loading="wordFormLoading"
+      :word="wordToEdit"
+      :difficulty-options="difficultyOptions"
+      :dialect-options="dialectOptions"
+      :mastery-level-options="masteryLevelOptions"
+      :parts-of-speech-options="partsOfSpeechOptions"
+      @close="handleWordModalClose"
+      @submit="handleWordSubmit"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { onMounted, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import EditRootModal from '~/components/roots/EditRootModal.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
 import RootWordsList from '~/components/roots/RootWordsList.vue'
+import WordForm from '~/components/vocabulary/WordForm.vue'
+import { wordService } from '~/composables/wordService'
 import { useRootStore } from '~/stores/rootStore'
-import type { Root } from '~/types'
+import type { Root, Word } from '~/types'
 
 const route = useRoute()
 const rootStore = useRootStore()
 
 const showEditModal = ref(false)
+const showWordModal = ref(false)
+const wordFormLoading = ref(false)
+const wordToEdit = ref<Word | null>(null)
+
+// Form options for word modal
+const difficultyOptions = [
+  { label: 'Beginner', value: Difficulty.BEGINNER },
+  { label: 'Intermediate', value: Difficulty.INTERMEDIATE },
+  { label: 'Advanced', value: Difficulty.ADVANCED },
+]
+
+const dialectOptions = [
+  { label: 'Modern Standard Arabic', value: Dialect.MSA },
+  { label: 'Egyptian', value: Dialect.EGYPTIAN },
+  { label: 'Levantine', value: Dialect.LEVANTINE },
+  { label: 'Gulf', value: Dialect.GULF },
+  { label: 'Moroccan', value: Dialect.MOROCCAN },
+  { label: 'Iraqi', value: Dialect.IRAQI },
+]
+
+const masteryLevelOptions = [
+  { label: 'New', value: MasteryLevel.NEW },
+  { label: 'Learning', value: MasteryLevel.LEARNING },
+  { label: 'Known', value: MasteryLevel.KNOWN },
+  { label: 'Mastered', value: MasteryLevel.MASTERED },
+]
+
+const partsOfSpeechOptions = [
+  { label: 'Noun', value: PartOfSpeech.NOUN },
+  { label: 'Verb', value: PartOfSpeech.VERB },
+  { label: 'Adjective', value: PartOfSpeech.ADJECTIVE },
+  { label: 'Adverb', value: PartOfSpeech.ADVERB },
+  { label: 'Preposition', value: PartOfSpeech.PREPOSITION },
+  { label: 'Pronoun', value: PartOfSpeech.PRONOUN },
+  { label: 'Conjunction', value: PartOfSpeech.CONJUNCTION },
+  { label: 'Interjection', value: PartOfSpeech.INTERJECTION },
+  { label: 'Particle', value: PartOfSpeech.PARTICLE },
+  { label: 'Unknown', value: PartOfSpeech.UNKNOWN },
+]
 
 const loadRootData = async (rootId: string) => {
   if (rootId) {
@@ -100,6 +156,38 @@ const handleRootUpdated = async (updatedRoot: Root) => {
   }
 }
 
+const handleWordModalClose = () => {
+  showWordModal.value = false
+  wordToEdit.value = null
+}
+
+const handleWordSubmit = async (formData: Partial<Word>) => {
+  if (!rootStore.currentRootWithWords?.root) return
+
+  wordFormLoading.value = true
+  try {
+    // Set the root for the new word
+    const wordData = {
+      ...formData,
+      root: rootStore.currentRootWithWords.root.displayForm,
+    }
+
+    await wordService.createWord(wordData)
+
+    // Refresh the root data to show the new word
+    const id = route.params.id as string
+    if (id) {
+      await loadRootData(id)
+    }
+
+    handleWordModalClose()
+  } catch (error) {
+    console.error('Error creating word:', error)
+  } finally {
+    wordFormLoading.value = false
+  }
+}
+
 onMounted(() => {
   const id = route.params.id as string
   if (id) {
@@ -112,6 +200,21 @@ watch(
   newId => {
     if (newId && typeof newId === 'string') {
       loadRootData(newId)
+    }
+  }
+)
+
+// Reset word modal when opening
+watch(
+  () => showWordModal.value,
+  isOpen => {
+    if (isOpen && rootStore.currentRootWithWords?.root) {
+      // Create a partial word with the root pre-filled
+      wordToEdit.value = {
+        root: rootStore.currentRootWithWords.root.displayForm,
+      } as Word
+    } else if (!isOpen) {
+      wordToEdit.value = null
     }
   }
 )
