@@ -25,10 +25,10 @@ import java.util.UUID
 class RootService {
 
     @Inject
-    internal lateinit var rootNormalizationService: RootNormalizationService
+    private lateinit var rootNormalizationService: RootNormalizationService
 
     @Inject
-    internal lateinit var rootRepository: ArabicRootRepository
+    private lateinit var rootRepository: ArabicRootRepository
     
     @Inject
     private lateinit var normalizationService: RootNormalizationService
@@ -154,6 +154,11 @@ class RootService {
             logger.debug("Invalid root input: '${input}' - ${e.message}")
             null
         }
+    }
+
+  fun getWordCountForRoot(id: UUID): Int {
+        logger.info("Getting word count for root ID: $id")
+        return rootRepository.getWordCountForRoot(id)
     }
     
     /**

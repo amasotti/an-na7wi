@@ -71,7 +71,7 @@ class RootController {
     fun getRootById(@PathParam("id") id: UUID): Response {
         logger.info("GET /api/v1/roots/$id")
         val root = rootService.findById(id)
-        val wordCount = rootService.rootRepository.getWordCountForRoot(id)
+        val wordCount = rootService.getWordCountForRoot(id)
         val rootDTO = RootResponseDTO.fromEntity(root, wordCount)
         return Response.ok(rootDTO).build()
     }
@@ -127,7 +127,7 @@ class RootController {
         @QueryParam("pageSize") pageSize: Int?,
         @QueryParam("sort") @DefaultValue("displayForm") sort: String
     ): Response {
-        if (letterCount < 2 || letterCount > 5) {
+        if (letterCount !in 2..5) {
             throw AppException(AppError.ValidationError.InvalidRoot("Letter count must be between 2 and 5"))
         }
         
@@ -155,13 +155,10 @@ class RootController {
     @Operation(summary = "Normalize root input", description = "Validates and normalizes Arabic root input")
     fun normalizeRoot(request: RootNormalizationRequestDTO): Response {
         logger.info("POST /api/v1/roots/normalize - input: '${request.input}'")
-        val result = rootService.normalizeRoot(request.input)
+      val result = rootService.normalizeRoot(request.input)
+        ?: throw AppException(AppError.ValidationError.InvalidRoot("Invalid Arabic root input: '${request.input}'"))
 
-        if (result == null) {
-            throw AppException(AppError.ValidationError.InvalidRoot("Invalid Arabic root input: '${request.input}'"))
-        }
-
-        val responseDto = RootNormalizationResponseDTO.fromNormalizedRoot(request.input, result)
+      val responseDto = RootNormalizationResponseDTO.fromNormalizedRoot(request.input, result)
         return Response.ok(responseDto).build()
     }
     
@@ -180,7 +177,7 @@ class RootController {
         logger.info("POST /api/v1/roots - input: '${request.input}'")
         try {
             val root = rootService.createRoot(request)
-            val wordCount = rootService.rootRepository.getWordCountForRoot(root.id!!)
+            val wordCount = rootService.getWordCountForRoot(root.id!!)
             return Response.status(Response.Status.CREATED).entity(RootResponseDTO.fromEntity(root, wordCount)).build()
         }  catch (e: AppException) {
             logger.debug("Error creating root: ${e.message}")

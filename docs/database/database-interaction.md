@@ -72,7 +72,6 @@ quarkus.datasource.password=${QUARKUS_DATASOURCE_PASSWORD:dev_password}
 quarkus.datasource.jdbc.url=${QUARKUS_DATASOURCE_JDBC_URL:jdbc:postgresql://localhost:5432/annahwi}
 quarkus.datasource.jdbc.max-size=16
 # Hibernate
-quarkus.hibernate-orm.database.generation=update
 quarkus.hibernate-orm.log.sql=true
 quarkus.hibernate-orm.physical-naming-strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 ```

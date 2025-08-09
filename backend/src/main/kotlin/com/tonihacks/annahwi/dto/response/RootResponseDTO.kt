@@ -31,25 +31,9 @@ data class RootResponseDTO(
                 letterCount = root.letterCount,
                 meaning = root.meaning,
                 analysis = root.analysis,
-                wordCount = wordCount ?: try { root.words.size } catch (e: Exception) { 0 },
+                wordCount = wordCount ?: try { root.words.size } catch (_: Exception) { 0 },
                 createdAt = root.createdAt,
                 updatedAt = root.updatedAt
-            )
-        }
-
-        fun fromNormalizedRoot(normalizedRoot: NormalizedRoot
-        ): RootResponseDTO {
-            return RootResponseDTO(
-                id = UUID.randomUUID(), // ID will be set later when saved
-                letters = normalizedRoot.letters,
-                normalizedForm = normalizedRoot.normalizedForm,
-                displayForm = normalizedRoot.displayForm,
-                letterCount = normalizedRoot.letterCount,
-                meaning = null, // Meaning is not part of normalization
-                analysis = null, // Analysis is not part of normalization
-                wordCount = 0, // Word count will be set when words are added
-                createdAt = LocalDateTime.now(),
-                updatedAt = LocalDateTime.now()
             )
         }
     }
