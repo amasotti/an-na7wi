@@ -44,6 +44,7 @@ describe('RootDetailHeader', () => {
         },
         plugins: [
           {
+            // biome-ignore lint/suspicious/noExplicitAny: This is a mock plugin
             install(app: any) {
               app.config.globalProperties.$markdownit = mockMarkdownit
             },
@@ -106,6 +107,7 @@ describe('RootDetailHeader', () => {
       createComponent(root)
 
       const letterElements = screen.getAllByText(/^[كتب]$/)
+      // biome-ignore lint/complexity/noForEach: This is a simple check for class application
       letterElements.forEach(element => {
         expect(element).toHaveClass('w-12', 'h-12', 'arabic', 'text-xl', 'font-bold')
       })
@@ -272,7 +274,7 @@ describe('RootDetailHeader', () => {
       await fireEvent.click(addWordButton!)
 
       expect(emitted()['add-word']).toBeTruthy()
-      expect(emitted()['add-word'].length).toBeGreaterThan(0)
+      expect(emitted()['add-word']!.length).toBeGreaterThan(0)
     })
 
     it('emits edit event when Edit button is clicked', async () => {
@@ -283,7 +285,7 @@ describe('RootDetailHeader', () => {
       await fireEvent.click(editButton!)
 
       expect(emitted().edit).toBeTruthy()
-      expect(emitted().edit.length).toBeGreaterThan(0)
+      expect(emitted().edit!.length).toBeGreaterThan(0)
     })
   })
 
