@@ -1,6 +1,6 @@
 <template>
   <article 
-    class="root-card group"
+    class="root-card group flex flex-col"
     :class="mobileClasses"
     @click="handleClick"
   >
@@ -26,7 +26,7 @@
     </aside>
 
     <!-- Root Display -->
-    <header class="text-center mb-4">
+    <header class="text-center flex-grow flex flex-col justify-center">
       <h3 :class="rootTextClasses">
         {{ root.displayForm }}
       </h3>
@@ -35,26 +35,11 @@
       </p>
     </header>
 
-    <!-- Root Letters -->
-    <section class="flex justify-center gap-2 mb-4">
-      <span
-        v-for="(letter, index) in root.letters"
-        :key="index"
-        class="letter-badge arabic"
-      >
-        {{ letter }}
-      </span>
-    </section>
-
-    <!-- Root Stats -->
-    <footer class="grid grid-cols-2 gap-4 text-center">
-      <div class="stat-item">
-        <div class="stat-number">{{ root.letterCount }}</div>
-        <div class="stat-label">Letters</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number text-blue-600">{{ root.wordCount }}</div>
-        <div class="stat-label">Words</div>
+    <!-- Word Count - Always at bottom -->
+    <footer class="text-center mt-auto pt-3">
+      <div class="word-count">
+        <span class="count">{{ root.wordCount }}</span>
+        <span class="label">{{ root.wordCount === 1 ? 'word' : 'words' }}</span>
       </div>
     </footer>
 
@@ -101,12 +86,10 @@ const mobileClasses = computed(() =>
   props.mobile ? 'border rounded-lg' : 'border-b lg:border-r last:border-r-0'
 )
 
-const rootTextClasses = computed(() => [
-  'text-3xl font-bold text-gray-900 arabic mb-2 text-center text-2xl',
-])
+const rootTextClasses = computed(() => ['text-2xl font-bold text-gray-900 arabic mb-1 text-center'])
 
 const meaningClasses = computed(() => [
-  'text-gray-600 font-medium',
+  'text-gray-600 font-medium text-center',
   props.mobile ? 'text-sm' : 'text-base',
 ])
 
@@ -122,31 +105,27 @@ const handleDelete = (event: Event) => {
 
 <style scoped>
 .root-card {
-  @apply relative bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-200 hover:shadow-md hover:border-blue-300 hover:-translate-y-1;
+  @apply relative bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer transition-all duration-200 hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5;
 }
 
 .action-button {
-  @apply p-2 rounded-full bg-white/90 text-red-500 hover:bg-red-50 hover:text-red-600 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200/50 backdrop-blur-sm opacity-0 group-hover:opacity-100;
+  @apply p-1.5 rounded-full bg-white/90 text-red-500 hover:bg-red-50 hover:text-red-600 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200/50 backdrop-blur-sm opacity-0 group-hover:opacity-100;
 }
 
-.letter-badge {
-  @apply inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-700 text-lg font-semibold rounded-lg border border-blue-200;
+.word-count {
+  @apply flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-full;
 }
 
-.stat-item {
-  @apply bg-gray-50 rounded-lg p-3;
+.count {
+  @apply text-lg font-bold text-green-700;
 }
 
-.stat-number {
-  @apply text-2xl font-bold text-gray-900;
-}
-
-.stat-label {
-  @apply text-xs font-medium text-gray-500 uppercase tracking-wider;
+.label {
+  @apply text-sm font-medium text-green-600;
 }
 
 .hover-indicator {
-  @apply absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1;
+  @apply absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-0.5;
 }
 
 .root-card:hover {

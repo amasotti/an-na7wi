@@ -1,95 +1,77 @@
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-    <div class="mb-6">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Arabic Roots</h1>
-          <p class="text-gray-600">
-            Explore {{ totalCount }} Arabic roots and their derived words
-          </p>
-        </div>
-        <div class="flex items-center space-x-4">
-          <AddButton @click="handleAddRoot">
-            <span class="hidden sm:inline">Add Root</span>
-            <span class="sm:hidden">Add</span>
-          </AddButton>
-          <div v-if="statistics" class="hidden md:block">
-            <RootStatisticsCard :statistics="statistics" />
-          </div>
-        </div>
-      </div>
+  <!-- Clean Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-3 bg-gray-50">
+    <div>
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Arabic Roots</h1>
+      <p class="text-gray-600">Explore {{ totalCount }} Arabic roots and their derived words</p>
     </div>
+    
+    <div class="flex gap-3">
+      <div v-if="statistics" class="hidden md:block">
+        <RootStatisticsCard :statistics="statistics" />
+      </div>
+      <AddButton @click="handleAddRoot">
+        Add Root
+      </AddButton>
+    </div>
+  </div>
 
-    <!-- Search and Filters -->
-    <div class="space-y-4">
-      <!-- Search Bar -->
-      <div class="relative">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <BaseIcon size="sm" class="text-gray-400">
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </BaseIcon>
-        </div>
-        <input
+  <!-- Integrated Search and Filters -->
+  <div class="bg-gray-50/50 border border-gray-100 rounded-xl p-4 mb-8 shadow-md">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <!-- Search -->
+      <div class="md:col-span-2">
+        <BaseInput
           v-model="searchQuery"
-          type="text"
-          placeholder="Search roots by letters, form, or meaning..."
-          class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
+          placeholder="Search by letters, form, or meaning..."
+          clearable
+          icon-left="search"
           @input="debouncedSearch"
           @keyup.enter="handleSearch"
         />
       </div>
 
-      <!-- Filters Row -->
-      <div class="flex flex-wrap gap-4 items-center">
-        <!-- Letter Count Filter -->
-        <BaseSelect
-          v-model="filters.letterCount"
-          :options="letterCountOptions"
-          placeholder="Letter Count"
-          class="min-w-32"
-          aria-label="Letter Count Filter"
-          @update:model-value="handleFilterChange"
-        />
+      <!-- Letter Count Filter -->
+      <BaseSelect
+        v-model="filters.letterCount"
+        :options="letterCountOptions"
+        placeholder="All Lengths"
+        @update:model-value="handleFilterChange"
+      />
 
+      <!-- Sort -->
+      <BaseSelect
+        v-model="filters.sort"
+        :options="sortOptions"
+        placeholder="Sort by"
+        @update:model-value="handleFilterChange"
+      />
 
-        <!-- Sort -->
-        <BaseSelect
-          v-model="filters.sort"
-          :options="sortOptions"
-          label="Sort by"
-          class="min-w-32"
-          @update:model-value="handleFilterChange"
-        />
-
-        <!-- Clear Filters -->
+      <!-- Clear Filters -->
+      <div class="flex items-center">
         <BaseButton
           v-if="hasActiveFilters"
           variant="outline"
           size="sm"
           @click="clearFilters"
+          class="w-full"
         >
           Clear Filters
         </BaseButton>
       </div>
+    </div>
 
-      <!-- Mobile Statistics -->
-      <div v-if="statistics" class="md:hidden">
-        <RootStatisticsCard :statistics="statistics" mobile />
-      </div>
+    <!-- Mobile Statistics -->
+    <div v-if="statistics" class="md:hidden mt-4 pt-4 border-t border-gray-200">
+      <RootStatisticsCard :statistics="statistics" mobile />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import AddButton from '@/components/common/AddButton.vue'
-import BaseIcon from '@/components/common/BaseIcon.vue'
+import BaseButton from '@/components/common/BaseButton.vue'
+import BaseInput from '@/components/common/BaseInput.vue'
 import BaseSelect from '@/components/common/BaseSelect.vue'
 import type { RootStatistics } from '@/types'
 import { debounce } from 'lodash-es'

@@ -38,18 +38,7 @@ describe('RootCard', () => {
 
     expect(screen.getByText('ك-ت-ب')).toBeInTheDocument()
     expect(screen.getByText('related to writing')).toBeInTheDocument()
-    expect(screen.getByText('3')).toBeInTheDocument()
     expect(screen.getByText('5')).toBeInTheDocument()
-  })
-
-  it('renders root letters', () => {
-    renderWithStore(RootCard, {
-      props: { root: mockRoot },
-    })
-
-    expect(screen.getByText('ك')).toBeInTheDocument()
-    expect(screen.getByText('ت')).toBeInTheDocument()
-    expect(screen.getByText('ب')).toBeInTheDocument()
   })
 
   it('handles root without meaning', () => {
@@ -124,24 +113,5 @@ describe('RootCard', () => {
 
     const rootText = screen.getByText('ك-ت-ب')
     expect(rootText).toHaveClass('text-2xl')
-  })
-
-  it('handles different letter counts correctly', () => {
-    const quadriliteral: Root = {
-      ...mockRoot,
-      letters: ['ف', 'ع', 'ل', 'ن'],
-      letterCount: 4,
-      displayForm: 'ف-ع-ل-ن',
-    }
-
-    renderWithStore(RootCard, {
-      props: { root: quadriliteral },
-    })
-
-    expect(screen.getByText('4')).toBeInTheDocument()
-    expect(screen.getByText('ف')).toBeInTheDocument()
-    expect(screen.getByText('ع')).toBeInTheDocument()
-    expect(screen.getByText('ل')).toBeInTheDocument()
-    expect(screen.getByText('ن')).toBeInTheDocument()
   })
 })

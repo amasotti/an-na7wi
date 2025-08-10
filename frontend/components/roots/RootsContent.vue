@@ -29,8 +29,8 @@
       />
 
       <article>
-        <!-- Mobile Grid -->
-        <section v-if="viewMode === ViewMode.GRID" class="grid grid-cols-2 gap-1">
+        <!-- Root Cards Grid -->
+        <section v-if="viewMode === ViewMode.GRID" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <RootCard
             v-for="root in roots"
             :key="root.id"
