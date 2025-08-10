@@ -1,9 +1,9 @@
 <template>
   <LoadingEffect v-if="loading" />
 
-  <main v-else-if="currentWord" class="space-y-6">
+  <main v-else-if="currentWord" class="max-w-7xl mx-auto p-4 space-y-6">
 
-    <header>
+    <header class="mb-6">
       <BaseBreadcrumb
         :parent-link="breadCrumb.parentLink"
         :parent-text="breadCrumb.parentText"
@@ -12,18 +12,26 @@
       />
     </header>
 
+    <!-- Hero Section with Word Info -->
     <WordPrimaryInformation
-    @edit="handleOpenWordModal"
-    @delete="toggleDeleteModal"
+      @edit="handleOpenWordModal"
+      @delete="toggleDeleteModal"
     />
 
-    <WordExamples v-if="currentWord.example" />
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Left Column: Examples, Notes, and Related Words -->
+      <div class="left-column">
+        <WordExamples v-if="currentWord.example" />
+        <WordNotes v-if="currentWord.notes" />
+        <RelatedWords v-if="currentWord.root" />
+      </div>
 
-    <WordNotes v-if="currentWord.notes" />
-
-    <RelatedWords v-if="currentWord.root" />
-
-    <WordReferences v-if="currentWord.dictionaryLinks.length > 0" />
+      <!-- Right Column: Dictionary References Only -->
+      <div class="right-column">
+        <WordReferences v-if="currentWord.dictionaryLinks.length > 0" />
+      </div>
+    </div>
 
   </main>
 
@@ -137,3 +145,28 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.content-grid {
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.left-column {
+  @apply lg:col-span-2 space-y-6;
+}
+
+.right-column {
+  @apply lg:col-span-1 space-y-6;
+}
+
+@media (max-width: 1024px) {
+  .content-grid {
+    @apply grid-cols-1;
+  }
+  
+  .left-column,
+  .right-column {
+    @apply col-span-1;
+  }
+}
+</style>

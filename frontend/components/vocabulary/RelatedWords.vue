@@ -99,16 +99,27 @@ onMounted(() => {
 
 <style scoped>
 .container-related-words {
-  @apply bg-gradient-to-br from-purple-50/50 to-violet-50/50 rounded-xl p-6 border border-purple-100/30;
-  @apply shadow-lg;
-  border: 1px solid rgba(209, 213, 219, 0.3);
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
+}
+
+h2 {
+  @apply px-6 pt-6 border-b border-purple-100 pb-4 mb-0;
+  @apply bg-gradient-to-r from-purple-50 to-violet-50;
+}
+
+menu {
+  @apply p-6;
+}
+
+li {
+  @apply rounded-xl hover:bg-gray-50 transition-colors cursor-pointer;
 }
 
 .related-word-box {
-  @apply flex items-baseline gap-3;
+  @apply flex items-baseline gap-3 p-4;
 }
 
-.related-word-box:hover {
-  @apply bg-purple-100/50 shadow-md cursor-pointer;
+.section-icon {
+  @apply text-purple-600;
 }
 </style>

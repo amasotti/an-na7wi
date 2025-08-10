@@ -25,14 +25,19 @@ const currentWord = computed((): Word | null => wordStore.currentWord)
 
 <style scoped>
 .container-notes {
-  @apply bg-gradient-to-br from-yellow-50/50 to-lime-50/40 rounded-xl p-6 border border-yellow-100/50;
-  border: 1px solid #f6e05e; /* Tailwind's yellow-200 */
-  @apply shadow-md;
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
 }
 
 .word-note-header {
-  @apply text-lg font-bold mt-4;
-  border-bottom: 1px solid #e2e8f0; /* Tailwind's gray-200 */
-  padding-bottom: 0.5rem;
+  @apply text-lg font-semibold mb-0 text-gray-900 px-6 pt-6 border-b border-amber-100 pb-4;
+  @apply bg-gradient-to-r from-amber-50 to-yellow-50;
+}
+
+section {
+  @apply p-6;
+}
+
+article {
+  @apply text-gray-700 leading-relaxed;
 }
 </style>

@@ -21,10 +21,11 @@
       </BaseButton>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="references-list">
       <BaseButton
         v-if="currentWord?.pronunciationLink"
         variant="outline"
+        class="reference-button"
         @click.stop="openLink(currentWord.pronunciationLink)"
         title="Listen to pronunciation"
       >
@@ -39,16 +40,14 @@
         :href="ref.url"
         target="_blank"
         rel="noopener noreferrer"
-        class="reference-card group"
+        class="reference-card"
       >
-        <div class="flex items-center gap-3">
-          <span class="dictionary-icon">
-              {{ DICTIONARY_CONFIG[ref.type].icon }}
-            </span>
-          <span class="dictionary-name">
-              {{ ref.displayName || DICTIONARY_CONFIG[ref.type].name }}
-            </span>
-        </div>
+        <span class="dictionary-icon">
+          {{ DICTIONARY_CONFIG[ref.type].icon }}
+        </span>
+        <span class="dictionary-name">
+          {{ ref.displayName || DICTIONARY_CONFIG[ref.type].name }}
+        </span>
       </a>
     </div>
   </section>
@@ -83,28 +82,40 @@ const openAllDictionaries = () => {
 
 <style scoped>
 .references-container {
-  @apply bg-gradient-to-br from-red-100/70 via-violet-100/50 to-pink-50/40 rounded-xl p-6 border border-red-300/50;
-  border: 1px solid rgba(220, 38, 38, 0.1); /* Tailwind's red-200 */
-  @apply shadow-md;
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
 }
 
 .referece-header {
-  @apply text-lg font-bold mt-4;
-  border-bottom: 1px solid #e2e8f0; /* Tailwind's gray-200 */
-  padding-bottom: 0.5rem;
+  @apply text-lg font-semibold mb-0 text-gray-900 px-6 pt-6 border-b border-blue-100 pb-4;
+  @apply bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center gap-2;
+}
+
+.references-container > div:first-of-type {
+  @apply px-6 pt-4;
+}
+
+.references-list {
+  @apply px-6 pb-6 space-y-3;
+}
+
+.reference-button {
+  @apply w-full;
 }
 
 .reference-card {
-  @apply flex items-center p-4 rounded-lg border bg-white shadow-sm transition-all;
-}
-.reference-card:hover {
-  @apply shadow-md border-emerald-300;
-  transform: translateY(-1px);
+  @apply flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-white transition-all duration-200;
+  @apply hover:shadow-sm hover:border-gray-300 w-full;
 }
 
-@media (hover: hover) {
-  .reference-card:hover span {
-    @apply text-emerald-700;
-  }
+.dictionary-icon {
+  @apply text-lg flex-shrink-0;
+}
+
+.dictionary-name {
+  @apply font-medium text-gray-700 truncate;
+}
+
+.section-icon {
+  @apply text-blue-600;
 }
 </style>

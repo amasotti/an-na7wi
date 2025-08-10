@@ -96,7 +96,7 @@ describe('WordPrimaryInformation', () => {
 
       expect(screen.getByText('madrasa')).toBeInTheDocument()
       const transliterationElement = screen.getByText('madrasa')
-      expect(transliterationElement).toHaveClass('word-basic-info', 'italic')
+      expect(transliterationElement).toHaveClass('transliteration')
     })
 
     it('does not render transliteration section when not provided', async () => {
@@ -118,7 +118,7 @@ describe('WordPrimaryInformation', () => {
 
       expect(screen.getByText('school')).toBeInTheDocument()
       const translationElement = screen.getByText('school')
-      expect(translationElement).toHaveClass('word-basic-info')
+      expect(translationElement).toHaveClass('translation')
     })
 
     it('does not render translation section when not provided', async () => {
@@ -145,22 +145,16 @@ describe('WordPrimaryInformation', () => {
       const word = createMockWord({ root: 'د ر س' })
       await createComponent(word)
 
-      expect(screen.getByText('Root:')).toBeInTheDocument()
+      expect(screen.getByText('Root')).toBeInTheDocument()
       expect(screen.getByText('د ر س')).toBeInTheDocument()
-
-      const rootBadge = screen.getByText('د ر س')
-      expect(rootBadge).toHaveClass('arabic', 'rootLink')
     })
 
     it('displays part of speech correctly', async () => {
       const word = createMockWord({ partOfSpeech: PartOfSpeech.NOUN })
       await createComponent(word)
 
-      expect(screen.getByText('Part of Speech:')).toBeInTheDocument()
+      expect(screen.getByText('Part of Speech')).toBeInTheDocument()
       expect(screen.getByText(PartOfSpeech.NOUN)).toBeInTheDocument()
-
-      const posBadge = screen.getByText(PartOfSpeech.NOUN)
-      expect(posBadge).toHaveClass('part-of-speech-badge')
     })
 
     it('shows N/A for undefined part of speech', async () => {
@@ -174,11 +168,11 @@ describe('WordPrimaryInformation', () => {
       const word = createMockWord({ dialect: Dialect.EGYPTIAN })
       await createComponent(word)
 
-      expect(screen.getByText('Dialect:')).toBeInTheDocument()
+      expect(screen.getByText('Dialect')).toBeInTheDocument()
       expect(screen.getByText(Dialect.EGYPTIAN)).toBeInTheDocument()
 
       const dialectBadge = screen.getByText(Dialect.EGYPTIAN)
-      expect(dialectBadge).toHaveClass('dialect-badge')
+      expect(dialectBadge).toBeInTheDocument()
     })
 
     it('shows Standard for undefined dialect', async () => {
@@ -192,11 +186,11 @@ describe('WordPrimaryInformation', () => {
       const word = createMockWord({ masteryLevel: MasteryLevel.LEARNING })
       await createComponent(word)
 
-      expect(screen.getByText('Mastery:')).toBeInTheDocument()
+      expect(screen.getByText('Mastery')).toBeInTheDocument()
       expect(screen.getByText(MasteryLevel.LEARNING)).toBeInTheDocument()
 
       const masteryBadge = screen.getByText(MasteryLevel.LEARNING)
-      expect(masteryBadge).toHaveClass('register-badge')
+      expect(masteryBadge).toBeInTheDocument()
     })
 
     it('shows Standard for undefined mastery level', async () => {
@@ -210,7 +204,7 @@ describe('WordPrimaryInformation', () => {
       const word = createMockWord()
       await createComponent(word)
 
-      expect(screen.getByText('Added on:')).toBeInTheDocument()
+      expect(screen.getByText('Added')).toBeInTheDocument()
       expect(screen.getByText('January 1, 2024')).toBeInTheDocument()
     })
   })
@@ -222,7 +216,6 @@ describe('WordPrimaryInformation', () => {
 
       const rootBadge = screen.getByText('ك ت ب')
       expect(rootBadge).toBeInTheDocument()
-      expect(rootBadge).toHaveClass('arabic', 'rootLink')
     })
 
     it('displays different root text correctly', async () => {
@@ -231,15 +224,14 @@ describe('WordPrimaryInformation', () => {
 
       const rootBadge = screen.getByText('ا ب ج')
       expect(rootBadge).toBeInTheDocument()
-      expect(rootBadge).toHaveClass('arabic', 'rootLink')
     })
 
     it('displays root label when no root is provided', async () => {
       const word = createMockWord({ root: undefined })
       await createComponent(word)
 
-      // The component should handle undefined root gracefully
-      expect(screen.getByText('Root:')).toBeInTheDocument()
+      // The component should handle undefined root gracefully - no root section should be shown
+      expect(screen.queryByText('Root')).not.toBeInTheDocument()
     })
   })
 
@@ -272,7 +264,7 @@ describe('WordPrimaryInformation', () => {
       const word = createMockWord()
       await createComponent(word)
 
-      const mainArticle = document.querySelector('article.container-header')
+      const mainArticle = document.querySelector('article.word-hero')
       expect(mainArticle).toBeInTheDocument()
 
       const sections = mainArticle?.querySelectorAll('section, article')
@@ -288,14 +280,13 @@ describe('WordPrimaryInformation', () => {
 
       expect(editButton).toBeInTheDocument()
       expect(deleteButton).toBeInTheDocument()
-      expect(deleteButton).toHaveClass('action-button-danger')
     })
 
     it('applies responsive grid layout for word information', async () => {
       const word = createMockWord()
       await createComponent(word)
 
-      const infoGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2')
+      const infoGrid = document.querySelector('.metadata-grid')
       expect(infoGrid).toBeInTheDocument()
     })
 
@@ -303,7 +294,7 @@ describe('WordPrimaryInformation', () => {
       const word = createMockWord()
       await createComponent(word)
 
-      const infoSection = document.querySelector('.bg-gray-50.rounded-lg.p-4.my-4')
+      const infoSection = document.querySelector('.metadata-grid')
       expect(infoSection).toBeInTheDocument()
     })
   })
@@ -320,7 +311,7 @@ describe('WordPrimaryInformation', () => {
       await createComponent(minimalWord)
 
       // Component should render without crashing
-      expect(document.querySelector('article.container-header')).toBeInTheDocument()
+      expect(document.querySelector('article.word-hero')).toBeInTheDocument()
     })
 
     it('handles empty strings in word fields', async () => {
@@ -356,7 +347,7 @@ describe('WordPrimaryInformation', () => {
       const word = createMockWord({ createdAt: '' })
       await createComponent(word)
 
-      expect(screen.getByText('Added on:')).toBeInTheDocument()
+      expect(screen.getByText('Added')).toBeInTheDocument()
       // formatDate should handle empty string gracefully
     })
   })

@@ -88,14 +88,23 @@ const examples = computed<Example[]>(() => {
 
 <style scoped>
 .container-notes {
-  @apply bg-gradient-to-br from-green-50/50 to-emerald-50/50 rounded-xl p-6 border border-green-100/50;
-  @apply shadow-sm;
-  border: 1px solid #c6f6d5; /* Tailwind's green-200 */
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
 }
 
 .word-note-header {
-  @apply text-lg font-bold mt-4;
-  border-bottom: 2px solid #d1fae5;
-  padding-bottom: 0.5rem;
+  @apply text-lg font-semibold mb-4 text-gray-900 px-6 pt-6 border-b border-emerald-100 pb-4;
+  @apply bg-gradient-to-r from-emerald-50 to-green-50;
+}
+
+.example-item {
+  @apply px-6 pb-4;
+}
+
+.example-item:last-child {
+  @apply pb-6;
+}
+
+.section-icon {
+  @apply text-emerald-600;
 }
 </style>

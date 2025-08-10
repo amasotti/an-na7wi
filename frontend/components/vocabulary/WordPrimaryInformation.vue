@@ -1,7 +1,7 @@
 <template>
-  <article class="container-header">
-    <section class="flex justify-end space-x-3">
-      <!-- Edit Button -->
+  <article class="word-hero">
+    <!-- Actions Toolbar -->
+    <section class="actions-toolbar">
       <BaseButton
         variant="outline"
         size="sm"
@@ -12,11 +12,10 @@
         </BaseIcon>
         Edit
       </BaseButton>
-      <!-- Delete Button -->
       <BaseButton
         variant="outline"
         size="sm"
-        class="action-button-danger"
+        class="text-red-600 hover:bg-red-50 border-red-200"
         @click="$emit('delete')"
       >
         <BaseIcon size="sm" class="mr-2">
@@ -26,77 +25,88 @@
       </BaseButton>
     </section>
 
-    <!-- Basic info: text, translitteration and translation   -->
-    <article>
+    <!-- Main Word Display -->
+    <article class="word-display">
       <h1 class="word-arabic arabic">
         {{ currentWord!!.arabic }}
       </h1>
-      <section
-        v-if="currentWord?.transliteration"
-        class="word-basic-info italic"
-      >
-        {{ currentWord!!.transliteration }}
+      <section class="word-details">
+        <p v-if="currentWord?.transliteration" class="transliteration">
+          {{ currentWord.transliteration }}
+        </p>
+        <p v-if="currentWord?.translation" class="translation">
+          {{ currentWord.translation }}
+        </p>
       </section>
-      <div v-if="currentWord?.translation" class="word-basic-info">
-        {{ currentWord!!.translation }}
-      </div>
     </article>
 
-    <!-- Word badge infos: dialect, id, etc. -->
-    <article class="bg-gray-50 rounded-lg p-4 my-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-          <div class="flex justify-between">
-            <span class="text-gray-600">Root:</span>
-            <BaseBadge
-              size="lg"
-              class="arabic rootLink"
-              @click="handleRootClicked"
-            >
-              {{currentWord?.root}}
-            </BaseBadge>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Part of Speech:</span>
-            <BaseBadge
-              size="lg"
-              class="part-of-speech-badge"
-            >
-              {{ currentWord?.partOfSpeech || 'N/A' }}
-            </BaseBadge>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Dialect:</span>
-            <BaseBadge
-              size="lg"
-              class="dialect-badge"
-            >
-              {{ currentWord?.dialect || 'Standard' }}
-            </BaseBadge>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Mastery:</span>
-            <BaseBadge
-              size="lg"
-              class="register-badge"
-            >
-              {{ currentWord?.masteryLevel || 'Standard' }}
-            </BaseBadge>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Added on:</span>
-            <span>{{ formatDate(currentWord!!.createdAt) }}</span>
-          </div>
+    <!-- Primary Metadata Cards -->
+    <section class="metadata-grid">
+      <!-- Root Card -->
+      <article class="metadata-card primary-metadata" v-if="currentWord?.root">
+        <div class="metadata-label">Root</div>
+        <BaseBadge
+          variant="primary"
+          size="md"
+          class="metadata-value arabic root-badge"
+          @click="handleRootClicked"
+        >
+          {{ currentWord.root }}
+        </BaseBadge>
+      </article>
+
+      <!-- Part of Speech Card -->
+      <article class="metadata-card">
+        <div class="metadata-label">Part of Speech</div>
+        <BaseBadge
+          variant="secondary"
+          size="md"
+          class="metadata-value"
+        >
+          {{ currentWord?.partOfSpeech || 'N/A' }}
+        </BaseBadge>
+      </article>
+
+      <!-- Dialect Card -->
+      <article class="metadata-card">
+        <div class="metadata-label">Dialect</div>
+        <BaseBadge
+          :variant="getDialectVariant(currentWord?.dialect)"
+          size="md"
+          class="metadata-value"
+        >
+          {{ currentWord?.dialect || 'Standard' }}
+        </BaseBadge>
+      </article>
+
+      <!-- Mastery Level Card -->
+      <article class="metadata-card">
+        <div class="metadata-label">Mastery</div>
+        <BaseBadge
+          :variant="getMasteryVariant(currentWord?.masteryLevel)"
+          size="md"
+          class="metadata-value"
+        >
+          {{ currentWord?.masteryLevel || 'Standard' }}
+        </BaseBadge>
+      </article>
+
+      <!-- Created Date Card -->
+      <article class="metadata-card secondary-metadata">
+        <div class="metadata-label">Added</div>
+        <div class="metadata-value text-gray-600">
+          {{ formatDate(currentWord!!.createdAt) }}
         </div>
-    </article>
-
+      </article>
+    </section>
   </article>
-
 </template>
 
 <script setup lang="ts">
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import type { BadgeVariant } from '~/types'
 import { formatDate } from '~/utils/dateUtils'
 
 const wordStore = useWordStore()
@@ -117,30 +127,88 @@ const handleRootClicked = () => {
   const rootDetailPath = getRootDetailPath()
   navigateTo(rootDetailPath)
 }
+
+const getDialectVariant = (dialect?: string) => {
+  const dialectMap: Record<string, BadgeVariant> = {
+    tunisian: 'warning',
+    levantine: 'neutral',
+    gulf: 'primary',
+    maghrebi: 'error',
+    standard: 'success',
+    msa: 'success',
+  }
+  return dialectMap[dialect?.toLowerCase() || 'standard'] || 'neutral'
+}
+
+const getMasteryVariant = (mastery?: string) => {
+  const masteryMap: Record<string, BadgeVariant> = {
+    new: 'warning',
+    beginner: 'error',
+    intermediate: 'warning',
+    known: 'success',
+    mastered: 'primary',
+    learning: 'secondary',
+    standard: 'primary',
+  }
+  return masteryMap[mastery?.toLowerCase() || 'standard'] || 'neutral'
+}
 </script>
 
 <style scoped>
+.word-hero {
+  @apply bg-gradient-to-br from-slate-50 to-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
+}
+
+.actions-toolbar {
+  @apply flex justify-end gap-2 p-4 bg-gray-50/50 border-b border-gray-100;
+}
+
+.word-display {
+  @apply text-center py-8 px-6 bg-gradient-to-br from-indigo-50/20 to-purple-50/20;
+}
+
 .word-arabic {
-  @apply text-5xl font-bold text-gray-900 text-center;
+  @apply text-6xl md:text-7xl font-bold text-gray-900 mb-4 text-center;
+  line-height: 1.1;
 }
 
-.word-basic-info {
-  @apply text-lg text-gray-600 font-light text-center;
+.word-details {
+  @apply space-y-2 max-w-2xl mx-auto;
 }
 
-.rootLink {
-  @apply hover:text-violet-950 cursor-pointer bg-purple-300 rounded-xl px-2 py-1;
+.transliteration {
+  @apply text-xl text-gray-600 italic font-light;
 }
 
-.dialect-badge {
-  @apply bg-blue-100 text-blue-800;
+.translation {
+  @apply text-lg text-gray-700 font-medium;
 }
 
-.register-badge {
-  @apply bg-green-100 text-green-800;
+.metadata-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 p-6 bg-white;
 }
 
-.part-of-speech-badge {
-  @apply bg-yellow-100 text-yellow-800;
+.metadata-card {
+  @apply bg-gray-50/80 rounded-xl p-4 text-center border border-gray-100/50 hover:bg-gray-50 transition-colors;
+}
+
+.primary-metadata {
+  @apply bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100;
+}
+
+.secondary-metadata {
+  @apply bg-gradient-to-br from-gray-50 to-slate-50;
+}
+
+.metadata-label {
+  @apply text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2;
+}
+
+.metadata-value {
+  @apply text-sm font-medium;
+}
+
+.root-badge {
+  @apply cursor-pointer hover:scale-105 transition-transform;
 }
 </style>
