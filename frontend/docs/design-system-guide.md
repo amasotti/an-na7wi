@@ -67,7 +67,7 @@ Based on the component analysis, here are key recommendations for better semanti
 <nav aria-label="Main navigation">
   <ul class="nav-list">
     <li><a href="/texts" class="nav-link">Texts</a></li>
-    <li><a href="/vocabulary" class="nav-link">Vocabulary</a></li>
+    <li><a href="/words" class="nav-link">Vocabulary</a></li>
     <li><a href="/roots" class="nav-link">Roots</a></li>
   </ul>
 </nav>

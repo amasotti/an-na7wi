@@ -299,15 +299,15 @@ import BaseInput from '../common/BaseInput.vue'
 import BaseModal from '../common/BaseModal.vue'
 import BaseSelect from '../common/BaseSelect.vue'
 import DictionaryLinkManager from './DictionaryLinkManager.vue'
+import { difficultyOptions } from '~/constants/difficulty'
+import { partsOfSpeechOptions } from '~/constants/pos'
+import { dialectOptions } from '~/constants/dialects'
+import { masteryLevelOptions } from '~/constants/masteryLevel'
 
 interface Props {
   open: boolean
   loading?: boolean
   word?: Word | null
-  difficultyOptions: SelectOption<Difficulty>[]
-  dialectOptions: SelectOption<Dialect>[]
-  masteryLevelOptions: SelectOption<MasteryLevel>[]
-  partsOfSpeechOptions: SelectOption<PartOfSpeech>[]
 }
 
 const props = withDefaults(defineProps<Props>(), {

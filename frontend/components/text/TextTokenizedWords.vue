@@ -80,7 +80,7 @@ const totalPages = computed(() => Math.ceil(props.totalCount / props.pageSize))
 const handleWordClick = (arabic: string) => {
   // Navigate to vocabulary view with Arabic search query
   navigateTo({
-    path: '/vocabulary',
+    path: '/words',
     query: { search: arabic },
   })
 }

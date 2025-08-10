@@ -2,10 +2,7 @@
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <!-- Loading State -->
-      <div v-if="rootStore.loading" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
-        <span class="ml-3 text-gray-600">Loading root details...</span>
-      </div>
+      <LoadingEffect v-if="rootStore.loading" />
 
       <!-- Error State -->
       <div v-else-if="rootStore.error" class="text-center py-12">
@@ -21,15 +18,12 @@
       <!-- Root Content -->
       <div v-else-if="rootStore.currentRootWithWords" class="space-y-8">
         <!-- Navigation Breadcrumb -->
-        <nav class="flex items-center space-x-2 text-sm text-gray-600">
-          <NuxtLink to="/roots" class="hover:text-primary-600 transition-colors">
-            Roots
-          </NuxtLink>
-          <span>/</span>
-          <span class="text-gray-900 font-medium">
-            {{ rootStore.currentRootWithWords.root.displayForm }}
-          </span>
-        </nav>
+        <BaseBreadcrumb
+          :parent-link="'/roots'"
+          :parent-text="'Roots'"
+          :separator="'/'"
+          :item="rootStore.currentRootWithWords.root.displayForm"
+        />
 
         <!-- Root Header -->
         <RootDetailHeader 
@@ -46,15 +40,12 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else class="text-center py-12">
-        <div class="text-gray-400 text-lg">Root not found</div>
-        <NuxtLink 
-          to="/roots" 
-          class="inline-block mt-4 text-primary-600 hover:text-primary-700 transition-colors"
-        >
-          ← Back to Roots
-        </NuxtLink>
-      </div>
+      <BaseEmptyState
+        v-else
+        link="/roots"
+        link-text="Go Back to Roots"
+        message="No root data available"
+      />
     </div>
 
     <!-- Edit Root Modal -->
@@ -70,10 +61,6 @@
       :open="showWordModal"
       :loading="wordFormLoading"
       :word="wordToEdit"
-      :difficulty-options="difficultyOptions"
-      :dialect-options="dialectOptions"
-      :mastery-level-options="masteryLevelOptions"
-      :parts-of-speech-options="partsOfSpeechOptions"
       @close="handleWordModalClose"
       @submit="handleWordSubmit"
     />
@@ -81,7 +68,6 @@
 </template>
 
 <script setup lang="ts">
-import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { onMounted, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
@@ -91,6 +77,13 @@ import WordForm from '~/components/vocabulary/WordForm.vue'
 import { wordService } from '~/composables/wordService'
 import { useRootStore } from '~/stores/rootStore'
 import type { Root, Word } from '~/types'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
+import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
+import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
+import { difficultyOptions } from '~/constants/difficulty'
+import { dialectOptions } from '~/constants/dialects'
+import { masteryLevelOptions } from '~/constants/masteryLevel'
+import { partsOfSpeechOptions } from '~/constants/pos'
 
 const route = useRoute()
 const rootStore = useRootStore()
@@ -99,42 +92,6 @@ const showEditModal = ref(false)
 const showWordModal = ref(false)
 const wordFormLoading = ref(false)
 const wordToEdit = ref<Word | null>(null)
-
-// Form options for word modal
-const difficultyOptions = [
-  { label: 'Beginner', value: Difficulty.BEGINNER },
-  { label: 'Intermediate', value: Difficulty.INTERMEDIATE },
-  { label: 'Advanced', value: Difficulty.ADVANCED },
-]
-
-const dialectOptions = [
-  { label: 'Modern Standard Arabic', value: Dialect.MSA },
-  { label: 'Egyptian', value: Dialect.EGYPTIAN },
-  { label: 'Levantine', value: Dialect.LEVANTINE },
-  { label: 'Gulf', value: Dialect.GULF },
-  { label: 'Moroccan', value: Dialect.MOROCCAN },
-  { label: 'Iraqi', value: Dialect.IRAQI },
-]
-
-const masteryLevelOptions = [
-  { label: 'New', value: MasteryLevel.NEW },
-  { label: 'Learning', value: MasteryLevel.LEARNING },
-  { label: 'Known', value: MasteryLevel.KNOWN },
-  { label: 'Mastered', value: MasteryLevel.MASTERED },
-]
-
-const partsOfSpeechOptions = [
-  { label: 'Noun', value: PartOfSpeech.NOUN },
-  { label: 'Verb', value: PartOfSpeech.VERB },
-  { label: 'Adjective', value: PartOfSpeech.ADJECTIVE },
-  { label: 'Adverb', value: PartOfSpeech.ADVERB },
-  { label: 'Preposition', value: PartOfSpeech.PREPOSITION },
-  { label: 'Pronoun', value: PartOfSpeech.PRONOUN },
-  { label: 'Conjunction', value: PartOfSpeech.CONJUNCTION },
-  { label: 'Interjection', value: PartOfSpeech.INTERJECTION },
-  { label: 'Particle', value: PartOfSpeech.PARTICLE },
-  { label: 'Unknown', value: PartOfSpeech.UNKNOWN },
-]
 
 const loadRootData = async (rootId: string) => {
   if (rootId) {

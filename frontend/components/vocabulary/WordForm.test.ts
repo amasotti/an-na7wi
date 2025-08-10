@@ -62,22 +62,6 @@ const defaultProps = {
   open: true,
   loading: false,
   word: null,
-  difficultyOptions: Object.values(Difficulty).map(d => ({
-    value: d,
-    label: d,
-  })) as SelectOption<Difficulty>[],
-  dialectOptions: Object.values(Dialect).map(d => ({
-    value: d,
-    label: d,
-  })) as SelectOption<Dialect>[],
-  masteryLevelOptions: Object.values(MasteryLevel).map(m => ({
-    value: m,
-    label: m,
-  })) as SelectOption<MasteryLevel>[],
-  partsOfSpeechOptions: Object.values(PartOfSpeech).map(p => ({
-    value: p,
-    label: p,
-  })) as SelectOption<PartOfSpeech>[],
 }
 
 describe('WordForm', () => {

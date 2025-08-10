@@ -109,7 +109,7 @@ const navItems = [
   {
     name: 'vocabulary',
     label: 'Dictionary',
-    to: '/vocabulary',
+    to: '/words',
     icon: 'BookOpenIcon',
   },
   {

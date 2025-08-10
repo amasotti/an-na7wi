@@ -155,11 +155,7 @@ const sortOptions: SelectOption<string>[] = [
 // Computed
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize.value))
 const hasActiveFilters = computed(() => {
-  return Boolean(
-      selectedDialect.value ||
-      selectedDifficulty.value ||
-      activeTags.value.length > 0
-  )
+  return Boolean(selectedDialect.value || selectedDifficulty.value || activeTags.value.length > 0)
 })
 
 const gridClasses = computed(() => {
@@ -177,7 +173,6 @@ const setSearchQuery = (value: string) => {
   } else {
     textStore.searchTexts(value)
   }
-
 }
 
 const setSelectedDialect = (value: Dialect | null) => {

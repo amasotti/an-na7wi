@@ -29,7 +29,7 @@
           </BaseButton>
         </NuxtLink>
         
-        <NuxtLink to="/vocabulary" class="inline-block">
+        <NuxtLink to="/words" class="inline-block">
           <BaseButton variant="outline" size="lg" class="w-full sm:w-auto p-4">
             <div class="flex items-center justify-center">
               <svg class="w-5 h-5 mr-2 flex-shrink-0" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +131,7 @@ const features = [
     description: 'Build your personal dictionary with root analysis and usage examples.',
     icon: 'book-open',
     color: 'secondary',
-    link: '/vocabulary',
+    link: '/words',
   },
   {
     title: 'Root Deep-Dive',

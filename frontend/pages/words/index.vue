@@ -37,10 +37,6 @@
       :open="showWordModal"
       :loading="formLoading"
       :word="editingWord"
-      :difficulty-options="wordStore.difficultyOptions"
-      :dialect-options="wordStore.dialectOptions"
-      :mastery-level-options="wordStore.masteryLevelOptions"
-      :parts-of-speech-options="wordStore.partsOfSpeechOptions"
       @close="closeWordModal"
       @submit="saveWord"
       @related-word-click="handleRelatedWordClick"
@@ -58,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Word } from '@/types'
+import type { Word } from '~/types'
 import { onMounted, ref, watchEffect } from 'vue'
 // import { useRoute } from 'vue-router' // Not needed in Nuxt
 import VocabularyContent from '~/components/vocabulary/VocabularyContent.vue'
@@ -106,8 +102,10 @@ const clearSearch = () => {
 
 // Word form methods
 const openWordForm = (word?: Word) => {
-  editingWord.value = word || null
-  showWordModal.value = true
+  if (!word) return
+  navigateTo(`/words/${word.id}`)
+  // editingWord.value = word || null
+  // showWordModal.value = true
 }
 
 const closeWordModal = () => {

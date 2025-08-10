@@ -1,17 +1,7 @@
 <template>
-  <div class="text-detail animate-fade-in">
+  <div class="animate-fade-in">
     <!-- Loading State -->
-    <div v-if="loading" class="max-w-6xl mx-auto px-4 py-8">
-      <div class="animate-pulse">
-        <div class="h-8 bg-gray-300 rounded w-1/3 mb-4"></div>
-        <div class="h-4 bg-gray-300 rounded w-1/4 mb-8"></div>
-        <div class="bg-white rounded-xl shadow-sm p-8">
-          <div class="h-6 bg-gray-300 rounded w-full mb-4"></div>
-          <div class="h-6 bg-gray-300 rounded w-3/4 mb-4"></div>
-          <div class="h-6 bg-gray-300 rounded w-5/6"></div>
-        </div>
-      </div>
-    </div>
+    <LoadingEffect v-if="loading" />
 
     <!-- Error State -->
     <div v-else-if="error" class="max-w-2xl mx-auto px-4 py-16 text-center">
@@ -193,10 +183,6 @@
       :open="showWordModal"
       :loading="wordLoading"
       :word="wordForForm"
-      :difficulty-options="difficultyOptions"
-      :dialect-options="dialectOptions"
-      :mastery-level-options="masteryLevelOptions"
-      :parts-of-speech-options="partsOfSpeechOptions"
       @close="closeWordModal"
       @submit="handleWordSubmit"
     />
@@ -236,6 +222,7 @@ import TextModal from '~/components/text/TextModal.vue'
 import TextTokenizedWords from '~/components/text/TextTokenizedWords.vue'
 import TextVersionManager from '~/components/text/TextVersionManager.vue'
 import WordForm from '~/components/vocabulary/WordForm.vue'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import { useTextStore } from '~/stores/textStore'
 import { useWordStore } from '~/stores/wordStore'
 import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Text, Word } from '~/types'

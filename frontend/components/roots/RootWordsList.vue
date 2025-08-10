@@ -53,7 +53,7 @@ defineProps<Props>()
 const handleWordClick = (arabic: string) => {
   // Navigate to vocabulary view with Arabic search query
   navigateTo({
-    path: '/vocabulary',
+    path: '/words',
     query: { search: arabic },
   })
 }
