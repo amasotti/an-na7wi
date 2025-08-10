@@ -9,22 +9,10 @@
           </p>
         </div>
         <div class="flex items-center space-x-4">
-          <BaseButton
-            @click="handleAddRoot"
-            class="flex items-center space-x-2"
-          >
-            <BaseIcon size="sm">
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4v16m8-8H4"
-              />
-            </BaseIcon>
+          <AddButton @click="handleAddRoot">
             <span class="hidden sm:inline">Add Root</span>
-          </BaseButton>
+            <span class="sm:hidden">Add</span>
+          </AddButton>
           <div v-if="statistics" class="hidden md:block">
             <RootStatisticsCard :statistics="statistics" />
           </div>
@@ -100,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from '@/components/common/BaseButton.vue'
+import AddButton from '@/components/common/AddButton.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
 import BaseSelect from '@/components/common/BaseSelect.vue'
 import type { RootStatistics } from '@/types'

@@ -7,19 +7,15 @@
           {{ searchLoading ? 'Searching...' : `Found ${searchResultsCount} result${searchResultsCount !== 1 ? 's' : ''}` }}
         </p>
       </div>
-      <BaseButton @click="$emit('add-word')" class="flex items-center">
-        <BaseIcon size="sm" class="mr-2">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </BaseIcon>
+      <AddButton @click="$emit('add-word')">
         Add New Word
-      </BaseButton>
+      </AddButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import BaseButton from '../common/BaseButton.vue'
-import BaseIcon from '../common/BaseIcon.vue'
+import AddButton from '../common/AddButton.vue'
 
 interface Props {
   isSearching: boolean

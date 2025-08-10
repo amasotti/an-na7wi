@@ -16,6 +16,7 @@
     <RootDetailHeader 
       @edit="showEditModal = true"
       @add-word="showWordModal = true"
+      @delete="showDeleteModal = true"
     />
 
     <!-- Content Grid -->
@@ -62,6 +63,15 @@
     @close="handleWordModalClose"
     @submit="handleWordSubmit"
   />
+
+  <!-- Root Delete Modal -->
+  <RootDeleteModal
+    :open="showDeleteModal"
+    :loading="deleteLoading"
+    :root="rootStore.currentRootWithWords?.root || null"
+    @close="showDeleteModal = false"
+    @confirm="handleDeleteRoot"
+  />
 </template>
 
 <script setup lang="ts">
@@ -70,6 +80,7 @@ import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import RootAnalysis from '~/components/roots/RootAnalysis.vue'
+import RootDeleteModal from '~/components/roots/RootDeleteModal.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
 import RootModal from '~/components/roots/RootModal.vue'
 import RootWordsList from '~/components/roots/RootWordsList.vue'
@@ -83,7 +94,9 @@ const rootStore = useRootStore()
 
 const showEditModal = ref(false)
 const showWordModal = ref(false)
+const showDeleteModal = ref(false)
 const wordFormLoading = ref(false)
+const deleteLoading = ref(false)
 const wordToEdit = ref<Word | null>(null)
 
 const loadRootData = async (rootId: string) => {
@@ -140,6 +153,21 @@ const handleWordSubmit = async (formData: Partial<Word>) => {
     console.error('Error creating word:', error)
   } finally {
     wordFormLoading.value = false
+  }
+}
+
+const handleDeleteRoot = async () => {
+  if (!rootStore.currentRootWithWords?.root) return
+
+  deleteLoading.value = true
+  try {
+    await rootStore.deleteRoot(rootStore.currentRootWithWords.root.id)
+    showDeleteModal.value = false
+    navigateTo('/roots')
+  } catch (error) {
+    console.error('Error deleting root:', error)
+  } finally {
+    deleteLoading.value = false
   }
 }
 

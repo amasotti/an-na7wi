@@ -29,24 +29,12 @@
           
           <div class="flex items-center gap-2">
             <!-- Edit Button (only for current version) -->
-            <BaseButton 
+            <EditButton 
               v-if="isViewingCurrentVersion" 
-              variant="outline" 
-              size="sm" 
               @click="editText"
-            >
-              <BaseIcon size="sm" class="mr-2">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </BaseIcon>
-              Edit
-            </BaseButton>
+            />
 
-            <BaseButton variant="outline" size="sm" @click="deleteText">
-              <BaseIcon size="sm" class="mr-2">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </BaseIcon>
-              Delete
-            </BaseButton>
+            <DeleteButton @click="deleteText" />
 
             <BaseButton variant="outline" size="sm" @click="toggleAnnotations">
               <BaseIcon size="sm" class="mr-2">
@@ -216,6 +204,8 @@ import AnnotationPanel from '~/components/annotation/AnnotationPanel.vue'
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
+import EditButton from '~/components/common/EditButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import AnnotatedTextContent from '~/components/text/AnnotatedTextContent.vue'
 import TextDeleteModal from '~/components/text/TextDeleteModal.vue'

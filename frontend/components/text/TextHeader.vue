@@ -18,18 +18,16 @@
         {{ viewMode === 'grid' ? 'Grid' : 'List' }}
       </BaseButton>
       
-      <BaseButton @click="$emit('showCreateModal')">
-        <BaseIcon size="sm" class="mr-2">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </BaseIcon>
+      <AddButton @click="$emit('showCreateModal')">
         Add New Text
-      </BaseButton>
+      </AddButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { h } from 'vue'
+import AddButton from '../common/AddButton.vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 

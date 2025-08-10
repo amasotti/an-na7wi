@@ -82,6 +82,7 @@ const showAddModal = ref(false)
 const showDeleteModal = ref(false)
 const rootToDelete = ref<Root | null>(null)
 const deleteLoading = ref(false)
+const createLoading = ref(false)
 
 const handleSearch = async (query: string) => {
   if (query.trim()) {
@@ -118,10 +119,18 @@ const handleRootClick = (rootId: string) => {
 
 const handleRootCreated = async (root: Root) => {
   try {
-    await rootStore.createRoot(root.displayForm)
+    createLoading.value = true
+    // Root is already created by the modal, just add it to the store and refresh
+    rootStore.roots.unshift(root)
+    rootStore.pagination.totalCount += 1
     await rootStore.fetchStatistics()
+    showAddModal.value = false
   } catch (error) {
     console.error('Error handling root creation:', error)
+    // Still close the modal even if statistics fetch fails
+    showAddModal.value = false
+  } finally {
+    createLoading.value = false
   }
 }
 

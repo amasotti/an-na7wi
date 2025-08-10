@@ -2,26 +2,11 @@
   <article class="root-hero">
     <!-- Actions Toolbar -->
     <section class="actions-toolbar">
-      <BaseButton
-        variant="outline"
-        size="sm"
-        @click="$emit('add-word')"
-      >
-        <BaseIcon size="sm" class="mr-2">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </BaseIcon>
+      <AddButton @click="$emit('add-word')">
         Add Word
-      </BaseButton>
-      <BaseButton
-        variant="outline"
-        size="sm"
-        @click="$emit('edit')"
-      >
-        <BaseIcon size="sm" class="mr-2">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </BaseIcon>
-        Edit
-      </BaseButton>
+      </AddButton>
+      <EditButton @click="$emit('edit')" />
+      <DeleteButton @click="$emit('delete')" />
     </section>
 
     <!-- Main Root Display -->
@@ -105,9 +90,10 @@
 </template>
 
 <script setup lang="ts">
+import AddButton from '~/components/common/AddButton.vue'
 import BaseBadge from '~/components/common/BaseBadge.vue'
-import BaseButton from '~/components/common/BaseButton.vue'
-import BaseIcon from '~/components/common/BaseIcon.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
+import EditButton from '~/components/common/EditButton.vue'
 import { useRootStore } from '~/stores/rootStore'
 import { formatDate } from '~/utils/dateUtils'
 
@@ -118,6 +104,7 @@ const currentRoot = computed(() => rootStore.currentRootWithWords?.root!)
 defineEmits<{
   edit: []
   'add-word': []
+  delete: []
 }>()
 
 const rootType = computed(() => {
