@@ -90,9 +90,10 @@ class RootService {
         // Search in both display form and normalized form
         val displayResults = rootRepository.searchByDisplayForm(query, pagination, sort)
         val normalizedResults = rootRepository.searchByNormalizedForm(query, pagination, sort)
+        val meaningResults = rootRepository.searchByMeaning(query, pagination, sort)
         
         // Combine and deduplicate results
-        return (displayResults + normalizedResults).distinctBy { it.id }
+        return (displayResults + normalizedResults + meaningResults).distinctBy { it.id }
             .map { root ->
                 val wordCount = rootRepository.getWordCountForRoot(root.id!!)
                 RootResponseDTO.fromEntity(root, wordCount)

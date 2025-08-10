@@ -39,6 +39,10 @@ class ArabicRootRepository : PanacheRepository<ArabicRoot> {
     fun searchByNormalizedForm(query: String, page: Page, sort: Sort = Sort.by("displayForm")): List<ArabicRoot> {
         return find("normalizedForm like ?1", sort, "%$query%").page(page).list()
     }
+
+  fun searchByMeaning(query: String, page: Page, sort: Sort = Sort.by("displayForm")): List<ArabicRoot> {
+        return find("meaning like ?1", sort, "%$query%").page(page).list()
+    }
     
     /**
      * Find all roots with pagination and sorting
