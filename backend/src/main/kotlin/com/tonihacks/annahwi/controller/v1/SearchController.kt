@@ -1,6 +1,9 @@
 package com.tonihacks.annahwi.controller.v1
 
+import com.tonihacks.annahwi.dto.response.PaginatedResponse
+import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.service.SearchService
+import com.tonihacks.annahwi.service.TextService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
@@ -23,7 +26,10 @@ import org.jboss.logging.Logger
 class SearchController {
     
     @Inject
-    lateinit var searchService: SearchService
+    private lateinit var searchService: SearchService
+
+    @Inject
+    private lateinit var textService: TextService
     
     private val logger = Logger.getLogger(SearchController::class.java)
     
@@ -56,11 +62,23 @@ class SearchController {
                 "tag: $tag, page: $page, size: $size")
 
         val pageToZero = PaginationUtil.toZeroBasedPage(page)
+        val actualSize = PaginationUtil.resolvePageSize(size, page)
+        val totalCount = textService.countAll()
+
         val search = searchService.advancedTextSearch(
             query, title, dialect,
             difficulty, tag,
             pageToZero, size)
-        return Response.ok(search).build()
+      val textDtos = search.map { text ->
+        TextResponseDTO.fromEntity(text)
+      }
+      val response = PaginatedResponse(
+        items = textDtos,
+        totalCount = totalCount,
+        page = page,
+        pageSize = actualSize
+      )
+      return Response.ok(response).build()
     }
     
     @GET

@@ -1,6 +1,7 @@
 import type {
   Annotation,
   PaginatedResponse,
+  SearchRequest,
   Text,
   TextVersion,
   TextVersionSummary,
@@ -17,6 +18,16 @@ export const textService = {
    */
   async getTexts(params: TextsRequest = {}): Promise<TextsResponse> {
     const response = await useApiClient().get('/texts', { params })
+    return response.data
+  },
+
+  /**
+   * Search for texts with pagination and filtering
+   */
+  async searchTexts(params: SearchRequest): Promise<TextsResponse> {
+    const response = await useApiClient().get('/search/texts', {
+      params: params,
+    })
     return response.data
   },
 

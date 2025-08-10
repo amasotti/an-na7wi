@@ -8,6 +8,7 @@ import type {
   Difficulty,
   MasteryLevel,
   PaginatedResponse,
+  SearchRequest,
   Text,
   TextVersion,
   TextVersionSummary,
@@ -63,6 +64,30 @@ export const useTextStore = defineStore('text', () => {
     }
     return currentText.value
   })
+
+  async function searchTexts(query: string) {
+    loading.value = true
+    error.value = null
+
+    try {
+      const params: SearchRequest = {
+        page: currentPage.value,
+        pageSize: pageSize.value,
+        query: query,
+      }
+
+      console.log('Searching texts with params:', params)
+
+      const response = await textService.searchTexts(params)
+      texts.value = response.items
+      totalCount.value = response.totalCount
+    } catch (err) {
+      error.value = 'Failed to search texts'
+      console.error(err)
+    } finally {
+      loading.value = false
+    }
+  }
 
   // Actions
   async function fetchTexts() {
@@ -455,6 +480,7 @@ export const useTextStore = defineStore('text', () => {
 
     // Text Actions
     fetchTexts,
+    searchTexts,
     fetchTextById,
     fetchTextVersions,
     selectTextVersion,

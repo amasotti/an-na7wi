@@ -24,6 +24,14 @@ export interface TextsRequest extends BaseRequest {
   tags?: string[]
 }
 
+export interface SearchRequest extends BaseRequest {
+  query: string
+  dialect?: Dialect
+  difficulty?: Difficulty
+  tags?: string[]
+  title?: string
+}
+
 export interface TransliterationRequest {
   arabicText: string
 }

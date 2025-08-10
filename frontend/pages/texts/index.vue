@@ -173,7 +173,8 @@ const toggleViewMode = () => {
 }
 
 const setSearchQuery = (value: string) => {
-  textStore.setFilters({ search: value })
+  if (value.trim().length < 5) return // Minimum length for search
+  textStore.searchTexts(value)
 }
 
 const setSelectedDialect = (value: Dialect | null) => {
