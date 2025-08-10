@@ -1,127 +1,128 @@
 <template>
-  <div class="container-header">
-    <div class="text-center space-y-6">
-      <!-- Action Buttons -->
-      <div class="flex justify-end space-x-3">
-        <BaseButton
-          variant="outline"
-          size="sm"
-          @click="$emit('add-word')"
-        >
-          <div class="flex items-center space-x-2">
-            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
-              <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            <span>Add Word</span>
-          </div>
-        </BaseButton>
-        <BaseButton
-          variant="outline"
-          size="sm"
-          @click="$emit('edit')"
-        >
-          <div class="flex items-center space-x-2">
-            <svg class="w-4 h-4" stroke="currentColor" viewBox="0 0 24 24">
-              <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            <span>Edit</span>
-          </div>
-        </BaseButton>
-      </div>
+  <article class="root-hero">
+    <!-- Actions Toolbar -->
+    <section class="actions-toolbar">
+      <BaseButton
+        variant="outline"
+        size="sm"
+        @click="$emit('add-word')"
+      >
+        <BaseIcon size="sm" class="mr-2">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </BaseIcon>
+        Add Word
+      </BaseButton>
+      <BaseButton
+        variant="outline"
+        size="sm"
+        @click="$emit('edit')"
+      >
+        <BaseIcon size="sm" class="mr-2">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </BaseIcon>
+        Edit
+      </BaseButton>
+    </section>
 
-      <div class="space-y-3">
-        <h1 class="text-5xl font-bold text-gray-900 arabic text-center">
-          {{ root.displayForm }}
-        </h1>
-        <div v-if="root.meaning" class="text-xl text-gray-700 font-medium">
-          {{ root.meaning }}
-        </div>
-      </div>
-
+    <!-- Main Root Display -->
+    <article class="root-display">
+      <h1 class="root-arabic arabic">
+        {{ currentRoot.displayForm }}
+      </h1>
+      <section class="root-details" v-if="currentRoot.meaning">
+        <p class="meaning">
+          {{ currentRoot.meaning }}
+        </p>
+      </section>
+      
       <!-- Root Letters -->
-      <div class="flex justify-center space-x-3">
+      <section class="root-letters">
         <div
-          v-for="(letter, index) in root.letters"
+          v-for="(letter, index) in currentRoot.letters"
           :key="index"
-          class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary-100 to-blue-100 text-primary-700 text-xl font-bold rounded-xl arabic border border-primary-200"
+          class="letter-badge arabic"
         >
           {{ letter }}
         </div>
-      </div>
+      </section>
+    </article>
 
-      <!-- Root Stats -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="text-center">
-          <div class="text-2xl font-bold text-primary-600">{{ root.letterCount }}</div>
-          <div class="text-sm text-gray-600">Letters</div>
-        </div>
-        <div class="text-center">
-          <div class="text-2xl font-bold text-green-600">{{ root.wordCount }}</div>
-          <div class="text-sm text-gray-600">Words</div>
-        </div>
-        <div class="text-center">
-          <div class="text-2xl font-bold text-blue-600">{{ rootType }}</div>
-          <div class="text-sm text-gray-600">Root Type</div>
-        </div>
-        <div class="text-center">
-          <div class="text-2xl font-bold text-purple-600">{{ root.normalizedForm }}</div>
-          <div class="text-sm text-gray-600">Normalized</div>
-        </div>
-      </div>
+    <!-- Primary Metadata Cards -->
+    <section class="metadata-grid">
+      <!-- Letter Count Card -->
+      <article class="metadata-card primary-metadata">
+        <div class="metadata-label">Letters</div>
+        <BaseBadge
+          variant="primary"
+          size="md"
+          class="metadata-value"
+        >
+          {{ currentRoot.letterCount }}
+        </BaseBadge>
+      </article>
 
-      <!-- Root Info -->
-      <div class="bg-gray-50 rounded-lg p-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div class="flex justify-between">
-            <span class="text-gray-600">Display Form:</span>
-            <span class="font-mono arabic">{{ root.displayForm }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Normalized:</span>
-            <span class="font-mono arabic">{{ root.normalizedForm }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Added:</span>
-            <span>{{ formatDate(root.createdAt) }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-600">Updated:</span>
-            <span>{{ formatDate(root.updatedAt) }}</span>
-          </div>
-        </div>
-      </div>
+      <!-- Word Count Card -->
+      <article class="metadata-card">
+        <div class="metadata-label">Words</div>
+        <BaseBadge
+          variant="success"
+          size="md"
+          class="metadata-value"
+        >
+          {{ currentRoot.wordCount }}
+        </BaseBadge>
+      </article>
 
-      <!-- Root Display -->
-      <div class="space-y-3">
-        <div v-if="root.analysis" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 class="text-sm font-semibold text-blue-900 mb-2">Linguistic Analysis</h3>
-          <div class="text-left text-blue-800 prose prose-sm max-w-none prose-headings:text-blue-900 prose-strong:text-blue-900" v-html="$markdownit.render(root.analysis)"></div>
+      <!-- Root Type Card -->
+      <article class="metadata-card">
+        <div class="metadata-label">Root Type</div>
+        <BaseBadge
+          variant="secondary"
+          size="md"
+          class="metadata-value"
+        >
+          {{ rootType }}
+        </BaseBadge>
+      </article>
+
+      <!-- Normalized Form Card -->
+      <article class="metadata-card">
+        <div class="metadata-label">Normalized</div>
+        <div class="metadata-value-ar arabic">
+          {{ currentRoot.normalizedForm }}
         </div>
-      </div>
-    </div>
-  </div>
+      </article>
+
+      <!-- Created Date Card -->
+      <article class="metadata-card secondary-metadata">
+        <div class="metadata-label">Added</div>
+        <div class="metadata-value text-gray-600">
+          {{ formatDate(currentRoot.createdAt) }}
+        </div>
+      </article>
+    </section>
+  </article>
 </template>
 
 <script setup lang="ts">
-import BaseButton from '@/components/common/BaseButton.vue'
-import type { Root } from '@/types'
-import { computed } from 'vue'
+import BaseBadge from '~/components/common/BaseBadge.vue'
+import BaseButton from '~/components/common/BaseButton.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
+import { useRootStore } from '~/stores/rootStore'
 import { formatDate } from '~/utils/dateUtils'
 
-interface Props {
-  root: Root
-}
+const rootStore = useRootStore()
 
-type Emits = {
+const currentRoot = computed(() => rootStore.currentRootWithWords?.root!)
+
+defineEmits<{
   edit: []
   'add-word': []
-}
-
-const props = defineProps<Props>()
-const emit = defineEmits<Emits>()
+}>()
 
 const rootType = computed(() => {
-  switch (props.root.letterCount) {
+  const letterCount = currentRoot.value.letterCount
+  switch (letterCount) {
     case 2:
       return 'Bilateral'
     case 3:
@@ -131,7 +132,70 @@ const rootType = computed(() => {
     case 5:
       return 'Quinqueliteral'
     default:
-      return `${props.root.letterCount}-Letter`
+      return `${letterCount}-Letter`
   }
 })
 </script>
+
+<style scoped>
+.root-hero {
+  @apply bg-gradient-to-br from-slate-50 to-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
+}
+
+.actions-toolbar {
+  @apply flex justify-end gap-2 p-4 bg-gray-50/50 border-b border-gray-100;
+}
+
+.root-display {
+  @apply text-center py-8 px-6 bg-gradient-to-br from-indigo-50/20 to-purple-50/20;
+}
+
+.root-arabic {
+  @apply text-6xl md:text-7xl font-bold text-gray-900 mb-4 text-center;
+  line-height: 1.1;
+}
+
+.root-details {
+  @apply space-y-2 max-w-2xl mx-auto mb-6;
+}
+
+.meaning {
+  @apply text-xl text-gray-600 font-medium;
+}
+
+.root-letters {
+  @apply flex justify-center gap-3 flex-wrap;
+}
+
+.letter-badge {
+  @apply inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary-100 to-blue-100 text-primary-700 text-xl font-bold rounded-xl border border-primary-200;
+}
+
+.metadata-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 p-6 bg-white;
+}
+
+.metadata-card {
+  @apply bg-gray-50/80 rounded-xl p-4 text-center border border-gray-100/50 hover:bg-gray-50 transition-colors;
+}
+
+.primary-metadata {
+  @apply bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100;
+}
+
+.secondary-metadata {
+  @apply bg-gradient-to-br from-gray-50 to-slate-50;
+}
+
+.metadata-label {
+  @apply text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2;
+}
+
+.metadata-value {
+  @apply text-sm font-medium;
+}
+
+.metadata-value-ar {
+  @apply text-gray-600 text-xl text-center;
+}
+</style>

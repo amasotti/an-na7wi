@@ -1,78 +1,75 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <!-- Loading State -->
-      <LoadingEffect v-if="rootStore.loading" />
+  <LoadingEffect v-if="rootStore.loading" />
 
-      <!-- Error State -->
-      <div v-else-if="rootStore.error" class="text-center py-12">
-        <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-          <h3 class="text-red-800 font-medium mb-2">Error Loading Root</h3>
-          <p class="text-red-600 text-sm">{{ rootStore.error }}</p>
-          <BaseButton @click="loadRootData" variant="outline" size="sm" class="mt-4">
-            Try Again
-          </BaseButton>
-        </div>
+  <main v-else-if="rootStore.currentRootWithWords" class="max-w-7xl mx-auto p-4 space-y-6">
+
+    <header class="mb-6">
+      <BaseBreadcrumb
+        :parent-link="'/roots'"
+        :parent-text="'Roots'"
+        :separator="'/'"
+        :item="rootStore.currentRootWithWords.root.displayForm"
+      />
+    </header>
+
+    <!-- Hero Section with Root Info -->
+    <RootDetailHeader 
+      @edit="showEditModal = true"
+      @add-word="showWordModal = true"
+    />
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Left Column: Root Analysis -->
+      <div class="left-column">
+        <RootAnalysis 
+          v-if="rootStore.currentRootWithWords.root.analysis" 
+        />
       </div>
 
-      <!-- Root Content -->
-      <div v-else-if="rootStore.currentRootWithWords" class="space-y-8">
-        <!-- Navigation Breadcrumb -->
-        <BaseBreadcrumb
-          :parent-link="'/roots'"
-          :parent-text="'Roots'"
-          :separator="'/'"
-          :item="rootStore.currentRootWithWords.root.displayForm"
-        />
-
-        <!-- Root Header -->
-        <RootDetailHeader 
-          :root="rootStore.currentRootWithWords.root" 
-          @edit="showEditModal = true"
-          @add-word="showWordModal = true"
-        />
-
-        <!-- Root Words -->
+      <!-- Right Column: Related Words -->
+      <div class="right-column">
         <RootWordsList 
           :words="rootStore.currentRootWithWords.words"
           :root-display="rootStore.currentRootWithWords.root.displayForm"
         />
       </div>
-
-      <!-- Empty State -->
-      <BaseEmptyState
-        v-else
-        link="/roots"
-        link-text="Go Back to Roots"
-        message="No root data available"
-      />
     </div>
 
-    <!-- Edit Root Modal -->
-    <RootModal
-      :open="showEditModal"
-      :root="rootStore.currentRootWithWords?.root || null"
-      @close="showEditModal = false"
-      @root-updated="handleRootUpdated"
-    />
+  </main>
 
-    <!-- Add Word Modal -->
-    <WordForm
-      :open="showWordModal"
-      :loading="wordFormLoading"
-      :word="wordToEdit"
-      @close="handleWordModalClose"
-      @submit="handleWordSubmit"
+  <footer v-else>
+    <BaseEmptyState
+      link="/roots"
+      link-text="Go Back to Roots"
+      message="No root data available"
     />
-  </div>
+  </footer>
+
+  <!-- Edit Root Modal -->
+  <RootModal
+    :open="showEditModal"
+    :root="rootStore.currentRootWithWords?.root || null"
+    @close="showEditModal = false"
+    @root-updated="handleRootUpdated"
+  />
+
+  <!-- Add Word Modal -->
+  <WordForm
+    :open="showWordModal"
+    :loading="wordFormLoading"
+    :word="wordToEdit"
+    @close="handleWordModalClose"
+    @submit="handleWordSubmit"
+  />
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
-import BaseButton from '~/components/common/BaseButton.vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
+import RootAnalysis from '~/components/roots/RootAnalysis.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
 import RootModal from '~/components/roots/RootModal.vue'
 import RootWordsList from '~/components/roots/RootWordsList.vue'
@@ -177,3 +174,28 @@ watch(
   }
 )
 </script>
+
+<style scoped>
+.content-grid {
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.left-column {
+  @apply lg:col-span-2 space-y-6;
+}
+
+.right-column {
+  @apply lg:col-span-1 space-y-6;
+}
+
+@media (max-width: 1024px) {
+  .content-grid {
+    @apply grid-cols-1;
+  }
+  
+  .left-column,
+  .right-column {
+    @apply col-span-1;
+  }
+}
+</style>
