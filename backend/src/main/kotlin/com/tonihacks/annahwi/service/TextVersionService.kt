@@ -38,7 +38,7 @@ class TextVersionService {
             isCurrent = true
         }
 
-        textVersionRepository.persist(version)
+        textVersionRepository.persistAndFlush(version)
             .also {
                 logger.info("Initial version created with ID: ${version.id}")
             }

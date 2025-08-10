@@ -159,15 +159,18 @@ class TextService {
         
         // Calculate word count
         text.wordCount = text.arabicContent.getWordCount()
-        
+
         // Persist the text first to get the ID
         textRepository.persist(text)
-        
+
         // Create initial version (version 1)
         textVersionService.createInitialVersion(text)
-        
+
         // Initialize lazy collections to prevent LazyInitializationException
         text.annotations.size
+
+        // Migrate unversioned texts if needed
+        textVersionService.migrateUnversionedTexts()
         
         return text
     }
