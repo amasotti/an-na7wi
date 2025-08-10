@@ -3,6 +3,7 @@ package com.tonihacks.annahwi.service
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
+import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
 import com.tonihacks.annahwi.repository.AnnotationRepository
 import com.tonihacks.annahwi.repository.TextRepository
@@ -114,6 +115,33 @@ class TextService {
             text.annotations.size
         }
         
+        return texts
+    }
+
+
+  @Transactional
+  fun findAllByDifficulty(
+        difficulty: Difficulty,
+        page: Int,
+        size: Int,
+        sortField: String = "title"
+    ): List<Text> {
+        logger.info("Finding texts by difficulty: $difficulty, page: $page, size: $size, sortField: $sortField")
+
+        val pagination = Page.of(page, size)
+        val sortFilter = Sort.by(sortField)
+
+        val texts = textRepository
+            .findByDifficulty(difficulty, pagination, sortFilter)
+            .also { texts ->
+                logger.debug("Found ${texts.size} texts for difficulty $difficulty")
+            }
+
+        // Initialize lazy collections to prevent LazyInitializationException
+        texts.forEach { text ->
+            text.annotations.size
+        }
+
         return texts
     }
     

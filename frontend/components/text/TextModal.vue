@@ -516,7 +516,6 @@ watch(
 .arabic-text-input {
   @apply text-right text-xl leading-relaxed font-arabic;
   direction: rtl;
-  font-family: 'Noto Naskh Arabic', 'Lateef', serif;
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;

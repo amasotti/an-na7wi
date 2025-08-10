@@ -52,13 +52,6 @@ export const textService = {
   },
 
   /**
-   * Analyze a text to extract vocabulary
-   */
-  async analyzeText(id: string): Promise<void> {
-    await useApiClient().post(`/texts/${id}/analyze`)
-  },
-
-  /**
    * Get annotations for a text
    */
   async getAnnotations(textId: string): Promise<Annotation[]> {

@@ -2,10 +2,10 @@
 
 * [x] Dual Interface Edit and Study
 * [x] Automatic translitteration
-* [ ] Complete frontend features
+* [x] Complete frontend features
 * [ ] Mastering dashboard (how many words, texts, etc.)
 * [x] Root functionalities
-
+* [ ] active-tag search and tags endpoints for texts
 
 ## Technical / Utilities
 
@@ -15,6 +15,8 @@
 * [x] Add tests for Services and Controllers
 * [x] Add DTOs
 * S3 Bucket for backup of db
+
+
 
 ## Prompts
 

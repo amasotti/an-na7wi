@@ -6,6 +6,7 @@ import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.dto.response.TransliterationResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
+import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.service.TextService
@@ -50,13 +51,14 @@ class TextController {
     
     @GET
     @Operation(summary = "Get all texts", description = "Returns a list of texts with pagination")
-    @Suppress("ThrowsCount")
+    @Suppress("ThrowsCount", "CyclomaticComplexMethod")
     fun getAllTexts(
         @QueryParam("page") @DefaultValue("1") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int,
         @QueryParam("pageSize") pageSize: Int?,
         @QueryParam("sort") @DefaultValue("title") sort: String,
-        @QueryParam("dialect") @DefaultValue("ALL") dialect: String
+        @QueryParam("dialect") @DefaultValue("ALL") dialect: String,
+        @QueryParam("difficulty") difficulty: Difficulty? = null
     ): Response {
         // Validate pagination parameters
         if (page < 1) {
@@ -72,14 +74,24 @@ class TextController {
         if (dialect != "ALL" && !dialect.isBlank() && !Dialect.isValid(dialect)) {
             throw AppException(AppError.ValidationError.InvalidDialect(dialect))
         }
+
+        // Validate difficulty parameter
+        if (difficulty != null && !Difficulty.isValid(difficulty.name)) {
+            throw AppException(AppError.ValidationError.InvalidDifficulty(difficulty.name))
+        }
         
         val actualSize = PaginationUtil.resolvePageSize(size, pageSize)
         val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
-        logger.info("GET /api/v1/texts - page: $page (API) -> $zeroBasedPage (internal), size: $actualSize, sort: $sort")
+        logger.info("GET /api/v1/texts " +
+          "- page: $page (API) -> $zeroBasedPage (internal), " +
+          "size: $actualSize, sort: $sort" +
+          ", dialect: $dialect, difficulty: ${difficulty?.name ?: "ALL"}"
+        )
 
         val texts = when {
-            dialect.isBlank() || dialect == "ALL" -> textService.findAll(zeroBasedPage, actualSize, sort)
-            else -> textService.findAllByDialect(dialect, zeroBasedPage, actualSize, sort)
+          difficulty != null -> textService.findAllByDifficulty(difficulty, zeroBasedPage, actualSize, sort)
+          dialect.isNotBlank() && dialect != "ALL" -> textService.findAllByDialect(dialect, zeroBasedPage, actualSize, sort)
+          else -> textService.findAll(zeroBasedPage, actualSize, sort)
         }
 
         val totalCount = textService.countAll()

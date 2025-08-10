@@ -167,16 +167,6 @@ describe('textService', () => {
     })
   })
 
-  describe('analyzeText', () => {
-    it('should analyze a text', async () => {
-      mockApiClient.post.mockResolvedValue({})
-
-      await textService.analyzeText('1')
-
-      expect(mockApiClient.post).toHaveBeenCalledWith('/texts/1/analyze')
-    })
-  })
-
   describe('getAnnotations', () => {
     it('should fetch annotations for a text', async () => {
       mockApiClient.get.mockResolvedValue({ data: [mockAnnotation] })

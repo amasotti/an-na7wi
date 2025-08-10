@@ -6,7 +6,18 @@ package com.tonihacks.annahwi.entity
 enum class Difficulty {
     BEGINNER,
     INTERMEDIATE,
-    ADVANCED
+    ADVANCED;
+
+    companion object {
+        fun fromString(value: String): Difficulty? =
+            entries.firstOrNull { it.name.equals(value.trim(), ignoreCase = true) }
+
+        fun allToJoinedString(): String =
+            entries.joinToString(", ")
+
+        fun isValid(value: String): Boolean =
+            entries.any { it.name.equals(value.trim(), ignoreCase = true) }
+    }
 }
 
 /**
@@ -46,7 +57,12 @@ enum class PartOfSpeech {
     PARTICLE,
     INTERJECTION,
     CONJUNCTION,
-    PRONOUN
+    PRONOUN;
+
+  companion object {
+        fun isValid(value: String): Boolean =
+            entries.any { it.name.equals(value.trim(), ignoreCase = true) }
+    }
 }
 
 /**

@@ -35,6 +35,12 @@ sealed class AppError(
             fieldName = "dialect",
             rejectedValue = dialect
         )
+
+      data class InvalidDifficulty(val difficulty: String) : ValidationError(
+            message = "Invalid difficulty '$difficulty'. Valid difficulties are: ${com.tonihacks.annahwi.entity.Difficulty.allToJoinedString()}",
+            fieldName = "difficulty",
+            rejectedValue = difficulty
+        )
         
         data class InvalidPageNumber(val page: Int) : ValidationError(
             message = "Page number must be greater than 0",

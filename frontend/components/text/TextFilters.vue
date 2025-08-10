@@ -3,6 +3,7 @@
     <div class="space-y-4">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="md:col-span-2">
+          <!--   Search       -->
           <BaseInput
             :model-value="searchQuery"
             @update:model-value="$emit('update:searchQuery', $event)"
@@ -11,7 +12,8 @@
             icon-left="search"
           />
         </div>
-        
+
+        <!-- Dialect and Difficulty Selectors -->
         <BaseSelect
           :model-value="selectedDialect"
           @update:model-value="$emit('update:selectedDialect', $event)"

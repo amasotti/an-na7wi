@@ -362,25 +362,6 @@ export const useTextStore = defineStore('text', () => {
     }
   }
 
-  async function analyzeText(id: string) {
-    loading.value = true
-    error.value = null
-
-    try {
-      await textService.analyzeText(id)
-      // Optionally refresh the current text to get updated data
-      if (currentText.value && currentText.value.id === id) {
-        await fetchTextById(id)
-      }
-    } catch (err) {
-      error.value = 'Failed to analyze text'
-      console.error(err)
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
   function setFilters(filters: {
     search?: string
     dialect?: Dialect | null
@@ -481,7 +462,6 @@ export const useTextStore = defineStore('text', () => {
     createText,
     updateText,
     deleteText,
-    analyzeText,
     setFilters,
     resetFilters,
 

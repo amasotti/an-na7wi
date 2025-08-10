@@ -132,6 +132,9 @@ const dialectOptions: SelectOption<Dialect>[] = [
   { value: Dialect.TUNISIAN, label: 'Tunisian' },
   { value: Dialect.MOROCCAN, label: 'Moroccan' },
   { value: Dialect.EGYPTIAN, label: 'Egyptian' },
+  { value: Dialect.LEVANTINE, label: 'Levantine' },
+  { value: Dialect.GULF, label: 'Gulf' },
+  { value: Dialect.IRAQI, label: 'Iraqi' },
   { value: Dialect.MSA, label: 'Modern Standard Arabic' },
 ]
 
