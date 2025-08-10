@@ -69,7 +69,10 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
+import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
+import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import RootDetailHeader from '~/components/roots/RootDetailHeader.vue'
 import RootModal from '~/components/roots/RootModal.vue'
 import RootWordsList from '~/components/roots/RootWordsList.vue'
@@ -77,9 +80,6 @@ import WordForm from '~/components/vocabulary/WordForm.vue'
 import { wordService } from '~/composables/wordService'
 import { useRootStore } from '~/stores/rootStore'
 import type { Root, Word } from '~/types'
-import LoadingEffect from '~/components/common/LoadingEffect.vue'
-import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
-import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 
 const route = useRoute()
 const rootStore = useRootStore()

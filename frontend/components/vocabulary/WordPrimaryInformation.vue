@@ -94,10 +94,10 @@
 </template>
 
 <script setup lang="ts">
+import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import { formatDate } from '~/utils/dateUtils'
-import BaseBadge from '~/components/common/BaseBadge.vue'
 
 const wordStore = useWordStore()
 

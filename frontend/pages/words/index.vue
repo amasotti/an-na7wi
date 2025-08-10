@@ -54,7 +54,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Word } from '~/types'
 import { onMounted, ref, watchEffect } from 'vue'
 // import { useRoute } from 'vue-router' // Not needed in Nuxt
 import VocabularyContent from '~/components/vocabulary/VocabularyContent.vue'
@@ -62,6 +61,7 @@ import VocabularyHeader from '~/components/vocabulary/VocabularyHeader.vue'
 import WordDeleteModal from '~/components/vocabulary/WordDeleteModal.vue'
 import WordForm from '~/components/vocabulary/WordForm.vue'
 import { useWordStore } from '~/stores/wordStore'
+import type { Word } from '~/types'
 
 // Store and route
 const wordStore = useWordStore()

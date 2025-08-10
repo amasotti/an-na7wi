@@ -135,9 +135,9 @@ import {
   generateAllDictionaryLinks,
   getDictionaryCardClass,
 } from '~/config/dictionaries'
+import { openLink } from '~/utils/linkUtils'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
-import { openLink } from '~/utils/linkUtils'
 
 interface Props {
   word: Word

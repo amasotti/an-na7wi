@@ -1,4 +1,4 @@
-export const openLink = (url: string, target: string = '_blank') => {
+export const openLink = (url: string, target = '_blank') => {
   if (!url) return
 
   // Validate URL format

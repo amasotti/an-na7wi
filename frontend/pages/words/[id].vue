@@ -59,18 +59,18 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 
-import { useWordStore } from '~/stores/wordStore'
-import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
-import WordForm from '~/components/vocabulary/WordForm.vue'
-import type { Word } from '~/types'
-import WordPrimaryInformation from '~/components/vocabulary/WordPrimaryInformation.vue'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
+import RelatedWords from '~/components/vocabulary/RelatedWords.vue'
 import WordDeleteModal from '~/components/vocabulary/WordDeleteModal.vue'
 import WordExamples from '~/components/vocabulary/WordExamples.vue'
+import WordForm from '~/components/vocabulary/WordForm.vue'
 import WordNotes from '~/components/vocabulary/WordNotes.vue'
-import RelatedWords from '~/components/vocabulary/RelatedWords.vue'
+import WordPrimaryInformation from '~/components/vocabulary/WordPrimaryInformation.vue'
 import WordReferences from '~/components/vocabulary/WordReferences.vue'
+import { useWordStore } from '~/stores/wordStore'
+import type { Word } from '~/types'
 
 const route = useRoute()
 const wordStore = useWordStore()

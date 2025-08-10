@@ -29,11 +29,11 @@
 </template>
 
 <script setup lang="ts">
-import { rootService, useWordStore, wordService } from '#imports'
-import LoadingEffect from '~/components/common/LoadingEffect.vue'
-import BaseIcon from '~/components/common/BaseIcon.vue'
 import { ref } from 'vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import type { Word } from '~/types'
+import { rootService, useWordStore, wordService } from '#imports'
 
 const wordStore = useWordStore()
 

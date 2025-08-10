@@ -56,7 +56,7 @@ const examples = computed<Example[]>(() => {
 
   const result: Example[] = []
   for (let i = 0; i < lines.length; ) {
-    const ex: Example = { example: lines[i] }
+    const ex: Example = { example: lines[i]!! }
 
     const next = lines[i + 1]
     const third = lines[i + 2]

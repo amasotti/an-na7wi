@@ -55,9 +55,9 @@
 </template>
 
 <script setup lang="ts">
+import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import { DICTIONARY_CONFIG } from '~/config/dictionaries'
-import BaseButton from '~/components/common/BaseButton.vue'
 import { openLink } from '~/utils/linkUtils'
 
 const wordStore = useWordStore()
