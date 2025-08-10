@@ -12,10 +12,14 @@ vi.mock('~/utils/dateUtils', () => ({
   }),
 }))
 
-// Mock markdown-it plugin
-const mockMarkdownit = {
-  render: vi.fn((text: string) => `<p>${text}</p>`),
+// Mock rootStore
+const mockRootStore = {
+  currentRootWithWords: null as { root: Root } | null,
 }
+
+vi.mock('~/stores/rootStore', () => ({
+  useRootStore: () => mockRootStore,
+}))
 
 describe('RootDetailHeader', () => {
   const createMockRoot = (overrides: Partial<Root> = {}): Root => ({
@@ -32,24 +36,26 @@ describe('RootDetailHeader', () => {
     ...overrides,
   })
 
-  const createComponent = (root: Root, props = {}) => {
+  const createComponent = (root: Root) => {
+    // Set up the mock store
+    mockRootStore.currentRootWithWords = { root }
+    
     return render(RootDetailHeader, {
-      props: { root, ...props },
       global: {
         stubs: {
           BaseButton: {
-            template: '<button v-bind="$attrs"><slot /></button>',
+            template: '<button><slot /></button>',
             props: ['variant', 'size'],
           },
-        },
-        plugins: [
-          {
-            // biome-ignore lint/suspicious/noExplicitAny: This is a mock plugin
-            install(app: any) {
-              app.config.globalProperties.$markdownit = mockMarkdownit
-            },
+          BaseBadge: {
+            template: '<span><slot /></span>',
+            props: ['variant', 'size'],
           },
-        ],
+          BaseIcon: {
+            template: '<svg><slot /></svg>',
+            props: ['size'],
+          },
+        },
       },
     })
   }
@@ -65,7 +71,6 @@ describe('RootDetailHeader', () => {
 
       const mainTitle = screen.getByRole('heading', { level: 1 })
       expect(mainTitle).toHaveTextContent('كتب')
-      expect(mainTitle).toHaveClass('text-5xl', 'font-bold', 'arabic')
     })
 
     it('renders root meaning when provided', () => {
@@ -73,7 +78,6 @@ describe('RootDetailHeader', () => {
       createComponent(root)
 
       expect(screen.getByText('writing and literature')).toBeInTheDocument()
-      expect(screen.getByText('writing and literature')).toHaveClass('text-xl', 'text-gray-700')
     })
 
     it('does not render meaning section when not provided', () => {
@@ -100,17 +104,6 @@ describe('RootDetailHeader', () => {
       expect(screen.getByText('ف')).toBeInTheDocument()
       expect(screen.getByText('ع')).toBeInTheDocument()
       expect(screen.getByText('ل')).toBeInTheDocument()
-    })
-
-    it('applies correct styling to letter boxes', () => {
-      const root = createMockRoot()
-      createComponent(root)
-
-      const letterElements = screen.getAllByText(/^[كتب]$/)
-      // biome-ignore lint/complexity/noForEach: This is a simple check for class application
-      letterElements.forEach(element => {
-        expect(element).toHaveClass('w-12', 'h-12', 'arabic', 'text-xl', 'font-bold')
-      })
     })
 
     it('handles different numbers of letters', () => {
@@ -149,8 +142,7 @@ describe('RootDetailHeader', () => {
       createComponent(root)
 
       expect(screen.getByText('Normalized')).toBeInTheDocument()
-      const normalizedElements = screen.getAllByText('ف-ع-ل')
-      expect(normalizedElements.length).toBeGreaterThan(0)
+      expect(screen.getByText('ف-ع-ل')).toBeInTheDocument()
     })
   })
 
@@ -192,76 +184,13 @@ describe('RootDetailHeader', () => {
     })
   })
 
-  describe('root information section', () => {
-    it('displays display form in info section', () => {
-      const root = createMockRoot({ displayForm: 'درس' })
-      createComponent(root)
-
-      expect(screen.getByText('Display Form:')).toBeInTheDocument()
-      const displayFormElements = screen.getAllByText('درس')
-      expect(displayFormElements.length).toBeGreaterThan(0) // Appears in main title and info
-    })
-
-    it('displays normalized form in info section', () => {
-      const root = createMockRoot({ normalizedForm: 'د-ر-س' })
-      createComponent(root)
-
-      expect(screen.getByText('Normalized:')).toBeInTheDocument()
-      const normalizedElements = screen.getAllByText('د-ر-س')
-      expect(normalizedElements.length).toBeGreaterThan(0) // Appears in stats and info sections
-    })
-
+  describe('metadata display', () => {
     it('displays formatted creation date', () => {
       const root = createMockRoot()
       createComponent(root)
 
-      expect(screen.getByText('Added:')).toBeInTheDocument()
+      expect(screen.getByText('Added')).toBeInTheDocument()
       expect(screen.getByText('January 1, 2024')).toBeInTheDocument()
-    })
-
-    it('displays formatted update date', () => {
-      const root = createMockRoot()
-      createComponent(root)
-
-      expect(screen.getByText('Updated:')).toBeInTheDocument()
-      expect(screen.getByText('February 15, 2024')).toBeInTheDocument()
-    })
-  })
-
-  describe('linguistic analysis section', () => {
-    it('renders analysis when provided', () => {
-      const root = createMockRoot({
-        analysis: 'This is a detailed linguistic analysis of the root.',
-      })
-      createComponent(root)
-
-      expect(screen.getByText('Linguistic Analysis')).toBeInTheDocument()
-      expect(mockMarkdownit.render).toHaveBeenCalledWith(
-        'This is a detailed linguistic analysis of the root.'
-      )
-    })
-
-    it('does not render analysis section when not provided', () => {
-      const root = createMockRoot({ analysis: undefined })
-      createComponent(root)
-
-      expect(screen.queryByText('Linguistic Analysis')).not.toBeInTheDocument()
-    })
-
-    it('applies proper styling to analysis section', () => {
-      const root = createMockRoot({ analysis: 'Some analysis' })
-      createComponent(root)
-
-      const analysisSection = screen.getByText('Linguistic Analysis').closest('div')
-      expect(analysisSection).toHaveClass('bg-blue-50', 'border-blue-200')
-    })
-
-    it('renders markdown analysis correctly', () => {
-      const analysisText = '**Bold text** and *italic* analysis.'
-      const root = createMockRoot({ analysis: analysisText })
-      createComponent(root)
-
-      expect(mockMarkdownit.render).toHaveBeenCalledWith(analysisText)
     })
   })
 
@@ -314,7 +243,7 @@ describe('RootDetailHeader', () => {
       const root = createMockRoot()
       createComponent(root)
 
-      const container = document.querySelector('.container-header')
+      const container = document.querySelector('.root-hero')
       expect(container).toBeInTheDocument()
     })
   })
@@ -348,8 +277,7 @@ describe('RootDetailHeader', () => {
       expect(mainTitle).toHaveTextContent('استخدم')
 
       expect(screen.getByText('Normalized')).toBeInTheDocument()
-      const normalizedElements = screen.getAllByText('ا-س-ت-خ-د-م')
-      expect(normalizedElements.length).toBeGreaterThan(0)
+      expect(screen.getByText('ا-س-ت-خ-د-م')).toBeInTheDocument()
     })
 
     it('handles zero word count', () => {
@@ -360,38 +288,6 @@ describe('RootDetailHeader', () => {
       expect(screen.getByText('Words')).toBeInTheDocument()
     })
 
-    it('handles missing analysis gracefully', () => {
-      const root = createMockRoot({ analysis: '' })
-      createComponent(root)
-
-      expect(screen.queryByText('Linguistic Analysis')).not.toBeInTheDocument()
-    })
-  })
-
-  describe('responsive layout', () => {
-    it('applies responsive grid classes for statistics', () => {
-      const root = createMockRoot()
-      createComponent(root)
-
-      const statsGrid = document.querySelector('.grid.grid-cols-2.md\\:grid-cols-4')
-      expect(statsGrid).toBeInTheDocument()
-    })
-
-    it('applies responsive grid classes for info section', () => {
-      const root = createMockRoot()
-      createComponent(root)
-
-      const infoGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2')
-      expect(infoGrid).toBeInTheDocument()
-    })
-
-    it('centers content appropriately', () => {
-      const root = createMockRoot()
-      createComponent(root)
-
-      const centerContainer = document.querySelector('.text-center.space-y-6')
-      expect(centerContainer).toBeInTheDocument()
-    })
   })
 
   describe('visual styling', () => {
@@ -400,29 +296,8 @@ describe('RootDetailHeader', () => {
       createComponent(root)
 
       const arabicElements = document.querySelectorAll('.arabic')
-      expect(arabicElements.length).toBeGreaterThan(2) // Title, letters, info sections
+      expect(arabicElements.length).toBeGreaterThan(1) // Title and letters
     })
 
-    it('applies proper color coding to statistics', () => {
-      const root = createMockRoot()
-      createComponent(root)
-
-      // Check that different stats have different color classes
-      const letterCount = screen.getByText(root.letterCount.toString()).closest('div')
-      const wordCount = screen.getByText(root.wordCount.toString()).closest('div')
-
-      expect(letterCount).toHaveClass('text-primary-600')
-      expect(wordCount).toHaveClass('text-green-600')
-    })
-
-    it('applies gradient styling to letter boxes', () => {
-      const root = createMockRoot()
-      createComponent(root)
-
-      const letterBoxes = document.querySelectorAll(
-        '.bg-gradient-to-br.from-primary-100.to-blue-100'
-      )
-      expect(letterBoxes.length).toBe(root.letters.length)
-    })
   })
 })
