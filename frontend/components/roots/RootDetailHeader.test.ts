@@ -39,7 +39,7 @@ describe('RootDetailHeader', () => {
   const createComponent = (root: Root) => {
     // Set up the mock store
     mockRootStore.currentRootWithWords = { root }
-    
+
     return render(RootDetailHeader, {
       global: {
         stubs: {
@@ -287,7 +287,6 @@ describe('RootDetailHeader', () => {
       expect(screen.getByText('0')).toBeInTheDocument()
       expect(screen.getByText('Words')).toBeInTheDocument()
     })
-
   })
 
   describe('visual styling', () => {
@@ -298,6 +297,5 @@ describe('RootDetailHeader', () => {
       const arabicElements = document.querySelectorAll('.arabic')
       expect(arabicElements.length).toBeGreaterThan(1) // Title and letters
     })
-
   })
 })
