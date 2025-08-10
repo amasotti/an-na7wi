@@ -2,6 +2,88 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [1.3.0] - 2025-08-10
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/55b8993e8c1783b15f4ac951c295a4cbe0a75e8d..2826bdfd9e08d76d07b13e14a1926f3d0dcff7b1)
+### 🚀 Features
+
+
+- Add word modal functionality and extend dialect options in vocabulary components ([38e26b6](https://github.com/amasotti/an-na7wi/commit/38e26b63594fc60d3d4e08cb7cadf5ab9bdd46c8))
+
+- Add analysis field to roots and update related components for detailed linguistic commentary ([80f3ff9](https://github.com/amasotti/an-na7wi/commit/80f3ff952b3ee7d68787503794e6db2003abcc52))
+
+- Integrate markdown-it for rendering linguistic analysis in RootDetailHeader ([9784f88](https://github.com/amasotti/an-na7wi/commit/9784f885884e11ad8a65f3495fe567d05869caf2))
+
+- Implement semantic CSS classes for improved styling and accessibility across components ([da99fa0](https://github.com/amasotti/an-na7wi/commit/da99fa0dd30c4246cf4d6c808cc4c82f082a7535))
+
+- Calligraphy animation ([2574143](https://github.com/amasotti/an-na7wi/commit/2574143af80b65c212d6a84fe4ed0863f7ba6da2))
+
+- Start implementation word page ([ba3ff85](https://github.com/amasotti/an-na7wi/commit/ba3ff8582fed38d0398b717bcce2da47055f48b3))
+
+- Finalize onepage for word implementation ([40a8930](https://github.com/amasotti/an-na7wi/commit/40a8930a5e7269523e35f998f35be1d70061dba4))
+
+### 🐛 Bug Fixes
+
+
+- Fix root controller test after having added the analysis field ([c0e180e](https://github.com/amasotti/an-na7wi/commit/c0e180eefbb1ca77675c4391a4557071646e3f63))
+
+- Correct argument formatting in mockUpdateRoot call and update import style in markdownit client ([f1bc756](https://github.com/amasotti/an-na7wi/commit/f1bc756124adf3e85e77e426038f7cf3df44071c))
+
+- Update Vite server configuration for improved hot module replacement ([9add20e](https://github.com/amasotti/an-na7wi/commit/9add20e01c4e0ba4c3e133b98e6dd0889787365b))
+
+- Convert enum columns to varchar for Hibernate compatibility ([75fc221](https://github.com/amasotti/an-na7wi/commit/75fc221f0f57596570a5dfd3a5e98c1bc10c6a55))
+
+- Convert enum columns to varchar for Hibernate compatibility ([a168e11](https://github.com/amasotti/an-na7wi/commit/a168e11db27c53329858e1f6e36875dd19de25a0))
+
+- Tests after refactoring ([f566c27](https://github.com/amasotti/an-na7wi/commit/f566c2749b044477b69a6bad131c43621bee285b))
+
+- Fix text filtering by dialect and difficulty ([d963cbe](https://github.com/amasotti/an-na7wi/commit/d963cbe6fed7d8d2a9f6e84279cc6b9831a1f250))
+
+- Fix free textsearch for texts ([5eea090](https://github.com/amasotti/an-na7wi/commit/5eea09083dd8d7cb1fd1975228dfa73359da88c4))
+
+- Migration on text creation ([f2d5f9a](https://github.com/amasotti/an-na7wi/commit/f2d5f9acc06847a1d89c4bb4968a64977952b001))
+
+### 🚜 Refactor
+
+
+- Streamline database configuration and improve word count retrieval in RootService ([ec7a020](https://github.com/amasotti/an-na7wi/commit/ec7a0209f33bf4506d781db7615aabc21af4548a))
+
+- Simplfy css for DictionaryLinkManager.vue and VocabularyContent.vue ([d4a830c](https://github.com/amasotti/an-na7wi/commit/d4a830c621819009f345c5eec68df2470d0250f3))
+
+- Improve word modal ([00ba68e](https://github.com/amasotti/an-na7wi/commit/00ba68e81419f823dae623b69f4617a966edfcb2))
+
+- Improve word modal - ux and general UI ([b8536ac](https://github.com/amasotti/an-na7wi/commit/b8536aca264fd264ec11ff5db31ec5dc7a83163a))
+
+- Improve word modal - ux and general UI ([a4c243f](https://github.com/amasotti/an-na7wi/commit/a4c243f63e9a7cdaa64b422b2b1e5ed6f7b88885))
+
+- Improve edit modal for root and text ([9eb950f](https://github.com/amasotti/an-na7wi/commit/9eb950f9fbeb52029b2602aec279b36652d3a220))
+
+- Merge create and edit text modal. ([5171301](https://github.com/amasotti/an-na7wi/commit/5171301512432b19cfcfdf186a867bb42c4c4671))
+
+- Merge create and edit text modal. ([cf943dc](https://github.com/amasotti/an-na7wi/commit/cf943dcce726515e99dfa384d817fcf0dfad343b))
+
+- Improve readability arabic texts ([a6ed95a](https://github.com/amasotti/an-na7wi/commit/a6ed95a5d9de72c2c4d1c6836fbac9e1fa678bdf))
+
+### 🧪 Testing
+
+
+- Increase coverage for new components ([55f6dbe](https://github.com/amasotti/an-na7wi/commit/55f6dbeba5e97da03d8a736b49c47ee8e2eb8dd0))
+
+- Add tests for RootDetailHeader ([18ccdba](https://github.com/amasotti/an-na7wi/commit/18ccdbabf4c5ad52bae87283f7519ecbbb62cdef))
+
+- Add tests for RootDetailHeader ([2826bdf](https://github.com/amasotti/an-na7wi/commit/2826bdfd9e08d76d07b13e14a1926f3d0dcff7b1))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Simplify effect ([4fa467f](https://github.com/amasotti/an-na7wi/commit/4fa467f6f35e49f2ed37f6cbce54d1dab0099dbe))
+
+- Simplify search ([06f1eaf](https://github.com/amasotti/an-na7wi/commit/06f1eaf54847e2e10e360a87054567e70131bee4))
+
+- Small improvements word view ([9bab28e](https://github.com/amasotti/an-na7wi/commit/9bab28e8602cce706f1daa75a6ae3d8ccd62febf))
+
+- Run formatter ([0b4ddee](https://github.com/amasotti/an-na7wi/commit/0b4ddee1089a5dc4cc4d69a77e6400ef805cec14))
+
 ## [1.2.0] - 2025-08-09
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/4a3ca1338ee7417ebbc4e3faed83b13f9e30c4fe..55b8993e8c1783b15f4ac951c295a4cbe0a75e8d)
