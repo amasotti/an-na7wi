@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [1.4.0] - 2025-08-10
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/2826bdfd9e08d76d07b13e14a1926f3d0dcff7b1..bb1e4c7c12f2f44ee413811a4f83d2aa1d606442)
+### 🚀 Features
+
+
+- Improve UI of word page ([bb1e4c7](https://github.com/amasotti/an-na7wi/commit/bb1e4c7c12f2f44ee413811a4f83d2aa1d606442))
+
 ## [1.3.0] - 2025-08-10
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/55b8993e8c1783b15f4ac951c295a4cbe0a75e8d..2826bdfd9e08d76d07b13e14a1926f3d0dcff7b1)
