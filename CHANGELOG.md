@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [1.4.1] - 2025-08-10
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/bb1e4c7c12f2f44ee413811a4f83d2aa1d606442..)
+### 🚀 Features
+
+
+- Improve UI of root page ([3469173](https://github.com/amasotti/an-na7wi/commit/3469173e2754388e796f0d9725ed6b81b6bdc54c))
+
+### 🐛 Bug Fixes
+
+
+- Tests for root header ([b87e8b0](https://github.com/amasotti/an-na7wi/commit/b87e8b0092f1c0aae86a827d7e9976909a5f5532))
+
+### 🚜 Refactor
+
+
+- Create base buttons for common actions ([30f4c97](https://github.com/amasotti/an-na7wi/commit/30f4c97b10c73a386ef1d5fb80c3a80428695ff5))
+
+- Simplify view for RootsContent.vue ([3ece4b8](https://github.com/amasotti/an-na7wi/commit/3ece4b85c67c0a180754dc253ec46829936610f0))
+
+- Improve root main page ([c9a4976](https://github.com/amasotti/an-na7wi/commit/c9a49765845454a0de04a05e2841a1d2de904a48))
+
+### 🧪 Testing
+
+
+- Add tests for root analysis component ([7e54af1](https://github.com/amasotti/an-na7wi/commit/7e54af1205828a00972d10504c85f292c986d6a6))
+
 ## [1.4.0] - 2025-08-10
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/2826bdfd9e08d76d07b13e14a1926f3d0dcff7b1..bb1e4c7c12f2f44ee413811a4f83d2aa1d606442)
