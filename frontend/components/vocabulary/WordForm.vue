@@ -339,7 +339,7 @@ const form = ref({
   example: '',
   root: '',
   notes: '',
-  partOfSpeech: PartOfSpeech.UNKNOWN,
+  partOfSpeech: PartOfSpeech.NOUN,
   difficulty: Difficulty.BEGINNER,
   dialect: Dialect.MSA,
   masteryLevel: MasteryLevel.NEW,
@@ -359,10 +359,10 @@ watch(
         translation: newWord.translation || '',
         example: newWord.example || '',
         root: newWord.root || '',
-        partOfSpeech: newWord.partOfSpeech || PartOfSpeech.UNKNOWN,
+        partOfSpeech: newWord.partOfSpeech || PartOfSpeech.NOUN,
         notes: newWord.notes || '',
-        difficulty: newWord.difficulty,
-        dialect: newWord.dialect,
+        difficulty: newWord.difficulty || Difficulty.BEGINNER,
+        dialect: newWord.dialect || Dialect.MSA,
         masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
         dictionaryLinks: newWord.dictionaryLinks || [],
         pronunciationLink: newWord.pronunciationLink || '',
@@ -375,7 +375,7 @@ watch(
         translation: '',
         example: '',
         root: '',
-        partOfSpeech: PartOfSpeech.UNKNOWN,
+        partOfSpeech: PartOfSpeech.NOUN,
         notes: '',
         difficulty: Difficulty.BEGINNER,
         dialect: Dialect.MSA,
@@ -416,11 +416,6 @@ const handleSubmit = async () => {
 
   emit('submit', form.value)
 }
-
-// Handle clicking on related words - emit event to parent
-// const handleRelatedWordClick = (word: Partial<Word>) => {
-//   emit('related-word-click', word)
-// }
 
 // Load related words when editing a word with a root
 const loadRelatedWords = async (root: string) => {

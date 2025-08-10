@@ -80,7 +80,7 @@ const editingWord = ref<Word | null>(null)
 const wordToDelete = ref<Word | null>(null)
 
 // View mode state
-const viewMode = ref<'table' | 'grid'>('table')
+const viewMode = ref<'table' | 'grid'>('grid')
 
 // Search debouncing
 let searchTimeout: number | null = null

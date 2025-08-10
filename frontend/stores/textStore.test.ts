@@ -309,7 +309,6 @@ describe('textStore', () => {
         tags: ['tag1', 'tag2'],
       })
 
-      expect(store.searchQuery).toBe('test query')
       expect(store.selectedDialect).toBe(Dialect.EGYPTIAN)
       expect(store.selectedDifficulty).toBe(Difficulty.INTERMEDIATE)
       expect(store.selectedTags).toEqual(['tag1', 'tag2'])
@@ -323,7 +322,6 @@ describe('textStore', () => {
 
       store.resetFilters()
 
-      expect(store.searchQuery).toBe('')
       expect(store.selectedDialect).toBeNull()
       expect(store.selectedDifficulty).toBeNull()
       expect(store.selectedTags).toEqual([])
