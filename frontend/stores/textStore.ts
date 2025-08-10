@@ -100,10 +100,6 @@ export const useTextStore = defineStore('text', () => {
         pageSize: pageSize.value,
       }
 
-      if (searchQuery.value) {
-        params.search = searchQuery.value
-      }
-
       if (selectedDialect.value) {
         params.dialect = selectedDialect.value
       }
@@ -393,10 +389,6 @@ export const useTextStore = defineStore('text', () => {
     difficulty?: Difficulty | null
     tags?: string[]
   }) {
-    if (filters.search !== undefined) {
-      searchQuery.value = filters.search
-    }
-
     if (filters.dialect !== undefined) {
       selectedDialect.value = filters.dialect
     }
@@ -442,7 +434,6 @@ export const useTextStore = defineStore('text', () => {
   }
 
   function resetFilters() {
-    searchQuery.value = ''
     selectedDialect.value = null
     selectedDifficulty.value = null
     selectedTags.value = []

@@ -156,7 +156,6 @@ const sortOptions: SelectOption<string>[] = [
 const totalPages = computed(() => Math.ceil(totalCount.value / pageSize.value))
 const hasActiveFilters = computed(() => {
   return Boolean(
-    searchQuery.value ||
       selectedDialect.value ||
       selectedDifficulty.value ||
       activeTags.value.length > 0
@@ -173,8 +172,12 @@ const toggleViewMode = () => {
 }
 
 const setSearchQuery = (value: string) => {
-  if (value.trim().length < 5) return // Minimum length for search
-  textStore.searchTexts(value)
+  if (value.trim().length < 5) {
+    textStore.fetchTexts()
+  } else {
+    textStore.searchTexts(value)
+  }
+
 }
 
 const setSelectedDialect = (value: Dialect | null) => {
