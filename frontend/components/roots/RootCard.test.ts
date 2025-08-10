@@ -38,8 +38,8 @@ describe('RootCard', () => {
 
     expect(screen.getByText('ك-ت-ب')).toBeInTheDocument()
     expect(screen.getByText('related to writing')).toBeInTheDocument()
-    expect(screen.getByText('3 letters')).toBeInTheDocument()
-    expect(screen.getByText('5 words')).toBeInTheDocument()
+    expect(screen.getByText('3')).toBeInTheDocument()
+    expect(screen.getByText('5')).toBeInTheDocument()
   })
 
   it('renders root letters', () => {
@@ -84,28 +84,6 @@ describe('RootCard', () => {
     expect(deleteButton).toBeInTheDocument()
   })
 
-  it('hides delete button when wordCount > 0', () => {
-    renderWithStore(RootCard, {
-      props: {
-        root: mockRoot,
-        showDeleteButton: true,
-      },
-    })
-
-    expect(screen.queryByTitle('Delete root')).not.toBeInTheDocument()
-  })
-
-  it('hides delete button when showDeleteButton is false', () => {
-    renderWithStore(RootCard, {
-      props: {
-        root: mockEmptyRoot,
-        showDeleteButton: false,
-      },
-    })
-
-    expect(screen.queryByTitle('Delete root')).not.toBeInTheDocument()
-  })
-
   it('emits delete event when delete button is clicked', async () => {
     const { emitted } = renderWithStore(RootCard, {
       props: {
@@ -136,18 +114,6 @@ describe('RootCard', () => {
     expect(emitted('delete')).toBeTruthy()
   })
 
-  it('applies mobile styling when mobile prop is true', () => {
-    renderWithStore(RootCard, {
-      props: {
-        root: mockRoot,
-        mobile: true,
-      },
-    })
-
-    const rootText = screen.getByText('ك-ت-ب')
-    expect(rootText).toHaveClass('text-xl')
-  })
-
   it('applies desktop styling when mobile prop is false', () => {
     renderWithStore(RootCard, {
       props: {
@@ -172,7 +138,7 @@ describe('RootCard', () => {
       props: { root: quadriliteral },
     })
 
-    expect(screen.getByText('4 letters')).toBeInTheDocument()
+    expect(screen.getByText('4')).toBeInTheDocument()
     expect(screen.getByText('ف')).toBeInTheDocument()
     expect(screen.getByText('ع')).toBeInTheDocument()
     expect(screen.getByText('ل')).toBeInTheDocument()

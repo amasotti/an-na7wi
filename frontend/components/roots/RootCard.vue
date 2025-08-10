@@ -1,55 +1,18 @@
 <template>
   <article 
-    class="card-base card-interactive card-padding-sm group"
+    class="root-card group"
     :class="mobileClasses"
     @click="handleClick"
   >
-    <!-- Root Display -->
-    <header class="text-center">
-      <h3 :class="rootTextClasses">
-        {{ root.displayForm }}
-      </h3>
-      <p v-if="root.meaning" :class="meaningClasses">
-        {{ root.meaning }}
-      </p>
-    </header>
-
-    <!-- Root Details -->
-    <section :class="detailsClasses">
-      <dl class="flex-between text-small text-muted">
-        <div>
-          <dt class="sr-only">Letter count</dt>
-          <dd>{{ root.letterCount }} letters</dd>
-        </div>
-        <div>
-          <dt class="sr-only">Word count</dt>
-          <dd>{{ root.wordCount }} words</dd>
-        </div>
-      </dl>
-      
-      <!-- Root Letters -->
-      <div class="flex justify-center gap-sm mt-2">
-        <span
-          v-for="(letter, index) in root.letters"
-          :key="index"
-          class="flex-center w-6 h-6 bg-gray-100 text-gray-700 text-sm font-medium rounded arabic"
-        >
-          {{ letter }}
-        </span>
-      </div>
-    </section>
-
-    <!-- Action Buttons -->
-    <aside :class="actionButtonsClasses" aria-label="Root actions">
-      <!-- Delete Button -->
+    <!-- Action Buttons - Positioned at top-left to avoid Arabic text -->
+    <aside class="absolute top-3 left-3 z-10">
       <button
-        v-if="showDeleteButton && root.wordCount === 0"
         @click.stop="handleDelete"
-        class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 action-button text-red-600 hover:bg-red-100"
+        class="action-button"
         title="Delete root"
         aria-label="Delete root"
       >
-        <BaseIcon size="xs">
+        <BaseIcon size="sm">
           <path
             fill="none"
             stroke="currentColor"
@@ -60,21 +23,54 @@
           />
         </BaseIcon>
       </button>
-
-      <!-- Hover Indicator -->
-      <div class="opacity-0 group-hover:opacity-100 transition-medium">
-        <BaseIcon size="xs" class="text-primary-400">
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </BaseIcon>
-      </div>
     </aside>
+
+    <!-- Root Display -->
+    <header class="text-center mb-4">
+      <h3 :class="rootTextClasses">
+        {{ root.displayForm }}
+      </h3>
+      <p v-if="root.meaning" :class="meaningClasses">
+        {{ root.meaning }}
+      </p>
+    </header>
+
+    <!-- Root Letters -->
+    <section class="flex justify-center gap-2 mb-4">
+      <span
+        v-for="(letter, index) in root.letters"
+        :key="index"
+        class="letter-badge arabic"
+      >
+        {{ letter }}
+      </span>
+    </section>
+
+    <!-- Root Stats -->
+    <footer class="grid grid-cols-2 gap-4 text-center">
+      <div class="stat-item">
+        <div class="stat-number">{{ root.letterCount }}</div>
+        <div class="stat-label">Letters</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number text-blue-600">{{ root.wordCount }}</div>
+        <div class="stat-label">Words</div>
+      </div>
+    </footer>
+
+    <!-- Hover Indicator -->
+    <div class="hover-indicator">
+      <BaseIcon size="sm" class="text-blue-500">
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        />
+      </BaseIcon>
+    </div>
   </article>
 </template>
 
@@ -106,20 +102,12 @@ const mobileClasses = computed(() =>
 )
 
 const rootTextClasses = computed(() => [
-  'arabic-root font-bold',
-  props.mobile ? 'text-xl' : 'text-2xl',
+  'text-3xl font-bold text-gray-900 arabic mb-2 text-center text-2xl',
 ])
 
 const meaningClasses = computed(() => [
-  'text-muted font-medium',
-  props.mobile ? 'text-xs' : 'text-small',
-])
-
-const detailsClasses = computed(() => (props.mobile ? 'space-xs' : 'space-sm'))
-
-const actionButtonsClasses = computed(() => [
-  'absolute flex items-center gap-xs',
-  props.mobile ? 'top-1 right-1' : 'top-2 right-2',
+  'text-gray-600 font-medium',
+  props.mobile ? 'text-sm' : 'text-base',
 ])
 
 const handleClick = () => {
@@ -131,3 +119,37 @@ const handleDelete = (event: Event) => {
   emit('delete', props.root.id)
 }
 </script>
+
+<style scoped>
+.root-card {
+  @apply relative bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-200 hover:shadow-md hover:border-blue-300 hover:-translate-y-1;
+}
+
+.action-button {
+  @apply p-2 rounded-full bg-white/90 text-red-500 hover:bg-red-50 hover:text-red-600 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200/50 backdrop-blur-sm opacity-0 group-hover:opacity-100;
+}
+
+.letter-badge {
+  @apply inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-700 text-lg font-semibold rounded-lg border border-blue-200;
+}
+
+.stat-item {
+  @apply bg-gray-50 rounded-lg p-3;
+}
+
+.stat-number {
+  @apply text-2xl font-bold text-gray-900;
+}
+
+.stat-label {
+  @apply text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.hover-indicator {
+  @apply absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200 transform group-hover:translate-x-1;
+}
+
+.root-card:hover {
+  @apply bg-gradient-to-br from-blue-50/50 to-indigo-50/30;
+}
+</style>

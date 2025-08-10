@@ -3,13 +3,14 @@
     :class="computedCardClasses"
   >
     <!-- Actions Menu - Top Right Corner -->
-    <div class="absolute top-4 right-4 z-10">
+    <div class="absolute top-3 right-3 z-10">
       <button
         @click="toggleDropdown"
         :class="actionButtonClasses"
+        aria-label="Text actions menu"
       >
-        <BaseIcon size="xs">
-          <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 5v.01M12 12v.01M12 19v.01" />
+        <BaseIcon size="sm">
+          <path fill="currentColor" d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
         </BaseIcon>
       </button>
       
@@ -186,7 +187,7 @@ const titleClasses = computed(
 )
 const actionButtonClasses = computed(
   () =>
-    'p-1.5 rounded-full bg-primary-500 text-white hover:bg-primary-400 shadow-md hover:shadow-lg transition-all duration-200 border-0'
+    'p-2 rounded-full bg-white/90 text-gray-600 hover:bg-white hover:text-gray-800 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200/50 backdrop-blur-sm opacity-0 group-hover:opacity-100'
 )
 const dropdownClasses = computed(
   () =>

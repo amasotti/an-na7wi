@@ -1,103 +1,48 @@
 <template>
   <div class="space-y-6">
     <!-- Loading State -->
-    <div v-if="loading" class="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
-      <div class="flex items-center justify-center">
-        <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
-        <span class="ml-3 text-gray-600">Loading roots...</span>
-      </div>
-    </div>
+    <LoadingEffect v-if="loading" />
 
     <!-- Error State -->
-    <div v-else-if="error" class="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
-      <div class="text-center">
-        <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-          <h3 class="text-red-800 font-medium mb-2">Error Loading Roots</h3>
-          <p class="text-red-600 text-sm">{{ error }}</p>
-        </div>
-      </div>
-    </div>
+    <BaseErrorState
+      v-if="error"
+      message="Failed to load roots"
+      :error="error"
+    />
 
     <!-- Empty State -->
-    <div v-else-if="roots.length === 0" class="bg-white rounded-xl shadow-sm border border-gray-200 p-12">
-      <div class="text-center">
-        <BaseIcon size="xl" class="text-gray-300 mx-auto mb-4">
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-          />
-        </BaseIcon>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No roots found</h3>
-        <p class="text-gray-600">Try adjusting your search criteria or filters.</p>
-      </div>
-    </div>
+    <BaseEmptyState
+      v-else-if="!loading && roots.length === 0"
+      link="/roots"
+      linkText="Create Root"
+      message="No roots found. Start by creating a new root."
+    />
 
     <!-- Roots Grid -->
-    <div v-else class="bg-lime-100 rounded-xl shadow-sm border border-gray-200">
-      <!-- View Toggle (Mobile) -->
-      <div class="md:hidden border-b border-gray-200 p-4">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-gray-700">View</span>
-          <div class="flex rounded-lg border border-gray-300">
-            <button
-              :class="[
-                'px-3 py-1 text-xs font-medium rounded-l-lg transition-colors',
-                viewMode === 'grid' 
-                  ? 'bg-primary-100 text-primary-700 border-primary-300' 
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
-              ]"
-              @click="viewMode = 'grid'"
-            >
-              Grid
-            </button>
-            <button
-              :class="[
-                'px-3 py-1 text-xs font-medium rounded-r-lg border-l transition-colors',
-                viewMode === 'list' 
-                  ? 'bg-primary-100 text-primary-700 border-primary-300' 
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
-              ]"
-              @click="viewMode = 'list'"
-            >
-              List
-            </button>
-          </div>
-        </div>
-      </div>
+    <main v-else>
+      <!-- View Toggle -->
+      <ViewToggle
+        class="content-controls mb-2"
+        :model-value="viewMode"
+        @update:model-value="handleViewModeChange"
+        aria-label="Switch between table and grid view"
+      />
 
-      <!-- Desktop Grid View -->
-      <div class="hidden md:grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-1 divide-y lg:divide-y-0">
-        <RootCard
-          v-for="root in roots"
-          :key="root.id"
-          :root="root"
-          :show-delete-button="showDeleteButtons"
-          @click="$emit('root-clicked', root.id)"
-          @delete="$emit('root-deleted', $event)"
-        />
-      </div>
-
-      <!-- Mobile Views -->
-      <div class="md:hidden">
+      <article>
         <!-- Mobile Grid -->
-        <div v-if="viewMode === 'grid'" class="grid grid-cols-2 gap-1">
+        <section v-if="viewMode === ViewMode.GRID" class="grid grid-cols-2 gap-1">
           <RootCard
             v-for="root in roots"
             :key="root.id"
             :root="root"
             :show-delete-button="showDeleteButtons"
-            mobile
             @click="$emit('root-clicked', root.id)"
             @delete="$emit('root-deleted', $event)"
           />
-        </div>
+        </section>
 
         <!-- Mobile List -->
-        <div v-else class="divide-y divide-gray-200">
+        <section v-if="viewMode === ViewMode.TABLE" class="divide-y divide-gray-200">
           <RootListItem
             v-for="root in roots"
             :key="root.id"
@@ -106,11 +51,11 @@
             @click="$emit('root-clicked', root.id)"
             @delete="$emit('root-deleted', $event)"
           />
-        </div>
-      </div>
+        </section>
+      </article>
 
       <!-- Pagination -->
-      <div v-if="pagination.totalPages > 1" class="border-t border-gray-200 px-6 py-4">
+      <footer v-if="pagination.totalPages > 1" class="border-t border-gray-200 px-6 py-4">
         <Pagination
           :current-page="pagination.page"
           :total-pages="pagination.totalPages"
@@ -118,15 +63,20 @@
           :page-size="pagination.size"
           @page-changed="$emit('page-changed', $event)"
         />
-      </div>
-    </div>
+      </footer>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
+import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import Pagination from '~/components/common/Pagination.vue'
+import ViewToggle from '~/components/common/ViewToggle.vue'
+import { ViewMode, type ViewModeType } from '~/config/viewMode'
 import type { Root } from '~/types'
 import RootCard from './RootCard.vue'
 import RootListItem from './RootListItem.vue'
@@ -153,5 +103,9 @@ interface Emits {
 defineProps<Props>()
 defineEmits<Emits>()
 
-const viewMode = ref<'grid' | 'list'>('grid')
+const viewMode = ref<ViewModeType>(ViewMode.GRID)
+
+const handleViewModeChange = (mode: ViewModeType) => {
+  viewMode.value = mode
+}
 </script>
