@@ -15,15 +15,16 @@
     <WordPrimaryInformation
     @edit="handleOpenWordModal"
     @delete="toggleDeleteModal"
-    >
+    />
 
-    </WordPrimaryInformation>
+    <WordExamples v-if="currentWord.example" />
 
-    <p>{{currentWord.id}}</p>
-    <p>{{currentWord.arabic}}</p>
-    <p>{{currentWord?.translation}}</p>
-    <p>{{currentWord?.dialect}}</p>
-    <p>{{currentWord.id}}</p>
+    <WordNotes v-if="currentWord.notes" />
+
+    <RelatedWords v-if="currentWord.root" />
+
+    <WordReferences v-if="currentWord.dictionaryLinks.length > 0" />
+
   </main>
 
   <!-- Word Edit Modal -->
@@ -52,9 +53,6 @@
       message="No word data available :("
     />
   </footer>
-
-
-
 </template>
 
 
@@ -69,6 +67,10 @@ import WordForm from '~/components/vocabulary/WordForm.vue'
 import type { Word } from '~/types'
 import WordPrimaryInformation from '~/components/vocabulary/WordPrimaryInformation.vue'
 import WordDeleteModal from '~/components/vocabulary/WordDeleteModal.vue'
+import WordExamples from '~/components/vocabulary/WordExamples.vue'
+import WordNotes from '~/components/vocabulary/WordNotes.vue'
+import RelatedWords from '~/components/vocabulary/RelatedWords.vue'
+import WordReferences from '~/components/vocabulary/WordReferences.vue'
 
 const route = useRoute()
 const wordStore = useWordStore()
@@ -118,6 +120,7 @@ const handleDeleteWord = async () => {
     console.error('Error deleting word:', error)
   } finally {
     wordStore.loading = false
+    navigateTo('/words')
   }
 }
 

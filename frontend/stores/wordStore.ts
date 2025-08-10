@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { wordService } from '~/composables/wordService'
-import type { PaginatedResponse, SelectOption, Word } from '~/types'
+import type { DictionaryLink, PaginatedResponse, SelectOption, Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 import { isArabicText } from '~/utils/stringUtils'
 
@@ -47,7 +47,7 @@ export const useWordStore = defineStore('word', () => {
   const hasSearchResults = computed(() => searchResults.value.length > 0)
   const isSearching = computed(() => filters.value.search.trim().length > 0)
   const displayWords = computed(() => (isSearching.value ? searchResults.value : words.value))
-
+  const dictionaryLinks = computed(() => currentWord.value?.dictionaryLinks)
   // Option arrays for select components
   const difficultyOptions = computed<SelectOption<Difficulty>[]>(() =>
     Object.values(Difficulty).map(d => ({ value: d, label: d }))
@@ -279,6 +279,7 @@ export const useWordStore = defineStore('word', () => {
     dialectOptions,
     masteryLevelOptions,
     partsOfSpeechOptions,
+    dictionaryLinks,
 
     // Actions
     fetchWords,

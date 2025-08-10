@@ -80,10 +80,6 @@ import type { Root, Word } from '~/types'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
-import { difficultyOptions } from '~/constants/difficulty'
-import { dialectOptions } from '~/constants/dialects'
-import { masteryLevelOptions } from '~/constants/masteryLevel'
-import { partsOfSpeechOptions } from '~/constants/pos'
 
 const route = useRoute()
 const rootStore = useRootStore()

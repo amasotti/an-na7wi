@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+  <article class="container-header">
     <section class="flex justify-end space-x-3">
       <!-- Edit Button -->
       <BaseButton
@@ -26,6 +26,7 @@
       </BaseButton>
     </section>
 
+    <!-- Basic info: text, translitteration and translation   -->
     <article>
       <h1 class="word-arabic arabic">
         {{ currentWord!!.arabic }}
@@ -41,22 +42,81 @@
       </div>
     </article>
 
-  </header>
+    <!-- Word badge infos: dialect, id, etc. -->
+    <article class="bg-gray-50 rounded-lg p-4 my-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Root:</span>
+            <BaseBadge
+              size="lg"
+              class="arabic rootLink"
+              @click="handleRootClicked"
+            >
+              {{currentWord?.root}}
+            </BaseBadge>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Part of Speech:</span>
+            <BaseBadge
+              size="lg"
+              class="part-of-speech-badge"
+            >
+              {{ currentWord?.partOfSpeech || 'N/A' }}
+            </BaseBadge>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Dialect:</span>
+            <BaseBadge
+              size="lg"
+              class="dialect-badge"
+            >
+              {{ currentWord?.dialect || 'Standard' }}
+            </BaseBadge>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Mastery:</span>
+            <BaseBadge
+              size="lg"
+              class="register-badge"
+            >
+              {{ currentWord?.masteryLevel || 'Standard' }}
+            </BaseBadge>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Added on:</span>
+            <span>{{ formatDate(currentWord!!.createdAt) }}</span>
+          </div>
+        </div>
+    </article>
+
+  </article>
 
 </template>
 
 <script setup lang="ts">
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import { formatDate } from '~/utils/dateUtils'
+import BaseBadge from '~/components/common/BaseBadge.vue'
 
 const wordStore = useWordStore()
 
 const currentWord = computed(() => wordStore.currentWord)
 
-const emit = defineEmits<{
+defineEmits<{
   edit: []
   delete: []
 }>()
+
+const getRootDetailPath = () => {
+  const root = currentWord.value?.root
+  return root ? `/roots?search=${encodeURIComponent(root)}` : '/roots'
+}
+
+const handleRootClicked = () => {
+  const rootDetailPath = getRootDetailPath()
+  navigateTo(rootDetailPath)
+}
 </script>
 
 <style scoped>
@@ -66,5 +126,21 @@ const emit = defineEmits<{
 
 .word-basic-info {
   @apply text-lg text-gray-600 font-light text-center;
+}
+
+.rootLink {
+  @apply hover:text-violet-950 cursor-pointer bg-purple-300 rounded-xl px-2 py-1;
+}
+
+.dialect-badge {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.register-badge {
+  @apply bg-green-100 text-green-800;
+}
+
+.part-of-speech-badge {
+  @apply bg-yellow-100 text-yellow-800;
 }
 </style>

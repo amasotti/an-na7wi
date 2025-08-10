@@ -108,6 +108,8 @@ import { debounce } from 'lodash-es'
 import { computed, onMounted, ref } from 'vue'
 import RootStatisticsCard from './RootStatisticsCard.vue'
 
+const route = useRoute()
+
 interface Props {
   totalCount: number
   statistics?: RootStatistics | null
@@ -125,7 +127,7 @@ interface Emits {
   (e: 'add-root'): void
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const searchQuery = ref('')
@@ -184,6 +186,20 @@ const clearFilters = () => {
 const handleAddRoot = () => {
   emit('add-root')
 }
+
+// Watch for query parameters to update root data
+watch(
+  () => route.query,
+  query => {
+    if (query.search) {
+      searchQuery.value = query.search as string
+    } else {
+      searchQuery.value = ''
+    }
+    handleFilterChange()
+  },
+  { immediate: true }
+)
 
 onMounted(() => {
   handleFilterChange()

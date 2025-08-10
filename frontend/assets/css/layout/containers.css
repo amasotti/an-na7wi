@@ -4,6 +4,10 @@
   @apply container mx-auto px-4 py-8;
 }
 
+.container-header {
+  @apply bg-white rounded-xl shadow-sm border border-gray-200 p-8;
+}
+
 .container-section {
   @apply container mx-auto px-4;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+  <div class="container-header">
     <div class="text-center space-y-6">
       <!-- Action Buttons -->
       <div class="flex justify-end space-x-3">
@@ -106,6 +106,7 @@
 import BaseButton from '@/components/common/BaseButton.vue'
 import type { Root } from '@/types'
 import { computed } from 'vue'
+import { formatDate } from '~/utils/dateUtils'
 
 interface Props {
   root: Root
@@ -133,12 +134,4 @@ const rootType = computed(() => {
       return `${props.root.letterCount}-Letter`
   }
 })
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
 </script>

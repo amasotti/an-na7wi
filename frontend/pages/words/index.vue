@@ -102,10 +102,14 @@ const clearSearch = () => {
 
 // Word form methods
 const openWordForm = (word?: Word) => {
-  if (!word) return
+  if (!word) {
+    editingWord.value = null
+    showWordModal.value = true
+    return
+  }
+
+  editingWord.value = word
   navigateTo(`/words/${word.id}`)
-  // editingWord.value = word || null
-  // showWordModal.value = true
 }
 
 const closeWordModal = () => {

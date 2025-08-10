@@ -137,6 +137,7 @@ import {
 } from '~/config/dictionaries'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
+import { openLink } from '~/utils/linkUtils'
 
 interface Props {
   word: Word
@@ -186,11 +187,6 @@ const getMasteryBadgeClass = (masteryLevel?: MasteryLevel) => {
     default:
       return `${baseClasses} bg-blue-100 text-blue-800`
   }
-}
-
-// Utility method for opening links
-const openLink = (url: string) => {
-  window.open(url, '_blank', 'noopener,noreferrer')
 }
 
 // Open all dictionaries for a word
