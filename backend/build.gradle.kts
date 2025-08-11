@@ -41,6 +41,7 @@ dependencies {
     testImplementation(libs.restassured)
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.junit.jupiter)
+    testImplementation(libs.mockk)
 }
 
 group = "com.tonihacks"

@@ -51,6 +51,12 @@ class RootService {
                 RootResponseDTO.fromEntity(root, wordCount)
             }
     }
+
+  @Transactional
+  fun getAllRoots(): List<ArabicRoot> {
+        logger.info("Retrieving all roots")
+        return rootRepository.listAll()
+    }
     
     /**
      * Get total count of roots
