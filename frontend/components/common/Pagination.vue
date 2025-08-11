@@ -78,7 +78,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  maxVisible: 7,
+  maxVisible: 5,
 })
 
 const emit = defineEmits<{

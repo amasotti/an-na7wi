@@ -10,12 +10,7 @@
       />
       
       <div class="mt-8">
-        <RootsContent 
-          :roots="rootStore.roots"
-          :loading="rootStore.loading"
-          :error="rootStore.error"
-          :pagination="rootStore.pagination"
-          :show-delete-buttons="true"
+        <RootsContent
           @page-changed="handlePageChange"
           @root-clicked="handleRootClick"
           @root-deleted="handleRootDelete"
@@ -31,38 +26,13 @@
     />
 
     <!-- Delete Confirmation Modal -->
-    <BaseModal
+    <RootDeleteModal
       :open="showDeleteModal"
-      title="Delete Root"
+      :loading="deleteLoading"
+      :root="rootToDelete"
       @close="showDeleteModal = false"
-    >
-      <div v-if="rootToDelete" class="space-y-4">
-        <p class="text-gray-700">
-          Are you sure you want to delete the root 
-          <span class="font-bold arabic text-lg">{{ rootToDelete.displayForm }}</span>?
-        </p>
-        <p class="text-sm text-gray-600">
-          This action cannot be undone.
-        </p>
-        
-        <div class="flex justify-end space-x-3 pt-4 border-t">
-          <BaseButton
-            variant="outline"
-            @click="showDeleteModal = false"
-            :disabled="deleteLoading"
-          >
-            Cancel
-          </BaseButton>
-          <BaseButton
-            variant="danger"
-            @click="confirmDelete"
-            :loading="deleteLoading"
-          >
-            Delete Root
-          </BaseButton>
-        </div>
-      </div>
-    </BaseModal>
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -70,6 +40,8 @@
 import { onMounted, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
+import RootDeleteModal from '~/components/roots/RootDeleteModal.vue'
 import RootModal from '~/components/roots/RootModal.vue'
 import RootsContent from '~/components/roots/RootsContent.vue'
 import RootsHeader from '~/components/roots/RootsHeader.vue'

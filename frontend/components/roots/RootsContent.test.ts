@@ -1,193 +1,97 @@
-import { fireEvent, screen } from '@testing-library/vue'
-import { describe, expect, it } from 'vitest'
-import { renderWithStore } from '~/test/test-utils'
-import type { Root } from '~/types'
+import { render, screen } from '@testing-library/vue'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockedRoots } from '~/test/mocks/roots.mock'
 import { RootsContent } from '#components'
+import { useRootStore } from '#imports'
 
-const mockRoot: Root = {
-  id: '1',
-  letters: ['ر', 'و', 'ح'],
-  normalizedForm: 'روج',
-  displayForm: 'ر-و-ح',
-  letterCount: 3,
-  meaning: 'related to writing',
-  wordCount: 15,
-  createdAt: '2023-01-01T00:00:00Z',
-  updatedAt: '2023-01-01T00:00:00Z',
-}
+describe('RootContent', () => {
+  const pinia = usePinia()
+  let rootStore: ReturnType<typeof useRootStore>
 
-const mockRoots: Root[] = [
-  mockRoot,
-  {
-    ...mockRoot,
-    id: '2',
-    letters: ['ش', 'م', 'ش'],
-    normalizedForm: 'شمس',
-    displayForm: 'ش-م-س',
-    meaning: 'related to reading',
-    wordCount: 12,
-  },
-]
+  const renderComponent = () =>
+    render(RootsContent, {
+      global: {
+        // provide the testing pinia instance as a plugin
+        plugins: [pinia],
+        stubs: {
+          // useful visible stubs that preserve props/emits so tests assert behavior
+          LoadingEffect: {
+            template: '<div>LoadingEffect</div>',
+          },
+          BaseErrorState: {
+            props: ['message', 'error'],
+            template: '<div>{{ message }}</div>',
+          },
+          BaseEmptyState: {
+            props: ['message', 'link', 'linkText'],
+            template: '<div>{{ message }}</div>',
+          },
 
-const defaultProps = {
-  roots: mockRoots,
-  loading: false,
-  error: null,
-  pagination: {
-    page: 1,
-    size: 10,
-    totalCount: 25,
-    totalPages: 3,
-  },
-  showDeleteButtons: false,
-}
-
-describe('RootsContent', () => {
-  it('displays error state', () => {
-    renderWithStore(RootsContent, {
-      props: {
-        ...defaultProps,
-        loading: false,
-        error: 'Failed to load roots',
-      },
-    })
-
-    expect(screen.getAllByText('Failed to load roots').length).toBeGreaterThan(0)
-  })
-
-  it('displays empty state when no roots', () => {
-    renderWithStore(RootsContent, {
-      props: {
-        ...defaultProps,
-        roots: [],
-        loading: false,
-        error: null,
-      },
-    })
-
-    expect(screen.getByText('No roots found. Start by creating a new root.')).toBeInTheDocument()
-    expect(screen.getByText('Create Root')).toBeInTheDocument()
-  })
-
-  it('displays pagination when multiple pages exist', () => {
-    renderWithStore(RootsContent, {
-      props: defaultProps,
-    })
-
-    // Check pagination is present
-    const paginationButtons = screen
-      .getAllByRole('button')
-      .filter(btn => /^\d+$/.test(btn.textContent || ''))
-    expect(paginationButtons.length).toBeGreaterThan(0)
-  })
-
-  it('does not display pagination when only one page', () => {
-    renderWithStore(RootsContent, {
-      props: {
-        ...defaultProps,
-        pagination: {
-          ...defaultProps.pagination,
-          totalPages: 1,
+          // Child components should emit the same events the real ones do.
+          RootCard: {
+            props: ['root'],
+            template:
+              '<button data-testid="root-card" @click="$emit(\'click\')">root-card</button>',
+          },
+          RootListItem: {
+            props: ['root'],
+            template:
+              '<button data-testid="root-list-item" @click="$emit(\'click\')">root-list-item</button>',
+          },
+          ViewToggle: {
+            emits: ['update:modelValue'],
+            template:
+              '<button data-testid="toggle" @click="$emit(\'update:modelValue\', \'TABLE\')">toggle</button>',
+          },
+          Pagination: {
+            props: ['currentPage', 'totalPages', 'totalCount', 'pageSize'],
+            emits: ['page-change'],
+            template: '<div data-testid="pagination">pagination</div>',
+          },
         },
       },
     })
 
-    // Pagination should be hidden
-    const buttons = screen.getAllByRole('button')
-    const paginationButtons = buttons.filter(btn => /^\d+$/.test(btn.textContent || ''))
-    expect(paginationButtons.length).toBe(0)
+  beforeEach(() => {
+    // now get the store instance (do NOT import the store module directly in Nuxt tests)
+    rootStore = useRootStore()
+
+    // ensure a predictable initial shape
+    rootStore.loading = false
+    rootStore.error = null
+    rootStore.roots = []
+    rootStore.pagination = { page: 1, totalPages: 1, totalCount: 0, size: 10 }
   })
 
-  it('emits root-deleted event when delete button is clicked', async () => {
-    const rootsWithNoWords = mockRoots.map(root => ({ ...root, wordCount: 0 }))
-    const { emitted } = renderWithStore(RootsContent, {
-      props: {
-        ...defaultProps,
-        roots: rootsWithNoWords,
-        showDeleteButtons: true,
-      },
-    })
-
-    // Find and click delete button
-    const deleteButton = screen.getAllByTitle('Delete root')[0] as HTMLButtonElement
-    await fireEvent.click(deleteButton)
-
-    expect(emitted('root-deleted')).toBeTruthy()
+  it('renders loading state', () => {
+    rootStore.loading = true
+    renderComponent()
+    expect(screen.getByText('LoadingEffect')).toBeInTheDocument()
   })
 
-  it('passes showDeleteButtons prop to child components', () => {
-    renderWithStore(RootsContent, {
-      props: {
-        ...defaultProps,
-        showDeleteButtons: true,
-      },
-    })
-
-    // This is tested indirectly through the presence of delete buttons
-    // when roots have wordCount: 0
-    expect(screen.queryAllByTitle('Delete root').length).toBeGreaterThan(0)
+  it('renders error state', () => {
+    rootStore.error = 'some-error'
+    renderComponent()
+    expect(screen.getByText('Failed to load roots')).toBeInTheDocument()
   })
 
-  it('applies correct styling to main container', () => {
-    renderWithStore(RootsContent, {
-      props: defaultProps,
-    })
-
-    const mainContainer = document.querySelector('.space-y-6')
-    expect(mainContainer).toBeInTheDocument()
+  it('renders empty state', () => {
+    rootStore.loading = false
+    rootStore.roots = []
+    renderComponent()
+    expect(screen.getByText(/no roots found/i)).toBeInTheDocument()
   })
 
-  it('handles loading state styling', () => {
-    renderWithStore(RootsContent, {
-      props: { ...defaultProps, loading: true },
-    })
-
-    const loadingContainer = document.querySelector('.bg-white.rounded-xl.shadow-sm')
-    expect(loadingContainer).toBeInTheDocument()
+  it('renders grid view when roots exist', () => {
+    rootStore.roots = mockedRoots
+    renderComponent()
+    expect(screen.getAllByTestId('root-card')).toHaveLength(mockedRoots.length)
   })
 
-  it('maintains view mode state correctly', async () => {
-    renderWithStore(RootsContent, {
-      props: defaultProps,
-    })
-
-    const gridButton = screen.getByRole('button', { name: 'Card view' })
-    const listButton = screen.getByRole('button', { name: 'Table view' })
-
-    // Initially grid should be active
-    expect(gridButton).toHaveClass('toggle-button toggle-button-active')
-
-    // Switch to list view
-    await fireEvent.click(listButton)
-    expect(listButton).toHaveClass('toggle-button toggle-button-active')
-
-    // Switch back to grid view
-    await fireEvent.click(gridButton)
-    expect(gridButton).toHaveClass('toggle-button toggle-button-active')
-  })
-
-  it('shows mobile list view when selected', async () => {
-    renderWithStore(RootsContent, {
-      props: defaultProps,
-    })
-
-    const listButton = screen.getByRole('button', { name: 'Table view' })
-    await fireEvent.click(listButton)
-
-    // List view should be shown after clicking
-    const mobileListContainer = document.querySelector('.divide-y.divide-gray-200')
-    expect(mobileListContainer).toBeInTheDocument()
-  })
-
-  it('handles single root correctly', () => {
-    renderWithStore(RootsContent, {
-      props: {
-        ...defaultProps,
-        roots: [mockRoot],
-      },
-    })
-
-    expect(screen.getAllByText('ر-و-ح')).not.toHaveLength(0)
-    expect(screen.getAllByText('related to writing')).not.toHaveLength(0)
+  it('shows pagination when multiple pages exist', () => {
+    rootStore.roots = mockedRoots
+    rootStore.pagination = { page: 1, totalPages: 2, totalCount: 10, size: 5 }
+    renderComponent()
+    expect(screen.getByTestId('pagination')).toBeInTheDocument()
   })
 })

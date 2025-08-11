@@ -77,7 +77,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   mobile: false,
-  showDeleteButton: false,
+  showDeleteButton: true,
 })
 
 const emit = defineEmits<Emits>()

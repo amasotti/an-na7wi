@@ -47,6 +47,6 @@ describe('Pagination', () => {
       props: { currentPage: 5, totalPages: 20 },
     })
 
-    expect(screen.getByText('...')).toBeInTheDocument()
+    expect(screen.getAllByText('...').length).toBeGreaterThan(0)
   })
 })

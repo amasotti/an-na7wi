@@ -12,7 +12,7 @@
 
     <!-- Empty State -->
     <BaseEmptyState
-      v-else-if="!loading && roots.length === 0"
+      v-else-if="!loading && rootStore.roots.length === 0"
       link="/roots"
       linkText="Create Root"
       message="No roots found. Start by creating a new root."
@@ -32,10 +32,9 @@
         <!-- Root Cards Grid -->
         <section v-if="viewMode === ViewMode.GRID" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <RootCard
-            v-for="root in roots"
+            v-for="root in rootStore.roots"
             :key="root.id"
             :root="root"
-            :show-delete-button="showDeleteButtons"
             @click="$emit('root-clicked', root.id)"
             @delete="$emit('root-deleted', $event)"
           />
@@ -44,10 +43,9 @@
         <!-- Mobile List -->
         <section v-if="viewMode === ViewMode.TABLE" class="divide-y divide-gray-200">
           <RootListItem
-            v-for="root in roots"
+            v-for="root in rootStore.roots"
             :key="root.id"
             :root="root"
-            :show-delete-button="showDeleteButtons"
             @click="$emit('root-clicked', root.id)"
             @delete="$emit('root-deleted', $event)"
           />
@@ -72,36 +70,25 @@
 import { ref } from 'vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
-import BaseIcon from '~/components/common/BaseIcon.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import Pagination from '~/components/common/Pagination.vue'
 import ViewToggle from '~/components/common/ViewToggle.vue'
 import { ViewMode, type ViewModeType } from '~/config/viewMode'
-import type { Root } from '~/types'
 import RootCard from './RootCard.vue'
 import RootListItem from './RootListItem.vue'
 
-interface Props {
-  roots: Root[]
-  loading: boolean
-  error: string | null
-  pagination: {
-    page: number
-    size: number
-    totalCount: number
-    totalPages: number
-  }
-  showDeleteButtons?: boolean
-}
-
-interface Emits {
+interface RootContentEmits {
   (e: 'page-changed', page: number): void
   (e: 'root-clicked', rootId: string): void
   (e: 'root-deleted', rootId: string): void
 }
 
-defineProps<Props>()
-defineEmits<Emits>()
+defineEmits<RootContentEmits>()
+
+const rootStore = useRootStore()
+const loading = computed(() => rootStore.loading)
+const error = computed(() => rootStore.error)
+const pagination = computed(() => rootStore.pagination)
 
 const viewMode = ref<ViewModeType>(ViewMode.GRID)
 

@@ -54,7 +54,7 @@ interface Props {
   root?: Root | null
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   loading: false,
   root: null,
 })
