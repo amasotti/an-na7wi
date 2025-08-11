@@ -1,85 +1,62 @@
 <template>
   <div class="analytics-dashboard p-6 max-w-7xl mx-auto">
-    <div class="mb-8">
+    <header class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Learning Analytics</h1>
-      <p class="text-gray-600">Track your Arabic learning progress with detailed insights and statistics</p>
-    </div>
+      <p class="text-gray-500 italic">Track your Arabic learning progress with detailed insights and statistics</p>
+    </header>
 
-    <div v-if="pending" class="flex items-center justify-center h-64">
-      <LoadingEffect />
-    </div>
+    <LoadingEffect v-if="pending" />
 
-    <div v-else-if="error" class="text-center py-12">
-      <BaseErrorState 
-        title="Failed to load analytics" 
-        :description="error.message"
-        @retry="refresh"
-      />
-    </div>
+    <BaseErrorState
+      v-else-if="error"
+      class="text-center py-12"
+      message="Failed to load analytics"
+      :error="error.message"
+      @click="refresh"
+    />
 
-    <div v-else-if="analytics" class="space-y-8">
+
+    <main v-else-if="analytics" class="space-y-8">
       <!-- Overview Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <BaseCard class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-blue-100 rounded-lg">
-              <BaseIcon size="md" class="text-blue-600">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </BaseIcon>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Total Texts</p>
-              <p class="text-2xl font-bold text-gray-900">{{ analytics.overview.totalTexts.toLocaleString() }}</p>
-            </div>
-          </div>
-        </BaseCard>
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <SummaryCard
+          title="Total Texts"
+          :count="analytics.overview.totalTexts"
+          icon-class="text-blue-600"
+          icon-bg-class="bg-blue-100">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </SummaryCard>
 
-        <BaseCard class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-green-100 rounded-lg">
-              <BaseIcon size="md" class="text-green-600">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-              </BaseIcon>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Vocabulary</p>
-              <p class="text-2xl font-bold text-gray-900">{{ analytics.overview.totalWords.toLocaleString() }}</p>
-            </div>
-          </div>
-        </BaseCard>
 
-        <BaseCard class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-purple-100 rounded-lg">
-              <BaseIcon size="md" class="text-purple-600">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-              </BaseIcon>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Annotations</p>
-              <p class="text-2xl font-bold text-gray-900">{{ analytics.overview.totalAnnotations.toLocaleString() }}</p>
-            </div>
-          </div>
-        </BaseCard>
+        <SummaryCard
+          title="Total Words"
+          :count="analytics.overview.totalWords"
+          icon-class="text-green-600"
+          icon-bg-class="bg-green-100">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+        </SummaryCard>
 
-        <BaseCard class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 bg-orange-100 rounded-lg">
-              <BaseIcon size="md" class="text-orange-600">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </BaseIcon>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm font-medium text-gray-600">Arabic Roots</p>
-              <p class="text-2xl font-bold text-gray-900">{{ analytics.overview.totalRoots.toLocaleString() }}</p>
-            </div>
-          </div>
-        </BaseCard>
-      </div>
+        <SummaryCard
+          title="Total Annotations"
+          :count="analytics.overview.totalAnnotations"
+          icon-class="text-purple-600"
+          icon-bg-class="bg-purple-100">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+        </SummaryCard>
+
+        <SummaryCard
+          title="Roots"
+          :count="analytics.overview.totalRoots"
+          icon-class="text-orange-600"
+          icon-bg-class="bg-orange-100"
+        >
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </SummaryCard>
+      </section>
 
       <!-- Charts Row 1 -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -187,12 +164,17 @@
           </div>
         </BaseCard>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { AnalyticsData } from '~/types/analytics'
+import LoadingEffect from "~/components/common/LoadingEffect.vue";
+import BaseErrorState from "~/components/common/BaseErrorState.vue";
+import BaseCard from "~/components/common/BaseCard.vue";
+import SummaryCard from "~/components/analytics/SummaryCard.vue";
+import BaseBadge from "~/components/common/BaseBadge.vue";
 
 const { getAnalytics } = useAnalyticsService()
 
