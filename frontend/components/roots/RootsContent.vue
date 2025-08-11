@@ -61,7 +61,7 @@
           :total-pages="pagination.totalPages"
           :total-count="pagination.totalCount"
           :page-size="pagination.size"
-          @page-changed="$emit('page-changed', $event)"
+          @page-change="$emit('page-changed', $event)"
         />
       </footer>
     </main>

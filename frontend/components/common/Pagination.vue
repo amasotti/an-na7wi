@@ -105,9 +105,8 @@ const showLastEllipsis = computed(
 )
 
 const goToPage = (page: number) => {
-  if (page >= 1 && page <= props.totalPages && page !== props.currentPage) {
-    emit('page-change', page)
-  }
+  if (page < 1 || page > props.totalPages) return
+  emit('page-change', page)
 }
 </script>
 
