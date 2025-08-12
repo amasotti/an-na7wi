@@ -1,22 +1,3 @@
-<script setup lang="ts">
-import BaseIcon from "~/components/common/BaseIcon.vue";
-import BaseCard from "~/components/common/BaseCard.vue";
-
-type AnalyticsProps = {
-  iconClass: string;
-  iconBgClass: string;
-  title: string;
-  count: number;
-};
-
-const props = defineProps<AnalyticsProps>();
-
-const iconBackground = computed(() => {
-  return props.iconBgClass + ' p-3 rounded-lg';
-});
-
-</script>
-
 <template>
   <BaseCard class="p-6">
     <div class="flex items-center">
@@ -32,6 +13,25 @@ const iconBackground = computed(() => {
     </div>
   </BaseCard>
 </template>
+
+<script setup lang="ts">
+import BaseCard from '~/components/common/BaseCard.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
+
+type AnalyticsProps = {
+  iconClass: string
+  iconBgClass: string
+  title: string
+  count: number
+}
+
+const props = defineProps<AnalyticsProps>()
+
+const iconBackground = computed(() => {
+  return `${props.iconBgClass} p-3 rounded-lg`
+})
+</script>
+
 
 <style scoped>
 
