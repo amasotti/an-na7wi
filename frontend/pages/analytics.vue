@@ -111,7 +111,7 @@
       <!-- Root Analysis -->
       <BaseCard class="p-6">
         <h3 class="text-lg font-semibold mb-6">Most Frequent Arabic Roots</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div v-for="root in analytics.rootAnalytics.mostFrequentRoots.slice(0, 6)" :key="root.root" 
                class="bg-gray-50 rounded-lg p-4">
             <div class="flex justify-between items-start mb-2">
@@ -120,11 +120,11 @@
             </div>
             <p class="text-sm text-gray-600">{{ root.meaning || 'No meaning available' }}</p>
           </div>
-        </div>
+        </section>
       </BaseCard>
 
       <!-- Study Patterns -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <BaseCard class="p-6">
           <h3 class="text-lg font-semibold mb-4">Review Schedule</h3>
           <div class="space-y-3">
@@ -163,7 +163,7 @@
             </BaseBadge>
           </div>
         </BaseCard>
-      </div>
+      </section>
     </main>
   </div>
 </template>
