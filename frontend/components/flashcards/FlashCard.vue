@@ -64,7 +64,7 @@
                    variant="outline" 
                    size="lg" 
                    class="reveal-button"
-                   @click="$emit('reveal')">
+                   @click="revealAnswer">
           <BaseIcon size="sm" class="mr-2">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -74,7 +74,7 @@
 
         <!-- Knowledge Assessment Buttons -->
         <div v-else class="assessment-buttons">
-          <BaseButton variant="primary" size="lg" class="know-button" @click="$emit('know')">
+          <BaseButton variant="primary" size="lg" class="know-button" @click="markAsKnown">
             <BaseIcon size="sm" class="mr-2">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                     d="M5 13l4 4L19 7"/>
@@ -82,7 +82,7 @@
             I Know This
           </BaseButton>
           
-          <BaseButton variant="danger" size="lg" class="practice-button" @click="$emit('dont-know')">
+          <BaseButton variant="danger" size="lg" class="practice-button" @click="markAsDontKnow">
             <BaseIcon size="sm" class="mr-2">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                     d="M6 18L18 6M6 6l12 12"/>
@@ -109,41 +109,42 @@
 </template>
 
 <script setup lang="ts">
-import type { ButtonVariant, Word } from '~/types'
-import { Difficulty } from '~/types/enums'
-
 import BaseBadge from '~/components/common/BaseBadge.vue'
-// Components
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseCard from '~/components/common/BaseCard.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import type { BadgeVariant } from '~/types'
+import { Difficulty } from '~/types/enums'
 
-interface Props {
-  word: Word
-  showAnswer: boolean
-  displayMode: 'arabic' | 'translation'
+const flashcardStore = useFlashcardStore()
+
+const word = computed(() => flashcardStore.currentWord!)
+const showAnswer = computed(() => flashcardStore.session?.showAnswer || false)
+const displayMode = computed(() => flashcardStore.session?.displayMode || 'arabic')
+
+const revealAnswer = () => {
+  flashcardStore.revealAnswer()
 }
 
-interface Emits {
-  reveal: []
-  know: []
-  'dont-know': []
+const markAsKnown = () => {
+  flashcardStore.markWordAs('correct')
 }
 
-defineProps<Props>()
-defineEmits<Emits>()
+const markAsDontKnow = () => {
+  flashcardStore.markWordAs('incorrect')
+}
 
 // Utility functions
-const getDifficultyVariant = (difficulty: string): ButtonVariant => {
+const getDifficultyVariant = (difficulty: string): BadgeVariant => {
   switch (difficulty) {
     case Difficulty.BEGINNER:
-      return 'primary'
+      return 'success'
     case Difficulty.INTERMEDIATE:
       return 'secondary'
     case Difficulty.ADVANCED:
-      return 'danger'
+      return 'warning'
     default:
-      return 'ghost'
+      return 'neutral'
   }
 }
 </script>

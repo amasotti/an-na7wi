@@ -7,7 +7,7 @@
     />
     
     <div class="page-content">
-      <FlashcardContent @return-home="$router.push('/')" />
+      <FlashcardContent />
     </div>
   </div>
 </template>

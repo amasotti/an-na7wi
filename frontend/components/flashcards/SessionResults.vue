@@ -1,17 +1,16 @@
 <template>
   <div class="session-results">
     <!-- Header -->
-    <div class="results-header">
-      <div class="completion-icon">
+    <header class="results-header">
+      <aside class="completion-icon">
         <BaseIcon size="xl" class="text-primary-600">
           <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </BaseIcon>
-      </div>
-      
+      </aside>
       <h2 class="results-title">Session Complete!</h2>
       <p class="results-subtitle">Here's how you performed</p>
-    </div>
+    </header>
 
     <!-- Stats Overview -->
     <div class="stats-grid">
@@ -140,20 +139,20 @@
 
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <BaseButton size="lg" @click="$emit('restart')">
+      <BaseButton size="sm" @click="handleRestart">
         <BaseIcon size="sm" class="mr-2">
           <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </BaseIcon>
-        Practice Again
+        <span class="text-sm">Practice Again</span>
       </BaseButton>
       
-      <BaseButton variant="outline" size="lg" @click="$emit('return-home')">
+      <BaseButton variant="outline" size="sm" @click="goHome">
         <BaseIcon size="sm" class="mr-2">
           <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
         </BaseIcon>
-        Back to Home
+        <span class="text-sm">Go home</span>
       </BaseButton>
     </div>
   </div>
@@ -162,41 +161,25 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import BaseBadge from '~/components/common/BaseBadge.vue'
+import BaseButton from '~/components/common/BaseButton.vue'
 import BaseCard from '~/components/common/BaseCard.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
-import type { ButtonVariant, Word } from '~/types'
+import type { BadgeVariant } from '~/types'
+import type { SessionResults } from '~/types/training'
 
-interface SessionData {
-  total: number
-  correct: number
-  incorrect: number
-  skipped: number
-  words: Array<{ word: Word; result: 'correct' | 'incorrect' | 'skipped' }>
-  startTime: Date
-  endTime: Date | null
-}
-
-interface Props {
-  sessionData: SessionData
-}
-
-interface Emits {
-  restart: []
-  'return-home': []
-}
-
-const props = defineProps<Props>()
-defineEmits<Emits>()
+const flashcardStore = useFlashcardStore()
+const sessionData = computed<SessionResults>(() => flashcardStore.sessionResults)
 
 // State
-const activeTab = ref<'all' | 'correct' | 'incorrect' | 'skipped'>('all')
+type ResultType = 'all' | 'correct' | 'incorrect' | 'skipped'
+const activeTab = ref<ResultType>('all')
 
 // Computed
 const sessionDuration = computed(() => {
-  if (!props.sessionData.endTime) return '0m'
+  if (!sessionData.value.endTime) return '0m'
 
-  const start = props.sessionData.startTime
-  const end = props.sessionData.endTime
+  const start = sessionData.value.startTime
+  const end = sessionData.value.endTime
   const diffMs = end.getTime() - start.getTime()
   const diffMins = Math.floor(diffMs / 60000)
   const diffSecs = Math.floor((diffMs % 60000) / 1000)
@@ -207,28 +190,37 @@ const sessionDuration = computed(() => {
   return `${diffSecs}s`
 })
 
-const accuracyPercentage = computed(() => {
-  if (props.sessionData.total === 0) return 0
-  return Math.round((props.sessionData.correct / props.sessionData.total) * 100)
-})
+const handleRestart = async () => {
+  await flashcardStore.startNewSession()
+}
 
-const reviewTabs = computed(() => [
-  { key: 'all', label: 'All', count: props.sessionData.words.length },
-  { key: 'correct', label: 'Correct', count: props.sessionData.correct },
-  { key: 'incorrect', label: 'Need Practice', count: props.sessionData.incorrect },
-  { key: 'skipped', label: 'Skipped', count: props.sessionData.skipped },
+const goHome = () => {
+  flashcardStore.resetSession()
+  navigateTo('/')
+}
+
+type ReviewTab = {
+  key: ResultType
+  label: string
+  count: number
+}
+const reviewTabs = computed((): ReviewTab[] => [
+  { key: 'all', label: 'All', count: sessionData.value.words.length },
+  { key: 'correct', label: 'Correct', count: sessionData.value.correct },
+  { key: 'incorrect', label: 'Need Practice', count: sessionData.value.incorrect },
+  { key: 'skipped', label: 'Skipped', count: sessionData.value.skipped },
 ])
 
 const filteredWords = computed(() => {
-  if (activeTab.value === 'all') return props.sessionData.words
-  return props.sessionData.words.filter(item => item.result === activeTab.value)
+  if (activeTab.value === 'all') return sessionData.value.words
+  return sessionData.value.words.filter(item => item.result === activeTab.value)
 })
 
 // Chart data
 const donutChartSeries = computed(() => [
-  props.sessionData.correct,
-  props.sessionData.incorrect,
-  props.sessionData.skipped,
+  sessionData.value.correct,
+  sessionData.value.incorrect,
+  sessionData.value.skipped,
 ])
 
 const donutChartOptions = computed(() => ({
@@ -268,7 +260,7 @@ const donutChartOptions = computed(() => ({
 }))
 
 const barChartSeries = computed(() => {
-  const difficultyStats = props.sessionData.words.reduce(
+  const difficultyStats = sessionData.value.words.reduce(
     (acc, item) => {
       const difficulty = item.word.difficulty || 'UNKNOWN'
       if (!acc[difficulty]) {
@@ -286,6 +278,7 @@ const barChartSeries = computed(() => {
   const categories = Object.keys(difficultyStats)
   const data = categories.map(difficulty => {
     const stats = difficultyStats[difficulty]
+    if (!stats) return 0
     return Math.round((stats.correct / stats.total) * 100)
   })
 
@@ -304,7 +297,7 @@ const barChartOptions = computed(() => ({
   },
   xaxis: {
     categories: Object.keys(
-      props.sessionData.words.reduce(
+      sessionData.value.words.reduce(
         (acc, item) => {
           const difficulty = item.word.difficulty || 'UNKNOWN'
           acc[difficulty] = true
@@ -334,14 +327,14 @@ const barChartOptions = computed(() => ({
 }))
 
 // Methods
-const getResultVariant = (result: string): ButtonVariant => {
+const getResultVariant = (result: string): BadgeVariant => {
   switch (result) {
     case 'correct':
       return 'primary'
     case 'skipped':
       return 'secondary'
     case 'incorrect':
-      return 'danger'
+      return 'error'
     default:
       return 'secondary'
   }

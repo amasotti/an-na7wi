@@ -1,26 +1,6 @@
 import { computed, ref } from 'vue'
 import type { Word } from '~/types'
-import { MasteryLevel } from '~/types/enums'
-
-interface FlashcardSession {
-  words: Word[]
-  currentIndex: number
-  showAnswer: boolean
-  displayMode: 'arabic' | 'translation'
-  results: Array<{ word: Word; result: 'correct' | 'incorrect' | 'skipped' }>
-  startTime: Date
-  endTime: Date | null
-}
-
-interface SessionResults {
-  total: number
-  correct: number
-  incorrect: number
-  skipped: number
-  words: Array<{ word: Word; result: 'correct' | 'incorrect' | 'skipped' }>
-  startTime: Date
-  endTime: Date | null
-}
+import type { FlashcardSession, SessionResults } from '~/types/training'
 
 export const useFlashcardStore = defineStore('flashcard', () => {
   // State
