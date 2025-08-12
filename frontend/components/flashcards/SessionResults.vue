@@ -161,10 +161,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type {ButtonVariant, Word} from '~/types'
-import BaseIcon from "~/components/common/BaseIcon.vue";
-import BaseCard from "~/components/common/BaseCard.vue";
-import BaseBadge from "~/components/common/BaseBadge.vue";
+import BaseBadge from '~/components/common/BaseBadge.vue'
+import BaseCard from '~/components/common/BaseCard.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
+import type { ButtonVariant, Word } from '~/types'
 
 interface SessionData {
   total: number
@@ -194,13 +194,13 @@ const activeTab = ref<'all' | 'correct' | 'incorrect' | 'skipped'>('all')
 // Computed
 const sessionDuration = computed(() => {
   if (!props.sessionData.endTime) return '0m'
-  
+
   const start = props.sessionData.startTime
   const end = props.sessionData.endTime
   const diffMs = end.getTime() - start.getTime()
   const diffMins = Math.floor(diffMs / 60000)
   const diffSecs = Math.floor((diffMs % 60000) / 1000)
-  
+
   if (diffMins > 0) {
     return `${diffMins}m ${diffSecs}s`
   }
@@ -252,31 +252,36 @@ const donutChartOptions = computed(() => ({
     enabled: true,
     formatter: (val: number) => `${Math.round(val)}%`,
   },
-  responsive: [{
-    breakpoint: 480,
-    options: {
-      chart: {
-        width: 200,
-      },
-      legend: {
-        position: 'bottom',
+  responsive: [
+    {
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200,
+        },
+        legend: {
+          position: 'bottom',
+        },
       },
     },
-  }],
+  ],
 }))
 
 const barChartSeries = computed(() => {
-  const difficultyStats = props.sessionData.words.reduce((acc, item) => {
-    const difficulty = item.word.difficulty || 'UNKNOWN'
-    if (!acc[difficulty]) {
-      acc[difficulty] = { correct: 0, total: 0 }
-    }
-    acc[difficulty].total++
-    if (item.result === 'correct') {
-      acc[difficulty].correct++
-    }
-    return acc
-  }, {} as Record<string, { correct: number; total: number }>)
+  const difficultyStats = props.sessionData.words.reduce(
+    (acc, item) => {
+      const difficulty = item.word.difficulty || 'UNKNOWN'
+      if (!acc[difficulty]) {
+        acc[difficulty] = { correct: 0, total: 0 }
+      }
+      acc[difficulty].total++
+      if (item.result === 'correct') {
+        acc[difficulty].correct++
+      }
+      return acc
+    },
+    {} as Record<string, { correct: number; total: number }>
+  )
 
   const categories = Object.keys(difficultyStats)
   const data = categories.map(difficulty => {
@@ -284,10 +289,12 @@ const barChartSeries = computed(() => {
     return Math.round((stats.correct / stats.total) * 100)
   })
 
-  return [{
-    name: 'Accuracy %',
-    data,
-  }]
+  return [
+    {
+      name: 'Accuracy %',
+      data,
+    },
+  ]
 })
 
 const barChartOptions = computed(() => ({
@@ -296,11 +303,16 @@ const barChartOptions = computed(() => ({
     fontFamily: 'inherit',
   },
   xaxis: {
-    categories: Object.keys(props.sessionData.words.reduce((acc, item) => {
-      const difficulty = item.word.difficulty || 'UNKNOWN'
-      acc[difficulty] = true
-      return acc
-    }, {} as Record<string, boolean>)),
+    categories: Object.keys(
+      props.sessionData.words.reduce(
+        (acc, item) => {
+          const difficulty = item.word.difficulty || 'UNKNOWN'
+          acc[difficulty] = true
+          return acc
+        },
+        {} as Record<string, boolean>
+      )
+    ),
   },
   yaxis: {
     title: {
@@ -324,19 +336,27 @@ const barChartOptions = computed(() => ({
 // Methods
 const getResultVariant = (result: string): ButtonVariant => {
   switch (result) {
-    case 'correct': return 'primary'
-    case 'skipped': return 'secondary'
-    case 'incorrect': return 'danger'
-    default: return 'secondary'
+    case 'correct':
+      return 'primary'
+    case 'skipped':
+      return 'secondary'
+    case 'incorrect':
+      return 'danger'
+    default:
+      return 'secondary'
   }
 }
 
 const getResultLabel = (result: string) => {
   switch (result) {
-    case 'correct': return 'Correct'
-    case 'incorrect': return 'Need Practice'
-    case 'skipped': return 'Skipped'
-    default: return 'Unknown'
+    case 'correct':
+      return 'Correct'
+    case 'incorrect':
+      return 'Need Practice'
+    case 'skipped':
+      return 'Skipped'
+    default:
+      return 'Unknown'
   }
 }
 </script>

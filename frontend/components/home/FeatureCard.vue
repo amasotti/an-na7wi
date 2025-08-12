@@ -84,7 +84,7 @@ const ctaClasses = computed(() => {
 
 // Icon components mapping
 const iconComponents = {
-  'cards': () =>
+  cards: () =>
     h('path', {
       fill: 'none',
       stroke: 'currentColor',

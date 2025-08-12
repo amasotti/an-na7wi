@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseCard from '~/components/common/BaseCard.vue'
-import type {RootFrequency} from "~/types/analytics";
+import type { RootFrequency } from '~/types/analytics'
 
 const analyticsStore = useAnalyticsStore()
 const { rootAnalytics } = storeToRefs(analyticsStore)
@@ -31,7 +31,6 @@ const { rootAnalytics } = storeToRefs(analyticsStore)
 const goToRoot = (root: RootFrequency) => {
   navigateTo(`/roots?search=${root.displayForm}`)
 }
-
 </script>
 
 <style scoped>

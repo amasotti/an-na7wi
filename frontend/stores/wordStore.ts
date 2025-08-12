@@ -240,6 +240,37 @@ export const useWordStore = defineStore('word', () => {
     fetchWords(true)
   }
 
+  const fetchAllUnmasteredWords = async () => {
+    loading.value = true
+    try {
+      const allWords: Word[] = []
+      let currentPage = 1
+      let hasMorePages = true
+
+      while (hasMorePages) {
+        const params = {
+          page: currentPage,
+          size: 50, // Larger page size for efficiency
+          sort: 'arabic',
+        }
+
+        const response = await wordService.getWords(params)
+        allWords.push(...response.items.filter(word => word.masteryLevel !== MasteryLevel.MASTERED))
+
+        // Check if there are more pages
+        hasMorePages = currentPage < Math.ceil(response.totalCount / response.pageSize)
+        currentPage++
+      }
+
+      return allWords
+    } catch (error) {
+      console.error('Error fetching all unmastered words:', error)
+      return []
+    } finally {
+      loading.value = false
+    }
+  }
+
   const reset = () => {
     words.value = []
     currentWord.value = null
@@ -292,6 +323,7 @@ export const useWordStore = defineStore('word', () => {
     updateFilters,
     clearSearch,
     clearFilters,
+    fetchAllUnmasteredWords,
     reset,
   }
 })

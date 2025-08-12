@@ -49,7 +49,8 @@
 import ChartCard from '~/components/analytics/ChartCard.vue'
 
 const analyticsStore = useAnalyticsStore()
-const { loading, contentDistribution, learningProgress, activityMetrics } = storeToRefs(analyticsStore)
+const { loading, contentDistribution, learningProgress, activityMetrics } =
+  storeToRefs(analyticsStore)
 
 interface ChartsSectionProps {
   sectionTitle: string

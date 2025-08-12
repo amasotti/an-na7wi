@@ -45,7 +45,6 @@ import SummaryCard from '~/components/analytics/SummaryCard.vue'
 
 const analyticsStore = useAnalyticsStore()
 const { overview } = storeToRefs(analyticsStore)
-
 </script>
 
 <style scoped>

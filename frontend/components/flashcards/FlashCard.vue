@@ -109,14 +109,14 @@
 </template>
 
 <script setup lang="ts">
-import type {ButtonVariant, Word} from '~/types'
+import type { ButtonVariant, Word } from '~/types'
 import { Difficulty } from '~/types/enums'
 
+import BaseBadge from '~/components/common/BaseBadge.vue'
 // Components
-import BaseButton from "~/components/common/BaseButton.vue";
-import BaseIcon from "~/components/common/BaseIcon.vue";
-import BaseBadge from "~/components/common/BaseBadge.vue";
-import BaseCard from "~/components/common/BaseCard.vue";
+import BaseButton from '~/components/common/BaseButton.vue'
+import BaseCard from '~/components/common/BaseCard.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
 
 interface Props {
   word: Word
