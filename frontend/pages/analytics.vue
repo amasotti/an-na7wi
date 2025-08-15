@@ -169,12 +169,12 @@
 </template>
 
 <script setup lang="ts">
+import SummaryCard from '~/components/analytics/SummaryCard.vue'
+import BaseBadge from '~/components/common/BaseBadge.vue'
+import BaseCard from '~/components/common/BaseCard.vue'
+import BaseErrorState from '~/components/common/BaseErrorState.vue'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import type { AnalyticsData } from '~/types/analytics'
-import LoadingEffect from "~/components/common/LoadingEffect.vue";
-import BaseErrorState from "~/components/common/BaseErrorState.vue";
-import BaseCard from "~/components/common/BaseCard.vue";
-import SummaryCard from "~/components/analytics/SummaryCard.vue";
-import BaseBadge from "~/components/common/BaseBadge.vue";
 
 const { getAnalytics } = useAnalyticsService()
 

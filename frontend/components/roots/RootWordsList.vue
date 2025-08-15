@@ -41,14 +41,13 @@
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import type { WordSummary } from '~/types'
+import { useRootStore } from '#imports'
 import RootWordItem from './RootWordItem.vue'
 
-interface Props {
-  words: WordSummary[]
-  rootDisplay: string
-}
+const rootStore = useRootStore()
 
-defineProps<Props>()
+const words = computed(() => rootStore.currentRootWithWords!.words)
+const rootDisplay = computed(() => rootStore.currentRootWithWords!.root.displayForm)
 
 const handleWordClick = (arabic: string) => {
   // Navigate to vocabulary view with Arabic search query

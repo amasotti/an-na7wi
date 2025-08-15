@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import BaseIcon from "~/components/common/BaseIcon.vue";
-import BaseCard from "~/components/common/BaseCard.vue";
+import BaseCard from '~/components/common/BaseCard.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
 
 type AnalyticsProps = {
-  iconClass: string;
-  iconBgClass: string;
-  title: string;
-  count: number;
-};
+  iconClass: string
+  iconBgClass: string
+  title: string
+  count: number
+}
 
-const props = defineProps<AnalyticsProps>();
+const props = defineProps<AnalyticsProps>()
 
 const iconBackground = computed(() => {
-  return props.iconBgClass + ' p-3 rounded-lg';
-});
-
+  return `${props.iconBgClass} p-3 rounded-lg`
+})
 </script>
 
 <template>

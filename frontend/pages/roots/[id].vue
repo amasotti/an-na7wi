@@ -29,12 +29,9 @@
       </div>
 
       <!-- Right Column: Related Words -->
-      <div class="right-column">
-        <RootWordsList 
-          :words="rootStore.currentRootWithWords.words"
-          :root-display="rootStore.currentRootWithWords.root.displayForm"
-        />
-      </div>
+      <section class="right-column">
+        <RootWordsList />
+      </section>
     </div>
 
   </main>
