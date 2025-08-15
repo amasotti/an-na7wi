@@ -48,6 +48,7 @@ export interface ExampleGenerationRequest {
 
 export interface ExampleDTO {
   arabic: string
+  transliteration: string
   english: string
 }
 

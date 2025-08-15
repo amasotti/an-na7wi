@@ -383,7 +383,7 @@ describe('AnnotationForm', () => {
 
       expect(vi.mocked(exampleService.generateExamples)).toHaveBeenCalledWith({
         arabic: 'كتاب',
-        context: 'vocabulary',
+        context: undefined,
       })
     })
 
@@ -430,6 +430,7 @@ describe('AnnotationForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
+            transliteration: 'Hatha kitab mufid',
             english: 'This is a useful book',
           },
         ],
@@ -455,8 +456,8 @@ describe('AnnotationForm', () => {
       await firstExample.trigger('click')
 
       const contentTextarea = wrapper.find('#content').element as HTMLTextAreaElement
-      expect(contentTextarea.value).toContain('Arabic: هذا كتاب مفيد')
-      expect(contentTextarea.value).toContain('English: This is a useful book')
+      expect(contentTextarea.value).toContain('هذا كتاب مفيد')
+      expect(contentTextarea.value).toContain('This is a useful book')
     })
 
     it('clears examples when anchor text changes', async () => {

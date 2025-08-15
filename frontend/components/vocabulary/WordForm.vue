@@ -41,10 +41,14 @@
               required
               aria-describedby="translation-help"
             />
-          </div>
-          <div class="form-help-row">
-            <div id="transliteration-help" class="form-help">Romanized pronunciation</div>
-            <div id="translation-help" class="form-help">English meaning or definition</div>
+            <div class="invisible">Placeholder to put the root on the right</div>
+            <BaseInput
+              v-model="form.root"
+              label="Root"
+              class="arabic text-xl"
+              :error="rootValidationError"
+              aria-describedby="root-help"
+            />
           </div>
         </div>
       </section>
@@ -103,6 +107,7 @@
               @keydown.space.prevent="addExampleToField(example)"
             >
               <div class="font-medium text-gray-900 rtl mb-1">{{ example.arabic }}</div>
+              <div class="font-small italic text-gray-500">{{ example.transliteration }}</div>
               <div class="text-gray-600 text-sm">{{ example.english }}</div>
             </div>
           </div>
@@ -110,43 +115,15 @@
         </div>
       </section>
 
-      <!-- Root and Related Words Section -->
-      <section class="form-section section-root" aria-labelledby="root-heading">
-        <h3 id="root-heading" class="form-section-title">
-          <BaseIcon size="sm" class="section-icon text-orange-600">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l3.057-3L21 16l-3.057 3.057M5.353 8.978l1.414 1.414M8.978 5.353l1.414 1.414m0 9.193l1.414 1.414M5.353 15.314l1.414 1.414M8 21l8-8" />
-          </BaseIcon>
-          Root Analysis
-        </h3>
-        <div class="form-group">
-          <BaseInput
-            v-model="form.root"
-            label="Root"
-            class="arabic text-xl"
-            :error="rootValidationError"
-            aria-describedby="root-help"
-          />
-          <div id="root-help" class="form-help">Arabic root letters (usually 3 consonants)</div>
-
-          <!-- Loading state for related words -->
-          <div v-if="loadingRelatedWords" class="loading-state" role="status" aria-live="polite">
-            <div class="flex items-center justify-center py-4">
-              <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-orange-500 mr-3"></div>
-              <span class="text-sm text-gray-600 font-medium">Finding related words...</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- Related Words Section -->
-      <section v-if="relatedWords.length > 0" class="form-section section-related" aria-labelledby="related-words-heading">
-        <h3 id="related-words-heading" class="form-section-title">
-          <BaseIcon size="sm" class="section-icon text-teal-600">
+      <section v-if="relatedWords.length > 0" class="form-section section-related-words" aria-labelledby="rel-words-heading">
+        <h3 id="rel-words-heading" class="form-section-title">
+          <BaseIcon size="sm" class="section-icon text-orange-600">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </BaseIcon>
           Related Words (Same Root)
         </h3>
-        <div class="form-preview" role="region" aria-label="Related words list">
+        <div role="region" aria-label="Related words list">
           <div class="space-y-2">
             <div
               v-for="word in relatedWords"
@@ -159,7 +136,7 @@
               @keydown.enter="$emit('related-word-click', word)"
               @keydown.space.prevent="$emit('related-word-click', word)"
             >
-              <div class="flex-1">
+              <div class="flex-2">
                 <span class="font-medium text-gray-900 rtl block">{{ word.arabic }}</span>
                 <span v-if="word.transliteration" class="text-sm text-gray-600">{{ word.transliteration }}</span>
               </div>
@@ -287,8 +264,8 @@
 </template>
 
 <script setup lang="ts">
-import type { DictionaryLink, ExampleDTO, SelectOption, Word } from '@/types'
-import { Dialect, DictionaryType, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
+import type { DictionaryLink, ExampleDTO, Word } from '@/types'
+import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { computed, ref, watch } from 'vue'
 import { exampleService } from '~/composables/exampleService'
 import { rootService } from '~/composables/rootService'
@@ -491,14 +468,13 @@ const generateExamples = async () => {
     generatedExamples.value = response.examples
   } catch (error) {
     console.error('Failed to generate examples:', error)
-    // TODO: Show user-friendly error message
   } finally {
     loadingExamples.value = false
   }
 }
 
 const addExampleToField = (example: ExampleDTO) => {
-  const exampleText = `${example.arabic} (${example.english})`
+  const exampleText = `${example.arabic} (${example.transliteration})\n${example.english}`
 
   if (form.value.example) {
     form.value.example += `\n ${exampleText}`
@@ -543,7 +519,7 @@ watch(
   @apply bg-gradient-to-br from-green-50/50 to-emerald-50/50 rounded-xl p-6 border border-green-100/50;
 }
 
-.section-root {
+.section-related-words {
   @apply bg-gradient-to-br from-orange-50/50 to-amber-50/50 rounded-xl p-6 border border-orange-100/50;
 }
 
@@ -559,14 +535,6 @@ watch(
   @apply bg-gradient-to-br from-gray-50/50 to-slate-50/50 rounded-xl p-6 border border-gray-100/50;
 }
 
-.section-related {
-  @apply bg-gradient-to-br from-teal-50/50 to-cyan-50/50 rounded-xl p-6 border border-teal-100/50;
-}
-
-.loading-state {
-  @apply bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200/60 shadow-sm;
-}
-
 .form-section-grid {
   @apply space-y-6;
 }
@@ -577,10 +545,6 @@ watch(
 
 .form-field-row {
   @apply grid grid-cols-1 md:grid-cols-2 gap-6;
-}
-
-.form-help-row {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-6 mt-2;
 }
 
 /* RTL Support */
@@ -598,21 +562,16 @@ watch(
 }
 
 .related-word-item {
-  @apply bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-teal-200/60 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-[1.02] hover:bg-white hover:border-teal-300 flex justify-between items-center;
+  @apply p-4 border cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-[1.02] flex justify-between items-center bg-white/60 backdrop-blur-sm rounded-xl border-orange-200/60 hover:bg-white hover:border-orange-300;
 }
 
 /* Form Preview Enhancements */
 .form-preview {
-  @apply bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 shadow-sm;
+  @apply shadow-sm;
 }
 
 .form-preview-title {
   @apply text-blue-900 font-semibold text-sm uppercase tracking-wide;
-}
-
-/* Loading States */
-.loading-section {
-  @apply animate-pulse;
 }
 
 /* Responsive Improvements */
@@ -622,10 +581,6 @@ watch(
   }
   
   .form-field-row {
-    @apply grid-cols-1 gap-4;
-  }
-  
-  .form-help-row {
     @apply grid-cols-1 gap-4;
   }
   

@@ -64,6 +64,7 @@
             >
               <div class="text-sm">
                 <div class="font-medium text-blue-900 rtl mb-1">{{ example.arabic }}</div>
+                <div class="font-small italic text-gray-600">{{ example.transliteration }}</div>
                 <div class="text-gray-600">{{ example.english }}</div>
               </div>
             </div>
@@ -314,7 +315,7 @@ const generateExamples = async () => {
   try {
     const response = await exampleService.generateExamples({
       arabic: form.value.anchorText.trim(),
-      context: form.value.type === AnnotationTypeEnum.VOCABULARY ? 'vocabulary' : undefined,
+      context: undefined,
     })
     generatedExamples.value = response.examples
   } catch (error) {
@@ -326,7 +327,7 @@ const generateExamples = async () => {
 }
 
 const addExampleToContent = (example: ExampleDTO) => {
-  const exampleText = `Arabic: ${example.arabic}\nEnglish: ${example.english}\n\n`
+  const exampleText = `E.g.: ${example.arabic}\n${example.transliteration}\n${example.english}\n\n`
 
   if (form.value.content) {
     form.value.content += `\n\n${exampleText}`

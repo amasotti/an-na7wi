@@ -84,15 +84,6 @@ describe('WordForm', () => {
     expect(screen.getByRole('group', { name: 'Form actions' })).toBeInTheDocument()
   })
 
-  it('renders help text for form fields', () => {
-    renderWithStore(WordForm, { props: defaultProps })
-
-    expect(screen.getByText('Enter the Arabic word or phrase')).toBeInTheDocument()
-    expect(screen.getByText('Romanized pronunciation')).toBeInTheDocument()
-    expect(screen.getByText('English meaning or definition')).toBeInTheDocument()
-    expect(screen.getByText('Arabic root letters (usually 3 consonants)')).toBeInTheDocument()
-  })
-
   it('renders in create mode when no word provided', () => {
     renderWithStore(WordForm, { props: defaultProps })
 
@@ -124,7 +115,6 @@ describe('WordForm', () => {
     // Check for section headings
     expect(screen.getByText('Primary Information')).toBeInTheDocument()
     expect(screen.getByText('Example Usage')).toBeInTheDocument()
-    expect(screen.getByText('Root Analysis')).toBeInTheDocument()
     expect(screen.getByText('Classification')).toBeInTheDocument()
     expect(screen.getByText('Resources & Links')).toBeInTheDocument()
     expect(screen.getByText('Additional Notes')).toBeInTheDocument()
