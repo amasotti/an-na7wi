@@ -4,6 +4,7 @@ import { exampleService } from '~/composables/exampleService'
 import type { Annotation, ExampleGenerationResponse } from '~/types'
 import { AnnotationType, MasteryLevel } from '~/types'
 import { AnnotationForm } from '#components'
+import {mockedExample} from "~/test/mocks/examples.mock";
 
 // Mock child components
 vi.mock('../common/BaseModal.vue', () => ({
@@ -358,10 +359,7 @@ describe('AnnotationForm', () => {
     it('calls example service when generate button is clicked', async () => {
       const mockResponse: ExampleGenerationResponse = {
         examples: [
-          {
-            arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book',
-          },
+          mockedExample,
         ],
       }
       vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
@@ -390,12 +388,10 @@ describe('AnnotationForm', () => {
     it('displays generated examples', async () => {
       const mockResponse: ExampleGenerationResponse = {
         examples: [
-          {
-            arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book',
-          },
+          mockedExample,
           {
             arabic: 'أقرأ الكتاب',
+            transliteration: 'Aqra al-kitab',
             english: 'I read the book',
           },
         ],

@@ -1,11 +1,12 @@
-import { render, screen } from '@testing-library/vue'
+import { screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { exampleService } from '~/composables/exampleService'
 import { mockDictionaryLinks } from '~/test/mocks/server'
 import { renderWithStore } from '~/test/test-utils'
-import type { ExampleGenerationResponse, SelectOption, Word } from '~/types'
+import type { ExampleGenerationResponse, Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 import { VocabularyWordForm as WordForm } from '#components'
+import {mockedExample} from "~/test/mocks/examples.mock";
 
 // Mock the services
 vi.mock('~/composables/rootService', () => ({
@@ -166,10 +167,7 @@ describe('WordForm', () => {
     it('calls example service with arabic word and part of speech context', async () => {
       const mockResponse: ExampleGenerationResponse = {
         examples: [
-          {
-            arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book',
-          },
+          mockedExample,
         ],
       }
       const mockedGenerateExamples = vi.mocked(exampleService.generateExamples)
@@ -194,6 +192,7 @@ describe('WordForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب',
+            transliteration: 'hatha kitab',
             english: 'This is a book',
           },
         ],
@@ -219,10 +218,12 @@ describe('WordForm', () => {
         examples: [
           {
             arabic: 'هذا كتاب مفيد',
+            transliteration: 'hatha kitab mufid',
             english: 'This is a useful book',
           },
           {
             arabic: 'أقرأ الكتاب',
+            transliteration: 'aqra al-kitab',
             english: 'I read the book',
           },
         ],
