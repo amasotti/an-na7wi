@@ -32,38 +32,6 @@
         </div>
       </section>
 
-      <!-- Preview Section -->
-      <section v-if="preview" class="form-section section-preview" aria-labelledby="preview-heading">
-        <h3 id="preview-heading" class="form-section-title">
-          <BaseIcon size="sm" class="section-icon text-emerald-600">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </BaseIcon>
-          Root Preview
-        </h3>
-        <div class="root-preview">
-          <div class="preview-item">
-            <span class="preview-label">Display Form</span>
-            <span class="preview-value arabic text-3xl font-bold">{{ preview.displayForm }}</span>
-          </div>
-          <div class="preview-item">
-            <span class="preview-label">Individual Letters</span>
-            <div class="letter-display">
-              <span
-                v-for="(letter, index) in preview.letters"
-                :key="index"
-                class="letter-badge arabic"
-              >
-                {{ letter }}
-              </span>
-            </div>
-          </div>
-          <div class="preview-item">
-            <span class="preview-label">Letter Count</span>
-            <span class="preview-value font-semibold">{{ preview.letterCount }} letters</span>
-          </div>
-        </div>
-      </section>
-
       <!-- Meaning Section -->
       <section class="form-section section-meaning" aria-labelledby="meaning-heading">
         <h3 id="meaning-heading" class="form-section-title">
@@ -149,7 +117,7 @@ import BaseButton from '@/components/common/BaseButton.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
-import type { Root, RootNormalization } from '@/types'
+import type { Root } from '@/types'
 import { computed, ref, watch } from 'vue'
 import { rootService } from '~/composables/rootService'
 
@@ -172,7 +140,6 @@ const emit = defineEmits<Emits>()
 const rootInput = ref('')
 const meaningInput = ref('')
 const analysisInput = ref('')
-const preview = ref<RootNormalization | null>(null)
 const inputError = ref('')
 const error = ref('')
 const loading = ref(false)
@@ -180,22 +147,19 @@ const loading = ref(false)
 const isEditing = computed(() => !!props.root)
 
 const canSubmit = computed(() => {
-  return (
-    rootInput.value.trim() !== '' && preview.value?.isValid && !inputError.value && !loading.value
-  )
+  return rootInput.value.trim() !== '' && !inputError.value && !loading.value
 })
 
 const handleInput = async () => {
   inputError.value = ''
   error.value = ''
-  preview.value = null
 
   const input = rootInput.value.trim()
   if (!input || input.length < 3) return
 
   try {
-    preview.value = await rootService.normalizeRoot(input)
-    if (!preview.value.isValid) {
+    const normalized = await rootService.normalizeRoot(input)
+    if (!normalized.isValid) {
       inputError.value = 'Invalid root format. Please enter 2-5 Arabic letters.'
     }
   } catch (err) {
@@ -205,14 +169,13 @@ const handleInput = async () => {
 }
 
 const handleSubmit = async () => {
-  if (!canSubmit.value || !preview.value) return
+  if (!canSubmit.value) return
 
   try {
     loading.value = true
     error.value = ''
 
-    // Use the original input from preview (which contains the normalized data)
-    const inputToSend = preview.value.input || rootInput.value.trim()
+    const inputToSend = rootInput.value.trim()
 
     if (isEditing.value && props.root) {
       // Update existing root
@@ -246,7 +209,6 @@ const handleClose = () => {
   rootInput.value = ''
   meaningInput.value = ''
   analysisInput.value = ''
-  preview.value = null
   inputError.value = ''
   error.value = ''
   loading.value = false
@@ -258,20 +220,10 @@ const initializeForm = () => {
     rootInput.value = props.root.displayForm
     meaningInput.value = props.root.meaning || ''
     analysisInput.value = props.root.analysis || ''
-
-    preview.value = {
-      input: props.root.displayForm,
-      letters: props.root.letters,
-      normalizedForm: props.root.normalizedForm,
-      displayForm: props.root.displayForm,
-      letterCount: props.root.letterCount,
-      isValid: true,
-    }
   } else {
     rootInput.value = ''
     meaningInput.value = ''
     analysisInput.value = ''
-    preview.value = null
     inputError.value = ''
     error.value = ''
   }
@@ -286,7 +238,6 @@ watch(
       rootInput.value = ''
       meaningInput.value = ''
       analysisInput.value = ''
-      preview.value = null
       inputError.value = ''
       error.value = ''
     }
@@ -333,10 +284,6 @@ if (props.open && props.root) {
   @apply bg-gradient-to-br from-blue-50/50 to-indigo-50/50 rounded-xl p-6 border border-blue-100/50;
 }
 
-.section-preview {
-  @apply bg-gradient-to-br from-emerald-50/50 to-green-50/50 rounded-xl p-6 border border-emerald-100/50;
-}
-
 .section-meaning {
   @apply bg-gradient-to-br from-purple-50/50 to-violet-50/50 rounded-xl p-6 border border-purple-100/50;
 }
@@ -347,31 +294,6 @@ if (props.open && props.root) {
 
 .form-field-primary {
   @apply space-y-3;
-}
-
-/* Preview styling */
-.root-preview {
-  @apply space-y-4;
-}
-
-.preview-item {
-  @apply flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-emerald-200/60;
-}
-
-.preview-label {
-  @apply text-sm font-medium text-gray-600 mb-1 sm:mb-0;
-}
-
-.preview-value {
-  @apply text-gray-900;
-}
-
-.letter-display {
-  @apply flex gap-2 flex-wrap;
-}
-
-.letter-badge {
-  @apply inline-flex items-center justify-center w-10 h-10 bg-emerald-100 text-emerald-700 text-lg font-semibold rounded-lg shadow-sm border border-emerald-200;
 }
 
 /* Error styling */
@@ -387,11 +309,6 @@ if (props.open && props.root) {
   @apply text-red-700 text-sm font-medium;
 }
 
-/* RTL Support */
-.rtl {
-  direction: rtl;
-}
-
 /* Responsive Improvements */
 @media (max-width: 768px) {
   .form-section {
@@ -404,14 +321,6 @@ if (props.open && props.root) {
   
   .section-icon {
     @apply mr-2;
-  }
-  
-  .preview-item {
-    @apply flex-col items-start;
-  }
-  
-  .letter-display {
-    @apply justify-center mt-2;
   }
 }
 </style>

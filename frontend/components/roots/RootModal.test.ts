@@ -315,22 +315,5 @@ describe('RootModal', () => {
       // Should render without errors
       expect(screen.getByText('Add New Root')).toBeInTheDocument()
     })
-
-    it('shows preview when valid root is normalized', async () => {
-      mockNormalizeRoot.mockResolvedValue(validNormalization)
-
-      renderWithStore(RootModal, {
-        props: { open: true },
-      })
-
-      const rootInput = screen.getByLabelText('Root Letters *')
-      await fireEvent.update(rootInput, 'كتب')
-
-      await waitFor(() => {
-        expect(screen.getByText('Root Preview')).toBeInTheDocument()
-        expect(screen.getByText('ك-ت-ب')).toBeInTheDocument()
-        expect(screen.getByText('3 letters')).toBeInTheDocument()
-      })
-    })
   })
 })

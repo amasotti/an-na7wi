@@ -31,7 +31,7 @@
         v-for="word in words"
         :key="word.id"
         :word="word"
-        @click="handleWordClick"
+        @click="handleWordClick(word)"
       />
     </div>
   </div>
@@ -49,11 +49,10 @@ const rootStore = useRootStore()
 const words = computed(() => rootStore.currentRootWithWords!.words)
 const rootDisplay = computed(() => rootStore.currentRootWithWords!.root.displayForm)
 
-const handleWordClick = (arabic: string) => {
+const handleWordClick = (word: WordSummary) => {
   // Navigate to vocabulary view with Arabic search query
   navigateTo({
-    path: '/words',
-    query: { search: arabic },
+    path: `/words/${word.id}`,
   })
 }
 </script>
