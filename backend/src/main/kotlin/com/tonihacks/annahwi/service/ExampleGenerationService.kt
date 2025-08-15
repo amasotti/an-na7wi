@@ -38,6 +38,7 @@ class ExampleGenerationService {
                 .build()
 
             val response: Message = client.messages().create(messageRequest)
+              .also { logger.debug("Anthropic response: ${it.content()}") }
             val examples = parseExamplesFromResponse(response)
             
             logger.info("Generated ${examples.size} examples for: ${request.arabic}")
@@ -60,21 +61,25 @@ class ExampleGenerationService {
             - Use Modern Standard Arabic (MSA) or Tunisian Arabic colloquial dialect
             - Examples should be practical and commonly used
             - Show the word/expression in different grammatical contexts when possible
-            - For each example, provide the Arabic sentence followed by its English translation
+            - For each example, provide the Arabic sentence followed by its translitteration and English translation
             
-            Format your response as exactly 5 lines:
+            Format your response as exactly and strictly 7 lines:
             Line 1: First Arabic sentence
-            Line 2: English translation of first sentence
-            Line 3: Six dashes (------) to separate examples
-            Line 4: Second Arabic sentence
-            Line 5: English translation of second sentence
+            Line 2: Translitteration of first sentence in chat arabic alphabet
+            Line 3: English translation of first sentence
+            Line 4: Six dashes (------) to separate examples
+            Line 5: Second Arabic sentence
+            Line 6: Translitteration of second sentence in chat arabic alphabet
+            Line 7: English translation of second sentence
             
             Example format:
             ```
             هذا كتاب مفيد
+            Hatha kitab mufeed
             This is a useful book
             ------
             أقرأ الكتاب كل يوم
+            Aqra' al-kitab kul yawom
             I read the book every day
             ```
         """.trimIndent()
@@ -89,8 +94,8 @@ class ExampleGenerationService {
             ?.let { lines ->
                 if (lines.hasEnoughExampleData()) {
                     listOf(
-                        lines.extractExample(0, 2),
-                        lines.extractExample(3, 5)
+                        lines.extractExample(0, 3),
+                        lines.extractExample(4, 7)
                     )
                 } else {
                     logger.warn("Response does not contain enough lines for examples: ${lines.size}")

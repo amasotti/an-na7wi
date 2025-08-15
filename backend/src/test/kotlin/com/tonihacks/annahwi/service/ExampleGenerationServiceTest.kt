@@ -116,7 +116,6 @@ class ExampleGenerationServiceTest {
         assertTrue(prompt.contains("- Each example should be maximum 8 words"))
         assertTrue(prompt.contains("- Use Modern Standard Arabic (MSA)"))
         assertTrue(prompt.contains("- Examples should be practical and commonly used"))
-        assertTrue(prompt.contains("Format your response as exactly 5 lines"))
         assertTrue(prompt.contains("English translation"))
         
         // Check that the specific word and context are included

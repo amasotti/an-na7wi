@@ -1,8 +1,9 @@
 package com.tonihacks.annahwi.dto.response
 
 data class ExampleDTO(
-    val arabic: String,
-    val english: String
+  val arabic: String,
+  val transliteration: String = "",
+  val english: String
 ) {
     companion object {
 
@@ -22,7 +23,8 @@ data class ExampleDTO(
             }
             return ExampleDTO(
                 arabic = example[0].trim(),
-                english = example.getOrElse(1) { "" }.trim()
+                transliteration = example.getOrElse(1) { "" }.trim(),
+                english = example.getOrElse(2) { "" }.trim()
             )
         }
     }
