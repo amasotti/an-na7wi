@@ -2,9 +2,35 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [1.6.1] - 2025-08-16
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/22d9e01c4c109bbbe177c9614a7d030db2e07ad7..)
+### 🚜 Refactor
+
+
+- *(ci)* Improve github actions ([7d5b2ff](https://github.com/amasotti/an-na7wi/commit/7d5b2ffaa33e16eb3688348a0b10ebe84130a807))
+
+### 🧪 Testing
+
+
+- Improve passing props to test for BaseEmptyState ([33db8eb](https://github.com/amasotti/an-na7wi/commit/33db8eb7a0b1952bb49395f7df6e23d5570500dd))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Migrate npm packages to new version ([0ff03f5](https://github.com/amasotti/an-na7wi/commit/0ff03f5896018abc2a3487fea0e2c40ee005dbb4))
+
+- Biome 2 format and lint ([51b9cc6](https://github.com/amasotti/an-na7wi/commit/51b9cc6293ec492c89c7fffd664980d423c9cb8d))
+
+- Biome ignore vuejs imports ([28fc835](https://github.com/amasotti/an-na7wi/commit/28fc8358e5f097623f3ea3624b32582ca5ad00d5))
+
+- Fix biome findings ([8d30fcf](https://github.com/amasotti/an-na7wi/commit/8d30fcf5c5225f3e916188e18a052241560e76c4))
+
+- Update gh actions ([56cbef3](https://github.com/amasotti/an-na7wi/commit/56cbef39eec7f655100a317b3e50d49acb66304d))
+
 ## [1.6.0] - 2025-08-16
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/965ac2733c97bb7b17c1e6e7bd526da2d46e0ef2..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/965ac2733c97bb7b17c1e6e7bd526da2d46e0ef2..22d9e01c4c109bbbe177c9614a7d030db2e07ad7)
 ### 🚀 Features
 
 
