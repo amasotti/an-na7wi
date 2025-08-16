@@ -81,30 +81,12 @@ class WordRepository : PanacheRepository<Word> {
     }
     
     /**
-     * Find verified words
-     */
-    fun findVerified(page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
-        return find("isVerified = true", sort)
-            .page(page)
-            .list()
-    }
-    
-    /**
      * Search words by translation or transliteration (case-insensitive)
      */
     fun searchByTranslation(query: String, page: Page, sort: Sort = Sort.by("arabic")): List<Word> {
         return find("LOWER(translation) LIKE LOWER(:query) OR LOWER(transliteration) LIKE LOWER(:query)", 
             Parameters.with("query", "%$query%"))
             .page(page)
-            .list()
-    }
-    
-    /**
-     * Find words with highest frequency
-     */
-    fun findMostFrequent(limit: Int): List<Word> {
-        return find("ORDER BY frequency DESC")
-            .page(0, limit)
             .list()
     }
     

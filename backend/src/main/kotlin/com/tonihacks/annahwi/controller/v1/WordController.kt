@@ -213,25 +213,6 @@ class WordController {
     }
     
     @GET
-    @Path("/verified")
-    @Operation(summary = "Find verified words", description = "Returns verified words")
-    fun findVerified(
-        @QueryParam("page") @DefaultValue("1") page: Int,
-        @QueryParam("size") @DefaultValue("10") size: Int
-    ): Response {
-        logger.info("GET /api/v1/words/verified - page: $page, size: $size")
-        val pagination = PaginationUtil.toZeroBasedPage(page)
-        val total = wordService.countAll()
-        val paginatedResponse = PaginatedResponse(
-            items = wordService.findVerified(pagination, size),
-            totalCount = total,
-            page = page,
-            pageSize = size
-        )
-        return Response.ok(paginatedResponse).build()
-    }
-    
-    @GET
     @Path("/search/translation/{query}")
     @Operation(summary = "Search words by translation", description = "Returns words containing the given text in translation or transliteration")
     fun searchByTranslation(

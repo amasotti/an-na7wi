@@ -156,15 +156,6 @@ class WordService {
     }
     
     /**
-     * Find verified words
-     */
-    fun findVerified(page: Int, size: Int): List<WordResponseDTO> {
-        logger.info("Finding verified words, page: $page, size: $size")
-        val words = wordRepository.findVerified(Page.of(page, size))
-        return WordResponseDTO.fromEntities(words)
-    }
-    
-    /**
      * Search words by translation or transliteration
      */
     fun searchByTranslation(query: String, page: Int, size: Int): List<WordResponseDTO> {
