@@ -9,7 +9,7 @@
 
     <section aria-labelledby="word-notes">
       <article>
-        {{ currentWord?.notes }}
+        <div v-html="formattedNotes"></div>
       </article>
     </section>
   </article>
@@ -21,6 +21,14 @@ import type { Word } from '~/types'
 
 const wordStore = useWordStore()
 const currentWord = computed((): Word | null => wordStore.currentWord)
+
+// Convert \n to <br> for line breaks in notes
+const formattedNotes = computed(() => {
+  if (!currentWord.value?.notes) return ''
+  return currentWord.value.notes.replace(/\n/g, '<br>')
+})
+
+
 </script>
 
 <style scoped>
