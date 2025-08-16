@@ -1,9 +1,9 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { TextCard } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { Text } from '~/types'
 import { Dialect, Difficulty } from '~/types/enums'
-import { TextCard } from '#components'
 
 // Mock router
 const mockPush = vi.fn()

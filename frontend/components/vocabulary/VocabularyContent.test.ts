@@ -1,9 +1,9 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
+import { VocabularyContent } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import { DictionaryType, type SelectOption, type Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
-import { VocabularyContent } from '#components'
 
 const mockWord: Word = {
   id: '1',

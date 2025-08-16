@@ -1,8 +1,8 @@
-import type { DictionaryLink } from '@/types'
-import { DictionaryType } from '@/types/enums'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { VocabularyDictionaryLinkManager as DictionaryLinkManager } from '#components'
+import type { DictionaryLink } from '@/types'
+import { DictionaryType } from '@/types/enums'
 
 // Mock crypto.randomUUID for consistent test results
 Object.defineProperty(global, 'crypto', {

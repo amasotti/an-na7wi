@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
-import { renderWithStore } from '~/test/test-utils'
 import { VocabularyHeader } from '#components'
+import { renderWithStore } from '~/test/test-utils'
 
 const defaultProps = {
   isSearching: false,

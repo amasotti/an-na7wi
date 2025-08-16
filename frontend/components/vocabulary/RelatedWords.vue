@@ -30,10 +30,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { rootService, useWordStore, wordService } from '#imports'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import type { Word } from '~/types'
-import { rootService, useWordStore, wordService } from '#imports'
 
 const wordStore = useWordStore()
 

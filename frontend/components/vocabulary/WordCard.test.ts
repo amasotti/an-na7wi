@@ -1,8 +1,8 @@
-import type { DictionaryLink, Word } from '@/types'
-import { Dialect, DictionaryType, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { VocabularyWordCard as WordCard } from '#components'
+import type { DictionaryLink, Word } from '@/types'
+import { Dialect, DictionaryType, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 
 // Mock NuxtLink for testing
 const MockNuxtLink = {

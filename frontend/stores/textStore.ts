@@ -10,9 +10,9 @@ import type {
   PaginatedResponse,
   SearchRequest,
   Text,
+  TextsRequest,
   TextVersion,
   TextVersionSummary,
-  TextsRequest,
   Word,
 } from '~/types'
 

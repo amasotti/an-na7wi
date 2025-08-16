@@ -113,12 +113,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import type { Root } from '@/types'
-import { computed, ref, watch } from 'vue'
 import { rootService } from '~/composables/rootService'
 
 interface Props {

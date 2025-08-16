@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
+import { RootsRootListItem as RootListItem } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { Root } from '~/types'
-import { RootsRootListItem as RootListItem } from '#components'
 
 const mockRoot: Root = {
   id: '1',

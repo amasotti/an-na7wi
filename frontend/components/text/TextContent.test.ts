@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
+import { TextContent } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { Text } from '~/types'
 import { Dialect, Difficulty } from '~/types/enums'
-import { TextContent } from '#components'
 
 const mockText: Text = {
   id: '1',

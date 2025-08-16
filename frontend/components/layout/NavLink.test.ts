@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { renderWithStore } from '~/test/test-utils'
 import { LayoutNavLink as NavLink } from '#components'
+import { renderWithStore } from '~/test/test-utils'
 
 // Mock useRoute composable
 const mockRoute = { path: '/texts' }

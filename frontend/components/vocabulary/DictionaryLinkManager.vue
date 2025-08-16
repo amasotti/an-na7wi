@@ -176,9 +176,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed, watch } from 'vue'
 import type { DictionaryLink } from '@/types'
 import { DictionaryType } from '@/types/enums'
-import { computed, watch } from 'vue'
 import {
   DICTIONARY_CONFIG,
   DICTIONARY_TYPE_OPTIONS,

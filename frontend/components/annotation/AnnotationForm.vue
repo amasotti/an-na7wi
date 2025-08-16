@@ -161,10 +161,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
 import type { Annotation, AnnotationType, ExampleDTO, MasteryLevel } from '@/types'
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
-import { computed, ref, watch } from 'vue'
 import { exampleService } from '~/composables/exampleService'
 import BaseButton from '../common/BaseButton.vue'
 import BaseModal from '../common/BaseModal.vue'

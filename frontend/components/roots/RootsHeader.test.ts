@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { RootsHeader } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { RootStatistics } from '~/types'
-import { RootsHeader } from '#components'
 
 const mockStatistics: RootStatistics = {
   totalRoots: 150,

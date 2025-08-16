@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { TextAnnotatedTextContent as AnnotatedTextContent } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { Annotation, Text } from '~/types'
 import { AnnotationType, Dialect, Difficulty, MasteryLevel } from '~/types/enums'
-import { TextAnnotatedTextContent as AnnotatedTextContent } from '#components'
 
 // Mock text store
 const mockCreateAnnotation = vi.fn()

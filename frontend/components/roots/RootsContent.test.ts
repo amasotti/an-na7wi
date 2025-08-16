@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { mockedRoots } from '~/test/mocks/roots.mock'
 import { RootsContent } from '#components'
 import { useRootStore } from '#imports'
+import { mockedRoots } from '~/test/mocks/roots.mock'
 
 describe('RootContent', () => {
   const pinia = usePinia()

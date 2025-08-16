@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { AnnotationPanel } from '#components'
 import type { Annotation } from '~/types'
 import { AnnotationType, MasteryLevel } from '~/types'
-import { AnnotationPanel } from '#components'
 
 // Mock child components
 vi.mock('../common/BaseCard.vue', () => ({

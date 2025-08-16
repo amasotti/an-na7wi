@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { TextModal } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { Text } from '~/types'
 import { Dialect, Difficulty } from '~/types/enums'
-import { TextModal } from '#components'
 
 // Mock text service
 vi.mock('~/composables/textService', () => ({

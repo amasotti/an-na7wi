@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { RootsRootWordsList as RootWordsList } from '#components'
 import { mockedRoot } from '~/test/mocks/roots.mock'
 import { mockWords } from '~/test/mocks/words.mock'
 import { renderWithStore } from '~/test/test-utils'
 import { Dialect, Difficulty, type Root, type WordSummary } from '~/types'
-import { RootsRootWordsList as RootWordsList } from '#components'
 
 // Mock rootStore
 const mockRootStore = {

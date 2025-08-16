@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { renderWithStore } from '~/test/test-utils'
 import { TextFilters } from '#components'
+import { renderWithStore } from '~/test/test-utils'
 
 const defaultProps = {
   searchQuery: '',

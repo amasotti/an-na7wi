@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
-import { renderWithStore } from '~/test/test-utils'
 import { TextActionMenuItem as ActionMenuItem } from '#components'
+import { renderWithStore } from '~/test/test-utils'
 
 describe('ActionMenuItem', () => {
   it('renders with default props', () => {

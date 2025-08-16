@@ -1,10 +1,10 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
+import { VocabularyWordDeleteModal as WordDeleteModal } from '#components'
 import { mockDictionaryLinks } from '~/test/mocks/server'
 import { renderWithStore } from '~/test/test-utils'
 import type { Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
-import { VocabularyWordDeleteModal as WordDeleteModal } from '#components'
 
 const mockWord: Word = {
   id: '1',

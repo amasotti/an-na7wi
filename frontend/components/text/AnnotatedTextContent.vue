@@ -54,9 +54,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useTextStore } from '@/stores/textStore'
 import type { Annotation, AnnotationType, MasteryLevel, Text } from '@/types'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import AnnotationForm from '~/components/annotation/AnnotationForm.vue'
 import BaseCard from '../common/BaseCard.vue'
 

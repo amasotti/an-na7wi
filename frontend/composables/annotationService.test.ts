@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { type Annotation, AnnotationType, MasteryLevel } from '~/types'
 import {
+  annotationService,
   type CreateAnnotationRequest,
   type UpdateAnnotationRequest,
-  annotationService,
 } from './annotationService'
 
 // Mock the API client

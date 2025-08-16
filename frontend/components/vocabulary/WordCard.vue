@@ -127,9 +127,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Word } from '@/types'
 import { Difficulty, MasteryLevel } from '@/types/enums'
-import { computed } from 'vue'
 import {
   DICTIONARY_CONFIG,
   generateAllDictionaryLinks,

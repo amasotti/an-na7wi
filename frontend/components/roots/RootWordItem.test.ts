@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
+import { RootsRootWordItem as RootWordItem } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import { Dialect, Difficulty, type WordSummary } from '~/types'
-import { RootsRootWordItem as RootWordItem } from '#components'
 
 const mockWord: WordSummary = {
   id: '1',

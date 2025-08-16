@@ -240,9 +240,9 @@
 </template>
 
 <script setup lang="ts">
-import { Dialect, Difficulty } from '@/types'
-import type { SelectOption, Text } from '@/types'
 import { computed, ref, watch } from 'vue'
+import type { SelectOption, Text } from '@/types'
+import { Dialect, Difficulty } from '@/types'
 import { textService } from '~/composables/textService'
 import BaseBadge from '../common/BaseBadge.vue'
 import BaseButton from '../common/BaseButton.vue'

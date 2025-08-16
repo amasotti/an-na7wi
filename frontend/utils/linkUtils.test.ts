@@ -77,10 +77,10 @@ describe('linkUtils', () => {
     })
 
     it('handles null/undefined URL gracefully', () => {
-      // @ts-ignore - Testing null and undefined handling
+      // @ts-expect-error - Testing null and undefined handling
       // biome-ignore lint/suspicious/noExplicitAny: testing null and undefined handling
       openLink(null as any)
-      // @ts-ignore - Testing null and undefined handling
+      // @ts-expect-error - Testing null and undefined handling
       // biome-ignore lint/suspicious/noExplicitAny: testing null and undefined handling
       openLink(undefined as any)
 

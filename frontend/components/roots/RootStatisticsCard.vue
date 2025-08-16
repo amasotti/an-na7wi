@@ -23,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import type { RootStatistics } from '@/types'
 import { computed } from 'vue'
+import type { RootStatistics } from '@/types'
 
 interface Props {
   statistics: RootStatistics

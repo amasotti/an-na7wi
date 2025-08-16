@@ -1,10 +1,10 @@
-import type { Word } from '@/types'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import { VocabularyWordPrimaryInformation as WordPrimaryInformation } from '#components'
+import type { Word } from '@/types'
 import { mockWord } from '~/test/mocks/server'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
-import { VocabularyWordPrimaryInformation as WordPrimaryInformation } from '#components'
 
 // Mock dependencies
 vi.mock('~/utils/dateUtils', () => ({

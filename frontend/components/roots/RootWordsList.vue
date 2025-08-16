@@ -38,10 +38,10 @@
 </template>
 
 <script setup lang="ts">
+import { useRootStore } from '#imports'
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import type { WordSummary } from '~/types'
-import { useRootStore } from '#imports'
 import RootWordItem from './RootWordItem.vue'
 
 const rootStore = useRootStore()

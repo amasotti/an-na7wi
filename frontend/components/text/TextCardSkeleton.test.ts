@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { renderWithStore } from '~/test/test-utils'
 import { TextCardSkeleton } from '#components'
+import { renderWithStore } from '~/test/test-utils'
 
 describe('TextCardSkeleton', () => {
   it('renders skeleton loading animation', () => {

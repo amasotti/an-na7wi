@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { RootsRootCard as RootCard } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { Root } from '~/types'
-import { RootsRootCard as RootCard } from '#components'
 
 const mockRoot: Root = {
   id: '1',

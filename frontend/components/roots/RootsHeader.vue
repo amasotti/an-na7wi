@@ -69,13 +69,13 @@
 </template>
 
 <script setup lang="ts">
+import { debounce } from 'lodash-es'
+import { computed, onMounted, ref } from 'vue'
 import AddButton from '@/components/common/AddButton.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseSelect from '@/components/common/BaseSelect.vue'
 import type { RootStatistics } from '@/types'
-import { debounce } from 'lodash-es'
-import { computed, onMounted, ref } from 'vue'
 import RootStatisticsCard from './RootStatisticsCard.vue'
 
 const route = useRoute()

@@ -264,9 +264,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import type { DictionaryLink, ExampleDTO, Word } from '@/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
-import { computed, ref, watch } from 'vue'
 import { exampleService } from '~/composables/exampleService'
 import { rootService } from '~/composables/rootService'
 import { wordService } from '~/composables/wordService'

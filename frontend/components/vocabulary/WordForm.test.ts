@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { VocabularyWordForm as WordForm } from '#components'
 import { exampleService } from '~/composables/exampleService'
 import { mockedExample } from '~/test/mocks/examples.mock'
 import { mockDictionaryLinks } from '~/test/mocks/server'
 import { renderWithStore } from '~/test/test-utils'
 import type { ExampleGenerationResponse, Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
-import { VocabularyWordForm as WordForm } from '#components'
 
 // Mock the services
 vi.mock('~/composables/rootService', () => ({

@@ -1,7 +1,7 @@
-import type { Root } from '@/types'
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { RootsRootDetailHeader as RootDetailHeader } from '#components'
+import type { Root } from '@/types'
 
 // Mock dependencies
 vi.mock('~/utils/dateUtils', () => ({

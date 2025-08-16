@@ -50,13 +50,7 @@ export const useRootStore = defineStore('root', () => {
     loading.value = value
   }
 
-  const fetchRoots = async (
-    params: {
-      page?: number
-      size?: number
-      sort?: string
-    } = {}
-  ) => {
+  const fetchRoots = async (params: { page?: number; size?: number; sort?: string } = {}) => {
     try {
       setLoading(true)
       clearError()

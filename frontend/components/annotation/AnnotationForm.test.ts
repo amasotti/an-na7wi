@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { AnnotationForm } from '#components'
 import { exampleService } from '~/composables/exampleService'
 import { mockedExample } from '~/test/mocks/examples.mock'
 import type { Annotation, ExampleGenerationResponse } from '~/types'
 import { AnnotationType, MasteryLevel } from '~/types'
-import { AnnotationForm } from '#components'
 
 // Mock child components
 vi.mock('../common/BaseModal.vue', () => ({
@@ -252,7 +252,7 @@ describe('AnnotationForm', () => {
     })
 
     // Call the handleDelete method directly
-    // @ts-ignore
+    // @ts-expect-error
     await wrapper.vm.handleDelete()
 
     expect(confirmSpy).toHaveBeenCalledWith('Are you sure you want to delete this annotation?')
@@ -275,7 +275,7 @@ describe('AnnotationForm', () => {
     })
 
     // Call the handleDelete method directly
-    // @ts-ignore
+    // @ts-expect-error
     await wrapper.vm.handleDelete()
 
     expect(confirmSpy).toHaveBeenCalled()
@@ -296,11 +296,11 @@ describe('AnnotationForm', () => {
     await wrapper.find('#content').setValue('some content')
 
     // Close modal
-    // @ts-ignore
+    // @ts-expect-error
     await wrapper.setProps({ open: false })
 
     // Reopen modal
-    // @ts-ignore
+    // @ts-expect-error
     await wrapper.setProps({ open: true })
 
     const anchorTextInput = wrapper.find('#anchorText').element as unknown as HTMLInputElement
@@ -406,7 +406,7 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Generate examples
-      // @ts-ignore
+      // @ts-expect-error
       await wrapper.vm.generateExamples()
       await wrapper.vm.$nextTick()
 
@@ -441,7 +441,7 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Generate examples
-      // @ts-ignore
+      // @ts-expect-error
       await wrapper.vm.generateExamples()
       await wrapper.vm.$nextTick()
 
@@ -465,14 +465,14 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Set some generated examples
-      // @ts-ignore
+      // @ts-expect-error
       wrapper.vm.generatedExamples = [{ arabic: 'test', english: 'test' }]
       await wrapper.vm.$nextTick()
 
       // Change anchor text
       await wrapper.find('#anchorText').setValue('جديد')
 
-      // @ts-ignore
+      // @ts-expect-error
       expect(wrapper.vm.generatedExamples).toHaveLength(0)
     })
 
@@ -485,14 +485,14 @@ describe('AnnotationForm', () => {
       })
 
       // Set some generated examples
-      // @ts-ignore
+      // @ts-expect-error
       wrapper.vm.generatedExamples = [{ arabic: 'test', english: 'test' }]
       await wrapper.vm.$nextTick()
 
       // Close modal
       await wrapper.setProps({ open: false })
 
-      // @ts-ignore
+      // @ts-expect-error
       expect(wrapper.vm.generatedExamples).toHaveLength(0)
     })
 
@@ -510,7 +510,7 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Generate examples
-      // @ts-ignore
+      // @ts-expect-error
       await wrapper.vm.generateExamples()
       await wrapper.vm.$nextTick()
 

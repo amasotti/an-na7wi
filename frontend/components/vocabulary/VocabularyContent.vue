@@ -124,9 +124,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { SelectOption, Word } from '@/types'
 import type { Dialect, Difficulty, MasteryLevel } from '@/types/enums'
-import { computed } from 'vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import Pagination from '../common/Pagination.vue'

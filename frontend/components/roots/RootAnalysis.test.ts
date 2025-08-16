@@ -1,7 +1,7 @@
-import type { Root } from '@/types'
 import { render, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { RootsRootAnalysis as RootAnalysis } from '#components'
+import type { Root } from '@/types'
 
 // Mock rootStore
 const mockRootStore = {

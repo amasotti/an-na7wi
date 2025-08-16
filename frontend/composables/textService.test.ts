@@ -7,10 +7,10 @@ import {
   MasteryLevel,
   type PaginatedResponse,
   type Text,
-  type TextVersion,
-  type TextVersionSummary,
   type TextsRequest,
   type TextsResponse,
+  type TextVersion,
+  type TextVersionSummary,
   type TransliterationResponse,
   type Word,
 } from '~/types'

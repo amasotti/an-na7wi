@@ -11,11 +11,7 @@ export const rootService = {
    * Get all roots with pagination
    */
   async getRoots(
-    params: {
-      page?: number
-      size?: number
-      sort?: string
-    } = {}
+    params: { page?: number; size?: number; sort?: string } = {}
   ): Promise<PaginatedResponse<Root>> {
     const response = await useApiClient().get('/roots', { params })
     return response.data

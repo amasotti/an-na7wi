@@ -90,9 +90,10 @@
 
 <script setup lang="ts">
 // import router from '@/router' // Not needed in Nuxt
-import { Dialect, Difficulty } from '@/types'
-import type { SelectOption, Text } from '@/types'
+
 import { computed, onMounted, ref } from 'vue'
+import type { SelectOption, Text } from '@/types'
+import { Dialect, Difficulty } from '@/types'
 import Pagination from '~/components/common/Pagination.vue'
 import EmptyState from '~/components/text/EmptyState.vue'
 import TextCard from '~/components/text/TextCard.vue'

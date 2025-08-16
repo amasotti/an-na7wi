@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { RootsRootModal as RootModal } from '#components'
 import { renderWithStore } from '~/test/test-utils'
 import type { Root, RootNormalization } from '~/types'
-import { RootsRootModal as RootModal } from '#components'
 
 // Mock rootService
 vi.mock('~/composables/rootService', () => ({
@@ -14,6 +14,7 @@ vi.mock('~/composables/rootService', () => ({
 }))
 
 import { rootService } from '~/composables/rootService'
+
 const mockNormalizeRoot = vi.mocked(rootService.normalizeRoot)
 const mockUpdateRoot = vi.mocked(rootService.updateRoot)
 const mockCreateRoot = vi.mocked(rootService.createRoot)
