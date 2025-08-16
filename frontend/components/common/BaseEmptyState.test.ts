@@ -8,14 +8,15 @@ const MockNuxtLink = {
   props: ['to'],
 }
 
-export type EmptySateProps = {
+type EmptySateProps = {
   link: string | undefined
   linkText: string | undefined
   message: string | undefined
 }
 
 describe('BaseEmptyState', () => {
-  const createComponent = (props : EmptySateProps | {}) => {
+  // biome-ignore lint/complexity/noBannedTypes: This is a test file, so using the emtpy object is acceptable here.
+  const createComponent = (props: EmptySateProps | {}) => {
     return render(BaseEmptyState, {
       props,
       global: {
