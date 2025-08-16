@@ -52,8 +52,6 @@ class Annotation : PanacheEntityBase {
     @Column(name = "needs_review", nullable = false)
     var needsReview: Boolean = false
     
-    @Column(name = "next_review_date")
-    var nextReviewDate: LocalDateTime? = null
     
     @Column(name = "color")
     var color: String? = null

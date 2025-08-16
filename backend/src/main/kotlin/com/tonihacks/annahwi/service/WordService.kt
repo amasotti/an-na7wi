@@ -334,7 +334,6 @@ class WordService {
         existingWord.notes = word.notes
         existingWord.difficulty = word.difficulty
         existingWord.dialect = word.dialect
-        existingWord.isVerified = word.isVerified
         
         // Persist the updated word
         wordRepository.persist(existingWord)

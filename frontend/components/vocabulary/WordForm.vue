@@ -322,7 +322,6 @@ const form = ref({
   masteryLevel: MasteryLevel.NEW,
   dictionaryLinks: [] as DictionaryLink[],
   pronunciationLink: '',
-  isVerified: false,
 })
 
 // Watch for changes in the word prop to update the form
@@ -343,7 +342,6 @@ watch(
         masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
         dictionaryLinks: newWord.dictionaryLinks || [],
         pronunciationLink: newWord.pronunciationLink || '',
-        isVerified: newWord.isVerified,
       }
     } else {
       form.value = {
@@ -359,7 +357,6 @@ watch(
         masteryLevel: MasteryLevel.NEW,
         dictionaryLinks: [] as DictionaryLink[],
         pronunciationLink: '',
-        isVerified: false,
       }
     }
   },

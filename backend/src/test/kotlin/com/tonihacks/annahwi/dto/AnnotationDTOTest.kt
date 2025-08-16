@@ -78,7 +78,6 @@ class AnnotationDTOTest {
             type = AnnotationType.VOCABULARY
             masteryLevel = MasteryLevel.LEARNING
             needsReview = true
-            nextReviewDate = LocalDateTime.now().plusDays(1)
             color = "#00FF00"
             createdAt = LocalDateTime.now()
         }
@@ -94,7 +93,6 @@ class AnnotationDTOTest {
         assertEquals(annotation.type, responseDTO.type)
         assertEquals(annotation.masteryLevel, responseDTO.masteryLevel)
         assertEquals(annotation.needsReview, responseDTO.needsReview)
-        assertEquals(annotation.nextReviewDate, responseDTO.nextReviewDate)
         assertEquals(annotation.color, responseDTO.color)
         assertEquals(annotation.createdAt, responseDTO.createdAt)
     }
@@ -110,7 +108,6 @@ class AnnotationDTOTest {
             type = AnnotationType.CULTURAL,
             masteryLevel = MasteryLevel.MASTERED,
             needsReview = false,
-            nextReviewDate = null,
             color = "#0000FF",
             createdAt = LocalDateTime.now()
         )
@@ -127,7 +124,6 @@ class AnnotationDTOTest {
         assertEquals(responseDTO.type, deserializedDTO.type)
         assertEquals(responseDTO.masteryLevel, deserializedDTO.masteryLevel)
         assertEquals(responseDTO.needsReview, deserializedDTO.needsReview)
-        assertEquals(responseDTO.nextReviewDate, deserializedDTO.nextReviewDate)
         assertEquals(responseDTO.color, deserializedDTO.color)
     }
 }

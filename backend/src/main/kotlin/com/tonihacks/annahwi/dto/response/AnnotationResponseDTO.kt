@@ -21,7 +21,6 @@ data class AnnotationResponseDTO(
     val type: AnnotationType,
     val masteryLevel: MasteryLevel,
     val needsReview: Boolean,
-    val nextReviewDate: LocalDateTime?,
     val color: String?,
     val createdAt: LocalDateTime
 ) {
@@ -39,7 +38,6 @@ data class AnnotationResponseDTO(
                 type = annotation.type,
                 masteryLevel = annotation.masteryLevel,
                 needsReview = annotation.needsReview,
-                nextReviewDate = annotation.nextReviewDate,
                 color = annotation.color,
                 createdAt = annotation.createdAt
             )

@@ -53,7 +53,6 @@ const mockWord: Word = {
   masteryLevel: MasteryLevel.NEW,
   example: 'هذا كتاب جديد',
   notes: 'Common word for book',
-  isVerified: true,
   createdAt: new Date().toISOString(),
   frequency: 1,
   dictionaryLinks: mockDictionaryLinks,

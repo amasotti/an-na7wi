@@ -30,7 +30,6 @@ class WordDTOTest {
             frequency = 150,
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
-            isVerified = true
         )
 
         val json = objectMapper.writeValueAsString(requestDTO)
@@ -46,7 +45,6 @@ class WordDTOTest {
         assertEquals(requestDTO.frequency, deserializedDTO.frequency)
         assertEquals(requestDTO.difficulty, deserializedDTO.difficulty)
         assertEquals(requestDTO.dialect, deserializedDTO.dialect)
-        assertEquals(requestDTO.isVerified, deserializedDTO.isVerified)
     }
 
     @Test
@@ -66,7 +64,6 @@ class WordDTOTest {
         assertEquals(0, requestDTO.frequency)
         assertEquals(Difficulty.INTERMEDIATE, requestDTO.difficulty)
         assertEquals(Dialect.LEVANTINE, requestDTO.dialect)
-        assertEquals(false, requestDTO.isVerified)
     }
 
     @Test
@@ -81,7 +78,6 @@ class WordDTOTest {
             frequency = 200,
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
-            isVerified = true
         )
 
         val entity = requestDTO.toEntity()
@@ -96,7 +92,6 @@ class WordDTOTest {
         assertEquals(requestDTO.frequency, entity.frequency)
         assertEquals(requestDTO.difficulty, entity.difficulty)
         assertEquals(requestDTO.dialect, entity.dialect)
-        assertEquals(requestDTO.isVerified, entity.isVerified)
     }
 
     @Test
@@ -112,7 +107,6 @@ class WordDTOTest {
             frequency = 50
             difficulty = Difficulty.ADVANCED
             dialect = Dialect.GULF
-            isVerified = false
             createdAt = LocalDateTime.now()
         }
 
@@ -126,7 +120,6 @@ class WordDTOTest {
             frequency = 100,
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
-            isVerified = true
         )
 
         val updatedEntity = requestDTO.updateEntity(existingWord)
@@ -142,7 +135,6 @@ class WordDTOTest {
         assertEquals(requestDTO.frequency, updatedEntity.frequency)
         assertEquals(requestDTO.difficulty, updatedEntity.difficulty)
         assertEquals(requestDTO.dialect, updatedEntity.dialect)
-        assertEquals(requestDTO.isVerified, updatedEntity.isVerified)
     }
 
     @Test
@@ -165,6 +157,5 @@ class WordDTOTest {
         assertEquals(0, entity.frequency)
         assertEquals(Difficulty.BEGINNER, entity.difficulty)
         assertEquals(Dialect.MSA, entity.dialect)
-        assertEquals(false, entity.isVerified)
     }
 }

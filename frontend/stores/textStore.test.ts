@@ -57,7 +57,6 @@ const mockWord: Word = {
   dialect: Dialect.MSA,
   masteryLevel: MasteryLevel.NEW,
   frequency: 1,
-  isVerified: true,
   createdAt: new Date().toISOString(),
   dictionaryLinks: [],
 }

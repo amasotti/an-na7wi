@@ -143,7 +143,7 @@ class AnnotationController {
     @Operation(summary = "Update review settings", description = "Updates review settings for an annotation")
     fun updateReviewSettings(@PathParam("id") id: UUID, request: ReviewUpdateRequest): Response {
         logger.info("PUT /api/v1/annotations/$id/review - needsReview: ${request.needsReview}")
-        val updatedAnnotation = annotationService.updateReviewSettings(id, request.needsReview, request.nextReviewDate)
+        val updatedAnnotation = annotationService.updateReviewSettings(id, request.needsReview)
         val result = AnnotationResponseDTO.fromEntity(updatedAnnotation)
         return Response.ok(result).build()
     }

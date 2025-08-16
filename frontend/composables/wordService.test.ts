@@ -39,7 +39,6 @@ describe('wordService', () => {
     frequency: 100,
     root: 'ك-ت-ب',
     createdAt: '2024-01-01T00:00:00Z',
-    isVerified: true,
     dictionaryLinks: mockDictionaryLinks,
   }
 

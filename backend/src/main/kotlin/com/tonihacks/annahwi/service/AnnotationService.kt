@@ -88,12 +88,11 @@ class AnnotationService {
      * Update review settings
      */
     @Transactional
-    fun updateReviewSettings(id: UUID, needsReview: Boolean, nextReviewDate: LocalDateTime?): Annotation {
+    fun updateReviewSettings(id: UUID, needsReview: Boolean): Annotation {
         logger.info("Updating review settings for annotation $id - needsReview: $needsReview")
         // Use findByIdWithText to eagerly load the text data
         val annotation = findByIdWithText(id)
         annotation.needsReview = needsReview
-        annotation.nextReviewDate = nextReviewDate
         annotationRepository.persist(annotation)
         return annotation
     }
@@ -194,7 +193,6 @@ class AnnotationService {
         existingAnnotation.type = annotation.type
         existingAnnotation.masteryLevel = annotation.masteryLevel
         existingAnnotation.needsReview = annotation.needsReview
-        existingAnnotation.nextReviewDate = annotation.nextReviewDate
         existingAnnotation.color = annotation.color
         
         // Persist the updated annotation

@@ -28,7 +28,6 @@ class WordServiceDTOTest {
             frequency = 75,
             difficulty = Difficulty.INTERMEDIATE,
             dialect = Dialect.MSA,
-            isVerified = true
         )
 
         // Test DTO to entity conversion
@@ -45,7 +44,6 @@ class WordServiceDTOTest {
         assertEquals(wordDTO.frequency, word.frequency)
         assertEquals(wordDTO.difficulty, word.difficulty)
         assertEquals(wordDTO.dialect, word.dialect)
-        assertEquals(wordDTO.isVerified, word.isVerified)
         assertNotNull(word.createdAt)
     }
 
@@ -65,7 +63,6 @@ class WordServiceDTOTest {
             frequency = 50
             difficulty = Difficulty.BEGINNER
             dialect = Dialect.MSA
-            isVerified = false
             createdAt = originalCreatedAt
         }
 
@@ -79,7 +76,6 @@ class WordServiceDTOTest {
             frequency = 100,
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
-            isVerified = true
         )
 
         // Test DTO update entity method
@@ -96,7 +92,6 @@ class WordServiceDTOTest {
         assertEquals(updateDTO.frequency, updatedWord.frequency)
         assertEquals(updateDTO.difficulty, updatedWord.difficulty)
         assertEquals(updateDTO.dialect, updatedWord.dialect)
-        assertEquals(updateDTO.isVerified, updatedWord.isVerified)
         // Created date should remain unchanged
         assertEquals(originalCreatedAt, updatedWord.createdAt)
     }
@@ -123,7 +118,6 @@ class WordServiceDTOTest {
         assertEquals(0, word.frequency)
         assertEquals(minimalDTO.difficulty, word.difficulty)
         assertEquals(minimalDTO.dialect, word.dialect)
-        assertEquals(false, word.isVerified)
         assertNotNull(word.createdAt)
     }
 
@@ -143,7 +137,6 @@ class WordServiceDTOTest {
             frequency = 200
             difficulty = Difficulty.BEGINNER
             dialect = Dialect.MSA
-            isVerified = true
             createdAt = originalCreatedAt
         }
 
@@ -157,7 +150,6 @@ class WordServiceDTOTest {
             frequency = 250, // Increase frequency
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
-            isVerified = true
         )
 
         // Test partial update
@@ -196,7 +188,6 @@ class WordServiceDTOTest {
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
             dictionaryLinks = dictionaryLinks,
-            isVerified = true
         )
 
         // Test DTO to entity conversion with dictionary links
@@ -224,7 +215,6 @@ class WordServiceDTOTest {
             frequency = 200
             difficulty = Difficulty.BEGINNER
             dialect = Dialect.MSA
-            isVerified = true
             createdAt = LocalDateTime.now()
         }
 
@@ -251,7 +241,6 @@ class WordServiceDTOTest {
             difficulty = Difficulty.BEGINNER,
             dialect = Dialect.MSA,
             dictionaryLinks = newDictionaryLinks,
-            isVerified = true
         )
 
         // Test update with dictionary links

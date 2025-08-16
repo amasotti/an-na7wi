@@ -40,7 +40,7 @@ class AnalyticsService @Inject constructor(
     val totalRoots = arabicRootRepository.count()
 
     val averageWordsPerText = if (totalTexts > 0) {
-      querySingle<Double>("SELECT AVG(t.wordCount) AS avgWords FROM Text t") ?: 0.0
+      querySingle("SELECT AVG(t.wordCount) AS avgWords FROM Text t", clazz = Double::class.java) ?: 0.0
     } else 0.0
 
     val averageAnnotationsPerText = if (totalTexts > 0) {
@@ -68,11 +68,13 @@ class AnalyticsService @Inject constructor(
   private fun getLearningProgress(): LearningProgressDTO {
     val masteryDistribution = groupedCount<MasteryLevel>("w.masteryLevel", "Word w")
     val wordsNeedingReview = querySingle<Long>(
-      "SELECT COUNT(a) AS cnt FROM Annotation a WHERE a.needsReview = true"
+      "SELECT COUNT(a) AS cnt FROM Annotation a WHERE a.needsReview = true",
+      clazz = Long::class.java
     ) ?: 0L
     val annotationsNeedingReview = querySingle<Long>(
       "SELECT COUNT(a) AS cnt FROM Annotation a WHERE a.nextReviewDate <= :now",
-      "now" to LocalDateTime.now()
+      "now" to LocalDateTime.now(),
+      clazz = Long::class.java
     ) ?: 0L
 
     return LearningProgressDTO(
@@ -192,7 +194,8 @@ class AnalyticsService @Inject constructor(
                     UNION ALL
                     SELECT 1 AS x FROM ArabicRoot a WHERE DATE(a.createdAt) = :date
                 )
-                """, "date" to date
+                """, "date" to date,
+        clazz = Long::class.java
       ) ?: 0L
 
       if (activity > 0) {
@@ -215,14 +218,15 @@ class AnalyticsService @Inject constructor(
   }
 
   private inline fun <reified E> countWhere(where: String, vararg params: Pair<String, Any>): Long =
-    querySingle<Long>(
-      "SELECT COUNT(e) AS cnt FROM ${E::class.simpleName} e WHERE $where", *params
+    querySingle(
+      "SELECT COUNT(e) AS cnt FROM ${E::class.simpleName} e WHERE $where", *params,
+      clazz = Long::class.java
     ) ?: 0L
 
-  private fun <T> querySingle(jpql: String, vararg params: Pair<String, Any>): T? =
-    entityManager.createQuery(jpql, Any::class.java)
+  private fun <T : Any> querySingle(jpql: String, vararg params: Pair<String, Any>, clazz: Class<T>): T? =
+    entityManager.createQuery(jpql, clazz)
       .apply { params.forEach { setParameter(it.first, it.second) } }
-      .resultList.firstOrNull() as? T
+      .resultList.firstOrNull()
 
   private fun timeSeries(
     jpql: String,

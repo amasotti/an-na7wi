@@ -46,8 +46,6 @@ export interface Word {
   masteryLevel?: MasteryLevel
   dictionaryLinks: DictionaryLink[]
   pronunciationLink?: string
-  relatedWords?: string
-  isVerified: boolean
   createdAt: string
 }
 

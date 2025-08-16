@@ -79,11 +79,6 @@ class Word : PanacheEntityBase {
     @Column(name = "pronunciation_link")
     var pronunciationLink: String? = null
     
-    @Column(name = "related_words", columnDefinition = "TEXT")
-    var relatedWords: String? = null
-    
-    @Column(name = "is_verified", nullable = false)
-    var isVerified: Boolean = false
     
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()

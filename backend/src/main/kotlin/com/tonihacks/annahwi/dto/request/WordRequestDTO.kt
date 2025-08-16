@@ -1,6 +1,5 @@
 package com.tonihacks.annahwi.dto.request
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.MasteryLevel
@@ -24,8 +23,6 @@ data class WordRequestDTO(
     val masteryLevel: MasteryLevel? = MasteryLevel.NEW,
     val dictionaryLinks: List<DictionaryLinkRequestDTO> = emptyList(),
     val pronunciationLink: String? = null,
-    val relatedWords: String? = null,
-    @JsonProperty("isVerified") val isVerified: Boolean = false
 ) {
     fun toEntity(): Word {
         val word = Word().apply {
@@ -41,8 +38,6 @@ data class WordRequestDTO(
             dialect = this@WordRequestDTO.dialect
             masteryLevel = this@WordRequestDTO.masteryLevel
             pronunciationLink = this@WordRequestDTO.pronunciationLink
-            relatedWords = this@WordRequestDTO.relatedWords
-            isVerified = this@WordRequestDTO.isVerified
         }
         
         // Add dictionary links
@@ -67,8 +62,6 @@ data class WordRequestDTO(
             dialect = this@WordRequestDTO.dialect
             masteryLevel = this@WordRequestDTO.masteryLevel
             pronunciationLink = this@WordRequestDTO.pronunciationLink
-            relatedWords = this@WordRequestDTO.relatedWords
-            isVerified = this@WordRequestDTO.isVerified
             
             // Update dictionary links - clear existing and add new ones
             // Clear existing links (orphanRemoval will handle deletion)

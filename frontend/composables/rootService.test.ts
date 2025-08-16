@@ -54,7 +54,6 @@ describe('rootService', () => {
     difficulty: Difficulty.BEGINNER,
     masteryLevel: MasteryLevel.LEARNING,
     frequency: 100,
-    isVerified: true,
     root: 'ك-ت-ب',
     createdAt: '2024-01-01T00:00:00Z',
     dictionaryLinks: mockDictionaryLinks,
