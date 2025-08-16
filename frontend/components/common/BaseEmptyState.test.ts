@@ -8,8 +8,14 @@ const MockNuxtLink = {
   props: ['to'],
 }
 
+export type EmptySateProps = {
+  link: string | undefined
+  linkText: string | undefined
+  message: string | undefined
+}
+
 describe('BaseEmptyState', () => {
-  const createComponent = (props = {}) => {
+  const createComponent = (props : EmptySateProps | {}) => {
     return render(BaseEmptyState, {
       props,
       global: {
@@ -73,6 +79,7 @@ describe('BaseEmptyState', () => {
     it('creates link with correct href', () => {
       createComponent({
         link: '/texts/new',
+        message: 'No texts available',
         linkText: 'Create New Text',
       })
 
@@ -83,6 +90,7 @@ describe('BaseEmptyState', () => {
     it('uses default link when not provided', () => {
       createComponent({
         message: 'No data available',
+        link: undefined,
         linkText: 'Go Home',
       })
 
@@ -93,6 +101,7 @@ describe('BaseEmptyState', () => {
     it('falls back to default link for empty link prop', () => {
       createComponent({
         link: '',
+        message: 'No data available',
         linkText: 'Go Back',
       })
 
@@ -103,6 +112,7 @@ describe('BaseEmptyState', () => {
     it('uses computed goBackLink correctly', () => {
       createComponent({
         link: '/dashboard',
+        message: 'No data available',
         linkText: 'Back to Dashboard',
       })
 
@@ -113,21 +123,21 @@ describe('BaseEmptyState', () => {
 
   describe('layout and structure', () => {
     it('uses nav element for semantic structure', () => {
-      createComponent()
+      createComponent({})
 
       const nav = document.querySelector('nav')
       expect(nav).toBeInTheDocument()
     })
 
     it('centers content appropriately', () => {
-      createComponent()
+      createComponent({})
 
       const nav = document.querySelector('nav')
       expect(nav).toHaveClass('text-center')
     })
 
     it('maintains proper spacing', () => {
-      createComponent()
+      createComponent({})
 
       const nav = document.querySelector('nav')
       expect(nav).toHaveClass('py-12')
@@ -195,6 +205,7 @@ describe('BaseEmptyState', () => {
     it('provides meaningful link text', () => {
       createComponent({
         linkText: 'Add your first vocabulary word',
+        message: 'Your vocabulary is empty',
         link: '/vocabulary/new',
       })
 
@@ -204,7 +215,7 @@ describe('BaseEmptyState', () => {
     })
 
     it('maintains proper text color contrast', () => {
-      createComponent()
+      createComponent({})
 
       const message = document.querySelector('.text-gray-400')
       expect(message).toBeInTheDocument()
