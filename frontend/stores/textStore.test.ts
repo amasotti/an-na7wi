@@ -103,8 +103,8 @@ vi.mock('~/composables/annotationService', () => ({
     updateMasteryLevel: vi.fn((id: string, masteryLevel) =>
       Promise.resolve({ ...mockAnnotation, id, masteryLevel })
     ),
-    updateReviewSettings: vi.fn((id: string, needsReview, nextReviewDate) =>
-      Promise.resolve({ ...mockAnnotation, id, needsReview, nextReviewDate })
+    updateReviewSettings: vi.fn((id: string, needsReview) =>
+      Promise.resolve({ ...mockAnnotation, id, needsReview })
     ),
   },
 }))

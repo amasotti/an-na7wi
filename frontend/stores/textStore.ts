@@ -229,12 +229,11 @@ export const useTextStore = defineStore('text', () => {
     }
   }
 
-  async function updateAnnotationReview(id: string, needsReview: boolean, nextReviewDate?: string) {
+  async function updateAnnotationReview(id: string, needsReview: boolean) {
     try {
       const updatedAnnotation = await annotationService.updateReviewSettings(
         id,
         needsReview,
-        nextReviewDate
       )
 
       // Update in the list

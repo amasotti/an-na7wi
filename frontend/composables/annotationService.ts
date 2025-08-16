@@ -24,7 +24,6 @@ export interface MasteryUpdateRequest {
 
 export interface ReviewUpdateRequest {
   needsReview: boolean
-  nextReviewDate?: string
 }
 
 export const annotationService = {
@@ -82,11 +81,9 @@ export const annotationService = {
   async updateReviewSettings(
     id: string,
     needsReview: boolean,
-    nextReviewDate?: string
   ): Promise<Annotation> {
     const request: ReviewUpdateRequest = {
       needsReview,
-      nextReviewDate,
     }
     const response = await useApiClient().put(`/annotations/${id}/review`, request)
     return response.data

@@ -56,7 +56,7 @@ class AnnotationRepository : PanacheRepository<Annotation> {
     fun findByNeedsReviewWithText(needsReview: Boolean, page: Page): List<Annotation> {
         return getEntityManager()
             .createQuery(
-                "SELECT a FROM Annotation a JOIN FETCH a.text t WHERE a.needsReview = :needsReview ORDER BY a.nextReviewDate, a.createdAt",
+                "SELECT a FROM Annotation a JOIN FETCH a.text t WHERE a.needsReview = :needsReview ORDER BY a.createdAt",
                 Annotation::class.java
             )
             .setParameter("needsReview", needsReview)

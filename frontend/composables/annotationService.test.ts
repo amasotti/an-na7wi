@@ -121,7 +121,6 @@ describe('annotationService', () => {
 
       expect(mockApiClient.put).toHaveBeenCalledWith('/annotations/1/review', {
         needsReview: true,
-        nextReviewDate: undefined,
       })
       expect(result).toEqual(mockAnnotation)
     })
@@ -133,7 +132,6 @@ describe('annotationService', () => {
 
       expect(mockApiClient.put).toHaveBeenCalledWith('/annotations/1/review', {
         needsReview: true,
-        nextReviewDate: '2024-01-15',
       })
       expect(result).toEqual(mockAnnotation)
     })

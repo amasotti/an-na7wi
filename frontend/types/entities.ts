@@ -57,7 +57,6 @@ export interface Annotation {
   type: AnnotationType
   masteryLevel: MasteryLevel
   needsReview: boolean
-  nextReviewDate?: string
   color?: string
   createdAt: string
 }
