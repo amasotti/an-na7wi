@@ -4,6 +4,7 @@ import type {
   ReviewMode,
   StartTrainingSessionRequest,
   TrainingSession,
+  TrainingStats,
 } from '~/types/training'
 
 export const trainingService = {
@@ -75,6 +76,19 @@ export const trainingService = {
         throw new Error(`Training session not found: ${sessionId}`)
       }
       console.error('Error fetching training session:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Get training statistics
+   */
+  async getStats(): Promise<TrainingStats> {
+    try {
+      const response = await useApiClient().get('/training/stats')
+      return response.data
+    } catch (error) {
+      console.error('Error fetching training stats:', error)
       throw error
     }
   },

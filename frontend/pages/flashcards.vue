@@ -5,7 +5,7 @@
       :show-progress="flashcardStore.isSessionActive"
       @end-session="flashcardStore.endSession()"
     />
-    
+
     <!-- Review Mode Selector (only show when not in active session) -->
     <article v-if="!flashcardStore.isSessionActive && !flashcardStore.showResults" class="review-mode-section">
       <div class="review-mode-container">
@@ -48,11 +48,19 @@
         </BaseButton>
       </div>
     </article>
-    
+
+    <!-- Training Stats Section -->
+    <section v-if="!flashcardStore.isSessionActive && !flashcardStore.showResults" class="stats-section">
+      <div class="stats-container">
+        <TrainingStats />
+      </div>
+    </section>
+
     <div class="page-content">
       <FlashcardContent />
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -61,6 +69,7 @@ import BaseCard from '~/components/common/BaseCard.vue'
 import BaseSlider from '~/components/common/BaseSlider.vue'
 import FlashcardContent from '~/components/flashcards/FlashcardContent.vue'
 import FlashcardHeader from '~/components/flashcards/FlashcardHeader.vue'
+import TrainingStats from '~/components/flashcards/TrainingStats.vue'
 import type { ReviewMode } from '~/types/training'
 
 const flashcardStore = useFlashcardStore()
@@ -109,6 +118,14 @@ const updateReviewMode = (mode: ReviewMode) => {
 <style scoped>
 .flashcard-page {
   @apply min-h-screen bg-gray-50;
+}
+
+.stats-section {
+  @apply bg-gray-50 border-b border-gray-200;
+}
+
+.stats-container {
+  @apply max-w-4xl mx-auto px-4 py-6;
 }
 
 .review-mode-section {

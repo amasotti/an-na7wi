@@ -44,3 +44,20 @@ export interface RecordResultRequest {
   wordId: string
   result: 'CORRECT' | 'INCORRECT' | 'SKIPPED'
 }
+
+export interface TrainingStats {
+  totalSessions: number
+  totalWordsReviewed: number
+  averageAccuracy: number
+  recentSessions: RecentSession[]
+  accuracyByReviewMode: Record<string, number>
+}
+
+export interface RecentSession {
+  id: string
+  completedAt: string
+  reviewMode: string
+  totalWords: number
+  correctAnswers: number
+  accuracy: number
+}

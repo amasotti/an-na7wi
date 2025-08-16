@@ -2,18 +2,22 @@ package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.dto.request.RecordResultRequestDTO
 import com.tonihacks.annahwi.dto.request.StartTrainingSessionRequestDTO
+import com.tonihacks.annahwi.dto.response.RecentSessionDTO
 import com.tonihacks.annahwi.dto.response.TrainingSessionResponseDTO
+import com.tonihacks.annahwi.dto.response.TrainingStatsResponseDTO
 import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.service.TrainingSessionService
 import jakarta.inject.Inject
 import jakarta.validation.Valid
 import jakarta.ws.rs.Consumes
+import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.PUT
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
@@ -101,5 +105,43 @@ class TrainingController {
         )
         
         return Response.ok(responseDTO).build()
+    }
+    
+    @GET
+    @Path("/stats")
+    fun getTrainingStats(): Response {
+        val stats = trainingSessionService.getTrainingStats()
+        
+        val responseDTO = TrainingStatsResponseDTO(
+            totalSessions = stats.totalSessions,
+            totalWordsReviewed = stats.totalWordsReviewed,
+            averageAccuracy = stats.averageAccuracy,
+            recentSessions = stats.recentSessions.map { session ->
+                RecentSessionDTO(
+                    id = session.id!!.toString(),
+                    completedAt = session.completedAt!!,
+                    reviewMode = session.reviewMode.name,
+                    totalWords = session.totalWords,
+                    correctAnswers = session.correctAnswers,
+                    accuracy = if (session.totalWords > 0) session.correctAnswers.toDouble() / session.totalWords * 100 else 0.0
+                )
+            },
+            accuracyByReviewMode = stats.accuracyByReviewMode.mapKeys { it.key.name }
+        )
+        
+        return Response.ok(responseDTO).build()
+    }
+    
+    @DELETE
+    @Path("/cleanup")
+    fun cleanupOldSessions(@QueryParam("count") count: Int = 10): Response {
+        if (count <= 0 || count > 100) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(mapOf("error" to "Count must be between 1 and 100"))
+                .build()
+        }
+        
+        val deletedCount = trainingSessionService.cleanOldestSessions(count)
+        return Response.ok(mapOf("deleted" to deletedCount)).build()
     }
 }

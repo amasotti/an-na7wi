@@ -32,6 +32,8 @@ class TrainingSessionService {
     
     @Inject
     lateinit var sessionWordRepository: TrainingSessionWordRepository
+
+    private val logger = org.jboss.logging.Logger.getLogger(TrainingSessionService::class.java)
     
     @Transactional
     fun startTrainingSession(reviewMode: ReviewMode, sessionLength: Int = 15): TrainingSession {
@@ -99,6 +101,7 @@ class TrainingSessionService {
     fun getWordsForSession(sessionId: UUID): List<Word> {
         // Use the repository to get the words in the correct order
         return sessionWordRepository.findWordsBySessionId(sessionId)
+          .also { logger.info("Retrieved ${it.size} words for session $sessionId") }
     }
     
     internal fun selectWordsForReview(reviewMode: ReviewMode, sessionLength: Int): List<Word> {
@@ -180,4 +183,53 @@ class TrainingSessionService {
             progress.masteryLevelUpdatedAt = LocalDateTime.now()
         }
     }
+    
+    fun getTrainingStats(): TrainingStatsData {
+        val totalSessions = trainingSessionRepository.count("completedAt IS NOT NULL")
+        val completedSessions = trainingSessionRepository.list("completedAt IS NOT NULL")
+        
+        val totalWordsReviewed = completedSessions.sumOf { it.totalWords }.toLong()
+        val totalCorrectAnswers = completedSessions.sumOf { it.correctAnswers }
+        val averageAccuracy = if (totalWordsReviewed > 0) totalCorrectAnswers.toDouble() / totalWordsReviewed * 100 else 0.0
+        
+        val recentSessions = completedSessions
+            .sortedByDescending { it.completedAt }
+            .take(10)
+        
+        val accuracyByMode = completedSessions
+            .groupBy { it.reviewMode }
+            .mapValues { (_, sessions) ->
+                val totalWords = sessions.sumOf { it.totalWords }
+                val correctWords = sessions.sumOf { it.correctAnswers }
+                if (totalWords > 0) correctWords.toDouble() / totalWords * 100 else 0.0
+            }
+        
+        return TrainingStatsData(
+            totalSessions = totalSessions,
+            totalWordsReviewed = totalWordsReviewed,
+            averageAccuracy = averageAccuracy,
+            recentSessions = recentSessions,
+            accuracyByReviewMode = accuracyByMode
+        )
+    }
+    
+    @Transactional
+    fun cleanOldestSessions(count: Int): Int {
+        val oldestSessions = trainingSessionRepository.list("ORDER BY createdAt ASC")
+            .take(count)
+        
+        oldestSessions.forEach { session ->
+            trainingSessionRepository.delete(session)
+        }
+        
+        return oldestSessions.size
+    }
 }
+
+data class TrainingStatsData(
+    val totalSessions: Long,
+    val totalWordsReviewed: Long,
+    val averageAccuracy: Double,
+    val recentSessions: List<TrainingSession>,
+    val accuracyByReviewMode: Map<ReviewMode, Double>
+)
