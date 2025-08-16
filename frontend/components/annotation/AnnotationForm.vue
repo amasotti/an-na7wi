@@ -120,18 +120,10 @@
       </div>
 
       <!-- Color (optional) -->
-      <div>
-        <label for="color" class="block text-sm font-medium text-gray-700 mb-1">
-          Color (optional)
-        </label>
-        <input
-          id="color"
-          v-model="form.color"
-          type="text"
-          placeholder="#RRGGBB"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-        />
-      </div>
+      <ColorPicker 
+        v-model="form.color" 
+        label="Color (optional)" 
+      />
 
       <!-- Buttons -->
       <div class="flex justify-between items-center pt-6">
@@ -168,6 +160,7 @@ import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum 
 import { exampleService } from '~/composables/exampleService'
 import BaseButton from '../common/BaseButton.vue'
 import BaseModal from '../common/BaseModal.vue'
+import ColorPicker from '../common/ColorPicker.vue'
 
 interface Props {
   open: boolean
