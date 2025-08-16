@@ -9,6 +9,7 @@ const MockNuxtLink = {
 }
 
 describe('BaseBreadcrumb', () => {
+  // ts-ignore
   const createComponent = (props = {}) => {
     return render(BaseBreadcrumb, {
       props,

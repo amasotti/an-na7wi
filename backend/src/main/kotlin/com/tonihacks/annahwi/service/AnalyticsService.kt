@@ -189,6 +189,8 @@ class AnalyticsService @Inject constructor(
                     SELECT 1 AS x FROM Word w WHERE DATE(w.createdAt) = :date
                     UNION ALL
                     SELECT 1 AS x FROM Annotation a WHERE DATE(a.createdAt) = :date
+                    UNION ALL
+                    SELECT 1 AS x FROM ArabicRoot a WHERE DATE(a.createdAt) = :date
                 )
                 """, "date" to date
       ) ?: 0L

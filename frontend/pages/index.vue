@@ -120,37 +120,37 @@ import StatCard from '~/components/home/StatCard.vue'
 
 const features = [
   {
+    title: 'Flashcard Practice',
+    description: 'Master your vocabulary with interactive flashcards and track your progress.',
+    icon: 'cards',
+    color: 'primary',
+    link: '/flashcards',
+  },
+  {
     title: 'Text Library',
     description: 'Collect and organize Arabic texts with transliteration and personal notes.',
     icon: 'document-text',
-    color: 'primary',
+    color: 'secondary',
     link: '/texts',
   },
   {
     title: 'Vocabulary Journal',
     description: 'Build your personal dictionary with root analysis and usage examples.',
     icon: 'book-open',
-    color: 'secondary',
+    color: 'accent',
     link: '/words',
   },
   {
     title: 'Root Deep-Dive',
     description: 'Explore Arabic word roots and discover related words across different forms.',
     icon: 'cube-transparent',
-    color: 'accent',
+    color: 'primary',
     link: '/roots',
   },
   {
     title: 'Dialect Studies',
     description: 'Explore different Arabic dialects: Tunisian, Moroccan, Egyptian, and MSA.',
     icon: 'globe',
-    color: 'primary',
-    link: '/texts',
-  },
-  {
-    title: 'Personal Notes',
-    description: 'Add your own grammar observations, cultural insights, and pronunciation guides.',
-    icon: 'annotation',
     color: 'secondary',
     link: '/texts',
   },
