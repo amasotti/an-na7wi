@@ -88,3 +88,28 @@ export const textClasses = {
 export function combineClasses(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ')
 }
+
+export const sliderClasses = {
+  wrapper: 'flex items-center gap-3 w-full',
+
+  base: 'appearance-none w-full h-2 rounded-full cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
+
+  variants: {
+    primary:
+      'bg-gradient-to-r from-primary-400 to-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500',
+    secondary:
+      'bg-gradient-to-r from-secondary-400 to-secondary-600 focus:outline-none focus:ring-2 focus:ring-secondary-500',
+    outline:
+      'bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400',
+    danger:
+      'bg-gradient-to-r from-red-400 to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500',
+  },
+
+  sizes: {
+    sm: 'h-1 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3',
+    md: 'h-2 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4',
+    lg: 'h-3 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5',
+  },
+
+  value: 'text-sm font-medium text-gray-700 min-w-[2ch] text-right',
+}
