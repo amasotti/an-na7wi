@@ -231,10 +231,7 @@ export const useTextStore = defineStore('text', () => {
 
   async function updateAnnotationReview(id: string, needsReview: boolean) {
     try {
-      const updatedAnnotation = await annotationService.updateReviewSettings(
-        id,
-        needsReview,
-      )
+      const updatedAnnotation = await annotationService.updateReviewSettings(id, needsReview)
 
       // Update in the list
       const index = annotations.value.findIndex(a => a.id === id)

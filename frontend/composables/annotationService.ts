@@ -78,10 +78,7 @@ export const annotationService = {
   /**
    * Update the review settings of an annotation
    */
-  async updateReviewSettings(
-    id: string,
-    needsReview: boolean,
-  ): Promise<Annotation> {
+  async updateReviewSettings(id: string, needsReview: boolean): Promise<Annotation> {
     const request: ReviewUpdateRequest = {
       needsReview,
     }
