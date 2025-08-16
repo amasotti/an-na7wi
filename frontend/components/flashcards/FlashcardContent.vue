@@ -3,14 +3,6 @@
     <!-- Loading State -->
     <LoadingEffect v-if="flashcardStore.loading" />
 
-    <!-- No Words Available -->
-    <BaseEmptyState
-      v-else-if="!flashcardStore.isSessionActive && !flashcardStore.showResults"
-      link="/words"
-      linkText="Browse Vocabulary"
-      message="No words available for practice. Please add words to your vocabulary."
-    />
-
     <!-- Active Flashcard -->
     <FlashCard v-else-if="flashcardStore.hasCurrentWord && !flashcardStore.showResults" class="flashcard-container" />
 
@@ -22,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import FlashCard from '~/components/flashcards/FlashCard.vue'
 import SessionResults from '~/components/flashcards/SessionResults.vue'

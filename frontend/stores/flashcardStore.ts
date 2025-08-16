@@ -1,25 +1,30 @@
 import { computed, ref } from 'vue'
-import type { Word } from '~/types'
-import type { FlashcardSession, SessionResults } from '~/types/training'
+import type { FlashcardSession, ReviewMode, SessionResults, TrainingResult } from '~/types/training'
 
 export const useFlashcardStore = defineStore('flashcard', () => {
   // State
+  const MAX_SESSION_LENGTH = 50 // Maximum session length
   const loading = ref(false)
   const session = ref<FlashcardSession | null>(null)
+  const sessionLength = ref(15) // Default session length
   const showResults = ref(false)
+  const selectedReviewMode = ref<ReviewMode>('NEW') // Default review mode
 
   // Computed
   const currentWord = computed(() => {
-    if (!session.value || session.value.currentIndex >= session.value.words.length) {
+    if (
+      !session.value ||
+      session.value.currentIndex >= session.value.trainingSession.words.length
+    ) {
       return null
     }
-    return session.value.words[session.value.currentIndex]
+    return session.value.trainingSession.words[session.value.currentIndex]
   })
 
   const progress = computed(() => {
     if (!session.value) return { current: 0, total: 0, percentage: 0 }
     const current = session.value.currentIndex + 1
-    const total = session.value.words.length
+    const total = session.value.trainingSession.words.length
     return {
       current,
       total,
@@ -42,7 +47,7 @@ export const useFlashcardStore = defineStore('flashcard', () => {
 
     const results = session.value.results
     return {
-      total: session.value.words.length,
+      total: session.value.trainingSession.words.length,
       correct: results.filter(r => r.result === 'correct').length,
       incorrect: results.filter(r => r.result === 'incorrect').length,
       skipped: results.filter(r => r.result === 'skipped').length,
@@ -56,24 +61,20 @@ export const useFlashcardStore = defineStore('flashcard', () => {
   const hasCurrentWord = computed(() => currentWord.value !== null)
 
   // Actions
-  const startNewSession = async (sessionLength = 15) => {
+  const startNewSession = async () => {
     loading.value = true
     showResults.value = false
 
     try {
-      const wordStore = useWordStore()
-      const allUnmasteredWords = await wordStore.fetchAllUnmasteredWords()
+      const trainingSession = await trainingService.startSession(selectedReviewMode.value, sessionLength.value)
 
-      if (allUnmasteredWords.length === 0) {
+      if (trainingSession.words.length === 0) {
         session.value = null
         return false
       }
 
-      // Shuffle and limit words
-      const shuffledWords = shuffleArray([...allUnmasteredWords]).slice(0, sessionLength)
-
       session.value = {
-        words: shuffledWords,
+        trainingSession,
         currentIndex: 0,
         showAnswer: false,
         displayMode: getRandomDisplayMode(),
@@ -97,29 +98,48 @@ export const useFlashcardStore = defineStore('flashcard', () => {
     }
   }
 
-  const markWordAs = (result: 'correct' | 'incorrect' | 'skipped') => {
+  const markWordAs = async (result: TrainingResult) => {
     if (!session.value || !currentWord.value) return
 
-    // Add result
-    session.value.results.push({
-      word: currentWord.value,
-      result,
-    })
+    try {
+      await trainingService.recordResult(
+        session.value.trainingSession.id,
+        currentWord.value.id,
+        result
+      )
 
-    // Move to next word or end session
-    if (session.value.currentIndex < session.value.words.length - 1) {
-      session.value.currentIndex++
-      session.value.showAnswer = false
-      session.value.displayMode = getRandomDisplayMode()
-    } else {
-      endSession()
+      // Add result locally
+      session.value.results.push({
+        word: currentWord.value,
+        result,
+      })
+
+      // Move to next word or end session
+      if (session.value.currentIndex < session.value.trainingSession.words.length - 1) {
+        session.value.currentIndex++
+        session.value.showAnswer = false
+        session.value.displayMode = getRandomDisplayMode()
+      } else {
+        await endSession()
+      }
+    } catch (error) {
+      console.error('Error recording result:', error)
     }
   }
 
-  const endSession = () => {
+  const endSession = async () => {
     if (session.value) {
-      session.value.endTime = new Date()
-      showResults.value = true
+      try {
+        await trainingService.completeSession(session.value.trainingSession.id)
+
+        session.value.endTime = new Date()
+        showResults.value = true
+      } catch (error) {
+        console.error('Error completing session:', error)
+        // Still show results even if API call fails
+        session.value.endTime = new Date()
+        showResults.value = true
+      }
     }
   }
 
@@ -132,24 +152,30 @@ export const useFlashcardStore = defineStore('flashcard', () => {
     return Math.random() > 0.5 ? 'arabic' : 'translation'
   }
 
-  const shuffleArray = (array: Word[]): Word[] => {
-    const shuffled = [...array]
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      if (i < shuffled.length && j < shuffled.length) {
-        const temp = shuffled[i]!
-        shuffled[i] = shuffled[j]!
-        shuffled[j] = temp
-      }
+  // Modify sessionLength
+  const updateSessionLength = (length: number) => {
+    if (length < 1) {
+      console.warn('Session length must be at least 1')
+      sessionLength.value = 1
     }
-    return shuffled
+    sessionLength.value = Math.min(length, MAX_SESSION_LENGTH)
+  }
+
+  const updateReviewMode = (mode: ReviewMode) => {
+    if (['NEW', 'KNOWN', 'LEARNING', 'MIXED'].includes(mode)) {
+      selectedReviewMode.value = mode
+    } else {
+      console.warn('Invalid review mode:', mode)
+    }
   }
 
   return {
     // State
     loading,
     session: readonly(session),
+    sessionLength: readonly(sessionLength),
     showResults: readonly(showResults),
+    selectedReviewMode: readonly(selectedReviewMode),
 
     // Computed
     currentWord,
@@ -164,5 +190,7 @@ export const useFlashcardStore = defineStore('flashcard', () => {
     markWordAs,
     endSession,
     resetSession,
+    updateSessionLength,
+    updateReviewMode,
   }
 })

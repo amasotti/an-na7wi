@@ -2,8 +2,21 @@ import type { Word } from '~/types/entities'
 
 export type TrainingResult = 'correct' | 'incorrect' | 'skipped'
 
-export interface FlashcardSession {
+export type ReviewMode = 'NEW' | 'LEARNING' | 'KNOWN' | 'MIXED'
+
+export interface TrainingSession {
+  id: string
+  sessionType: string
+  reviewMode: ReviewMode
+  startedAt: string
+  completedAt: string | null
+  totalWords: number
+  correctAnswers: number
   words: Word[]
+}
+
+export interface FlashcardSession {
+  trainingSession: TrainingSession
   currentIndex: number
   showAnswer: boolean
   displayMode: 'arabic' | 'translation'
@@ -20,4 +33,14 @@ export interface SessionResults {
   words: Array<{ word: Word; result: TrainingResult }>
   startTime: Date
   endTime: Date | null
+}
+
+export interface StartTrainingSessionRequest {
+  reviewMode: ReviewMode
+  sessionLength?: number
+}
+
+export interface RecordResultRequest {
+  wordId: string
+  result: 'CORRECT' | 'INCORRECT' | 'SKIPPED'
 }
