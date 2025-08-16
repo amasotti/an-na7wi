@@ -27,8 +27,6 @@ const formattedNotes = computed(() => {
   if (!currentWord.value?.notes) return ''
   return currentWord.value.notes.replace(/\n/g, '<br>')
 })
-
-
 </script>
 
 <style scoped>

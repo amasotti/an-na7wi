@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockedExamples } from '~/test/mocks/examples.mock'
 import type { ExampleGenerationRequest, ExampleGenerationResponse } from '~/types'
 import { exampleService } from './exampleService'
 
@@ -18,16 +19,7 @@ describe('exampleService', () => {
   describe('generateExamples', () => {
     it('should generate examples with arabic word only', async () => {
       const mockResponse: ExampleGenerationResponse = {
-        examples: [
-          {
-            arabic: 'هذا كتاب مفيد',
-            english: 'This is a useful book',
-          },
-          {
-            arabic: 'أقرأ الكتاب كل يوم',
-            english: 'I read the book every day',
-          },
-        ],
+        examples: mockedExamples,
       }
 
       mockPost.mockResolvedValue({ data: mockResponse })
@@ -50,6 +42,7 @@ describe('exampleService', () => {
         examples: [
           {
             arabic: 'يدرس الطالب في المدرسة',
+            transliteration: 'Yadrus at-talib fi al-madrasa',
             english: 'The student studies at school',
           },
         ],
