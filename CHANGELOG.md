@@ -2,9 +2,59 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.0.0] - 2025-08-16
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/fb42c9ed3cd810f11be5a1f885bf22f56242a47d..)
+### 🚀 Features
+
+
+- Prepare migration for advanced training session feature ([0e43a3e](https://github.com/amasotti/an-na7wi/commit/0e43a3e79ce544ec878dca4dc4cda3ab7a5986ab))
+
+- Add base slider ([627c039](https://github.com/amasotti/an-na7wi/commit/627c039c278359d9bb4cf71bf5782af6e3623644))
+
+- Add DTOs ([aa7c183](https://github.com/amasotti/an-na7wi/commit/aa7c183b1a262c5d59595867edba66de1a73f8a3))
+
+- Add controller and service logic ([f8fe25d](https://github.com/amasotti/an-na7wi/commit/f8fe25df631fb4c038c3a89c15ced19c98bf2c9b))
+
+- Improve training session feature frontend ([9d72f2f](https://github.com/amasotti/an-na7wi/commit/9d72f2fea05a1367a0197cd4541cc27bc278a7d3))
+
+- Add training session analytics ([29bf14f](https://github.com/amasotti/an-na7wi/commit/29bf14f8b7d3eae1c974ee8717b925fd6b455f5c))
+
+- Add skip function ([4ad76aa](https://github.com/amasotti/an-na7wi/commit/4ad76aaf7ed3999ad61e20d2b5945f2c911ea92f))
+
+### 🐛 Bug Fixes
+
+
+- Tests with correct URL ([8e3c9c1](https://github.com/amasotti/an-na7wi/commit/8e3c9c12c2eb02a8be059ca41f8126e8839b125b))
+
+### 🚜 Refactor
+
+
+- Delete unused properties ([d65666e](https://github.com/amasotti/an-na7wi/commit/d65666e0214fd8c627a00e6b6e875f3775bd0246))
+
+- Delete unused endpoint ([1bc120c](https://github.com/amasotti/an-na7wi/commit/1bc120cecdcdb65144215545413c0bc0a1b29a6d))
+
+- Cleanup removed fields ([8468ec4](https://github.com/amasotti/an-na7wi/commit/8468ec4a20a513f0a48885bc59120724192d1544))
+
+- Cleanup outdated docs and md files, add LICENSE ([215454a](https://github.com/amasotti/an-na7wi/commit/215454a68e2a63f320d38970efd4f1fbe21006d7))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Update compatibility date ([e892ded](https://github.com/amasotti/an-na7wi/commit/e892ded0c9ef3647a77a88ba82c2f23f1d72c189))
+
+- Run biome ([a4e9d55](https://github.com/amasotti/an-na7wi/commit/a4e9d5559a00cf12a4aff1e3792d3d3c1fcd54f8))
+
+- Run biome formatter ([5ef474b](https://github.com/amasotti/an-na7wi/commit/5ef474b475805d31761a787e0d338e6d92d136a8))
+
 ## [1.6.1] - 2025-08-16
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/22d9e01c4c109bbbe177c9614a7d030db2e07ad7..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/22d9e01c4c109bbbe177c9614a7d030db2e07ad7..fb42c9ed3cd810f11be5a1f885bf22f56242a47d)
+### 🐛 Bug Fixes
+
+
+- Biome warning for banned emtpy object type ([fb42c9e](https://github.com/amasotti/an-na7wi/commit/fb42c9ed3cd810f11be5a1f885bf22f56242a47d))
+
 ### 🚜 Refactor
 
 
