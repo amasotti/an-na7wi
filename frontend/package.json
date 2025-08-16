@@ -2,7 +2,7 @@
   "name": "an-nahwi-frontend",
   "author": "Antonio Masotti <toniomasotti@gmail.com>",
   "description": "Frontend for An Nahwi",
-  "version": "0.1.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "scripts": {
