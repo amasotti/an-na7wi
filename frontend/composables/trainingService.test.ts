@@ -35,7 +35,7 @@ describe('trainingService', () => {
 
       const result = await trainingService.startSession('MIXED', 15)
 
-      expect(mockApiClient.post).toHaveBeenCalledWith('/api/v1/training/sessions/start', {
+      expect(mockApiClient.post).toHaveBeenCalledWith('/training/sessions/start', {
         reviewMode: 'MIXED',
         sessionLength: 15,
       })
@@ -62,7 +62,7 @@ describe('trainingService', () => {
 
       await trainingService.recordResult('123', '456', 'correct')
 
-      expect(mockApiClient.post).toHaveBeenCalledWith('/api/v1/training/sessions/123/results', {
+      expect(mockApiClient.post).toHaveBeenCalledWith('/training/sessions/123/results', {
         wordId: '456',
         result: 'CORRECT',
       })
@@ -95,7 +95,7 @@ describe('trainingService', () => {
 
       const result = await trainingService.completeSession('123')
 
-      expect(mockApiClient.put).toHaveBeenCalledWith('/api/v1/training/sessions/123/complete')
+      expect(mockApiClient.put).toHaveBeenCalledWith('/training/sessions/123/complete')
       expect(result).toEqual(mockSession)
     })
   })
@@ -117,7 +117,7 @@ describe('trainingService', () => {
 
       const result = await trainingService.getSession('123')
 
-      expect(mockApiClient.get).toHaveBeenCalledWith('/api/v1/training/sessions/123')
+      expect(mockApiClient.get).toHaveBeenCalledWith('/training/sessions/123')
       expect(result).toEqual(mockSession)
     })
 
