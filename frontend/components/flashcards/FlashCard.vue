@@ -90,6 +90,15 @@
             Need Practice
           </BaseButton>
         </div>
+
+        <!-- Skip Button (Always Available) -->
+        <BaseButton variant="outline" size="md" class="skip-button" @click="skipWord">
+          <BaseIcon size="sm" class="mr-2">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 9l6 6m0-6l-6 6"/>
+          </BaseIcon>
+          Skip
+        </BaseButton>
       </div>
 
       <!-- Word Metadata Badges -->
@@ -132,6 +141,10 @@ const markAsKnown = () => {
 
 const markAsDontKnow = () => {
   flashcardStore.markWordAs('incorrect')
+}
+
+const skipWord = () => {
+  flashcardStore.markWordAs('skipped')
 }
 
 // Utility functions
@@ -249,6 +262,10 @@ const getDifficultyVariant = (difficulty: string): BadgeVariant => {
 .know-button,
 .practice-button {
   @apply flex-1;
+}
+
+.skip-button {
+  @apply w-full mt-2;
 }
 
 .metadata-badges {
