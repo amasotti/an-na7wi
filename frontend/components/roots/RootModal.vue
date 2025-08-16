@@ -6,13 +6,13 @@
     @close="handleClose"
   >
     <form @submit.prevent="handleSubmit" class="content-area" role="form" aria-label="Root form">
-      <!-- Root Letters Section -->
+      <!-- Base Data Section -->
       <section class="form-section section-primary" aria-labelledby="root-letters-heading">
         <h3 id="root-letters-heading" class="form-section-title">
           <BaseIcon size="sm" class="section-icon text-blue-600">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
           </BaseIcon>
-          Root Letters
+          Basic Data
         </h3>
         <div class="form-field-primary">
           <label for="rootInput" class="form-label">Root Letters <span class="text-red-500 ml-1">*</span></label>
@@ -30,18 +30,8 @@
             Enter 2-5 Arabic consonant letters with or without dashes
           </div>
         </div>
-      </section>
-
-      <!-- Meaning Section -->
-      <section class="form-section section-meaning" aria-labelledby="meaning-heading">
-        <h3 id="meaning-heading" class="form-section-title">
-          <BaseIcon size="sm" class="section-icon text-purple-600">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </BaseIcon>
-          Semantic Meaning
-        </h3>
-        <div class="form-group">
-          <label for="meaningInput" class="form-label">Meaning (Optional)</label>
+        <div class="form-field-primary pt-4">
+          <label for="meaningInput" class="form-label">Meaning</label>
           <BaseInput
             id="meaningInput"
             v-model="meaningInput"
@@ -70,8 +60,8 @@
             id="analysisInput"
             v-model="analysisInput"
             placeholder="Enter linguistic analysis, cognitive metaphors, grammatical patterns, verb forms, semantic relationships..."
-            class="form-input resize-none"
-            rows="8"
+            class="form-input"
+            :rows="dynamicAreaTextSize"
             aria-describedby="analysis-help"
           />
           <div id="analysis-help" class="form-help">
@@ -119,6 +109,7 @@ import BaseIcon from '@/components/common/BaseIcon.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import type { Root } from '@/types'
+import DeleteButton from '~/components/common/DeleteButton.vue'
 import { rootService } from '~/composables/rootService'
 
 interface Props {
@@ -148,6 +139,10 @@ const isEditing = computed(() => !!props.root)
 
 const canSubmit = computed(() => {
   return rootInput.value.trim() !== '' && !inputError.value && !loading.value
+})
+
+const dynamicAreaTextSize = computed<number>(() => {
+  return Math.max(Math.ceil(analysisInput.value.length / 170), 10)
 })
 
 const handleInput = async () => {
@@ -282,10 +277,6 @@ if (props.open && props.root) {
 /* Section-specific styling */
 .section-primary {
   @apply bg-gradient-to-br from-blue-50/50 to-indigo-50/50 rounded-xl p-6 border border-blue-100/50;
-}
-
-.section-meaning {
-  @apply bg-gradient-to-br from-purple-50/50 to-violet-50/50 rounded-xl p-6 border border-purple-100/50;
 }
 
 .section-analysis {

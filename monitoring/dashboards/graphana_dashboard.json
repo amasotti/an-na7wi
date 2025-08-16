@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -817,7 +817,7 @@
         "defaults": {
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
@@ -825,11 +825,11 @@
               },
               {
                 "color": "orange",
-                "value": 70
+                "value": 30
               },
               {
                 "color": "red",
-                "value": 85
+                "value": 50
               }
             ]
           }
@@ -1447,5 +1447,5 @@
   "timezone": "browser",
   "title": "An-Na7wi",
   "uid": "47554693-9d10-4fa1-8fcb-fe0e8908aa98",
-  "version": 12
+  "version": 2
 }

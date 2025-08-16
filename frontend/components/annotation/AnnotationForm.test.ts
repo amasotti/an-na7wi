@@ -218,7 +218,7 @@ describe('AnnotationForm', () => {
         type: AnnotationType.GRAMMAR,
         masteryLevel: MasteryLevel.MASTERED,
         needsReview: true,
-        "color": "#32a7cf",
+        color: '#32a7cf',
       },
     ])
   })

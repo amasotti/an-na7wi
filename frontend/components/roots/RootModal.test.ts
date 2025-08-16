@@ -81,7 +81,7 @@ describe('RootModal', () => {
 
       expect(screen.getByText('Add New Root')).toBeInTheDocument()
       expect(screen.getByLabelText('Root Letters *')).toBeInTheDocument()
-      expect(screen.getByLabelText('Meaning (Optional)')).toBeInTheDocument()
+      expect(screen.getByLabelText('Meaning')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Create new root' })).toBeInTheDocument()
     })
 
@@ -121,7 +121,7 @@ describe('RootModal', () => {
 
       expect(screen.getByText('Edit Root')).toBeInTheDocument()
       expect(screen.getByLabelText('Root Letters *')).toBeInTheDocument()
-      expect(screen.getByLabelText('Meaning (Optional)')).toBeInTheDocument()
+      expect(screen.getByLabelText('Meaning')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Update root information' })).toBeInTheDocument()
     })
 
@@ -160,7 +160,7 @@ describe('RootModal', () => {
         props: { open: true, root: mockRoot },
       })
 
-      const meaningInput = screen.getByLabelText('Meaning (Optional)')
+      const meaningInput = screen.getByLabelText('Meaning')
       await fireEvent.update(meaningInput, 'updated meaning')
 
       const submitButton = screen.getByRole('button', { name: 'Update root information' })
@@ -267,7 +267,7 @@ describe('RootModal', () => {
         props: { open: true, root: mockRoot },
       })
 
-      const meaningInput = screen.getByLabelText('Meaning (Optional)')
+      const meaningInput = screen.getByLabelText('Meaning')
       await fireEvent.update(meaningInput, 'changed meaning')
 
       // Close modal
