@@ -21,7 +21,7 @@ export default defineNuxtConfig({
   sourcemap: false,
   ssr: false,
   css: ['~/assets/css/main.css'],
-  compatibilityDate: '2025-08-02',
+  compatibilityDate: '2025-08-16',
   srcDir: '.',
   imports: {
     autoImport: true,
