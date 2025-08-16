@@ -8,15 +8,14 @@ const MockNuxtLink = {
   props: ['to'],
 }
 
-type EmptySateProps = {
-  link: string | undefined
-  linkText: string | undefined
-  message: string | undefined
-}
+type EmptySateProps = NonNullable<{
+  readonly link: string
+  readonly linkText: string
+  readonly message: string
+}>
 
 describe('BaseEmptyState', () => {
-  // biome-ignore lint/complexity/noBannedTypes: This is a test file, so using the emtpy object is acceptable here.
-  const createComponent = (props: EmptySateProps | {}) => {
+  const createComponent = (props = {} as unknown as EmptySateProps) => {
     return render(BaseEmptyState, {
       props,
       global: {
@@ -93,7 +92,7 @@ describe('BaseEmptyState', () => {
         message: 'No data available',
         link: undefined,
         linkText: 'Go Home',
-      })
+      } as unknown as EmptySateProps)
 
       const link = screen.getByText('Go Home').closest('a')
       expect(link).toHaveAttribute('href', '/')
@@ -104,7 +103,7 @@ describe('BaseEmptyState', () => {
         link: '',
         message: 'No data available',
         linkText: 'Go Back',
-      })
+      } as unknown as EmptySateProps)
 
       const link = screen.getByText('Go Back').closest('a')
       expect(link).toHaveAttribute('href', '/')
@@ -124,21 +123,21 @@ describe('BaseEmptyState', () => {
 
   describe('layout and structure', () => {
     it('uses nav element for semantic structure', () => {
-      createComponent({})
+      createComponent({} as unknown as EmptySateProps)
 
       const nav = document.querySelector('nav')
       expect(nav).toBeInTheDocument()
     })
 
     it('centers content appropriately', () => {
-      createComponent({})
+      createComponent({} as unknown as EmptySateProps)
 
       const nav = document.querySelector('nav')
       expect(nav).toHaveClass('text-center')
     })
 
     it('maintains proper spacing', () => {
-      createComponent({})
+      createComponent({} as unknown as EmptySateProps)
 
       const nav = document.querySelector('nav')
       expect(nav).toHaveClass('py-12')
@@ -151,7 +150,7 @@ describe('BaseEmptyState', () => {
         message: undefined,
         linkText: undefined,
         link: undefined,
-      })
+      } as unknown as EmptySateProps)
 
       // Should use defaults
       expect(screen.getByText('No data available')).toBeInTheDocument()
@@ -166,7 +165,7 @@ describe('BaseEmptyState', () => {
         message: '',
         linkText: '',
         link: '',
-      })
+      } as unknown as EmptySateProps)
 
       // Empty message should still render (even if empty)
       const messageDiv = document.querySelector('.text-gray-400')
@@ -182,7 +181,7 @@ describe('BaseEmptyState', () => {
         'This is a very long message that might wrap to multiple lines and should still be displayed correctly in the empty state component'
       createComponent({
         message: longMessage,
-      })
+      } as unknown as EmptySateProps)
 
       expect(screen.getByText(longMessage)).toBeInTheDocument()
     })
@@ -192,7 +191,7 @@ describe('BaseEmptyState', () => {
         message: 'No results found for "advanced search"',
         linkText: 'Try Again →',
         link: '/search?reset=true',
-      })
+      } as unknown as EmptySateProps)
 
       expect(screen.getByText('No results found for "advanced search"')).toBeInTheDocument()
       expect(screen.getByText('Try Again →')).toBeInTheDocument()
@@ -216,7 +215,7 @@ describe('BaseEmptyState', () => {
     })
 
     it('maintains proper text color contrast', () => {
-      createComponent({})
+      createComponent({} as unknown as EmptySateProps)
 
       const message = document.querySelector('.text-gray-400')
       expect(message).toBeInTheDocument()

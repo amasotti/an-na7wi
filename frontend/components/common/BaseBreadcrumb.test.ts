@@ -8,9 +8,16 @@ const MockNuxtLink = {
   props: ['to'],
 }
 
+type BreadcrumbProps = {
+  readonly parentLink: string
+  readonly parentText: string
+  readonly separator: string
+  readonly item: string
+}
+
 describe('BaseBreadcrumb', () => {
   // ts-ignore
-  const createComponent = (props = {}) => {
+  const createComponent = (props = {} as unknown as BreadcrumbProps) => {
     return render(BaseBreadcrumb, {
       props,
       global: {
@@ -150,6 +157,8 @@ describe('BaseBreadcrumb', () => {
       createComponent({
         parentLink: '/some/path',
         parentText: 'Some Path',
+        separator: '>',
+        item: 'Current Item',
       })
 
       const parentLink = screen.getByText('Some Path').closest('a')
@@ -169,6 +178,8 @@ describe('BaseBreadcrumb', () => {
       createComponent({
         parentText: 'Parent',
         item: 'Current',
+        parentLink: '/parent',
+        separator: '>',
       })
 
       const currentItem = screen.getByText('Current')
@@ -180,7 +191,7 @@ describe('BaseBreadcrumb', () => {
 
   describe('edge cases', () => {
     it('handles undefined props gracefully', () => {
-      createComponent({})
+      createComponent({} as unknown as BreadcrumbProps)
 
       // Should use defaults - but there will be two "Home" elements (parent and current)
       const homeElements = screen.getAllByText('Home')
@@ -208,6 +219,7 @@ describe('BaseBreadcrumb', () => {
         parentText: 'Texts & Documents',
         separator: '→',
         item: 'Document #123',
+        parentLink: '/texts',
       })
 
       expect(screen.getByText('Texts & Documents')).toBeInTheDocument()

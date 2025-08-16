@@ -2,7 +2,7 @@
  * Represents a summary of a text version, used in dropdowns
  */
 export interface TextVersionSummary {
-  id: string | null
+  id: string
   versionNumber: number
   updatedAt: string
   isCurrent: boolean

@@ -215,7 +215,7 @@ import TextVersionManager from '~/components/text/TextVersionManager.vue'
 import WordForm from '~/components/vocabulary/WordForm.vue'
 import { useTextStore } from '~/stores/textStore'
 import { useWordStore } from '~/stores/wordStore'
-import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Text, Word } from '~/types'
+import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Word } from '~/types'
 import { Dialect, Difficulty } from '~/types'
 
 const route = useRoute()
@@ -292,12 +292,6 @@ const formattedDate = computed(() => {
   })
 })
 
-// Word form options
-const difficultyOptions = computed(() => wordStore.difficultyOptions)
-const dialectOptions = computed(() => wordStore.dialectOptions)
-const masteryLevelOptions = computed(() => wordStore.masteryLevelOptions)
-const partsOfSpeechOptions = computed(() => wordStore.partsOfSpeechOptions)
-
 // Word for form - pre-fills with selected text if available and Arabic
 const wordForForm = computed(() => {
   if (editingWord.value) {
@@ -308,7 +302,7 @@ const wordForForm = computed(() => {
   if (currentSelectedText.value && /[\u0600-\u06FF]/.test(currentSelectedText.value)) {
     return {
       arabic: currentSelectedText.value.trim(),
-    } as Partial<Word>
+    } as Word
   }
 
   return null
@@ -322,12 +316,12 @@ const selectionToolbarStyle = computed(() => {
 
   let { x, y } = selectionToolbarPosition.value
 
-  // Ensure toolbar doesn't go off screen horizontally
+  // Ensure toolbar doesn't go off-screen horizontally
   const maxX = window.innerWidth - toolbarWidth - padding
   const minX = toolbarWidth / 2 + padding
   x = Math.max(minX, Math.min(maxX, x))
 
-  // Ensure toolbar doesn't go off screen vertically
+  // Ensure toolbar doesn't go off-screen vertically
   // If selection is too close to top, show below instead of above
   if (y - toolbarHeight - padding < 0) {
     y = y + 30 // Show below selection

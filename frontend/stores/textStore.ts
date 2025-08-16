@@ -54,7 +54,9 @@ export const useTextStore = defineStore('text', () => {
   })
 
   // Display text is either the selected version or the current text
-  const displayText = computed(() => {
+  const displayText = computed((): Text | null => {
+    if (!currentText.value?.id) return null
+
     if (selectedVersion.value && !isViewingCurrentVersion.value) {
       return {
         ...currentText.value,

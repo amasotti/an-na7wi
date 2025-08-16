@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount, type VueWrapper } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AnnotationForm } from '#components'
 import { exampleService } from '~/composables/exampleService'
@@ -55,7 +55,7 @@ describe('AnnotationForm', () => {
   })
 
   it('renders correctly when closed', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: false,
       },
@@ -65,7 +65,7 @@ describe('AnnotationForm', () => {
   })
 
   it('renders form fields when open', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
       },
@@ -80,7 +80,7 @@ describe('AnnotationForm', () => {
   })
 
   it('shows correct title for new annotation', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
       },
@@ -91,7 +91,7 @@ describe('AnnotationForm', () => {
   })
 
   it('shows correct title for editing annotation', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         annotation: mockAnnotation,
@@ -103,7 +103,7 @@ describe('AnnotationForm', () => {
   })
 
   it('populates form with annotation data when editing', async () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         annotation: mockAnnotation,
@@ -129,7 +129,7 @@ describe('AnnotationForm', () => {
 
   it('uses selectedText for new annotation', async () => {
     const selectedText = 'selected text'
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         selectedText,
@@ -144,7 +144,7 @@ describe('AnnotationForm', () => {
   })
 
   it('disables anchor text when editing and canEditAnchorText is false', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         annotation: mockAnnotation,
@@ -158,7 +158,7 @@ describe('AnnotationForm', () => {
   })
 
   it('enables anchor text when editing and canEditAnchorText is true', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         annotation: mockAnnotation,
@@ -172,7 +172,7 @@ describe('AnnotationForm', () => {
   })
 
   it('shows delete button when editing', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         annotation: mockAnnotation,
@@ -186,7 +186,7 @@ describe('AnnotationForm', () => {
   })
 
   it('does not show delete button when creating new annotation', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
       },
@@ -199,7 +199,7 @@ describe('AnnotationForm', () => {
   })
 
   it('emits submit event with form data', async () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
       },
@@ -228,7 +228,7 @@ describe('AnnotationForm', () => {
   })
 
   it('emits close event when modal is closed', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
       },
@@ -244,7 +244,7 @@ describe('AnnotationForm', () => {
     // Mock window.confirm
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         annotation: mockAnnotation,
@@ -252,7 +252,6 @@ describe('AnnotationForm', () => {
     })
 
     // Call the handleDelete method directly
-    // @ts-expect-error
     await wrapper.vm.handleDelete()
 
     expect(confirmSpy).toHaveBeenCalledWith('Are you sure you want to delete this annotation?')
@@ -267,7 +266,7 @@ describe('AnnotationForm', () => {
     // Mock window.confirm to return false
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
 
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         annotation: mockAnnotation,
@@ -275,7 +274,6 @@ describe('AnnotationForm', () => {
     })
 
     // Call the handleDelete method directly
-    // @ts-expect-error
     await wrapper.vm.handleDelete()
 
     expect(confirmSpy).toHaveBeenCalled()
@@ -285,7 +283,7 @@ describe('AnnotationForm', () => {
   })
 
   it('resets form when modal is closed', async () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
         selectedText: 'initial text',
@@ -296,11 +294,9 @@ describe('AnnotationForm', () => {
     await wrapper.find('#content').setValue('some content')
 
     // Close modal
-    // @ts-expect-error
     await wrapper.setProps({ open: false })
 
     // Reopen modal
-    // @ts-expect-error
     await wrapper.setProps({ open: true })
 
     const anchorTextInput = wrapper.find('#anchorText').element as unknown as HTMLInputElement
@@ -311,7 +307,7 @@ describe('AnnotationForm', () => {
   })
 
   it('handles all annotation types and mastery levels', () => {
-    const wrapper = mount(AnnotationForm, {
+    const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
       props: {
         open: true,
       },
@@ -326,7 +322,7 @@ describe('AnnotationForm', () => {
 
   describe('Example Generation', () => {
     it('shows generate examples button when anchor text is present', async () => {
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
           selectedText: 'كتاب',
@@ -343,7 +339,7 @@ describe('AnnotationForm', () => {
     })
 
     it('hides generate examples button when anchor text is empty', () => {
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
         },
@@ -362,7 +358,7 @@ describe('AnnotationForm', () => {
       }
       vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
 
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
           selectedText: 'كتاب',
@@ -396,7 +392,7 @@ describe('AnnotationForm', () => {
       }
       vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
 
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
           selectedText: 'كتاب',
@@ -406,7 +402,6 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Generate examples
-      // @ts-expect-error
       await wrapper.vm.generateExamples()
       await wrapper.vm.$nextTick()
 
@@ -431,7 +426,7 @@ describe('AnnotationForm', () => {
       }
       vi.mocked(exampleService.generateExamples).mockResolvedValue(mockResponse)
 
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
           selectedText: 'كتاب',
@@ -441,7 +436,6 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Generate examples
-      // @ts-expect-error
       await wrapper.vm.generateExamples()
       await wrapper.vm.$nextTick()
 
@@ -455,7 +449,7 @@ describe('AnnotationForm', () => {
     })
 
     it('clears examples when anchor text changes', async () => {
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
           selectedText: 'كتاب',
@@ -465,19 +459,17 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Set some generated examples
-      // @ts-expect-error
       wrapper.vm.generatedExamples = [{ arabic: 'test', english: 'test' }]
       await wrapper.vm.$nextTick()
 
       // Change anchor text
       await wrapper.find('#anchorText').setValue('جديد')
 
-      // @ts-expect-error
       expect(wrapper.vm.generatedExamples).toHaveLength(0)
     })
 
     it('clears examples when modal closes', async () => {
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
           selectedText: 'كتاب',
@@ -485,14 +477,12 @@ describe('AnnotationForm', () => {
       })
 
       // Set some generated examples
-      // @ts-expect-error
       wrapper.vm.generatedExamples = [{ arabic: 'test', english: 'test' }]
       await wrapper.vm.$nextTick()
 
       // Close modal
       await wrapper.setProps({ open: false })
 
-      // @ts-expect-error
       expect(wrapper.vm.generatedExamples).toHaveLength(0)
     })
 
@@ -500,7 +490,7 @@ describe('AnnotationForm', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       vi.mocked(exampleService.generateExamples).mockRejectedValue(new Error('API Error'))
 
-      const wrapper = mount(AnnotationForm, {
+      const wrapper: VueWrapper<typeof AnnotationForm, any> = mount(AnnotationForm, {
         props: {
           open: true,
           selectedText: 'كتاب',
@@ -510,7 +500,6 @@ describe('AnnotationForm', () => {
       await wrapper.vm.$nextTick()
 
       // Generate examples
-      // @ts-expect-error
       await wrapper.vm.generateExamples()
       await wrapper.vm.$nextTick()
 

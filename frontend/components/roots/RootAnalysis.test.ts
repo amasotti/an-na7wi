@@ -40,7 +40,6 @@ describe('RootAnalysis', () => {
       global: {
         plugins: [
           {
-            // biome-ignore lint/suspicious/noExplicitAny: This is a mock plugin
             install(app: any) {
               app.config.globalProperties.$markdownit = mockMarkdownit
             },

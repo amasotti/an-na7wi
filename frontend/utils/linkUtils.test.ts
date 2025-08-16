@@ -77,11 +77,7 @@ describe('linkUtils', () => {
     })
 
     it('handles null/undefined URL gracefully', () => {
-      // @ts-expect-error - Testing null and undefined handling
-      // biome-ignore lint/suspicious/noExplicitAny: testing null and undefined handling
       openLink(null as any)
-      // @ts-expect-error - Testing null and undefined handling
-      // biome-ignore lint/suspicious/noExplicitAny: testing null and undefined handling
       openLink(undefined as any)
 
       expect(mockWindowOpen).not.toHaveBeenCalled()

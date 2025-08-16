@@ -19,7 +19,6 @@ const defaultProps = {
 
 // Mock lodash debounce to make it synchronous for testing
 vi.mock('lodash-es', () => ({
-  // biome-ignore lint/suspicious/noExplicitAny: This is a test mock
   debounce: (fn: any) => fn,
 }))
 

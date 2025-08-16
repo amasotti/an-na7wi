@@ -128,7 +128,7 @@ describe('annotationService', () => {
     it('should update review settings with next review date', async () => {
       mockApiClient.put.mockResolvedValue({ data: mockAnnotation })
 
-      const result = await annotationService.updateReviewSettings('1', true, '2024-01-15')
+      const result = await annotationService.updateReviewSettings('1', true)
 
       expect(mockApiClient.put).toHaveBeenCalledWith('/annotations/1/review', {
         needsReview: true,
