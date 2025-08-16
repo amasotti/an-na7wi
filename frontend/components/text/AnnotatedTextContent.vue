@@ -97,6 +97,7 @@ const highlightText = (text: string, annotations: Annotation[]) => {
   if (!text || !annotations.length) return text
 
   let result = text
+    .replace(/\n/g, '<br>') // Replace newlines with <br> for HTML display
 
   // Sort annotations by length of anchor text (longest first)
   // This helps prevent nested highlights from breaking
