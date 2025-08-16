@@ -1,15 +1,17 @@
 {
   "files": {
-    "include": ["**/*.ts", "**/*.js", "**/*.vue"],
-    "ignore": [
-      "node_modules/**",
-      "dist/**",
-      "build/**",
-      ".output/**",
-      ".nuxt/**",
-      "coverage/**",
-      "*.min.js",
-      "*.d.ts"
+    "includes": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.vue",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!**/.output",
+      "!**/.nuxt",
+      "!**/coverage",
+      "!**/*.min.js",
+      "!**/*.d.ts"
     ]
   },
   "vcs": {
@@ -26,9 +28,7 @@
     "lineEnding": "lf",
     "lineWidth": 100
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
