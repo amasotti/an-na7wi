@@ -53,7 +53,7 @@ The app has these main parts:
 ### Full Stack (Docker)
 
 ```bash
-make dev          # Start all services
+just dev          # Start all services
 # or
 docker-compose up
 ```
@@ -63,13 +63,13 @@ docker-compose up
 **Database only:**
 
 ```bash
-make start-db     # Start PostgreSQL container
+just start-db     # Start PostgreSQL container
 ```
 
 **Backend (local):**
 
 ```bash
-make local-be     # Start in dev mode with hot reload
+just local-be     # Start in dev mode with hot reload
 # or
 cd backend && ./gradlew quarkusDev
 ```
@@ -82,14 +82,29 @@ cd frontend && pnpm install && pnpm run dev
 
 ## Available Commands
 
-- `make dev` - Start full stack
-- `make build` - Build all containers
-- `make test` - Run all tests
-- `make clean` - Clean containers and volumes
-- `make start-db` - Database only
-- `make local-be` - Backend dev mode
+This project uses [just](https://just.systems/man/en/) as task runner (similar to Makefile, just better! ;) ).
+
+- `just dev` - Start full stack
+- `just build` - Build all containers
+- `just test` - Run all tests
+- `just clean` - Clean containers and volumes
+- `just start-db` - Database only
+- `just local-be` - Backend dev mode
 - Backend build: `cd backend && ./gradlew build`
 - Frontend dev: `cd frontend && pnpm run dev`
+
+## Monitoring 
+
+There is a second docker-compose file in this project which additionally adds monitoring tools like Prometheus and Grafana.
+To run it, use:
+
+```bash
+docker-compose -f docker-compose-monitoring.yml up
+
+# or
+
+just monitoring
+```
 
 ## Access Points
 
