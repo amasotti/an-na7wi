@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { sliderClasses, combineClasses } from '@/styles/component-classes'
+import { combineClasses, sliderClasses } from '@/styles/component-classes'
 
 interface Props {
   modelValue: number
@@ -52,7 +52,7 @@ const internalValue = ref(props.modelValue)
 
 watch(
   () => props.modelValue,
-  (val) => {
+  val => {
     if (val !== internalValue.value) {
       internalValue.value = val
     }

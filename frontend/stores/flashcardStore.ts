@@ -66,7 +66,10 @@ export const useFlashcardStore = defineStore('flashcard', () => {
     showResults.value = false
 
     try {
-      const trainingSession = await trainingService.startSession(selectedReviewMode.value, sessionLength.value)
+      const trainingSession = await trainingService.startSession(
+        selectedReviewMode.value,
+        sessionLength.value
+      )
 
       if (trainingSession.words.length === 0) {
         session.value = null

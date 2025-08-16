@@ -58,10 +58,10 @@
 <script setup lang="ts">
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseCard from '~/components/common/BaseCard.vue'
+import BaseSlider from '~/components/common/BaseSlider.vue'
 import FlashcardContent from '~/components/flashcards/FlashcardContent.vue'
 import FlashcardHeader from '~/components/flashcards/FlashcardHeader.vue'
 import type { ReviewMode } from '~/types/training'
-import BaseSlider from "~/components/common/BaseSlider.vue";
 
 const flashcardStore = useFlashcardStore()
 const { sessionLength } = storeToRefs(flashcardStore)

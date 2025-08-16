@@ -99,8 +99,7 @@ export const sliderClasses = {
       'bg-gradient-to-r from-primary-400 to-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500',
     secondary:
       'bg-gradient-to-r from-secondary-400 to-secondary-600 focus:outline-none focus:ring-2 focus:ring-secondary-500',
-    outline:
-      'bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400',
+    outline: 'bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400',
     danger:
       'bg-gradient-to-r from-red-400 to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500',
   },
