@@ -2,13 +2,35 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [1.6.0] - 2025-08-16
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/965ac2733c97bb7b17c1e6e7bd526da2d46e0ef2..)
+### 🚀 Features
+
+
+- Merge flashcard implementation ([c427a57](https://github.com/amasotti/an-na7wi/commit/c427a57ad2519e305059621d5943c54d51be2a91))
+
+### 🚜 Refactor
+
+
+- Improve flash cards components ([dbfae4c](https://github.com/amasotti/an-na7wi/commit/dbfae4ca7cefad8e5859bbc8d3559c060078693d))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Format and fix typecheck errors ([7f5694b](https://github.com/amasotti/an-na7wi/commit/7f5694bf0dcb44cbb5fc9fb7012ca0fc8ef252e6))
+
 ## [1.5.0] - 2025-08-12
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/b64b3802f46d6bcb5923aad9aa45005e1ecbfc63..c6d4273ff644d9f8df3fb0ef0489deb73623ea21)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/b64b3802f46d6bcb5923aad9aa45005e1ecbfc63..965ac2733c97bb7b17c1e6e7bd526da2d46e0ef2)
 ### 🚀 Features
 
 
 - First analytics ([5576231](https://github.com/amasotti/an-na7wi/commit/5576231e1edd2f8af5f5ec60b576028c2a127bb3))
+
+- Expand generated examples with translitteration ([9c40299](https://github.com/amasotti/an-na7wi/commit/9c40299757727de108604897043683486f40a788))
+
+- Expand generated examples with translitteration ([38ad48a](https://github.com/amasotti/an-na7wi/commit/38ad48a5a0768336520fa3f762315fe355fd0c7b))
 
 - Improve handling of analytics and page structure ([d2e2364](https://github.com/amasotti/an-na7wi/commit/d2e2364640eda636119c19e1946ce580fc0e623e))
 
@@ -23,10 +45,16 @@ All notable changes to this project will be documented in this file (created wit
 
 - Root pagination ([8a5535f](https://github.com/amasotti/an-na7wi/commit/8a5535f483ceef9c48affaeacbae5fcd3cfbd1e6))
 
+- Format word notes ([2ed4130](https://github.com/amasotti/an-na7wi/commit/2ed41309f15285f5a4dcc1c48bc66c46fb59c1aa))
+
 ### 🚜 Refactor
 
 
 - Start splitting into components ([225c337](https://github.com/amasotti/an-na7wi/commit/225c33730cd91ca013ef5d198dbd998c26df4f78))
+
+- Simplify RootWordsList.vue ([37ba58a](https://github.com/amasotti/an-na7wi/commit/37ba58abdb31f017013c80060b734f33f75bbe11))
+
+- Simplify RootModal.vue ([2793a9b](https://github.com/amasotti/an-na7wi/commit/2793a9b4f2c9a7a44dd6774970711e3f414bb5ef))
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -34,6 +62,8 @@ All notable changes to this project will be documented in this file (created wit
 - Simplify root content components ([864a412](https://github.com/amasotti/an-na7wi/commit/864a4124f58639b64581f79a9e8629c26afe52a6))
 
 - Semantic html ([ad20483](https://github.com/amasotti/an-na7wi/commit/ad204835902749b7ed8dfec18612d47c6c43a091))
+
+- Fix testing after refactoring ([a1d96f9](https://github.com/amasotti/an-na7wi/commit/a1d96f9568afc6a34828350897c65a103c83074f))
 
 ## [1.4.1] - 2025-08-10
 
@@ -542,11 +572,24 @@ All notable changes to this project will be documented in this file (created wit
 
 ## [0.0.2] - 2025-07-27
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/318061a9486e866668a465d2b7d1e667f82c8d6d..36d6dd24526fbca5c00ad27e696ba217cc655814)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/fa482d02a5f81ccb2a5d38fdbcfaf72136cff6ae..36d6dd24526fbca5c00ad27e696ba217cc655814)
+### 🐛 Bug Fixes
+
+
+- Issue with dialect concatenation after having added more dialects ([085ce22](https://github.com/amasotti/an-na7wi/commit/085ce22a71b16d8e30417fbf8b60be63f25fd132))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Make code more readable ([abf7f07](https://github.com/amasotti/an-na7wi/commit/abf7f07c72c9631ca01432935228697ca3b9982e))
+
+- Update dependencies ([36d6dd2](https://github.com/amasotti/an-na7wi/commit/36d6dd24526fbca5c00ad27e696ba217cc655814))
+
+## [0.0.1] - 2025-07-27
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/18fee9de3cf889e3828f780d02e27deeba0760bb..fa482d02a5f81ccb2a5d38fdbcfaf72136cff6ae)
 ### 🚀 Features
 
-
-- Add text detail view ([c4b1fdf](https://github.com/amasotti/an-na7wi/commit/c4b1fdfdfeecf9892e92d4f3a890166634baa560))
 
 - *(db)* Add migrations for removing unnedeed field and add versionig ([0f76fbe](https://github.com/amasotti/an-na7wi/commit/0f76fbe9e8c4e2e846d82e451ae597dd14fece94))
 
@@ -561,22 +604,10 @@ All notable changes to this project will be documented in this file (created wit
 ### 🐛 Bug Fixes
 
 
-- Render search results for texts ([1ede659](https://github.com/amasotti/an-na7wi/commit/1ede659aaa9a5fe2800c46066fb70df39f91c9cf))
-
-- Rendering of found texts ([e14beac](https://github.com/amasotti/an-na7wi/commit/e14beac1fff713265f7d66f7e0ba18dbd9312045))
-
 - Annotations ([650102b](https://github.com/amasotti/an-na7wi/commit/650102bd11457a3dfc283f67aadfe3a52c0401c0))
-
-- Issue with dialect concatenation after having added more dialects ([085ce22](https://github.com/amasotti/an-na7wi/commit/085ce22a71b16d8e30417fbf8b60be63f25fd132))
 
 ### ⚙️ Miscellaneous Tasks
 
-
-- *(ci)* Improve ci ([f444662](https://github.com/amasotti/an-na7wi/commit/f444662db68fe492cae4bc46827e66642335bf87))
-
-- Improve Pagination ([0ed9f76](https://github.com/amasotti/an-na7wi/commit/0ed9f760eb8db8dc98e8981dcbae611299b70589))
-
-- Fix detekt ([18fee9d](https://github.com/amasotti/an-na7wi/commit/18fee9de3cf889e3828f780d02e27deeba0760bb))
 
 - *(gradle)* Add compiler arguments kotlin ([a852974](https://github.com/amasotti/an-na7wi/commit/a852974f0491631d4ca432b1e88564cbb34da9ac))
 
@@ -590,9 +621,29 @@ All notable changes to this project will be documented in this file (created wit
 
 - Add request files ([4734cb8](https://github.com/amasotti/an-na7wi/commit/4734cb887e17f49f960118b0690080037c47cdad))
 
-- Make code more readable ([abf7f07](https://github.com/amasotti/an-na7wi/commit/abf7f07c72c9631ca01432935228697ca3b9982e))
+## [0.0.1-alpha-rc3] - 2025-07-26
 
-- Update dependencies ([36d6dd2](https://github.com/amasotti/an-na7wi/commit/36d6dd24526fbca5c00ad27e696ba217cc655814))
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/318061a9486e866668a465d2b7d1e667f82c8d6d..18fee9de3cf889e3828f780d02e27deeba0760bb)
+### 🚀 Features
+
+
+- Add text detail view ([c4b1fdf](https://github.com/amasotti/an-na7wi/commit/c4b1fdfdfeecf9892e92d4f3a890166634baa560))
+
+### 🐛 Bug Fixes
+
+
+- Render search results for texts ([1ede659](https://github.com/amasotti/an-na7wi/commit/1ede659aaa9a5fe2800c46066fb70df39f91c9cf))
+
+- Rendering of found texts ([e14beac](https://github.com/amasotti/an-na7wi/commit/e14beac1fff713265f7d66f7e0ba18dbd9312045))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- *(ci)* Improve ci ([f444662](https://github.com/amasotti/an-na7wi/commit/f444662db68fe492cae4bc46827e66642335bf87))
+
+- Improve Pagination ([0ed9f76](https://github.com/amasotti/an-na7wi/commit/0ed9f760eb8db8dc98e8981dcbae611299b70589))
+
+- Fix detekt ([18fee9d](https://github.com/amasotti/an-na7wi/commit/18fee9de3cf889e3828f780d02e27deeba0760bb))
 
 ## [0.0.1-alpha-rc2] - 2025-07-26
 
