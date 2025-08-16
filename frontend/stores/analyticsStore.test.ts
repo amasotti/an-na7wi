@@ -11,7 +11,7 @@ vi.mock('~/composables/analyticsService', () => ({
 }))
 
 describe('analyticsStore', () => {
-  const pinia = usePinia()
+  const _pinia = usePinia()
   let analyticsStore: ReturnType<typeof useAnalyticsStore>
 
   beforeEach(() => {

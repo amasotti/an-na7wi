@@ -169,7 +169,7 @@ describe('BaseDropdown', () => {
 
   describe('Slot props', () => {
     it('passes open state to trigger slot', async () => {
-      const { rerender } = createComponent()
+      createComponent()
 
       // Test with basic trigger first
       expect(screen.getByText('Trigger')).toBeInTheDocument()

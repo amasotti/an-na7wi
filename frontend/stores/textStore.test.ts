@@ -94,7 +94,7 @@ vi.mock('~/composables/textService', () => ({
 vi.mock('~/composables/annotationService', () => ({
   annotationService: {
     getAnnotations: vi.fn(() => Promise.resolve([mockAnnotation])),
-    createAnnotation: vi.fn((textId: string, data) =>
+    createAnnotation: vi.fn((_textId: string, data) =>
       Promise.resolve({ ...mockAnnotation, ...data, id: 'new-id' })
     ),
     updateAnnotation: vi.fn((id: string, data) =>

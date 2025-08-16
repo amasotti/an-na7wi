@@ -171,7 +171,6 @@ describe('BaseBreadcrumb', () => {
         item: 'Current',
       })
 
-      const parentText = screen.getByText('Parent')
       const currentItem = screen.getByText('Current')
 
       // Current item should have medium font weight for emphasis

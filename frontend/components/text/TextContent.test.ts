@@ -62,7 +62,7 @@ describe('TextContent', () => {
   })
 
   it('does not render transliteration section when transliteration is undefined', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: mock data may not have this field
     const textWithoutTransliteration = { ...mockText, transliteration: undefined as any }
     renderWithStore(TextContent, {
       props: { displayText: textWithoutTransliteration },
@@ -83,7 +83,7 @@ describe('TextContent', () => {
   })
 
   it('does not render translation section when translation is undefined', () => {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: mock data may not have this field
     const textWithoutTranslation = { ...mockText, translation: undefined as any }
     renderWithStore(TextContent, {
       props: { displayText: textWithoutTranslation },

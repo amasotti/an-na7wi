@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { AnalyticsOverviewSection as OverviewSection } from '#components'
-import { mockedAnalyticsData } from '~/test/mocks/analytics.mock'
 
 describe('OverviewSection', () => {
   const pinia = usePinia()

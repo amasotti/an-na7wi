@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/vue'
+import { render } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { CommonLoadingEffect as LoadingEffect } from '#components'
 

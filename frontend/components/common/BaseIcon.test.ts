@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/vue'
+import { render } from '@testing-library/vue'
 import { describe, expect, it } from 'vitest'
 import { CommonBaseIcon as BaseIcon } from '#components'
 

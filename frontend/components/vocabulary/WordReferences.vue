@@ -70,7 +70,7 @@ const openAllDictionaries = () => {
     return
   }
 
-  dictionaryLinks.value.forEach((dict, index) => {
+  dictionaryLinks.value.forEach((dict, _index) => {
     window.open(dict.url, '_blank', 'noopener,noreferrer')
   })
 

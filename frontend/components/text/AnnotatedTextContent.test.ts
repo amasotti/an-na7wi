@@ -207,7 +207,7 @@ describe('AnnotatedTextContent', () => {
           height: 20,
         }),
       })),
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny: mocked for testing purposes
     })) as any
 
     const { emitted } = renderWithStore(AnnotatedTextContent, {
@@ -272,7 +272,7 @@ describe('AnnotatedTextContent', () => {
   it('clears selection when clicking outside', async () => {
     window.getSelection = vi.fn(() => ({
       removeAllRanges: vi.fn(),
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // biome-ignore lint/suspicious/noExplicitAny: mocked for testing purposes
     })) as any
 
     const { emitted } = renderWithStore(AnnotatedTextContent, {

@@ -4,7 +4,7 @@ export const openLink = (url: string, target = '_blank') => {
   // Validate URL format
   try {
     new URL(url)
-  } catch (e) {
+  } catch (_e) {
     console.error('Invalid URL:', url)
     return
   }

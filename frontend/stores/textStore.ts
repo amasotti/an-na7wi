@@ -7,7 +7,6 @@ import type {
   Dialect,
   Difficulty,
   MasteryLevel,
-  PaginatedResponse,
   SearchRequest,
   Text,
   TextsRequest,
