@@ -1,5 +1,5 @@
-import type { Text, Annotation, Word } from './entities'
-import type { Dialect, Difficulty, AnnotationType, MasteryLevel } from './enums'
+import type { Annotation, Text, Word } from './entities'
+import type { AnnotationType, Dialect, Difficulty, MasteryLevel } from './enums'
 
 // API Request/Response types
 export interface PaginatedResponse<T> {

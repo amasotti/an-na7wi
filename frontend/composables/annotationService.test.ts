@@ -1,7 +1,11 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest'
-import {AnnotationType, MasteryLevel} from '~/types'
-import {annotationService, type CreateAnnotationRequest, type UpdateAnnotationRequest,} from './annotationService'
-import { mockAnnotation, mockWord, mockAnnotationWithWords } from '~/test/mocks/annotations.mock'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockAnnotation, mockAnnotationWithWords, mockWord } from '~/test/mocks/annotations.mock'
+import { AnnotationType, MasteryLevel } from '~/types'
+import {
+  annotationService,
+  type CreateAnnotationRequest,
+  type UpdateAnnotationRequest,
+} from './annotationService'
 
 // Mock the API client
 const mockApiClient = {
@@ -137,7 +141,6 @@ describe('annotationService', () => {
   })
 
   describe('word linking methods', () => {
-
     describe('getLinkedWords', () => {
       it('should get linked words for an annotation', async () => {
         mockApiClient.get.mockResolvedValue({ data: [mockWord] })
@@ -176,7 +179,10 @@ describe('annotationService', () => {
         const updatedAnnotation = { ...mockAnnotation, linkedWords: [mockWord] }
         mockApiClient.post.mockResolvedValue({ data: updatedAnnotation })
 
-        const result = await annotationService.linkMultipleWords('annotation-1', ['word-1', 'word-2'])
+        const result = await annotationService.linkMultipleWords('annotation-1', [
+          'word-1',
+          'word-2',
+        ])
 
         expect(mockApiClient.post).toHaveBeenCalledTimes(2)
         expect(mockApiClient.post).toHaveBeenCalledWith('/annotations/annotation-1/words/word-1')
@@ -189,7 +195,7 @@ describe('annotationService', () => {
       it('should replace all linked words for an annotation', async () => {
         const currentWords = [mockWord]
         const updatedAnnotation = { ...mockAnnotation, linkedWords: [mockWord] }
-        
+
         mockApiClient.get.mockResolvedValue({ data: currentWords })
         mockApiClient.delete.mockResolvedValue({ data: mockAnnotation })
         mockApiClient.post.mockResolvedValue({ data: updatedAnnotation })
@@ -204,7 +210,7 @@ describe('annotationService', () => {
 
       it('should handle empty current words', async () => {
         const updatedAnnotation = { ...mockAnnotation, linkedWords: [mockWord] }
-        
+
         mockApiClient.get.mockResolvedValue({ data: [] })
         mockApiClient.post.mockResolvedValue({ data: updatedAnnotation })
 
@@ -218,7 +224,7 @@ describe('annotationService', () => {
 
       it('should return annotation when no new words provided', async () => {
         const currentWords = [mockWord]
-        
+
         mockApiClient.get.mockResolvedValueOnce({ data: currentWords })
         mockApiClient.delete.mockResolvedValue({ data: mockAnnotation })
         mockApiClient.get.mockResolvedValueOnce({ data: mockAnnotation })

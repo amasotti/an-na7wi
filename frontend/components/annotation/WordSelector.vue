@@ -97,11 +97,11 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import type { WordSearchResult } from '~/types'
-import { wordService } from '~/composables/wordService'
-import { annotationService } from '~/composables/annotationService'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import BaseInput from '~/components/common/BaseInput.vue'
+import { annotationService } from '~/composables/annotationService'
+import { wordService } from '~/composables/wordService'
+import type { WordSearchResult } from '~/types'
 
 // --- Props / Emits ---
 interface Props {
@@ -119,7 +119,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: WordSearchResult[]]
   'word-added': [word: WordSearchResult]
   'word-removed': [word: WordSearchResult]
-  'error': [error: Error]
+  error: [error: Error]
 }>()
 
 // --- State ---
@@ -138,9 +138,7 @@ const searchWords = async (query: string) => {
   }
   try {
     const results = await wordService.searchWords(query)
-    searchResults.value = results.filter(
-      (word) => !selectedWords.value.some((s) => s.id === word.id),
-    )
+    searchResults.value = results.filter(word => !selectedWords.value.some(s => s.id === word.id))
   } catch (err) {
     console.error('Failed to search words:', err)
     searchResults.value = []
@@ -175,7 +173,10 @@ const removeWord = async (id: string) => {
     try {
       await annotationService.unlinkWordFromAnnotation(props.annotationId, id)
       emit('word-removed', wordToRemove)
-      emit('update:modelValue', selectedWords.value.filter((w) => w.id !== id))
+      emit(
+        'update:modelValue',
+        selectedWords.value.filter(w => w.id !== id)
+      )
     } catch (error) {
       console.error('Failed to unlink word from annotation:', error)
       emit('error', error as Error)
@@ -183,7 +184,10 @@ const removeWord = async (id: string) => {
     }
   } else {
     // Traditional mode: just update the model
-    emit('update:modelValue', selectedWords.value.filter((w) => w.id !== id))
+    emit(
+      'update:modelValue',
+      selectedWords.value.filter(w => w.id !== id)
+    )
   }
 }
 
@@ -195,7 +199,7 @@ const resetSearch = () => {
 
 // --- Watchers (debounced search) ---
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
-watch(searchQuery, (newQuery) => {
+watch(searchQuery, newQuery => {
   if (debounceTimer) clearTimeout(debounceTimer)
   if (!newQuery.trim()) {
     resetSearch()

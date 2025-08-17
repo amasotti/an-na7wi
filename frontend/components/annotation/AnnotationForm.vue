@@ -166,13 +166,19 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import type { Annotation, AnnotationType, ExampleDTO, MasteryLevel, WordSearchResult } from '@/types'
+import type {
+  Annotation,
+  AnnotationType,
+  ExampleDTO,
+  MasteryLevel,
+  WordSearchResult,
+} from '@/types'
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
-import { exampleService } from '~/composables/exampleService'
+import WordSelector from '~/components/annotation/WordSelector.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
 import ColorPicker from '~/components/common/ColorPicker.vue'
-import WordSelector from '~/components/annotation/WordSelector.vue'
+import { exampleService } from '~/composables/exampleService'
 
 interface Props {
   open: boolean
@@ -233,12 +239,13 @@ watch(
         masteryLevel: newAnnotation.masteryLevel,
         needsReview: newAnnotation.needsReview,
         color: newAnnotation.color || '',
-        linkedWords: newAnnotation.linkedWords?.map(word => ({
-          id: word.id,
-          arabic: word.arabic,
-          transliteration: word.transliteration,
-          translation: word.translation
-        })) || [],
+        linkedWords:
+          newAnnotation.linkedWords?.map(word => ({
+            id: word.id,
+            arabic: word.arabic,
+            transliteration: word.transliteration,
+            translation: word.translation,
+          })) || [],
       }
     } else {
       // Reset form for new annotation

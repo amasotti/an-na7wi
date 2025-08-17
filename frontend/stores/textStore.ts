@@ -439,7 +439,7 @@ export const useTextStore = defineStore('text', () => {
   }
 
   // --- Word Linking Methods ---
-  
+
   async function linkWordToAnnotation(annotationId: string, wordId: string) {
     try {
       const updatedAnnotation = await annotationService.linkWordToAnnotation(annotationId, wordId)
@@ -457,7 +457,10 @@ export const useTextStore = defineStore('text', () => {
 
   async function unlinkWordFromAnnotation(annotationId: string, wordId: string) {
     try {
-      const updatedAnnotation = await annotationService.unlinkWordFromAnnotation(annotationId, wordId)
+      const updatedAnnotation = await annotationService.unlinkWordFromAnnotation(
+        annotationId,
+        wordId
+      )
       // Update in the list
       const index = annotations.value.findIndex(a => a.id === annotationId)
       if (index !== -1) {

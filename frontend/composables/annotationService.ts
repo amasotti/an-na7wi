@@ -97,7 +97,7 @@ export const annotationService = {
   },
 
   // --- Word Linking Methods ---
-  
+
   /**
    * Get all words linked to an annotation
    */
@@ -127,11 +127,11 @@ export const annotationService = {
    */
   async linkMultipleWords(annotationId: string, wordIds: string[]): Promise<Annotation> {
     let updatedAnnotation: Annotation | null = null
-    
+
     for (const wordId of wordIds) {
       updatedAnnotation = await this.linkWordToAnnotation(annotationId, wordId)
     }
-    
+
     return updatedAnnotation!
   },
 
@@ -141,18 +141,18 @@ export const annotationService = {
   async replaceLinkedWords(annotationId: string, newWordIds: string[]): Promise<Annotation> {
     // Get current linked words
     const currentWords = await this.getLinkedWords(annotationId)
-    
+
     // Unlink all current words
     let updatedAnnotation: Annotation | null = null
     for (const word of currentWords) {
       updatedAnnotation = await this.unlinkWordFromAnnotation(annotationId, word.id)
     }
-    
+
     // Link all new words
     for (const wordId of newWordIds) {
       updatedAnnotation = await this.linkWordToAnnotation(annotationId, wordId)
     }
-    
-    return updatedAnnotation ?? await this.getAnnotation(annotationId)
+
+    return updatedAnnotation ?? (await this.getAnnotation(annotationId))
   },
 }

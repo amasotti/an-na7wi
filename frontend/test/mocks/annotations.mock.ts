@@ -15,7 +15,7 @@ export const mockWord: Word = {
   dialect: Dialect.MSA,
   masteryLevel: MasteryLevel.KNOWN,
   dictionaryLinks: [],
-  createdAt: '2023-01-01T00:00:00Z'
+  createdAt: '2023-01-01T00:00:00Z',
 }
 
 export const mockAnnotation: Annotation = {
