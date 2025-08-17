@@ -38,9 +38,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import BaseButton from '~/components/common/BaseButton.vue'
-import BaseModal from '~/components/common/BaseModal.vue'
-import DeleteButton from '~/components/common/DeleteButton.vue'
 import RootDeleteModal from '~/components/roots/RootDeleteModal.vue'
 import RootModal from '~/components/roots/RootModal.vue'
 import RootsContent from '~/components/roots/RootsContent.vue'
@@ -57,10 +54,10 @@ const deleteLoading = ref(false)
 const createLoading = ref(false)
 
 const handleSearch = async (query: string) => {
-  if (query.trim()) {
-    await rootStore.searchRoots(query.trim())
-  } else {
+  if (!query.trim() || query.length < 3) {
     await rootStore.fetchRoots()
+  } else {
+    await rootStore.searchRoots(query.trim())
   }
 }
 
@@ -69,6 +66,9 @@ const handleFilterChange = async (filters: {
   letterCount: number | null
   sort: string
 }) => {
+  // Skip if not mounted yet to prevent duplicate calls during initialization
+  if (!isMounted.value) return
+
   rootStore.updateFilters(filters)
 
   if (filters.letterCount) {
@@ -92,14 +92,16 @@ const handleRootClick = (rootId: string) => {
 const handleRootCreated = async (root: Root) => {
   try {
     createLoading.value = true
-    // Root is already created by the modal, just add it to the store and refresh
+    // Root is already created by the modal, just add it to the store
     rootStore.roots.unshift(root)
     rootStore.pagination.totalCount += 1
-    await rootStore.fetchStatistics()
+    // Update statistics locally
+    if (rootStore.statistics) {
+      rootStore.statistics.totalRoots += 1
+    }
     showAddModal.value = false
   } catch (error) {
     console.error('Error handling root creation:', error)
-    // Still close the modal even if statistics fetch fails
     showAddModal.value = false
   } finally {
     createLoading.value = false
@@ -120,7 +122,6 @@ const confirmDelete = async () => {
   try {
     deleteLoading.value = true
     await rootStore.deleteRoot(rootToDelete.value.id)
-    await rootStore.fetchStatistics()
     showDeleteModal.value = false
     rootToDelete.value = null
   } catch (error) {
@@ -130,13 +131,25 @@ const confirmDelete = async () => {
   }
 }
 
+const isMounted = ref(false)
+
 onMounted(async () => {
-  await Promise.all([rootStore.fetchRoots(), rootStore.fetchStatistics()])
+  // Initial data loading
+  const promises = []
+  promises.push(rootStore.fetchRoots())
+  if (!rootStore.statistics) {
+    promises.push(rootStore.fetchStatistics())
+  }
+
+  await Promise.all(promises)
+  isMounted.value = true
 })
 
+// Only react to sort changes after initial mount
 watch(
   () => rootStore.filters.sort,
-  async newSort => {
+  async (newSort, oldSort) => {
+    if (!isMounted.value || newSort === oldSort || !newSort) return
     await rootStore.fetchRoots({ sort: newSort })
   }
 )
