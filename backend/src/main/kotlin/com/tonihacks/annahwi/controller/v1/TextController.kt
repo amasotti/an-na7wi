@@ -254,4 +254,13 @@ class TextController {
 
       return Response.ok(response).build()
   }
+
+  @GET
+  @Path("/{id}/words")
+  @Operation(summary = "Get words referenced in a text", description = "Returns all words that are referenced in annotations of a specific text")
+  fun getWordsByTextId(@PathParam("id") id: UUID): Response {
+      logger.info("GET /api/v1/texts/$id/words")
+      val words = textService.findWordsByTextId(id)
+      return Response.ok(words).build()
+  }
 }

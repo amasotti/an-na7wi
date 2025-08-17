@@ -20,7 +20,7 @@ import java.util.UUID
 @Table(
     name = "annotation_words",
     uniqueConstraints = [
-        UniqueConstraint(name = "uk_annotation_words", columnNames = ["annotation_id", "word_id"])
+        UniqueConstraint(name = "uk_annotation_words", columnNames = ["annotation_id", "word_id", "text_id"])
     ]
 )
 class AnnotationWord : PanacheEntityBase {
@@ -39,6 +39,11 @@ class AnnotationWord : PanacheEntityBase {
     @JoinColumn(name = "word_id", nullable = false)
     @JsonIgnoreProperties("annotations")
     lateinit var word: Word
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "text_id", nullable = false)
+    @JsonIgnoreProperties("annotations")
+    lateinit var text: Text
     
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()

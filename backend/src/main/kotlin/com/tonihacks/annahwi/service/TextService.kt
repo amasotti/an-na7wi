@@ -3,6 +3,7 @@ package com.tonihacks.annahwi.service
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
 import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.dto.response.WordResponseDTO
+import com.tonihacks.annahwi.dto.response.WordSummaryDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.Text
@@ -300,9 +301,23 @@ class TextService {
       val annotationWordLinks = annotationLinkedWordRepository.findByWordId(word.id!!)
       logger.info("Found ${annotationWordLinks.size} annotation-word links for word $wordId")
 
-      val texts = annotationWordLinks.map { link -> link.annotation.text }
+      val texts = annotationWordLinks.map { link -> link.text }.distinctBy { it.id }
 
       return texts.map { TextResponseDTO.fromEntity(it) }
+  }
+
+  @Transactional
+  fun findWordsByTextId(textId: UUID): List<WordSummaryDTO> {
+      logger.info("Finding words referenced in text with ID: $textId")
+
+      val text = findById(textId)
+      
+      val annotationWordLinks = annotationLinkedWordRepository.findByTextId(text.id!!)
+      logger.info("Found ${annotationWordLinks.size} annotation-word links for text $textId")
+
+      val words = annotationWordLinks.map { link -> link.word }.distinctBy { it.id }
+
+      return WordSummaryDTO.fromEntities(words)
   }
 
 }

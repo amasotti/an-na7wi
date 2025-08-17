@@ -83,15 +83,3 @@ data class RootWithWordsDTO(
     val words: List<WordSummaryDTO>
 )
 
-/**
- * Simple word summary for root responses
- */
-data class WordSummaryDTO(
-    val id: UUID,
-    val arabic: String,
-    val transliteration: String?,
-    val translation: String?,
-    val partOfSpeech: String?,
-    val difficulty: String,
-    val dialect: String
-)

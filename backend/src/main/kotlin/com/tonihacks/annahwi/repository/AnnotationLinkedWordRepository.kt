@@ -16,5 +16,10 @@ class AnnotationLinkedWordRepository : PanacheRepository<AnnotationWord> {
     return find("annotation.id", annotationId).list()
   }
 
+  fun findByTextId(textId: UUID): List<AnnotationWord> {
+    return find("text.id", textId).list()
+  }
+
+
 }
 

@@ -73,15 +73,17 @@ class Annotation : PanacheEntityBase {
         return annotationWords.map { it.word }
     }
 
-  fun linkWord(word: Word) =
-    annotationWords
-      .takeIf { words -> words.none { it.word.id == word.id } }
-      ?.add(
-        AnnotationWord().apply {
-          annotation = this@Annotation
-          this.word = word
-        }
-      )
+  fun linkWord(word: Word) {
+    // Check if word is not already linked
+    if (annotationWords.none { it.word.id == word.id }) {
+      val annotationWord = AnnotationWord().apply {
+        annotation = this@Annotation
+        this.word = word
+        text = this@Annotation.text  // This ensures text_id is always set
+      }
+      annotationWords.add(annotationWord)
+    }
+  }
     
     fun unlinkWord(word: Word) {
         annotationWords.removeIf { it.word.id == word.id }

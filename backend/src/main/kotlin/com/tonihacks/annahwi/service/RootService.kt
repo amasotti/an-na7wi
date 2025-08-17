@@ -131,17 +131,7 @@ class RootService {
         logger.info("Getting root with words for ID: $id")
         
         val root = findById(id)
-        val words = root.words.map { word ->
-            WordSummaryDTO(
-                id = word.id!!,
-                arabic = word.arabic,
-                transliteration = word.transliteration,
-                translation = word.translation,
-                partOfSpeech = word.partOfSpeech?.name,
-                difficulty = word.difficulty.name,
-                dialect = word.dialect.name
-            )
-        }
+        val words = WordSummaryDTO.fromEntities(root.words)
         
         return RootWithWordsDTO(
             root = RootResponseDTO.fromEntity(root),
