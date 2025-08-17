@@ -1,7 +1,7 @@
 // Component style classes - centralized for maintainability and consistency
 
 export const buttonClasses = {
-  base: 'inline-flex items-center justify-center font-semibold focus:outline-none focus:ring-4 focus:ring-opacity-50 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
+  base: 'inline-flex items-center justify-center font-semibold focus:outline-none focus:ring-4 focus:ring-opacity-50 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
 
   variants: {
     primary:

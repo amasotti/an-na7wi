@@ -41,7 +41,7 @@
         variant="primary" 
         size="md" 
         @click="$emit('create-annotation')"
-        class="inline-flex items-center space-x-3 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        class="inline-flex items-center space-x-3 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
       >
         <div class="w-5 h-5 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
           <BaseIcon size="sm" class="text-white">

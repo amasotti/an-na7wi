@@ -93,7 +93,7 @@ const isLightColor = (hex: string): boolean => {
 }
 
 .color-button {
-  @apply relative w-5 h-5 rounded border border-gray-300 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1;
+  @apply relative w-5 h-5 rounded border border-gray-300 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1;
 }
 
 .color-button--selected {

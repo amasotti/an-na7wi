@@ -545,7 +545,7 @@ watch(
 
 /* Enhanced Interactions */
 .auto-transliterate-btn {
-  @apply transition-all duration-300 hover:shadow-lg hover:scale-105 bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white border-0 font-medium;
+  @apply transition-all duration-300 hover:shadow-lg hover:scale-[1.02] bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white border-0 font-medium;
 }
 
 /* Tag styling */
@@ -554,7 +554,7 @@ watch(
 }
 
 .tag-item {
-  @apply transition-all duration-200 hover:scale-105 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-800 border border-orange-300/50;
+  @apply transition-all duration-200 hover:scale-[1.02] bg-gradient-to-r from-orange-100 to-amber-100 text-orange-800 border border-orange-300/50;
 }
 
 /* Responsive Improvements */

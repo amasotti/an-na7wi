@@ -567,7 +567,7 @@ watch(
 
 /* Enhanced Interactions */
 .generate-examples-btn {
-  @apply transition-all duration-300 hover:shadow-lg hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 font-medium;
+  @apply transition-all duration-300 hover:shadow-lg hover:scale-[1.02] bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 font-medium;
 }
 
 .example-item {

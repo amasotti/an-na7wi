@@ -190,6 +190,6 @@ const getMasteryVariant = (mastery?: string) => {
 }
 
 .root-badge {
-  @apply cursor-pointer hover:scale-105 transition-transform;
+  @apply cursor-pointer hover:scale-[1.02] transition-transform;
 }
 </style>
