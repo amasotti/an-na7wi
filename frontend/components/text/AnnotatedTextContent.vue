@@ -96,7 +96,7 @@ const selectedSection = ref<'arabic' | 'transliteration' | 'translation' | null>
 const highlightText = (text: string, annotations: Annotation[]) => {
   if (!text || !annotations.length) return text
 
-  let result = text.replace(/\n/g, '<br>') // Replace newlines with <br> for HTML display
+  let result = text
 
   // Sort annotations by length of anchor text (longest first)
   // This helps prevent nested highlights from breaking
@@ -146,6 +146,7 @@ const highlightText = (text: string, annotations: Annotation[]) => {
 // Computed highlighted content
 const highlightedArabicContent = computed(() => {
   return highlightText(props.displayText?.arabicContent || '', props.annotations)
+    .replace(/\n/g, '<br>') // Replace newlines with <br> for HTML display
 })
 
 const highlightedTransliteration = computed(() => {
@@ -312,10 +313,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.font-arabic {
-  font-family: 'Noto Naskh Arabic', 'Arabic Typesetting', 'Times New Roman', serif;
-}
-
 /* Enhanced Arabic Text Display */
 .arabic-text-display {
   @apply text-2xl leading-relaxed text-gray-900 font-arabic text-right bg-gradient-to-br from-emerald-50/50 to-green-50/50 p-8 rounded-xl relative border border-emerald-100/30 shadow-sm;

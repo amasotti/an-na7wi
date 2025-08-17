@@ -1,7 +1,7 @@
 set shell := ["zsh", "-c"]
 
 dev:
-    docker compose -f docker-compose.yml up
+    docker compose -f docker-compose.yml up --build
 
 monitoring:
     docker compose -f docker-compose.monitoring.yml up --build
