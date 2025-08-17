@@ -72,16 +72,16 @@ class Annotation : PanacheEntityBase {
     fun getLinkedWords(): List<Word> {
         return annotationWords.map { it.word }
     }
-    
-    fun linkWord(word: Word) {
-        if (annotationWords.none { it.word.id == word.id }) {
-            val annotationWord = AnnotationWord().apply {
-                annotation = this@Annotation
-                this.word = word
-            }
-            annotationWords.add(annotationWord)
+
+  fun linkWord(word: Word) =
+    annotationWords
+      .takeIf { words -> words.none { it.word.id == word.id } }
+      ?.add(
+        AnnotationWord().apply {
+          annotation = this@Annotation
+          this.word = word
         }
-    }
+      )
     
     fun unlinkWord(word: Word) {
         annotationWords.removeIf { it.word.id == word.id }

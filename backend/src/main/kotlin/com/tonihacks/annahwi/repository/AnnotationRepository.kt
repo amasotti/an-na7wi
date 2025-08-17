@@ -34,35 +34,121 @@ class AnnotationRepository : PanacheRepository<Annotation> {
             .findFirst()
             .orElse(null)
     }
+    
+    /**
+     * Find an annotation by its ID with text and linked words eagerly loaded
+     */
+    fun findByIdWithTextAndWords(id: UUID): Annotation? {
+        val annotation = getEntityManager()
+            .createQuery(
+                """SELECT DISTINCT a FROM Annotation a 
+                   JOIN FETCH a.text t 
+                   LEFT JOIN FETCH a.annotationWords aw 
+                   LEFT JOIN FETCH aw.word w 
+                   LEFT JOIN FETCH w.arabicRoot ar 
+                   WHERE a.id = :id""",
+                Annotation::class.java
+            )
+            .setParameter("id", id)
+            .resultStream
+            .findFirst()
+            .orElse(null)
+            
+        // If annotation found, fetch dictionary links for linked words
+        if (annotation != null && annotation.annotationWords.isNotEmpty()) {
+            val wordIds = annotation.annotationWords.map { it.word.id!! }
+            getEntityManager()
+                .createQuery(
+                    """SELECT DISTINCT w FROM Word w 
+                       LEFT JOIN FETCH w.dictionaryLinks dl 
+                       WHERE w.id IN :wordIds""",
+                    com.tonihacks.annahwi.entity.Word::class.java
+                )
+                .setParameter("wordIds", wordIds)
+                .resultList
+        }
+        
+        return annotation
+    }
 
     /**
      * Find annotations by text ID with text data fetched to avoid N+1 queries
      */
     fun findByTextIdWithText(textId: UUID, page: Page): List<Annotation> {
-        return getEntityManager()
+        val annotations = getEntityManager()
             .createQuery(
-                "SELECT a FROM Annotation a JOIN FETCH a.text t WHERE t.id = :textId ORDER BY a.createdAt DESC",
+                """SELECT DISTINCT a FROM Annotation a 
+                   JOIN FETCH a.text t 
+                   LEFT JOIN FETCH a.annotationWords aw 
+                   LEFT JOIN FETCH aw.word w 
+                   LEFT JOIN FETCH w.arabicRoot ar 
+                   WHERE t.id = :textId 
+                   ORDER BY a.createdAt DESC""",
                 Annotation::class.java
             )
             .setParameter("textId", textId)
             .setFirstResult(page.index * page.size)
             .setMaxResults(page.size)
             .resultList
+            
+        // Fetch dictionary links for all linked words in a separate query
+        val allWordIds = annotations.flatMap { annotation -> 
+            annotation.annotationWords.map { it.word.id!! } 
+        }.distinct()
+        
+        if (allWordIds.isNotEmpty()) {
+            getEntityManager()
+                .createQuery(
+                    """SELECT DISTINCT w FROM Word w 
+                       LEFT JOIN FETCH w.dictionaryLinks dl 
+                       WHERE w.id IN :wordIds""",
+                    com.tonihacks.annahwi.entity.Word::class.java
+                )
+                .setParameter("wordIds", allWordIds)
+                .resultList
+        }
+        
+        return annotations
     }
 
     /**
      * Find annotations by needsReview flag with text data fetched
      */
     fun findByNeedsReviewWithText(needsReview: Boolean, page: Page): List<Annotation> {
-        return getEntityManager()
+        val annotations = getEntityManager()
             .createQuery(
-                "SELECT a FROM Annotation a JOIN FETCH a.text t WHERE a.needsReview = :needsReview ORDER BY a.createdAt",
+                """SELECT DISTINCT a FROM Annotation a 
+                   JOIN FETCH a.text t 
+                   LEFT JOIN FETCH a.annotationWords aw 
+                   LEFT JOIN FETCH aw.word w 
+                   LEFT JOIN FETCH w.arabicRoot ar 
+                   WHERE a.needsReview = :needsReview 
+                   ORDER BY a.createdAt""",
                 Annotation::class.java
             )
             .setParameter("needsReview", needsReview)
             .setFirstResult(page.index * page.size)
             .setMaxResults(page.size)
             .resultList
+            
+        // Fetch dictionary links for all linked words in a separate query
+        val allWordIds = annotations.flatMap { annotation -> 
+            annotation.annotationWords.map { it.word.id!! } 
+        }.distinct()
+        
+        if (allWordIds.isNotEmpty()) {
+            getEntityManager()
+                .createQuery(
+                    """SELECT DISTINCT w FROM Word w 
+                       LEFT JOIN FETCH w.dictionaryLinks dl 
+                       WHERE w.id IN :wordIds""",
+                    com.tonihacks.annahwi.entity.Word::class.java
+                )
+                .setParameter("wordIds", allWordIds)
+                .resultList
+        }
+        
+        return annotations
     }
 
     /**
@@ -77,6 +163,44 @@ class AnnotationRepository : PanacheRepository<Annotation> {
             .setFirstResult(page.index * page.size)
             .setMaxResults(page.size)
             .resultList
+    }
+    
+    /**
+     * Find all annotations with text data and linked words fetched
+     */
+    fun findAllWithTextAndWords(page: Page, sort: String): List<Annotation> {
+        val annotations = getEntityManager()
+            .createQuery(
+                """SELECT DISTINCT a FROM Annotation a 
+                   JOIN FETCH a.text t 
+                   LEFT JOIN FETCH a.annotationWords aw 
+                   LEFT JOIN FETCH aw.word w 
+                   LEFT JOIN FETCH w.arabicRoot ar 
+                   ORDER BY a.$sort""",
+                Annotation::class.java
+            )
+            .setFirstResult(page.index * page.size)
+            .setMaxResults(page.size)
+            .resultList
+            
+        // Fetch dictionary links for all linked words in a separate query
+        val allWordIds = annotations.flatMap { annotation -> 
+            annotation.annotationWords.map { it.word.id!! } 
+        }.distinct()
+        
+        if (allWordIds.isNotEmpty()) {
+            getEntityManager()
+                .createQuery(
+                    """SELECT DISTINCT w FROM Word w 
+                       LEFT JOIN FETCH w.dictionaryLinks dl 
+                       WHERE w.id IN :wordIds""",
+                    com.tonihacks.annahwi.entity.Word::class.java
+                )
+                .setParameter("wordIds", allWordIds)
+                .resultList
+        }
+        
+        return annotations
     }
     
     /**

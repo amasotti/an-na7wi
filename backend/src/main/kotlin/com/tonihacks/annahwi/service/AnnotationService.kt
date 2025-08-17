@@ -1,9 +1,12 @@
 package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.dto.request.AnnotationRequestDTO
+import com.tonihacks.annahwi.dto.response.AnnotationResponseDTO
 import com.tonihacks.annahwi.entity.Annotation
 import com.tonihacks.annahwi.entity.MasteryLevel
+import com.tonihacks.annahwi.entity.Word
 import com.tonihacks.annahwi.repository.AnnotationRepository
+import com.tonihacks.annahwi.repository.WordRepository
 import io.quarkus.panache.common.Page
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -25,6 +28,9 @@ class AnnotationService {
     
     @Inject
     private lateinit var textService: TextService
+    
+    @Inject
+    private lateinit var wordRepository: WordRepository
     
     private val logger = Logger.getLogger(AnnotationService::class.java)
     
@@ -109,7 +115,7 @@ class AnnotationService {
      * Create a new annotation for a specific text
      */
     @Transactional
-    fun createForText(textId: UUID, annotationDTO: AnnotationRequestDTO): Annotation {
+    fun createForText(textId: UUID, annotationDTO: AnnotationRequestDTO): AnnotationResponseDTO {
         logger.info("Creating new annotation for text ID: $textId")
         
         // Verify that the text exists
@@ -127,10 +133,20 @@ class AnnotationService {
             createdAt = LocalDateTime.now()
         }
         
-        // Persist the annotation
+        // Persist the annotation first
         annotationRepository.persist(annotation)
         
-        return annotation
+        // Link words if provided
+        annotationDTO.linkedWordIds?.forEach { wordId ->
+            linkWordToAnnotation(annotation.id!!, wordId)
+        }
+        
+        // Get the annotation with linked words eagerly loaded
+        val annotationWithLinkedWords = annotationRepository.findByIdWithTextAndWords(annotation.id!!)
+            ?: throw AppException(AppError.NotFound.Annotation(annotation.id.toString()))
+            
+        // Convert to DTO while session is still active
+        return AnnotationResponseDTO.fromEntity(annotationWithLinkedWords)
     }
     
     /**
@@ -171,10 +187,26 @@ class AnnotationService {
         existingAnnotation.needsReview = annotationDTO.needsReview
         existingAnnotation.color = annotationDTO.color
         
+        // Update linked words if provided
+        if (annotationDTO.linkedWordIds != null) {
+            // Clear existing word links
+            existingAnnotation.annotationWords.clear()
+            
+            // Add new word links
+            annotationDTO.linkedWordIds.forEach { wordId ->
+                val word = wordRepository.findById(wordId)
+                if (word != null) {
+                    existingAnnotation.linkWord(word)
+                }
+            }
+        }
+        
         // Persist the updated annotation
         annotationRepository.persist(existingAnnotation)
         
-        return existingAnnotation
+        // Return the annotation with linked words eagerly loaded
+        return annotationRepository.findByIdWithTextAndWords(id)
+            ?: throw AppException(AppError.NotFound.Annotation(id.toString()))
     }
     
     /**
@@ -209,4 +241,52 @@ class AnnotationService {
         logger.info("Deleting annotation with ID: $id")
         return annotationRepository.deleteById(id)
     }
+    
+    /**
+     * Link a word to an annotation
+     */
+    @Transactional
+    fun linkWordToAnnotation(annotationId: UUID, wordId: UUID): Annotation {
+        logger.info("Linking word $wordId to annotation $annotationId")
+
+      val annotation = findById(annotationId)
+      when (val word = wordRepository.findById(wordId)) {
+          is Word -> {
+              annotation.linkWord(word)
+              annotationRepository.persist(annotation)
+            }
+          null -> logger.warn("Word with ID $wordId not found, cannot link to annotation $annotationId")
+        }
+        
+        return annotation
+    }
+    
+    /**
+     * Unlink a word from an annotation
+     */
+    @Transactional
+    fun unlinkWordFromAnnotation(annotationId: UUID, wordId: UUID): Annotation {
+      logger.info("Unlinking word $wordId from annotation $annotationId")
+
+      val annotation = findById(annotationId)
+
+      val word = wordRepository.findById(wordId) ?: run {
+        logger.warn("Word $wordId not found, skipping unlink for annotation $annotationId")
+        return annotation
+      }
+
+      annotation.unlinkWord(word)
+      annotationRepository.persist(annotation)
+
+      return annotation
+    }
+    
+    /**
+     * Get all words linked to an annotation
+     */
+    fun getLinkedWords(annotationId: UUID): List<Word> =
+      findById(annotationId)
+          .getLinkedWords()
+          .also { logger.info("Getting linked words for annotation $annotationId") }
+
 }
