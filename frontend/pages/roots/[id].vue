@@ -177,8 +177,9 @@ onMounted(() => {
 
 watch(
   () => route.params.id,
-  newId => {
-    if (newId && typeof newId === 'string') {
+  (newId, oldId) => {
+    if (typeof newId !== 'string') return
+    if (newId && newId !== oldId) {
       loadRootData(newId)
     }
   }
