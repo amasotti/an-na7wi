@@ -11,7 +11,7 @@ import { Difficulty } from '~/types/enums'
 vi.mock('~/utils/dateUtils', () => ({
   formatDate: vi.fn((dateString: string) => {
     if (dateString === '2024-01-15T10:30:00Z') return 'Jan 15, 2024'
-    if (dateString === '2024-01-20T14:15:00Z') return 'Jan 20, 2024' 
+    if (dateString === '2024-01-20T14:15:00Z') return 'Jan 20, 2024'
     if (dateString === '2024-02-01T09:00:00Z') return 'Feb 1, 2024'
     return dateString
   }),
@@ -102,9 +102,9 @@ describe('RelatedTexts', () => {
       createdAt: '2024-01-15T10:30:00Z',
       tags: ['grammar', 'vocabulary', 'reading'],
     })
-    
+
     await renderComponent([text])
-    
+
     expect(screen.getByText('Related Texts')).toBeInTheDocument()
     expect(screen.getByText('Test Arabic Text')).toBeInTheDocument()
     expect(screen.getByText('INTERMEDIATE')).toBeInTheDocument()
@@ -118,9 +118,9 @@ describe('RelatedTexts', () => {
     const text = createMockText({
       tags: ['grammar', 'vocabulary', 'reading', 'culture', 'literature'],
     })
-    
+
     await renderComponent([text])
-    
+
     expect(screen.getByText('+2 more')).toBeInTheDocument()
     expect(screen.queryByText('culture')).not.toBeInTheDocument()
   })
