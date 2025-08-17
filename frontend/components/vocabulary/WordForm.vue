@@ -305,6 +305,9 @@ const rootValidationError = ref<string>('')
 const relatedWords = ref<Partial<Word>[]>([])
 const loadingRelatedWords = ref(false)
 
+// Cache for normalized roots to avoid duplicate API calls
+const normalizedRoots = new Map<string, { displayForm: string; isValid: boolean }>()
+
 // Example generation state
 const loadingExamples = ref(false)
 const generatedExamples = ref<ExampleDTO[]>([])
@@ -374,7 +377,14 @@ const handleSubmit = async () => {
   // Validate root if provided
   if (form.value.root?.trim()) {
     try {
-      const normalization = await rootService.normalizeRoot(form.value.root.trim())
+      const rootKey = form.value.root.trim()
+      let normalization = normalizedRoots.get(rootKey)
+      
+      if (!normalization) {
+        normalization = await rootService.normalizeRoot(rootKey)
+        normalizedRoots.set(rootKey, normalization)
+      }
+      
       if (!normalization.isValid) {
         rootValidationError.value = 'Invalid root format'
         return // Prevent submission
@@ -400,8 +410,15 @@ const loadRelatedWords = async (root: string) => {
 
   loadingRelatedWords.value = true
   try {
-    // First normalize the root to get the proper form
-    const normalization = await rootService.normalizeRoot(root.trim())
+    // Use cached normalization or fetch if not cached
+    const rootKey = root.trim()
+    let normalization = normalizedRoots.get(rootKey)
+    
+    if (!normalization) {
+      normalization = await rootService.normalizeRoot(rootKey)
+      normalizedRoots.set(rootKey, normalization)
+    }
+    
     if (normalization.isValid) {
       const response = await wordService.findByRoot(normalization.displayForm, 1, 5)
       // Filter out the current word being edited
@@ -447,6 +464,9 @@ watch(
     if (isOpen) {
       rootValidationError.value = ''
       generatedExamples.value = []
+    } else {
+      // Clear cache when modal closes to avoid stale data
+      normalizedRoots.clear()
     }
   }
 )
