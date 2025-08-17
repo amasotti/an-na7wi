@@ -115,10 +115,8 @@ import ArabicCalligraphy from '~/components/common/ArabicCalligraphy.vue'
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseCard from '~/components/common/BaseCard.vue'
-import FeatureCard, {type Feature} from '~/components/home/FeatureCard.vue'
+import FeatureCard, { type Feature } from '~/components/home/FeatureCard.vue'
 import StatCard from '~/components/home/StatCard.vue'
-
-
 
 const features: Feature[] = [
   {
