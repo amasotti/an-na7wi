@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.3.1] - 2025-08-17
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/87bd951c6497690a6eb75f6d4d1dbe06512fc5d6..1f546b6ac420a03bfff72c5bc73eee2ef5cdf709)
+### 🚀 Features
+
+
+- Implement endpoint for getting texts given a word ([c052674](https://github.com/amasotti/an-na7wi/commit/c05267484632dbde4694e47ba46189ee3e78dd82))
+
+- Implement frontend part ([d1e96c9](https://github.com/amasotti/an-na7wi/commit/d1e96c94464cc81ed1d5680c15b72d0cb8cd3ec6))
+
+### 🐛 Bug Fixes
+
+
+- Better display for line breaks once text (translitteration and translation) are rendered ([cbff343](https://github.com/amasotti/an-na7wi/commit/cbff3436f4feb5fc8b785f47b1411f323a7612d8))
+
+- Create annotation with linked words ([a1f05ac](https://github.com/amasotti/an-na7wi/commit/a1f05aca9d02262480c8179082cb135f2a167d2e))
+
+- Remove flaky tests, I will rewrite them later ([9b192f7](https://github.com/amasotti/an-na7wi/commit/9b192f7976b8fff1b2fe79a41e06d56a05cd0ac4))
+
+- Too large css ([1f546b6](https://github.com/amasotti/an-na7wi/commit/1f546b6ac420a03bfff72c5bc73eee2ef5cdf709))
+
+### 🚜 Refactor
+
+
+- More robust linking logic ([4061c96](https://github.com/amasotti/an-na7wi/commit/4061c96ed0907c906cfba35c2536018faaf443f6))
+
+- Use full screen and centralize css classes ([3fcd057](https://github.com/amasotti/an-na7wi/commit/3fcd057449addc0f67f399f096b65d4ce30cc7ff))
+
+- Reduce hovering effects ([7ebfdb3](https://github.com/amasotti/an-na7wi/commit/7ebfdb303f90b80cd9c8c6d73f160e42fe532d14))
+
+### 🧪 Testing
+
+
+- Create mocks for text reference and expand msw handlers ([7c2fa70](https://github.com/amasotti/an-na7wi/commit/7c2fa7026131319872cf74de9785262918f2d15a))
+
+- Create mocks for text reference and expand msw handlers ([29e8ab2](https://github.com/amasotti/an-na7wi/commit/29e8ab27be0c2edbb258693bcba071d851bf53e9))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Fix biome warning ([1e17a9b](https://github.com/amasotti/an-na7wi/commit/1e17a9bbfd7f2765dae0afe02e6252bd3fa90f43))
+
 ## [2.3.0] - 2025-08-17
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/f806c90e9dd2d42273a65f30187ef4d8d5cecb6f..87bd951c6497690a6eb75f6d4d1dbe06512fc5d6)
