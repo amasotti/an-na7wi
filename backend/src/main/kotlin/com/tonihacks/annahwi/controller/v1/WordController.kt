@@ -231,4 +231,29 @@ class WordController {
         )
         return Response.ok(paginatedResponse).build()
     }
+    
+    @GET
+    @Path("/search")
+    @Operation(summary = "Search words for autocomplete", description = "Returns words matching the query for autocomplete functionality")
+    fun searchWords(
+        @QueryParam("q") query: String,
+        @QueryParam("limit") @DefaultValue("10") limit: Int
+    ): Response {
+        logger.info("GET /api/v1/words/search - query: $query, limit: $limit")
+        
+        if (query.isBlank()) {
+            return Response.ok(emptyList<Any>()).build()
+        }
+        
+        // Search in both Arabic and translation/transliteration
+        val arabicResults = wordService.searchByArabic(query, 0, limit / 2)
+        val translationResults = wordService.searchByTranslation(query, 0, limit / 2)
+        
+        // Combine and deduplicate results
+        val combinedResults = (arabicResults + translationResults)
+            .distinctBy { it.id }
+            .take(limit)
+        
+        return Response.ok(combinedResults).build()
+    }
 }
