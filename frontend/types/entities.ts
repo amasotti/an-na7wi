@@ -24,6 +24,15 @@ export interface Text {
   currentVersionId?: string
 }
 
+export interface TextReference {
+  id: string;
+  title: string;
+  difficulty: Difficulty;
+  dialect: Dialect;
+  createdAt: string;
+  tags: string[];
+}
+
 export interface DictionaryLink {
   id: string
   type: DictionaryType

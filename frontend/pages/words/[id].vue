@@ -25,6 +25,7 @@
         <WordExamples v-if="currentWord.example" />
         <WordNotes v-if="currentWord.notes" />
         <RelatedWords v-if="currentWord.root" />
+        <RelatedTexts v-if="currentWord" />
       </div>
 
       <!-- Right Column: Dictionary References Only -->
@@ -79,6 +80,7 @@ import WordPrimaryInformation from '~/components/vocabulary/WordPrimaryInformati
 import WordReferences from '~/components/vocabulary/WordReferences.vue'
 import { useWordStore } from '~/stores/wordStore'
 import type { Word } from '~/types'
+import RelatedTexts from "~/components/vocabulary/RelatedTexts.vue";
 
 const route = useRoute()
 const wordStore = useWordStore()

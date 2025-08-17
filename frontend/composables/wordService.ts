@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios'
-import type { PaginatedResponse, Word, WordSearchResult } from '~/types'
+import type {PaginatedResponse, TextsFromLinkedWordRequest, TextsResponse, Word, WordSearchResult} from '~/types'
 
 export const wordService = {
   /**
@@ -197,4 +197,22 @@ export const wordService = {
       return []
     }
   },
+
+  /**
+   * Get texts linked to a specific word
+   * @param req
+   */
+  async getTextsFromLinkedWord(req: TextsFromLinkedWordRequest): Promise<TextsResponse> {
+    try {
+      const response = await useApiClient().get(`/texts/words/${req.wordId}`, { params: {
+        page: req.page || 1,
+        size: req.size || 10,
+        }
+      })
+      return response.data
+    } catch (error) {
+      console.error('Failed to get texts from linked word:', error)
+      throw error
+    }
+  }
 }
