@@ -42,7 +42,7 @@ import { cardClasses, combineClasses } from '~/styles/component-classes'
 import BaseCard from '../common/BaseCard.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 
-interface Feature {
+export interface Feature {
   title: string
   description: string
   icon: string
