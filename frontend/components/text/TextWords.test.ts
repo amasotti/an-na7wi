@@ -1,9 +1,8 @@
 import { render, screen } from '@testing-library/vue'
-import { createPinia, setActivePinia } from 'pinia'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { useTextStore } from '~/stores/textStore'
 import type { WordSummary } from '~/types'
-import TextWords from './TextWords.vue'
+import { TextWords } from '#components'
 
 // Mock navigation
 vi.mock('#app', () => ({
@@ -11,10 +10,6 @@ vi.mock('#app', () => ({
 }))
 
 describe('TextWords', () => {
-  beforeEach(() => {
-    setActivePinia(createPinia())
-  })
-
   const mockWords: WordSummary[] = [
     {
       id: '1',

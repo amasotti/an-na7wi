@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/vue'
 import { describe, expect, it, vi } from 'vitest'
+import { TextWordItem } from '#components'
 import type { WordSummary } from '~/types'
-import TextWordItem from './TextWordItem.vue'
 
 // Mock navigateTo
 vi.mock('#app', () => ({
