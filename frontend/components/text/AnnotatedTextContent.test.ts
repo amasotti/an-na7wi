@@ -138,7 +138,7 @@ describe('AnnotatedTextContent', () => {
     })
 
     const highlighted = document.querySelector('.annotation-highlight')
-    expect(highlighted).toHaveStyle('text-decoration-color: rgba(16, 185, 129, 0.2)')
+    expect(highlighted).toHaveStyle('text-decoration-color: #10b981')
   })
 
   it('applies correct highlight color for grammar annotations', () => {
@@ -151,7 +151,7 @@ describe('AnnotatedTextContent', () => {
     })
 
     const highlighted = document.querySelector('.annotation-highlight')
-    expect(highlighted).toHaveStyle('text-decoration-color: rgba(59, 130, 246, 0.2)')
+    expect(highlighted).toHaveStyle('text-decoration-color: #3b82f6')
   })
 
   it('applies correct highlight color for cultural annotations', () => {
@@ -164,7 +164,7 @@ describe('AnnotatedTextContent', () => {
     })
 
     const highlighted = document.querySelector('.annotation-highlight')
-    expect(highlighted).toHaveStyle('text-decoration-color: rgba(245, 158, 11, 0.2)')
+    expect(highlighted).toHaveStyle('text-decoration-color: #f59e0b')
   })
 
   it('uses custom color when provided', () => {

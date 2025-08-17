@@ -2,43 +2,46 @@
   <BaseCard class="lg:col-span-3">
     <div class="space-y-6">
       <!-- Arabic Content -->
-      <div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Arabic Text</h2>
+      <section>
+        <h2 class="section-title">Arabic Text</h2>
         <div 
           class="arabic-text-display"
           dir="rtl"
           lang="ar"
           ref="arabicContentRef"
           @mouseup="handleTextSelection"
+          @annotation-clicked="handleAnnotationClick"
         >
           <span v-if="!displayText?.arabicContent">No content</span>
           <div v-else v-html="highlightedArabicContent"></div>
         </div>
-      </div>
+      </section>
 
       <!-- Transliteration -->
-      <div v-if="displayText?.transliteration">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Transliteration</h2>
+      <section v-if="displayText?.transliteration">
+        <h2 class="section-title">Transliteration</h2>
         <div 
-          class="text-lg leading-relaxed text-gray-700 italic bg-blue-50 p-6 rounded-lg relative"
+          class="text-section transliteration-section"
           ref="transliterationRef"
           @mouseup="handleTextSelection"
+          @annotation-clicked="handleAnnotationClick"
         >
           <div v-html="highlightedTransliteration"></div>
         </div>
-      </div>
+      </section>
 
       <!-- Translation -->
-      <div v-if="displayText?.translation">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Translation</h2>
+      <section v-if="displayText?.translation">
+        <h2 class="section-title">Translation</h2>
         <div 
-          class="text-lg leading-relaxed text-gray-800 bg-green-50 p-6 rounded-lg relative"
+          class="text-section translation-section"
           ref="translationRef"
           @mouseup="handleTextSelection"
+          @annotation-clicked="handleAnnotationClick"
         >
           <div v-html="highlightedTranslation"></div>
         </div>
-      </div>
+      </section>
     </div>
 
     <!-- Annotation Form Modal -->
@@ -54,9 +57,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, ref, toRef } from 'vue'
+import { useAnnotationInteraction } from '@/composables/useAnnotationInteraction'
 import { useTextStore } from '@/stores/textStore'
 import type { Annotation, AnnotationType, MasteryLevel, Text } from '@/types'
+import { highlightAnnotations } from '@/utils/textHighlighting'
 import AnnotationForm from '~/components/annotation/AnnotationForm.vue'
 import BaseCard from '../common/BaseCard.vue'
 
@@ -89,144 +94,61 @@ const translationRef = ref<HTMLElement | null>(null)
 // State for annotation form
 const showAnnotationForm = ref(false)
 const editingAnnotation = ref<Annotation | undefined>(undefined)
-const selectedText = ref('')
-const selectedSection = ref<'arabic' | 'transliteration' | 'translation' | null>(null)
 
-// Highlight annotations in text
-const highlightText = (text: string, annotations: Annotation[]) => {
-  if (!text || !annotations.length) return text
-
-  let result = text
-
-  // Sort annotations by length of anchor text (longest first)
-  // This helps prevent nested highlights from breaking
-  const sortedAnnotations = [...annotations].sort(
-    (a, b) => b.anchorText.length - a.anchorText.length
+// Use annotation interaction composable
+const { selectedText, selectedSection, handleTextSelection, createAnnotationFromSelection } =
+  useAnnotationInteraction(
+    toRef(props, 'annotations'),
+    {
+      arabic: arabicContentRef,
+      transliteration: transliterationRef,
+      translation: translationRef,
+    },
+    emit
   )
-
-  for (const annotation of sortedAnnotations) {
-    const { anchorText, id, type, color } = annotation
-
-    // Skip if anchor text is not in the content
-    if (!result.includes(anchorText)) continue
-
-    // Determine highlight color based on type
-    let highlightColor = ''
-    switch (type) {
-      case 'GRAMMAR':
-        highlightColor = color || 'rgba(59, 130, 246, 0.2)' // blue
-        break
-      case 'VOCABULARY':
-        highlightColor = color || 'rgba(16, 185, 129, 0.2)' // green
-        break
-      case 'CULTURAL':
-        highlightColor = color || 'rgba(245, 158, 11, 0.2)' // amber
-        break
-      default:
-        highlightColor = color || 'rgba(156, 163, 175, 0.2)' // gray
-    }
-
-    // Create underlined span instead of highlighted
-    const highlightedSpan = `<span 
-      class="annotation-highlight cursor-pointer" 
-      style="text-decoration: underline; text-decoration-color: ${highlightColor}; text-decoration-thickness: 2px; position: relative;"
-      data-annotation-id="${id}"
-      title="${annotation.content}"
-    >${anchorText}</span>`
-
-    // Replace all occurrences
-    // Using a simple replace might cause issues with nested highlights
-    // A more robust solution would use a proper HTML parser
-    result = result.split(anchorText).join(highlightedSpan)
-  }
-
-  return result
-}
 
 // Computed highlighted content
 const highlightedArabicContent = computed(() => {
-  return highlightText(props.displayText?.arabicContent || '', props.annotations)
-    .replace(/\n/g, '<br>') // Replace newlines with <br> for HTML display
+  return highlightAnnotations(props.displayText?.arabicContent || '', props.annotations).replace(
+    /\n/g,
+    '<br>'
+  ) // Replace newlines with <br> for HTML display
 })
 
 const highlightedTransliteration = computed(() => {
-  return highlightText(props.displayText?.transliteration || '', props.annotations)
+  return highlightAnnotations(props.displayText?.transliteration || '', props.annotations)
 })
 
 const highlightedTranslation = computed(() => {
-  return highlightText(props.displayText?.translation || '', props.annotations)
+  return highlightAnnotations(props.displayText?.translation || '', props.annotations)
 })
 
-// Handle text selection
-const handleTextSelection = (event: MouseEvent) => {
-  const selection = window.getSelection()
-
-  if (!selection || selection.isCollapsed) {
-    // No text selected, emit clear event
-    emit('selectionCleared')
-    return
-  }
-
-  const selectedStr = selection.toString().trim()
-
-  if (selectedStr) {
-    // Determine which section was selected
-    const target = event.target as HTMLElement
-    let section: 'arabic' | 'transliteration' | 'translation' | null = null
-
-    if (arabicContentRef.value?.contains(target)) {
-      section = 'arabic'
-    } else if (transliterationRef.value?.contains(target)) {
-      section = 'transliteration'
-    } else if (translationRef.value?.contains(target)) {
-      section = 'translation'
-    }
-
-    if (section) {
-      selectedText.value = selectedStr
-      selectedSection.value = section
-
-      // Position the toolbar near the selection
-      const range = selection.getRangeAt(0)
-      const rect = range.getBoundingClientRect()
-
-      // Emit selection event with position
-      emit('textSelected', {
-        selectedText: selectedStr,
-        position: {
-          x: rect.left + rect.width / 2,
-          y: rect.top,
-        },
-      })
-    }
-  } else {
-    emit('selectionCleared')
-  }
+// Handle annotation clicks
+const handleAnnotationClick = (event: CustomEvent) => {
+  const { annotation } = event.detail
+  editingAnnotation.value = annotation
+  showAnnotationForm.value = true
 }
 
-// Create annotation from selection
-const createAnnotationFromSelection = () => {
-  if (selectedText.value && selectedSection.value) {
-    // Open annotation form with selected text
+// Create annotation from selection (exposed method)
+const createAnnotationFromSelectionWrapper = () => {
+  const selectionData = createAnnotationFromSelection()
+  if (selectionData) {
     editingAnnotation.value = undefined
     showAnnotationForm.value = true
-
-    // Emit clear selection
     emit('selectionCleared')
   }
 }
 
 // Expose method to parent
 defineExpose({
-  createAnnotationFromSelection,
+  createAnnotationFromSelection: createAnnotationFromSelectionWrapper,
 })
 
 // Close annotation form
 const closeAnnotationForm = () => {
   showAnnotationForm.value = false
   editingAnnotation.value = undefined
-  selectedText.value = ''
-  selectedSection.value = null
 }
 
 // Handle annotation form submission
@@ -247,7 +169,6 @@ const handleAnnotationSubmit = async (data: {
       emit('annotationUpdated', updatedAnnotation)
     } else {
       // Create new annotation
-      // If we're creating from selection, use the selected text
       const annotationData = {
         ...data,
         anchorText: selectedText.value || data.anchorText,
@@ -263,56 +184,25 @@ const handleAnnotationSubmit = async (data: {
     console.error('Failed to save annotation:', error)
   }
 }
-
-// Watch for clicks on annotation highlights
-watch(
-  () => props.annotations,
-  () => {
-    setTimeout(() => {
-      const highlights = document.querySelectorAll('.annotation-highlight')
-
-      for (const highlight of highlights) {
-        highlight.addEventListener('click', (event: Event) => {
-          const annotationId = (event.currentTarget as HTMLElement).dataset.annotationId
-          if (annotationId) {
-            const annotation = props.annotations.find(a => a.id === annotationId)
-            if (annotation) {
-              editingAnnotation.value = annotation
-              showAnnotationForm.value = true
-            }
-          }
-        })
-      }
-    }, 100)
-  },
-  { immediate: true }
-)
-
-// Hide toolbar when clicking outside
-const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  const isClickInside =
-    arabicContentRef.value?.contains(target) ||
-    transliterationRef.value?.contains(target) ||
-    translationRef.value?.contains(target)
-
-  if (!isClickInside) {
-    // Clear selection and emit event
-    window.getSelection()?.removeAllRanges()
-    emit('selectionCleared')
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
 </script>
 
 <style scoped>
+.section-title {
+  @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+.text-section {
+  @apply text-lg leading-relaxed p-6 rounded-lg relative;
+}
+
+.transliteration-section {
+  @apply text-gray-700 italic bg-blue-50;
+}
+
+.translation-section {
+  @apply text-gray-800 bg-green-50;
+}
+
 /* Enhanced Arabic Text Display */
 .arabic-text-display {
   @apply text-2xl leading-relaxed text-gray-900 font-arabic text-right bg-gradient-to-br from-emerald-50/50 to-green-50/50 p-8 rounded-xl relative border border-emerald-100/30 shadow-sm;
