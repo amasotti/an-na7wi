@@ -177,11 +177,17 @@ const setSearchQuery = (value: string) => {
 }
 
 const setSelectedDialect = (value: Dialect | null) => {
-  textStore.setFilters({ dialect: value })
+  // Only trigger filter change if value actually changed
+  if (selectedDialect.value !== value) {
+    textStore.setFilters({ dialect: value })
+  }
 }
 
 const setSelectedDifficulty = (value: Difficulty | null) => {
-  textStore.setFilters({ difficulty: value })
+  // Only trigger filter change if value actually changed
+  if (selectedDifficulty.value !== value) {
+    textStore.setFilters({ difficulty: value })
+  }
 }
 
 const removeTag = (tag: string) => {
@@ -235,8 +241,6 @@ const handleTextSubmit = async (formData: {
       await textStore.createText(formData)
       showCreateModal.value = false
     }
-    // Refresh the texts list
-    await textStore.fetchTexts()
   } catch (error) {
     console.error('Failed to save text:', error)
   }
@@ -248,8 +252,6 @@ const handleDeleteText = async () => {
   try {
     await textStore.deleteText(textToDelete.value.id)
     closeDeleteModal()
-    // Refresh the texts list
-    await textStore.fetchTexts()
   } catch (error) {
     console.error('Failed to delete text:', error)
   }

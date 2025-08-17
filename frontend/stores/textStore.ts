@@ -44,6 +44,10 @@ export const useTextStore = defineStore('text', () => {
   const tokenizedWordsCurrentPage = ref(1)
   const tokenizedWordsPageSize = ref(10)
 
+  // Cache management
+  const lastFetchParams = ref<string>('')
+  const isCurrentlyFetching = ref(false)
+
   // Getters
   const filteredTexts = computed(() => {
     return texts.value
@@ -67,10 +71,13 @@ export const useTextStore = defineStore('text', () => {
   })
 
   async function searchTexts(query: string) {
-    loading.value = true
-    error.value = null
+    if (isCurrentlyFetching.value) return
 
     try {
+      isCurrentlyFetching.value = true
+      loading.value = true
+      error.value = null
+
       const params: SearchRequest = {
         page: currentPage.value,
         pageSize: pageSize.value,
@@ -82,44 +89,64 @@ export const useTextStore = defineStore('text', () => {
       const response = await textService.searchTexts(params)
       texts.value = response.items
       totalCount.value = response.totalCount
+
+      // Clear cache key as search results are different
+      lastFetchParams.value = ''
     } catch (err) {
       error.value = 'Failed to search texts'
       console.error(err)
     } finally {
+      isCurrentlyFetching.value = false
       loading.value = false
     }
   }
 
   // Actions
   async function fetchTexts() {
-    loading.value = true
-    error.value = null
+    const params: TextsRequest = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+    }
+
+    if (selectedDialect.value) {
+      params.dialect = selectedDialect.value
+    }
+
+    if (selectedDifficulty.value) {
+      params.difficulty = selectedDifficulty.value
+    }
+
+    if (selectedTags.value.length > 0) {
+      params.tags = selectedTags.value
+    }
+
+    // Create cache key from parameters
+    const cacheKey = JSON.stringify(params)
+
+    // Skip if we have data and parameters haven't changed, or if already fetching
+    if (
+      isCurrentlyFetching.value ||
+      (texts.value.length > 0 && lastFetchParams.value === cacheKey)
+    ) {
+      return
+    }
 
     try {
-      const params: TextsRequest = {
-        page: currentPage.value,
-        pageSize: pageSize.value,
-      }
-
-      if (selectedDialect.value) {
-        params.dialect = selectedDialect.value
-      }
-
-      if (selectedDifficulty.value) {
-        params.difficulty = selectedDifficulty.value
-      }
-
-      if (selectedTags.value.length > 0) {
-        params.tags = selectedTags.value
-      }
+      isCurrentlyFetching.value = true
+      loading.value = true
+      error.value = null
 
       const response = await textService.getTexts(params)
       texts.value = response.items
       totalCount.value = response.totalCount
+
+      // Update cache key
+      lastFetchParams.value = cacheKey
     } catch (err) {
       error.value = 'Failed to fetch texts'
       console.error(err)
     } finally {
+      isCurrentlyFetching.value = false
       loading.value = false
     }
   }
@@ -214,40 +241,6 @@ export const useTextStore = defineStore('text', () => {
     }
   }
 
-  async function updateAnnotationMastery(id: string, masteryLevel: MasteryLevel) {
-    try {
-      const updatedAnnotation = await annotationService.updateMasteryLevel(id, masteryLevel)
-
-      // Update in the list
-      const index = annotations.value.findIndex(a => a.id === id)
-      if (index !== -1) {
-        annotations.value[index] = updatedAnnotation
-      }
-
-      return updatedAnnotation
-    } catch (err) {
-      console.error('Failed to update annotation mastery', err)
-      throw err
-    }
-  }
-
-  async function updateAnnotationReview(id: string, needsReview: boolean) {
-    try {
-      const updatedAnnotation = await annotationService.updateReviewSettings(id, needsReview)
-
-      // Update in the list
-      const index = annotations.value.findIndex(a => a.id === id)
-      if (index !== -1) {
-        annotations.value[index] = updatedAnnotation
-      }
-
-      return updatedAnnotation
-    } catch (err) {
-      console.error('Failed to update annotation review settings', err)
-      throw err
-    }
-  }
-
   async function fetchTextVersions(textId: string) {
     try {
       textVersions.value = await textService.getTextVersions(textId)
@@ -310,6 +303,7 @@ export const useTextStore = defineStore('text', () => {
     try {
       const newText = await textService.createText(text)
       texts.value.unshift(newText)
+      totalCount.value += 1
       return newText
     } catch (err) {
       error.value = 'Failed to create text'
@@ -364,6 +358,7 @@ export const useTextStore = defineStore('text', () => {
 
       // Remove from the list
       texts.value = texts.value.filter(t => t.id !== id)
+      totalCount.value = Math.max(0, totalCount.value - 1)
 
       // Clear current text if it's the same
       if (currentText.value && currentText.value.id === id) {
@@ -421,13 +416,6 @@ export const useTextStore = defineStore('text', () => {
     } finally {
       tokenizedWordsLoading.value = false
     }
-  }
-
-  function resetTokenizedWords() {
-    tokenizedWords.value = []
-    tokenizedWordsTotalCount.value = 0
-    tokenizedWordsCurrentPage.value = 1
-    tokenizedWordsLoading.value = false
   }
 
   function resetFilters() {
@@ -540,15 +528,12 @@ export const useTextStore = defineStore('text', () => {
 
     // Tokenized Words Actions
     fetchTokenizedWords,
-    resetTokenizedWords,
 
     // Annotation Actions
     fetchAnnotations,
     createAnnotation,
     updateAnnotation,
     deleteAnnotation,
-    updateAnnotationMastery,
-    updateAnnotationReview,
     linkWordToAnnotation,
     unlinkWordFromAnnotation,
     getLinkedWords,

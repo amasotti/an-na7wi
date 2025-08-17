@@ -274,6 +274,7 @@ import { dialectOptions } from '~/constants/dialects'
 import { difficultyOptions } from '~/constants/difficulty'
 import { masteryLevelOptions } from '~/constants/masteryLevel'
 import { partsOfSpeechOptions } from '~/constants/pos'
+import { requestDeduplicator } from '~/utils/requestDeduplicator'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
@@ -374,7 +375,13 @@ const handleSubmit = async () => {
   // Validate root if provided
   if (form.value.root?.trim()) {
     try {
-      const normalization = await rootService.normalizeRoot(form.value.root.trim())
+      const rootKey = form.value.root.trim()
+
+      // Use global deduplication for normalize calls
+      const normalization = await requestDeduplicator.dedupe(`normalize-${rootKey}`, () =>
+        rootService.normalizeRoot(rootKey)
+      )
+
       if (!normalization.isValid) {
         rootValidationError.value = 'Invalid root format'
         return // Prevent submission
@@ -398,31 +405,40 @@ const loadRelatedWords = async (root: string) => {
     return
   }
 
-  loadingRelatedWords.value = true
-  try {
-    // First normalize the root to get the proper form
-    const normalization = await rootService.normalizeRoot(root.trim())
-    if (normalization.isValid) {
-      const response = await wordService.findByRoot(normalization.displayForm, 1, 5)
-      // Filter out the current word being edited
-      relatedWords.value = response.items
-        .filter(word => !props.word || word.id !== props.word.id)
-        .map(word => ({
-          id: word.id,
-          arabic: word.arabic,
-          transliteration: word.transliteration,
-          translation: word.translation,
-          partOfSpeech: word.partOfSpeech,
-          difficulty: word.difficulty,
-          dialect: word.dialect,
-        }))
+  const requestKey = `form-related-words-${root.trim()}-${props.word?.id || 'new'}`
+
+  return requestDeduplicator.dedupe(requestKey, async () => {
+    loadingRelatedWords.value = true
+    try {
+      const rootKey = root.trim()
+
+      // Use global deduplication for normalize calls
+      const normalization = await requestDeduplicator.dedupe(`normalize-${rootKey}`, () =>
+        rootService.normalizeRoot(rootKey)
+      )
+
+      if (normalization.isValid) {
+        const response = await wordService.findByRoot(normalization.displayForm, 1, 5)
+        // Filter out the current word being edited
+        relatedWords.value = response.items
+          .filter(word => !props.word || word.id !== props.word.id)
+          .map(word => ({
+            id: word.id,
+            arabic: word.arabic,
+            transliteration: word.transliteration,
+            translation: word.translation,
+            partOfSpeech: word.partOfSpeech,
+            difficulty: word.difficulty,
+            dialect: word.dialect,
+          }))
+      }
+    } catch (error) {
+      console.error('Error loading related words:', error)
+      relatedWords.value = []
+    } finally {
+      loadingRelatedWords.value = false
     }
-  } catch (error) {
-    console.error('Error loading related words:', error)
-    relatedWords.value = []
-  } finally {
-    loadingRelatedWords.value = false
-  }
+  })
 }
 
 // Watch for word changes to load related words

@@ -2,6 +2,7 @@ import { computed, ref } from 'vue'
 import { wordService } from '~/composables/wordService'
 import type { PaginatedResponse, SelectOption, Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
+import { requestDeduplicator } from '~/utils/requestDeduplicator'
 import { isArabicText } from '~/utils/stringUtils'
 
 interface WordFilters {
@@ -66,36 +67,46 @@ export const useWordStore = defineStore('word', () => {
   )
 
   // Actions
-  const fetchWords = async (resetPage = false) => {
+  const fetchWords = async (resetPage = false, force = false) => {
     if (resetPage) {
       pagination.value.page = 1
     }
 
-    loading.value = true
-    try {
-      // Use the enhanced general endpoint for all filtering (compound filters supported)
-      const params = {
-        page: pagination.value.page,
-        size: pagination.value.pageSize,
-        sort: 'arabic',
-        ...(filters.value.difficulty && { difficulty: filters.value.difficulty }),
-        ...(filters.value.dialect && { dialect: filters.value.dialect }),
-        ...(filters.value.partOfSpeech && { partOfSpeech: filters.value.partOfSpeech }),
-        ...(filters.value.masteryLevel && { masteryLevel: filters.value.masteryLevel }),
-      }
-
-      const response = await wordService.getWords(params)
-      words.value = response.items
-      pagination.value.totalCount = response.totalCount
-      pagination.value.page = response.page
-      pagination.value.pageSize = response.pageSize
-    } catch (error) {
-      console.error('Error fetching words:', error)
-      words.value = []
-      pagination.value.totalCount = 0
-    } finally {
-      loading.value = false
+    const params = {
+      page: pagination.value.page,
+      size: pagination.value.pageSize,
+      sort: 'arabic',
+      ...(filters.value.difficulty && { difficulty: filters.value.difficulty }),
+      ...(filters.value.dialect && { dialect: filters.value.dialect }),
+      ...(filters.value.partOfSpeech && { partOfSpeech: filters.value.partOfSpeech }),
+      ...(filters.value.masteryLevel && { masteryLevel: filters.value.masteryLevel }),
     }
+
+    const cacheKey = JSON.stringify(params)
+
+    // Skip if we already have data with same parameters and not forcing a refresh
+    if (!force && words.value.length > 0 && pagination.value.totalCount > 0) {
+      return
+    }
+
+    const requestKey = `words-${cacheKey}`
+
+    return requestDeduplicator.dedupe(requestKey, async () => {
+      loading.value = true
+      try {
+        const response = await wordService.getWords(params)
+        words.value = response.items
+        pagination.value.totalCount = response.totalCount
+        pagination.value.page = response.page
+        pagination.value.pageSize = response.pageSize
+      } catch (error) {
+        console.error('Error fetching words:', error)
+        words.value = []
+        pagination.value.totalCount = 0
+      } finally {
+        loading.value = false
+      }
+    })
   }
 
   const searchWords = async (query: string) => {
@@ -127,15 +138,17 @@ export const useWordStore = defineStore('word', () => {
   }
 
   const fetchWordById = async (id: string) => {
-    loading.value = true
-    try {
-      currentWord.value = await wordService.getWord(id)
-    } catch (error) {
-      console.error('Error fetching word:', error)
-      currentWord.value = null
-    } finally {
-      loading.value = false
-    }
+    return requestDeduplicator.dedupe(`word-${id}`, async () => {
+      loading.value = true
+      try {
+        currentWord.value = await wordService.getWord(id)
+      } catch (error) {
+        console.error('Error fetching word:', error)
+        currentWord.value = null
+      } finally {
+        loading.value = false
+      }
+    })
   }
 
   const createWord = async (wordData: Partial<Word>) => {

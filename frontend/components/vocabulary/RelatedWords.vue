@@ -34,6 +34,7 @@ import { rootService, useWordStore, wordService } from '#imports'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import type { Word } from '~/types'
+import { requestDeduplicator } from '~/utils/requestDeduplicator'
 
 const wordStore = useWordStore()
 
@@ -49,31 +50,38 @@ const loadRelatedWords = async () => {
     return
   }
 
-  loading.value = true
-  try {
-    // First normalize the root to get the proper form
-    const normalization = await rootService.normalizeRoot(root.trim())
-    if (normalization.isValid) {
-      const response = await wordService.findByRoot(normalization.displayForm, 1, 5)
+  const requestKey = `related-words-${root.trim()}-${currentWord.value?.id}`
 
-      relatedWords.value = response.items
-        .filter(word => word.id !== currentWord.value?.id)
-        .map(word => ({
-          id: word.id,
-          arabic: word.arabic,
-          transliteration: word.transliteration,
-          translation: word.translation,
-          partOfSpeech: word.partOfSpeech,
-          difficulty: word.difficulty,
-          dialect: word.dialect,
-        }))
+  return requestDeduplicator.dedupe(requestKey, async () => {
+    loading.value = true
+    try {
+      // Use deduplication for normalize call as well
+      const normalization = await requestDeduplicator.dedupe(`normalize-${root.trim()}`, () =>
+        rootService.normalizeRoot(root.trim())
+      )
+
+      if (normalization.isValid) {
+        const response = await wordService.findByRoot(normalization.displayForm, 1, 5)
+
+        relatedWords.value = response.items
+          .filter(word => word.id !== currentWord.value?.id)
+          .map(word => ({
+            id: word.id,
+            arabic: word.arabic,
+            transliteration: word.transliteration,
+            translation: word.translation,
+            partOfSpeech: word.partOfSpeech,
+            difficulty: word.difficulty,
+            dialect: word.dialect,
+          }))
+      }
+    } catch (error) {
+      console.error('Error loading related words:', error)
+      relatedWords.value = []
+    } finally {
+      loading.value = false
     }
-  } catch (error) {
-    console.error('Error loading related words:', error)
-    relatedWords.value = []
-  } finally {
-    loading.value = false
-  }
+  })
 }
 
 const handleWordClicked = (word: Partial<Word>) => {

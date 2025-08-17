@@ -1,5 +1,6 @@
 import { rootService } from '~/composables/rootService'
 import type { PaginatedResponse, Root, RootStatistics, RootWithWords } from '~/types'
+import { requestDeduplicator } from '~/utils/requestDeduplicator'
 
 export const useRootStore = defineStore('root', () => {
   const roots = ref<Root[]>([])
@@ -21,6 +22,9 @@ export const useRootStore = defineStore('root', () => {
     letterCount: null as number | null,
     sort: 'displayForm',
   })
+
+  // Cache key to track when data needs refresh
+  const lastFetchParams = ref<string>('')
 
   const filteredRoots = computed(() => {
     let filtered = [...roots.value]
@@ -51,55 +55,76 @@ export const useRootStore = defineStore('root', () => {
   }
 
   const fetchRoots = async (params: { page?: number; size?: number; sort?: string } = {}) => {
-    try {
-      setLoading(true)
-      clearError()
-
-      const response: PaginatedResponse<Root> = await rootService.getRoots({
-        page: params.page || pagination.value.page,
-        size: params.size || pagination.value.size,
-        sort: params.sort || filters.value.sort,
-      })
-
-      roots.value = response.items
-      pagination.value = {
-        page: response.page,
-        size: response.pageSize,
-        totalCount: response.totalCount,
-        totalPages: Math.ceil(response.totalCount / response.pageSize),
-      }
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch roots'
-      console.error('Error fetching roots:', err)
-    } finally {
-      setLoading(false)
+    const currentParams = {
+      page: params.page || pagination.value.page,
+      size: params.size || pagination.value.size,
+      sort: params.sort || filters.value.sort,
     }
+
+    // Create cache key from parameters
+    const cacheKey = JSON.stringify(currentParams)
+
+    // Skip if we have data and parameters haven't changed
+    if (roots.value.length > 0 && lastFetchParams.value === cacheKey) {
+      return
+    }
+
+    const requestKey = `roots-${cacheKey}`
+
+    return requestDeduplicator.dedupe(requestKey, async () => {
+      try {
+        setLoading(true)
+        clearError()
+
+        const response: PaginatedResponse<Root> = await rootService.getRoots(currentParams)
+
+        roots.value = response.items
+        pagination.value = {
+          page: response.page,
+          size: response.pageSize,
+          totalCount: response.totalCount,
+          totalPages: Math.ceil(response.totalCount / response.pageSize),
+        }
+
+        // Update cache key
+        lastFetchParams.value = cacheKey
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Failed to fetch roots'
+        console.error('Error fetching roots:', err)
+      } finally {
+        setLoading(false)
+      }
+    })
   }
 
   const fetchRoot = async (id: string) => {
-    try {
-      setLoading(true)
-      clearError()
-      currentRoot.value = await rootService.getRoot(id)
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch root'
-      console.error('Error fetching root:', err)
-    } finally {
-      setLoading(false)
-    }
+    return requestDeduplicator.dedupe(`root-${id}`, async () => {
+      try {
+        setLoading(true)
+        clearError()
+        currentRoot.value = await rootService.getRoot(id)
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Failed to fetch root'
+        console.error('Error fetching root:', err)
+      } finally {
+        setLoading(false)
+      }
+    })
   }
 
   const fetchRootWithWords = async (id: string) => {
-    try {
-      setLoading(true)
-      clearError()
-      currentRootWithWords.value = await rootService.getRootWithWords(id)
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch root with words'
-      console.error('Error fetching root with words:', err)
-    } finally {
-      setLoading(false)
-    }
+    return requestDeduplicator.dedupe(`root-with-words-${id}`, async () => {
+      try {
+        setLoading(true)
+        clearError()
+        currentRootWithWords.value = await rootService.getRootWithWords(id)
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Failed to fetch root with words'
+        console.error('Error fetching root with words:', err)
+      } finally {
+        setLoading(false)
+      }
+    })
   }
 
   const searchRoots = async (
@@ -110,29 +135,38 @@ export const useRootStore = defineStore('root', () => {
       sort?: string
     } = {}
   ) => {
-    try {
-      setLoading(true)
-      clearError()
-
-      const response: PaginatedResponse<Root> = await rootService.searchRoots(query, {
-        page: params.page || 1,
-        size: params.size || pagination.value.size,
-        sort: params.sort || filters.value.sort,
-      })
-
-      roots.value = response.items
-      pagination.value = {
-        page: response.page,
-        size: response.pageSize,
-        totalCount: response.totalCount,
-        totalPages: Math.ceil(response.totalCount / response.pageSize),
-      }
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to search roots'
-      console.error('Error searching roots:', err)
-    } finally {
-      setLoading(false)
+    const searchParams = {
+      page: params.page || 1,
+      size: params.size || pagination.value.size,
+      sort: params.sort || filters.value.sort,
     }
+
+    const requestKey = `search-roots-${query}-${JSON.stringify(searchParams)}`
+
+    return requestDeduplicator.dedupe(requestKey, async () => {
+      try {
+        setLoading(true)
+        clearError()
+
+        const response: PaginatedResponse<Root> = await rootService.searchRoots(query, searchParams)
+
+        roots.value = response.items
+        pagination.value = {
+          page: response.page,
+          size: response.pageSize,
+          totalCount: response.totalCount,
+          totalPages: Math.ceil(response.totalCount / response.pageSize),
+        }
+
+        // Clear cache key as search results are different
+        lastFetchParams.value = ''
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Failed to search roots'
+        console.error('Error searching roots:', err)
+      } finally {
+        setLoading(false)
+      }
+    })
   }
 
   const fetchRootsByLetterCount = async (
@@ -143,40 +177,54 @@ export const useRootStore = defineStore('root', () => {
       sort?: string
     } = {}
   ) => {
-    try {
-      setLoading(true)
-      clearError()
-
-      const response: PaginatedResponse<Root> = await rootService.getRootsByLetterCount(
-        letterCount,
-        {
-          page: params.page || 1,
-          size: params.size || pagination.value.size,
-          sort: params.sort || filters.value.sort,
-        }
-      )
-
-      roots.value = response.items
-      pagination.value = {
-        page: response.page,
-        size: response.pageSize,
-        totalCount: response.totalCount,
-        totalPages: Math.ceil(response.totalCount / response.pageSize),
-      }
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to fetch roots by letter count'
-      console.error('Error fetching roots by letter count:', err)
-    } finally {
-      setLoading(false)
+    const fetchParams = {
+      page: params.page || 1,
+      size: params.size || pagination.value.size,
+      sort: params.sort || filters.value.sort,
     }
+
+    const requestKey = `roots-letter-count-${letterCount}-${JSON.stringify(fetchParams)}`
+
+    return requestDeduplicator.dedupe(requestKey, async () => {
+      try {
+        setLoading(true)
+        clearError()
+
+        const response: PaginatedResponse<Root> = await rootService.getRootsByLetterCount(
+          letterCount,
+          fetchParams
+        )
+
+        roots.value = response.items
+        pagination.value = {
+          page: response.page,
+          size: response.pageSize,
+          totalCount: response.totalCount,
+          totalPages: Math.ceil(response.totalCount / response.pageSize),
+        }
+
+        // Clear cache key as filtered results are different
+        lastFetchParams.value = ''
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'Failed to fetch roots by letter count'
+        console.error('Error fetching roots by letter count:', err)
+      } finally {
+        setLoading(false)
+      }
+    })
   }
 
   const fetchStatistics = async () => {
-    try {
-      statistics.value = await rootService.getStatistics()
-    } catch (err) {
-      console.error('Error fetching root statistics:', err)
-    }
+    // If we already have statistics, don't fetch again
+    if (statistics.value) return
+
+    return requestDeduplicator.dedupe('root-statistics', async () => {
+      try {
+        statistics.value = await rootService.getStatistics()
+      } catch (err) {
+        console.error('Error fetching root statistics:', err)
+      }
+    })
   }
 
   const updateFilters = (newFilters: Partial<typeof filters.value>) => {
@@ -202,6 +250,10 @@ export const useRootStore = defineStore('root', () => {
       const newRoot = await rootService.createRoot(input, meaning, analysis)
       roots.value.unshift(newRoot)
       pagination.value.totalCount += 1
+      // Update statistics locally instead of refetching
+      if (statistics.value) {
+        statistics.value.totalRoots += 1
+      }
       return newRoot
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to create root'
@@ -248,6 +300,10 @@ export const useRootStore = defineStore('root', () => {
       await rootService.deleteRoot(id)
       roots.value = roots.value.filter(root => root.id !== id)
       pagination.value.totalCount -= 1
+      // Update statistics locally instead of refetching
+      if (statistics.value) {
+        statistics.value.totalRoots -= 1
+      }
       return true
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to delete root'
