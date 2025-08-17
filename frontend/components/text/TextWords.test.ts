@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, it, vi } from 'vitest'
+import { TextWords } from '#components'
 import { useTextStore } from '~/stores/textStore'
 import type { WordSummary } from '~/types'
-import { TextWords } from '#components'
 
 // Mock navigation
 vi.mock('#app', () => ({

@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.4.0] - 2025-08-17
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/1f546b6ac420a03bfff72c5bc73eee2ef5cdf709..fd74f75c43d604519668063badf07f6b1e6ecd44)
+### 🚀 Features
+
+
+- More ux-friendly texts ([39b6672](https://github.com/amasotti/an-na7wi/commit/39b66724e0f8ee250941ddc4ead71f9a15bcfc24))
+
+- Enhance annotation-word linking and add text_id for improved queries ([60e4500](https://github.com/amasotti/an-na7wi/commit/60e4500df0c7962b67d87d137d5babbb8c6afe18))
+
+- Implement TextWords component and related functionality for displaying words referenced in annotations ([43f3e91](https://github.com/amasotti/an-na7wi/commit/43f3e91686e40d0e06746de24e5c5015a0ca1a1f))
+
+### 🧪 Testing
+
+
+- Fix tests ([828fdcd](https://github.com/amasotti/an-na7wi/commit/828fdcdfd551b1a44da2395e28eca31712e7c8d6))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Keep fixing the css ([7a2c869](https://github.com/amasotti/an-na7wi/commit/7a2c869ea0549360ae99fb6b31cd2c8ad915b8a5))
+
+- Run biome ([31b97ca](https://github.com/amasotti/an-na7wi/commit/31b97caf0ed07be906863f9dbcaf106d2f21a32f))
+
+- Refactor test imports for TextWordItem and TextWords components ([fd74f75](https://github.com/amasotti/an-na7wi/commit/fd74f75c43d604519668063badf07f6b1e6ecd44))
+
 ## [2.3.1] - 2025-08-17
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/87bd951c6497690a6eb75f6d4d1dbe06512fc5d6..1f546b6ac420a03bfff72c5bc73eee2ef5cdf709)
