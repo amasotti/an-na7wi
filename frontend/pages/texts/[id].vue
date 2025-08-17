@@ -213,9 +213,10 @@ import TextModal from '~/components/text/TextModal.vue'
 import TextTokenizedWords from '~/components/text/TextTokenizedWords.vue'
 import TextVersionManager from '~/components/text/TextVersionManager.vue'
 import WordForm from '~/components/vocabulary/WordForm.vue'
+import type { CreateAnnotationRequest } from '~/composables/annotationService'
 import { useTextStore } from '~/stores/textStore'
 import { useWordStore } from '~/stores/wordStore'
-import type { Annotation, AnnotationType, BadgeVariant, MasteryLevel, Word } from '~/types'
+import type { Annotation, BadgeVariant, Word } from '~/types'
 import { Dialect, Difficulty } from '~/types'
 
 const route = useRoute()
@@ -436,14 +437,7 @@ const closeAnnotationModal = () => {
   editingAnnotation.value = undefined
 }
 
-const handleAnnotationSubmit = async (data: {
-  anchorText: string
-  content: string
-  type: AnnotationType
-  masteryLevel: MasteryLevel
-  needsReview: boolean
-  color?: string
-}) => {
+const handleAnnotationSubmit = async (data: CreateAnnotationRequest) => {
   if (!currentText.value) return
 
   try {

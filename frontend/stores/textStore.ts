@@ -1,12 +1,14 @@
 import { computed, ref } from 'vue'
-import { annotationService } from '~/composables/annotationService'
+import {
+  annotationService,
+  type CreateAnnotationRequest,
+  type UpdateAnnotationRequest,
+} from '~/composables/annotationService'
 import { textService } from '~/composables/textService'
 import type {
   Annotation,
-  AnnotationType,
   Dialect,
   Difficulty,
-  MasteryLevel,
   SearchRequest,
   Text,
   TextsRequest,
@@ -181,17 +183,7 @@ export const useTextStore = defineStore('text', () => {
     }
   }
 
-  async function createAnnotation(
-    textId: string,
-    annotationData: {
-      anchorText: string
-      content: string
-      type: AnnotationType
-      masteryLevel?: MasteryLevel
-      needsReview?: boolean
-      color?: string
-    }
-  ) {
+  async function createAnnotation(textId: string, annotationData: CreateAnnotationRequest) {
     try {
       const newAnnotation = await annotationService.createAnnotation(textId, annotationData)
       annotations.value.push(newAnnotation)
@@ -202,17 +194,7 @@ export const useTextStore = defineStore('text', () => {
     }
   }
 
-  async function updateAnnotation(
-    id: string,
-    annotationData: {
-      anchorText?: string
-      content?: string
-      type?: AnnotationType
-      masteryLevel?: MasteryLevel
-      needsReview?: boolean
-      color?: string
-    }
-  ) {
+  async function updateAnnotation(id: string, annotationData: UpdateAnnotationRequest) {
     try {
       const updatedAnnotation = await annotationService.updateAnnotation(id, annotationData)
 

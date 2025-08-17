@@ -60,9 +60,10 @@
 import { computed, ref, toRef } from 'vue'
 import { useAnnotationInteraction } from '@/composables/useAnnotationInteraction'
 import { useTextStore } from '@/stores/textStore'
-import type { Annotation, AnnotationType, MasteryLevel, Text } from '@/types'
+import type { Annotation, Text } from '@/types'
 import { highlightAnnotations } from '@/utils/textHighlighting'
 import AnnotationForm from '~/components/annotation/AnnotationForm.vue'
+import type { CreateAnnotationRequest } from '~/composables/annotationService'
 import BaseCard from '../common/BaseCard.vue'
 
 interface Props {
@@ -96,7 +97,7 @@ const showAnnotationForm = ref(false)
 const editingAnnotation = ref<Annotation | undefined>(undefined)
 
 // Use annotation interaction composable
-const { selectedText, selectedSection, handleTextSelection, createAnnotationFromSelection } =
+const { selectedText, handleTextSelection, createAnnotationFromSelection } =
   useAnnotationInteraction(
     toRef(props, 'annotations'),
     {
@@ -116,19 +117,17 @@ const highlightedArabicContent = computed(() => {
 })
 
 const highlightedTransliteration = computed(() => {
-  return highlightAnnotations(props.displayText?.transliteration || '', props.annotations)
-    .replace(
-      /\n/g,
-      '<br>'
-    )
+  return highlightAnnotations(props.displayText?.transliteration || '', props.annotations).replace(
+    /\n/g,
+    '<br>'
+  )
 })
 
 const highlightedTranslation = computed(() => {
-  return highlightAnnotations(props.displayText?.translation || '', props.annotations)
-    .replace(
-      /\n/g,
-      '<br>'
-    )
+  return highlightAnnotations(props.displayText?.translation || '', props.annotations).replace(
+    /\n/g,
+    '<br>'
+  )
 })
 
 // Handle annotation clicks
@@ -160,14 +159,7 @@ const closeAnnotationForm = () => {
 }
 
 // Handle annotation form submission
-const handleAnnotationSubmit = async (data: {
-  anchorText: string
-  content: string
-  type: AnnotationType
-  masteryLevel: MasteryLevel
-  needsReview: boolean
-  color?: string
-}) => {
+const handleAnnotationSubmit = async (data: CreateAnnotationRequest) => {
   if (!props.displayText) return
 
   try {

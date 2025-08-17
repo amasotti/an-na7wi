@@ -178,6 +178,7 @@ import WordSelector from '~/components/annotation/WordSelector.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
 import ColorPicker from '~/components/common/ColorPicker.vue'
+import type { CreateAnnotationRequest } from '~/composables/annotationService'
 import { exampleService } from '~/composables/exampleService'
 
 interface Props {
@@ -198,7 +199,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'submit', data: Omit<Annotation, 'id' | 'textId' | 'createdAt'>): void
+  (e: 'submit', data: CreateAnnotationRequest): void
   (e: 'delete', id: string): void
   (e: 'word-linked', word: WordSearchResult): void
   (e: 'word-unlinked', word: WordSearchResult): void
@@ -304,8 +305,8 @@ const handleSubmit = () => {
     masteryLevel: form.value.masteryLevel,
     needsReview: form.value.needsReview,
     color: form.value.color || undefined,
-    linkedWords: form.value.linkedWords,
-  } as Omit<Annotation, 'id' | 'textId' | 'createdAt'>)
+    linkedWordIds: form.value.linkedWords.map(word => word.id),
+  } as CreateAnnotationRequest)
 }
 
 const handleClose = () => {
@@ -335,7 +336,6 @@ const generateExamples = async () => {
     generatedExamples.value = response.examples
   } catch (error) {
     console.error('Failed to generate examples:', error)
-    // TODO: Show user-friendly error message
   } finally {
     loadingExamples.value = false
   }
