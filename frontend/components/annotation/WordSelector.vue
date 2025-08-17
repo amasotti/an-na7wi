@@ -64,8 +64,12 @@
           v-for="word in selectedWords"
           :key="word.id"
           class="linked-word"
+          role="button"
         >
-          <span class="linked-word-arabic arabic">{{ word.arabic }}</span>
+          <span
+            class="linked-word-arabic arabic"
+            @click.stop="navigateToWord(word.id)"
+          >{{ word.arabic }}</span>
           <span
             v-if="word.transliteration"
             class="linked-word-transliteration"
@@ -195,6 +199,10 @@ const resetSearch = () => {
   searchQuery.value = ''
   searchResults.value = []
   showDropdown.value = false
+}
+
+const navigateToWord = (wordId: string) => {
+  navigateTo(`/words/${wordId}`)
 }
 
 // --- Watchers (debounced search) ---

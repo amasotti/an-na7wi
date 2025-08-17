@@ -146,7 +146,7 @@ describe('WordSelector', () => {
       { timeout: 1000 }
     )
 
-    expect(screen.getAllByRole('button').length).toBe(2)
+    expect(screen.getAllByRole('button').length).toBe(3)
   })
 
   it('handles search errors gracefully', async () => {
