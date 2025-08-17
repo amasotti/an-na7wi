@@ -25,12 +25,12 @@ export interface Text {
 }
 
 export interface TextReference {
-  id: string;
-  title: string;
-  difficulty: Difficulty;
-  dialect: Dialect;
-  createdAt: string;
-  tags: string[];
+  id: string
+  title: string
+  difficulty: Difficulty
+  dialect: Dialect
+  createdAt: string
+  tags: string[]
 }
 
 export interface DictionaryLink {

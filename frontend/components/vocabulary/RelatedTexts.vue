@@ -51,10 +51,10 @@
 </template>
 
 <script setup lang="ts">
-import LoadingEffect from "~/components/common/LoadingEffect.vue"
-import BaseIcon from "~/components/common/BaseIcon.vue"
-import BaseEmptyState from "~/components/common/BaseEmptyState.vue"
-import {formatDate} from "~/utils/dateUtils";
+import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
+import { formatDate } from '~/utils/dateUtils'
 
 const wordStore = useWordStore()
 const { loading, linkedTextsToCurrentWord } = storeToRefs(wordStore)

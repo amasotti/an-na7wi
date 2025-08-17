@@ -1,4 +1,4 @@
-import type { Root } from '~/types'
+import type { Root, RootNormalization } from '~/types'
 
 /**
  * export interface Root {
@@ -42,3 +42,32 @@ export const mockedRoots: Root[] = [
     updatedAt: new Date().toISOString(),
   },
 ]
+
+export const mockedNormalizedRoots: RootNormalization[] = [
+  {
+    input: 'ك ت ب',
+    letters: ['ك', 'ت', 'ب'],
+    normalizedForm: 'كتب',
+    displayForm: 'ك ت ب',
+    letterCount: 3,
+    isValid: true,
+  },
+  {
+    input: 'ق ر أ',
+    letters: ['ق', 'ر', 'أ'],
+    normalizedForm: 'قرأ',
+    displayForm: 'ق ر أ',
+    letterCount: 3,
+    isValid: true,
+  },
+  {
+    input: 'س ل م',
+    letters: ['س', 'ل', 'م'],
+    normalizedForm: 'سلم',
+    displayForm: 'س ل م',
+    letterCount: 3,
+    isValid: true,
+  },
+]
+
+export const mockedNormalizedRoot: RootNormalization = mockedNormalizedRoots[0]!

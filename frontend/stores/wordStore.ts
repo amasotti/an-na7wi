@@ -1,6 +1,12 @@
 import { computed, ref } from 'vue'
 import { wordService } from '~/composables/wordService'
-import type {PaginatedResponse, SelectOption, TextReference, TextsFromLinkedWordRequest, Word} from '~/types'
+import type {
+  PaginatedResponse,
+  SelectOption,
+  TextReference,
+  TextsFromLinkedWordRequest,
+  Word,
+} from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
 import { requestDeduplicator } from '~/utils/requestDeduplicator'
 import { isArabicText } from '~/utils/stringUtils'
@@ -307,7 +313,6 @@ export const useWordStore = defineStore('word', () => {
   }
 
   const getLinkedTexts = async (page: number = 1, size: number = 10) => {
-
     if (!currentWord.value) {
       console.warn('No current word set, cannot fetch linked texts')
       linkedTextsToCurrentWord.value = []
@@ -315,10 +320,10 @@ export const useWordStore = defineStore('word', () => {
     }
 
     try {
-      const reqParams : TextsFromLinkedWordRequest = {
+      const reqParams: TextsFromLinkedWordRequest = {
         wordId: currentWord.value.id,
         page,
-        size
+        size,
       }
       const texts = await wordService.getTextsFromLinkedWord(reqParams)
       linkedTextsToCurrentWord.value = texts.items.map(text => ({
@@ -329,7 +334,7 @@ export const useWordStore = defineStore('word', () => {
         createdAt: text.createdAt,
         tags: text.tags,
       }))
-  } catch (error) {
+    } catch (error) {
       console.error('Error fetching linked texts:', error)
       linkedTextsToCurrentWord.value = []
     }

@@ -1,9 +1,9 @@
 import { HttpResponse, http } from 'msw'
 import { setupServer } from 'msw/node'
-import { type DictionaryLink, DictionaryType, type PaginatedResponse, type Word, type TextReference } from '~/types'
+import { type DictionaryLink, DictionaryType, type PaginatedResponse, type Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
+import { mockedNormalizedRoot } from './roots.mock'
 import { mockTextReferences } from './texts.mock'
-import { mockedRoot } from './roots.mock'
 
 export const mockDictionaryLinks: DictionaryLink[] = [
   {
@@ -100,11 +100,8 @@ export const handlers = [
 
   // Root normalization
   http.post('/api/v1/roots/normalize', async ({ request }) => {
-    const body = await request.json() as { input: string }
-    return HttpResponse.json({
-      isValid: true,
-      displayForm: body.input || 'ك-ت-ب',
-    })
+    const _body = (await request.json()) as { input: string }
+    return HttpResponse.json(mockedNormalizedRoot)
   }),
 ]
 

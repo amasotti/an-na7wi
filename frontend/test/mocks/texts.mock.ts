@@ -11,7 +11,7 @@ export const mockTextReferences: TextReference[] = [
     tags: ['grammar', 'vocabulary'],
   },
   {
-    id: 'text-2', 
+    id: 'text-2',
     title: 'Advanced Arabic Literature',
     difficulty: Difficulty.ADVANCED,
     dialect: Dialect.LEVANTINE,

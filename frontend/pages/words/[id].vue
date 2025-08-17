@@ -71,6 +71,7 @@ import { computed, onMounted, ref } from 'vue'
 import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
+import RelatedTexts from '~/components/vocabulary/RelatedTexts.vue'
 import RelatedWords from '~/components/vocabulary/RelatedWords.vue'
 import WordDeleteModal from '~/components/vocabulary/WordDeleteModal.vue'
 import WordExamples from '~/components/vocabulary/WordExamples.vue'
@@ -80,7 +81,6 @@ import WordPrimaryInformation from '~/components/vocabulary/WordPrimaryInformati
 import WordReferences from '~/components/vocabulary/WordReferences.vue'
 import { useWordStore } from '~/stores/wordStore'
 import type { Word } from '~/types'
-import RelatedTexts from "~/components/vocabulary/RelatedTexts.vue";
 
 const route = useRoute()
 const wordStore = useWordStore()
