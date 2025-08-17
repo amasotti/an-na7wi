@@ -31,6 +31,22 @@ vi.mock('../common/BaseIcon.vue', () => ({
   },
 }))
 
+vi.mock('../common/WordSelector.vue', () => ({
+  default: {
+    template: '<div data-testid="word-selector" />',
+    props: ['modelValue', 'label'],
+    emits: ['update:modelValue'],
+  },
+}))
+
+vi.mock('../common/ColorPicker.vue', () => ({
+  default: {
+    template: '<div data-testid="color-picker" />',
+    props: ['modelValue', 'label'],
+    emits: ['update:modelValue'],
+  },
+}))
+
 // Mock the example service
 vi.mock('~/composables/exampleService', () => ({
   exampleService: {
@@ -48,6 +64,7 @@ describe('AnnotationForm', () => {
     needsReview: false,
     masteryLevel: MasteryLevel.MASTERED,
     createdAt: '2024-01-01T00:00:00Z',
+    linkedWords: [],
   }
 
   beforeEach(() => {
@@ -217,6 +234,7 @@ describe('AnnotationForm', () => {
         content: 'test content',
         type: AnnotationType.GRAMMAR,
         masteryLevel: MasteryLevel.MASTERED,
+        linkedWordIds: [],
         needsReview: true,
         color: '#32a7cf',
       },

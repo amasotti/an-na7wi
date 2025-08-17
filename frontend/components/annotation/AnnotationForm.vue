@@ -125,6 +125,17 @@
         label="Color (optional)" 
       />
 
+      <!-- Word Selector -->
+      <WordSelector
+        v-model="form.linkedWords"
+        label="Linked Words (optional)"
+        :annotation-id="annotation?.id"
+        :real-time-mode="isEditing"
+        @word-added="handleWordAdded"
+        @word-removed="handleWordRemoved"
+        @error="handleWordLinkError"
+      />
+
       <!-- Buttons -->
       <div class="flex justify-between items-center pt-6">
         <!-- Delete button (only in edit mode) -->
@@ -155,12 +166,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import type { Annotation, AnnotationType, ExampleDTO, MasteryLevel } from '@/types'
+import type { Annotation, AnnotationType, ExampleDTO, MasteryLevel, WordSearchResult } from '@/types'
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
 import { exampleService } from '~/composables/exampleService'
-import BaseButton from '../common/BaseButton.vue'
-import BaseModal from '../common/BaseModal.vue'
-import ColorPicker from '../common/ColorPicker.vue'
+import BaseButton from '~/components/common/BaseButton.vue'
+import BaseModal from '~/components/common/BaseModal.vue'
+import ColorPicker from '~/components/common/ColorPicker.vue'
+import WordSelector from '~/components/annotation/WordSelector.vue'
 
 interface Props {
   open: boolean
@@ -180,18 +192,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (
-    e: 'submit',
-    data: {
-      anchorText: string
-      content: string
-      type: AnnotationType
-      masteryLevel: MasteryLevel
-      needsReview: boolean
-      color?: string
-    }
-  ): void
+  (e: 'submit', data: Omit<Annotation, 'id' | 'textId' | 'createdAt'>): void
   (e: 'delete', id: string): void
+  (e: 'word-linked', word: WordSearchResult): void
+  (e: 'word-unlinked', word: WordSearchResult): void
+  (e: 'word-link-error', error: Error): void
 }>()
 
 // Form state
@@ -202,6 +207,7 @@ const form = ref({
   masteryLevel: MasteryLevelEnum.NEW as MasteryLevel,
   needsReview: false,
   color: '#32a7cf',
+  linkedWords: [] as WordSearchResult[],
 })
 
 // Example generation state
@@ -227,6 +233,12 @@ watch(
         masteryLevel: newAnnotation.masteryLevel,
         needsReview: newAnnotation.needsReview,
         color: newAnnotation.color || '',
+        linkedWords: newAnnotation.linkedWords?.map(word => ({
+          id: word.id,
+          arabic: word.arabic,
+          transliteration: word.transliteration,
+          translation: word.translation
+        })) || [],
       }
     } else {
       // Reset form for new annotation
@@ -237,6 +249,7 @@ watch(
         masteryLevel: MasteryLevelEnum.NEW,
         needsReview: false,
         color: '#32a7cf',
+        linkedWords: [],
       }
     }
   },
@@ -268,6 +281,7 @@ watch(
           masteryLevel: MasteryLevelEnum.NEW,
           needsReview: false,
           color: '#32a7cf',
+          linkedWords: [],
         }
       }
     }
@@ -283,7 +297,8 @@ const handleSubmit = () => {
     masteryLevel: form.value.masteryLevel,
     needsReview: form.value.needsReview,
     color: form.value.color || undefined,
-  })
+    linkedWordIds: form.value.linkedWords.map(word => word.id),
+  } as Omit<Annotation, 'id' | 'textId' | 'createdAt'>)
 }
 
 const handleClose = () => {
@@ -345,4 +360,17 @@ watch(
     generatedExamples.value = []
   }
 )
+
+// Word linking handlers
+const handleWordAdded = (word: WordSearchResult) => {
+  emit('word-linked', word)
+}
+
+const handleWordRemoved = (word: WordSearchResult) => {
+  emit('word-unlinked', word)
+}
+
+const handleWordLinkError = (error: Error) => {
+  emit('word-link-error', error)
+}
 </script>

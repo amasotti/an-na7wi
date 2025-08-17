@@ -99,6 +99,7 @@
 import { computed, ref, watch } from 'vue'
 import type { WordSearchResult } from '~/types'
 import { wordService } from '~/composables/wordService'
+import { annotationService } from '~/composables/annotationService'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import BaseInput from '~/components/common/BaseInput.vue'
 
@@ -106,12 +107,19 @@ import BaseInput from '~/components/common/BaseInput.vue'
 interface Props {
   modelValue: WordSearchResult[]
   label?: string
+  annotationId?: string
+  realTimeMode?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
   label: 'Linked Words (optional)',
+  annotationId: '',
+  realTimeMode: false,
 })
 const emit = defineEmits<{
   'update:modelValue': [value: WordSearchResult[]]
+  'word-added': [word: WordSearchResult]
+  'word-removed': [word: WordSearchResult]
+  'error': [error: Error]
 }>()
 
 // --- State ---
@@ -139,25 +147,49 @@ const searchWords = async (query: string) => {
   }
 }
 
-const selectWord = (word: WordSearchResult) => {
-  emit('update:modelValue', [...selectedWords.value, word])
+const selectWord = async (word: WordSearchResult) => {
+  if (props.realTimeMode && props.annotationId) {
+    // Real-time mode: immediately link to annotation via API
+    try {
+      await annotationService.linkWordToAnnotation(props.annotationId, word.id)
+      emit('word-added', word)
+      emit('update:modelValue', [...selectedWords.value, word])
+    } catch (error) {
+      console.error('Failed to link word to annotation:', error)
+      emit('error', error as Error)
+      return
+    }
+  } else {
+    // Traditional mode: just update the model
+    emit('update:modelValue', [...selectedWords.value, word])
+  }
   resetSearch()
 }
 
-const removeWord = (id: string) => {
-  emit(
-    'update:modelValue',
-    selectedWords.value.filter((w) => w.id !== id),
-  )
+const removeWord = async (id: string) => {
+  const wordToRemove = selectedWords.value.find(w => w.id === id)
+  if (!wordToRemove) return
+
+  if (props.realTimeMode && props.annotationId) {
+    // Real-time mode: immediately unlink from annotation via API
+    try {
+      await annotationService.unlinkWordFromAnnotation(props.annotationId, id)
+      emit('word-removed', wordToRemove)
+      emit('update:modelValue', selectedWords.value.filter((w) => w.id !== id))
+    } catch (error) {
+      console.error('Failed to unlink word from annotation:', error)
+      emit('error', error as Error)
+      return
+    }
+  } else {
+    // Traditional mode: just update the model
+    emit('update:modelValue', selectedWords.value.filter((w) => w.id !== id))
+  }
 }
 
 const resetSearch = () => {
   searchQuery.value = ''
   searchResults.value = []
-  showDropdown.value = false
-}
-
-const closeDropdown = () => {
   showDropdown.value = false
 }
 
