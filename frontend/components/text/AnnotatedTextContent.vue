@@ -117,10 +117,18 @@ const highlightedArabicContent = computed(() => {
 
 const highlightedTransliteration = computed(() => {
   return highlightAnnotations(props.displayText?.transliteration || '', props.annotations)
+    .replace(
+      /\n/g,
+      '<br>'
+    )
 })
 
 const highlightedTranslation = computed(() => {
   return highlightAnnotations(props.displayText?.translation || '', props.annotations)
+    .replace(
+      /\n/g,
+      '<br>'
+    )
 })
 
 // Handle annotation clicks
