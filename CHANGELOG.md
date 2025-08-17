@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.3.0] - 2025-08-17
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/f806c90e9dd2d42273a65f30187ef4d8d5cecb6f..87bd951c6497690a6eb75f6d4d1dbe06512fc5d6)
+### 🚀 Features
+
+
+- Simplify AnnotatedTextContent and extract text handling to utils files ([846f401](https://github.com/amasotti/an-na7wi/commit/846f4017bb4ffa7712d71aac2cd353d1379c3d4d))
+
+### 🐛 Bug Fixes
+
+
+- Update newline handling and logging levels ([7907d71](https://github.com/amasotti/an-na7wi/commit/7907d71239918fdbb567b390379ada5304dec38f))
+
+### 🧪 Testing
+
+
+- Fix flaky tests for new composables, refactor a bit the annotation component and test ([87bd951](https://github.com/amasotti/an-na7wi/commit/87bd951c6497690a6eb75f6d4d1dbe06512fc5d6))
+
 ## [2.2.0] - 2025-08-17
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/ce94ee512e1431d8f9e8c02ceefc5d50734e3006..f806c90e9dd2d42273a65f30187ef4d8d5cecb6f)
