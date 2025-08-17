@@ -71,7 +71,7 @@ describe('AnnotatedTextContent', () => {
       },
     })
 
-    expect(screen.getByText('Arabic Text')).toBeInTheDocument()
+    expect(screen.getByText('Arabic')).toBeInTheDocument()
     expect(screen.getByText('هذا نص تجريبي')).toBeInTheDocument()
     expect(screen.getByText('Transliteration')).toBeInTheDocument()
     expect(screen.getByText('hatha nass tajribi')).toBeInTheDocument()
@@ -266,7 +266,7 @@ describe('AnnotatedTextContent', () => {
       },
     })
 
-    expect(screen.getByText('Arabic Text')).toBeInTheDocument()
+    expect(screen.getByText('Arabic')).toBeInTheDocument()
   })
 
   it('clears selection when clicking outside', async () => {
@@ -295,7 +295,7 @@ describe('AnnotatedTextContent', () => {
       },
     })
 
-    expect(screen.getByText('Arabic Text')).toBeInTheDocument()
+    expect(screen.getByText('Arabic')).toBeInTheDocument()
     expect(screen.getByText('No content')).toBeInTheDocument()
   })
 
