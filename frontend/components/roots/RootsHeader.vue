@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import { debounce } from 'lodash-es'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import AddButton from '@/components/common/AddButton.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
@@ -97,7 +97,7 @@ interface Emits {
   (e: 'add-root'): void
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const searchQuery = ref('')
@@ -157,21 +157,15 @@ const handleAddRoot = () => {
   emit('add-root')
 }
 
-// Watch for query parameters to update root data
+// Watch for query parameters to update search query only
 watch(
   () => route.query,
-  query => {
-    if (query.search) {
-      searchQuery.value = query.search as string
-    } else {
-      searchQuery.value = ''
-    }
-    handleFilterChange()
-  },
-  { immediate: true }
-)
+  (query, oldQuery) => {
+    searchQuery.value = query.search ? query.search as string : ''
 
-onMounted(() => {
-  handleFilterChange()
-})
+    if (oldQuery !== undefined || oldQuery !== query.search) {
+      handleFilterChange()
+    }
+  }
+)
 </script>
