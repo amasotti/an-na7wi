@@ -178,7 +178,7 @@ const isInitialized = ref(false)
 // Handle query parameters
 watchEffect(() => {
   if (!isInitialized.value) return // Prevent firing before onMounted
-  
+
   const searchParam = route.query.search as string
   if (searchParam && searchParam !== wordStore.filters.search) {
     wordStore.updateFilters({ search: searchParam })

@@ -161,7 +161,7 @@ const handleAddRoot = () => {
 watch(
   () => route.query,
   (query, oldQuery) => {
-    searchQuery.value = query.search ? query.search as string : ''
+    searchQuery.value = query.search ? (query.search as string) : ''
 
     if (oldQuery !== undefined || oldQuery !== query.search) {
       handleFilterChange()

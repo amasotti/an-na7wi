@@ -1,6 +1,6 @@
 /**
  * Request deduplicator utility for preventing duplicate API calls
- * 
+ *
  * This utility provides a clean solution for coordinating API calls across
  * components and stores to prevent duplicate requests without dirty workarounds.
  */
@@ -9,6 +9,7 @@ type RequestKey = string
 type RequestPromise<T> = Promise<T>
 
 class RequestDeduplicator {
+  // biome-ignore lint/suspicious/noExplicitAny: We use any for generic requests
   private pendingRequests = new Map<RequestKey, RequestPromise<any>>()
 
   /**

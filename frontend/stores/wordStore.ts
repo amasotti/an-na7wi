@@ -2,8 +2,8 @@ import { computed, ref } from 'vue'
 import { wordService } from '~/composables/wordService'
 import type { PaginatedResponse, SelectOption, Word } from '~/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '~/types/enums'
-import { isArabicText } from '~/utils/stringUtils'
 import { requestDeduplicator } from '~/utils/requestDeduplicator'
+import { isArabicText } from '~/utils/stringUtils'
 
 interface WordFilters {
   search: string
@@ -83,14 +83,14 @@ export const useWordStore = defineStore('word', () => {
     }
 
     const cacheKey = JSON.stringify(params)
-    
+
     // Skip if we already have data with same parameters and not forcing a refresh
     if (!force && words.value.length > 0 && pagination.value.totalCount > 0) {
       return
     }
 
     const requestKey = `words-${cacheKey}`
-    
+
     return requestDeduplicator.dedupe(requestKey, async () => {
       loading.value = true
       try {
