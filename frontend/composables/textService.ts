@@ -1,6 +1,5 @@
 import type {
   Annotation,
-  PaginatedResponse,
   SearchRequest,
   Text,
   TextsRequest,
@@ -9,7 +8,7 @@ import type {
   TextVersionSummary,
   TransliterationRequest,
   TransliterationResponse,
-  Word,
+  WordSummary,
 } from '~/types'
 
 export const textService = {
@@ -117,12 +116,10 @@ export const textService = {
   },
 
   /**
-   * Tokenize text and get matching words from database
+   * Get words referenced in annotations of a text
    */
-  async tokenizeText(textId: string, page = 1, size = 10): Promise<PaginatedResponse<Word>> {
-    const response = await useApiClient().post(`/texts/${textId}/tokenize`, null, {
-      params: { page, size },
-    })
+  async getTextWords(textId: string): Promise<WordSummary[]> {
+    const response = await useApiClient().get(`/texts/${textId}/words`)
     return response.data
   },
 }

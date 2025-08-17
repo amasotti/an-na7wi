@@ -14,7 +14,7 @@ import type {
   TextsRequest,
   TextVersion,
   TextVersionSummary,
-  Word,
+  WordSummary,
 } from '~/types'
 
 export const useTextStore = defineStore('text', () => {
@@ -39,12 +39,9 @@ export const useTextStore = defineStore('text', () => {
   const selectedDifficulty = ref<Difficulty | null>(null)
   const selectedTags = ref<string[]>([])
 
-  // Tokenized words state
-  const tokenizedWords = ref<Word[]>([])
-  const tokenizedWordsLoading = ref(false)
-  const tokenizedWordsTotalCount = ref(0)
-  const tokenizedWordsCurrentPage = ref(1)
-  const tokenizedWordsPageSize = ref(10)
+  // Text words state
+  const textWords = ref<WordSummary[]>([])
+  const textWordsLoading = ref(false)
 
   // Cache management
   const lastFetchParams = ref<string>('')
@@ -379,24 +376,22 @@ export const useTextStore = defineStore('text', () => {
     currentPage.value = 1
 
     // Fetch with new filters
-    fetchTexts()
+    fetchTexts().then(r => console.log('Fetched texts with new filters:', r))
   }
 
-  // Tokenized words actions
-  async function fetchTokenizedWords(textId: string, page = 1) {
-    tokenizedWordsLoading.value = true
+  // Text words actions
+  async function fetchTextWords(textId: string) {
+    textWordsLoading.value = true
     error.value = null
 
     try {
-      const response = await textService.tokenizeText(textId, page, tokenizedWordsPageSize.value)
-      tokenizedWords.value = response.items
-      tokenizedWordsTotalCount.value = response.totalCount
-      tokenizedWordsCurrentPage.value = page
+      textWords.value = await textService.getTextWords(textId)
     } catch (err) {
-      error.value = 'Failed to fetch tokenized words'
+      error.value = 'Failed to fetch text words'
       console.error(err)
+      textWords.value = []
     } finally {
-      tokenizedWordsLoading.value = false
+      textWordsLoading.value = false
     }
   }
 
@@ -405,7 +400,7 @@ export const useTextStore = defineStore('text', () => {
     selectedDifficulty.value = null
     selectedTags.value = []
     currentPage.value = 1
-    fetchTexts()
+    fetchTexts().then(r => console.log('Fetched texts with reset filters:', r))
   }
 
   // --- Word Linking Methods ---
@@ -484,11 +479,8 @@ export const useTextStore = defineStore('text', () => {
     textVersions,
     selectedVersion,
     isViewingCurrentVersion,
-    tokenizedWords,
-    tokenizedWordsLoading,
-    tokenizedWordsTotalCount,
-    tokenizedWordsCurrentPage,
-    tokenizedWordsPageSize,
+    textWords,
+    textWordsLoading,
 
     // Getters
     filteredTexts,
@@ -508,8 +500,8 @@ export const useTextStore = defineStore('text', () => {
     setFilters,
     resetFilters,
 
-    // Tokenized Words Actions
-    fetchTokenizedWords,
+    // Text Words Actions
+    fetchTextWords,
 
     // Annotation Actions
     fetchAnnotations,

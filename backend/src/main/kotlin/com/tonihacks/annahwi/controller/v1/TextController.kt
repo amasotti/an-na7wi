@@ -196,6 +196,8 @@ class TextController {
         return Response.ok(response).build()
     }
 
+
+    @Deprecated("Too expensive, to be removed. No replacement planned.")
     @POST
     @Path("/{id}/tokenize")
     @Operation(summary = "Tokenize text and find words", description = "Tokenizes the Arabic text and returns matching words from the database")

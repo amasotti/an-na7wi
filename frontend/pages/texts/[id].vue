@@ -99,16 +99,8 @@
             @selection-cleared="handleSelectionCleared"
           />
 
-          <!-- Tokenized Words (only show in view mode) -->
-          <TextTokenizedWords
-            v-if="isViewingCurrentVersion"
-            :words="tokenizedWords"
-            :loading="tokenizedWordsLoading"
-            :total-count="tokenizedWordsTotalCount"
-            :current-page="tokenizedWordsCurrentPage"
-            :page-size="tokenizedWordsPageSize"
-            @page-change="handleTokenizedWordsPageChange"
-          />
+          <!-- Text Words (only show in view mode) -->
+          <TextWords v-if="isViewingCurrentVersion" />
 
           <!-- Version Manager -->
           <TextVersionManager
@@ -206,8 +198,8 @@ import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import AnnotatedTextContent from '~/components/text/AnnotatedTextContent.vue'
 import TextDeleteModal from '~/components/text/TextDeleteModal.vue'
 import TextModal from '~/components/text/TextModal.vue'
-import TextTokenizedWords from '~/components/text/TextTokenizedWords.vue'
 import TextVersionManager from '~/components/text/TextVersionManager.vue'
+import TextWords from '~/components/text/TextWords.vue'
 import WordForm from '~/components/vocabulary/WordForm.vue'
 import type { CreateAnnotationRequest } from '~/composables/annotationService'
 import { useTextStore } from '~/stores/textStore'
@@ -246,11 +238,6 @@ const error = computed(() => textStore.error)
 const textVersions = computed(() => textStore.textVersions)
 const selectedVersion = computed(() => textStore.selectedVersion)
 const isViewingCurrentVersion = computed(() => textStore.isViewingCurrentVersion)
-const tokenizedWords = computed(() => textStore.tokenizedWords)
-const tokenizedWordsLoading = computed(() => textStore.tokenizedWordsLoading)
-const tokenizedWordsTotalCount = computed(() => textStore.tokenizedWordsTotalCount)
-const tokenizedWordsCurrentPage = computed(() => textStore.tokenizedWordsCurrentPage)
-const tokenizedWordsPageSize = computed(() => textStore.tokenizedWordsPageSize)
 
 // Display the current text or selected version
 const displayText = computed(() => textStore.displayText)
@@ -487,13 +474,6 @@ const handleAnnotationDeleted = (id: string) => {
   console.log('Annotation deleted:', id)
 }
 
-// Tokenized words methods
-const handleTokenizedWordsPageChange = (page: number) => {
-  if (currentText.value) {
-    textStore.fetchTokenizedWords(currentText.value.id, page)
-  }
-}
-
 // Word form methods
 const addNewWord = () => {
   editingWord.value = null
@@ -543,9 +523,9 @@ onMounted(async () => {
     const id = route.params.id as string
     if (id) {
       await textStore.fetchTextById(id)
-      // Fetch tokenized words after text is loaded
+      // Fetch text words after text is loaded
       if (currentText.value) {
-        await textStore.fetchTokenizedWords(currentText.value.id)
+        await textStore.fetchTextWords(currentText.value.id)
       }
     }
   } catch (err) {

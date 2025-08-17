@@ -5,14 +5,13 @@ import {
   Dialect,
   Difficulty,
   MasteryLevel,
-  type PaginatedResponse,
   type Text,
   type TextsRequest,
   type TextsResponse,
   type TextVersion,
   type TextVersionSummary,
   type TransliterationResponse,
-  type Word,
+  type WordSummary,
 } from '~/types'
 import { textService } from './textService'
 
@@ -230,39 +229,43 @@ describe('textService', () => {
     })
   })
 
-  describe('tokenizeText', () => {
-    it('should tokenize text with default pagination', async () => {
-      const mockResponse: PaginatedResponse<Word> = {
-        items: [],
-        totalCount: 0,
-        page: 1,
-        pageSize: 10,
-      }
-      mockApiClient.post.mockResolvedValue({ data: mockResponse })
+  describe('getTextWords', () => {
+    it('should fetch words referenced in a text', async () => {
+      const mockWordSummaries: WordSummary[] = [
+        {
+          id: '1',
+          arabic: 'كلمة',
+          transliteration: 'kalima',
+          translation: 'word',
+          partOfSpeech: 'NOUN',
+          difficulty: 'INTERMEDIATE',
+          dialect: 'MSA',
+        },
+        {
+          id: '2',
+          arabic: 'جميل',
+          transliteration: 'jamil',
+          translation: 'beautiful',
+          partOfSpeech: 'ADJECTIVE',
+          difficulty: 'BEGINNER',
+          dialect: 'MSA',
+        },
+      ]
+      mockApiClient.get.mockResolvedValue({ data: mockWordSummaries })
 
-      const result = await textService.tokenizeText('1')
+      const result = await textService.getTextWords('1')
 
-      expect(mockApiClient.post).toHaveBeenCalledWith('/texts/1/tokenize', null, {
-        params: { page: 1, size: 10 },
-      })
-      expect(result).toEqual(mockResponse)
+      expect(mockApiClient.get).toHaveBeenCalledWith('/texts/1/words')
+      expect(result).toEqual(mockWordSummaries)
     })
 
-    it('should tokenize text with custom pagination', async () => {
-      const mockResponse: PaginatedResponse<Word> = {
-        items: [],
-        totalCount: 0,
-        page: 2,
-        pageSize: 20,
-      }
-      mockApiClient.post.mockResolvedValue({ data: mockResponse })
+    it('should return empty array when no words are found', async () => {
+      mockApiClient.get.mockResolvedValue({ data: [] })
 
-      const result = await textService.tokenizeText('1', 2, 20)
+      const result = await textService.getTextWords('1')
 
-      expect(mockApiClient.post).toHaveBeenCalledWith('/texts/1/tokenize', null, {
-        params: { page: 2, size: 20 },
-      })
-      expect(result).toEqual(mockResponse)
+      expect(mockApiClient.get).toHaveBeenCalledWith('/texts/1/words')
+      expect(result).toEqual([])
     })
   })
 })

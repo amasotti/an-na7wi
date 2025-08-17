@@ -1,11 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import {
-  type Annotation,
-  type PaginatedResponse,
-  PartOfSpeech,
-  type Text,
-  type Word,
-} from '~/types'
+import type { Annotation, PaginatedResponse, Text, WordSummary } from '~/types'
 import { AnnotationType, Dialect, Difficulty, MasteryLevel } from '~/types/enums'
 import { useTextStore } from './textStore'
 
@@ -48,18 +42,14 @@ const mockTextVersion = {
   createdAt: new Date().toISOString(),
 }
 
-const mockWord: Word = {
+const mockWordSummary: WordSummary = {
   id: '1',
   arabic: 'نص',
+  transliteration: 'nass',
   translation: 'text',
-  root: 'ن ص ص',
-  partOfSpeech: PartOfSpeech.NOUN,
-  difficulty: Difficulty.BEGINNER,
-  dialect: Dialect.MSA,
-  masteryLevel: MasteryLevel.NEW,
-  frequency: 1,
-  createdAt: new Date().toISOString(),
-  dictionaryLinks: [],
+  partOfSpeech: 'NOUN',
+  difficulty: 'BEGINNER',
+  dialect: 'MSA',
 }
 
 const mockTextResponse: PaginatedResponse<Text> = {
@@ -79,14 +69,7 @@ vi.mock('~/composables/textService', () => ({
     deleteText: vi.fn(() => Promise.resolve()),
     getTextVersions: vi.fn(() => Promise.resolve([mockTextVersion])),
     getTextVersion: vi.fn(() => Promise.resolve(mockTextVersion)),
-    tokenizeText: vi.fn(() =>
-      Promise.resolve({
-        items: [mockWord],
-        page: 1,
-        pageSize: 10,
-        totalCount: 1,
-      })
-    ),
+    getTextWords: vi.fn(() => Promise.resolve([mockWordSummary])),
     getAnnotations: vi.fn(() => Promise.resolve([mockAnnotation])),
   },
 }))
@@ -129,9 +112,8 @@ describe('textStore', () => {
     store.textVersions = []
     store.selectedVersion = null
     store.isViewingCurrentVersion = true
-    store.tokenizedWords = []
-    store.tokenizedWordsCurrentPage = 1
-    store.tokenizedWordsTotalCount = 0
+    store.textWords = []
+    store.textWordsLoading = false
     vi.clearAllMocks()
   })
 
@@ -290,13 +272,25 @@ describe('textStore', () => {
     })
   })
 
-  describe('tokenized words actions', () => {
-    it('fetches tokenized words successfully', async () => {
-      await store.fetchTokenizedWords('1')
+  describe('text words actions', () => {
+    it('fetches text words successfully', async () => {
+      await store.fetchTextWords('1')
 
-      expect(store.tokenizedWords).toEqual([mockWord])
-      expect(store.tokenizedWordsTotalCount).toBe(1)
-      expect(store.tokenizedWordsLoading).toBe(false)
+      expect(store.textWords).toEqual([mockWordSummary])
+      expect(store.textWordsLoading).toBe(false)
+    })
+
+    it('handles fetch text words error', async () => {
+      const textService = await import('~/composables/textService')
+      vi.mocked(textService.textService.getTextWords).mockRejectedValueOnce(
+        new Error('Network error')
+      )
+
+      await store.fetchTextWords('1')
+
+      expect(store.textWordsLoading).toBe(false)
+      expect(store.error).toBe('Failed to fetch text words')
+      expect(store.textWords).toEqual([])
     })
   })
 

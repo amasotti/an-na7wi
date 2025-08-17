@@ -1,8 +1,3 @@
-
-<script setup lang="ts">
-</script>
-
-
 <template>
   <div class="max-w-6xl mx-auto px-4 py-8">
     <div class="animate-pulse">
@@ -22,6 +17,10 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+</script>
+
 
 <style>
   .animate-pulse {

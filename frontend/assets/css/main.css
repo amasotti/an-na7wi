@@ -37,7 +37,19 @@
   .arabic {
     @apply font-arabic text-right;
     direction: rtl;
-    font-size: 1.25rem;
+    font-size: 1.20rem;
+    line-height: 2;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+  }
+
+  .arabic-left {
+    @apply font-arabic text-left;
+    direction: ltr;
+    font-size: 1.20rem;
     line-height: 2;
     text-rendering: optimizeLegibility;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
@@ -78,6 +90,13 @@
     direction: rtl;
     text-rendering: optimizeLegibility;
     line-height: 1.8;
+  }
+
+  /* TRANSLITERATION */
+  .transliteration {
+    @apply text-left text-slate-500 text-sm italic;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
   }
 
   /* Scrollbar styling */
