@@ -59,6 +59,7 @@ export interface Annotation {
   needsReview: boolean
   color?: string
   createdAt: string
+  linkedWords: Word[]
 }
 
 export interface Root {
@@ -104,4 +105,11 @@ export interface WordSummary {
 export interface RootWithWords {
   root: Root
   words: WordSummary[]
+}
+
+export interface WordSearchResult {
+  id: string
+  arabic: string
+  transliteration?: string
+  translation?: string
 }

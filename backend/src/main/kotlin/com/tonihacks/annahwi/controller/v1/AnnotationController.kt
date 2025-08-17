@@ -4,6 +4,7 @@ import com.tonihacks.annahwi.dto.request.AnnotationRequestDTO
 import com.tonihacks.annahwi.dto.request.MasteryUpdateRequest
 import com.tonihacks.annahwi.dto.request.ReviewUpdateRequest
 import com.tonihacks.annahwi.dto.response.AnnotationResponseDTO
+import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.service.AnnotationService
 import com.tonihacks.annahwi.util.PaginationUtil
 import jakarta.inject.Inject
@@ -88,8 +89,7 @@ class AnnotationController {
     @Operation(summary = "Create annotation for text", description = "Creates a new annotation for the given text")
     fun createAnnotation(@PathParam("id") textId: UUID, annotationDTO: AnnotationRequestDTO): Response {
         logger.info("POST /api/v1/annotations/text/$textId")
-        val createdAnnotation = annotationService.createForText(textId, annotationDTO)
-        val result = AnnotationResponseDTO.fromEntity(createdAnnotation)
+        val result = annotationService.createForText(textId, annotationDTO)
         return Response.status(Response.Status.CREATED).entity(result).build()
     }
     
@@ -148,5 +148,40 @@ class AnnotationController {
         return Response.ok(result).build()
     }
     
+    @POST
+    @Path("/{id}/words/{wordId}")
+    @Operation(summary = "Link word to annotation", description = "Links a word to an annotation")
+    fun linkWordToAnnotation(
+        @PathParam("id") annotationId: UUID, 
+        @PathParam("wordId") wordId: UUID
+    ): Response {
+        logger.info("POST /api/v1/annotations/$annotationId/words/$wordId")
+        val updatedAnnotation = annotationService.linkWordToAnnotation(annotationId, wordId)
+        val result = AnnotationResponseDTO.fromEntity(updatedAnnotation)
+        return Response.ok(result).build()
+    }
+    
+    @DELETE
+    @Path("/{id}/words/{wordId}")
+    @Operation(summary = "Unlink word from annotation", description = "Removes a word link from an annotation")
+    fun unlinkWordFromAnnotation(
+        @PathParam("id") annotationId: UUID, 
+        @PathParam("wordId") wordId: UUID
+    ): Response {
+        logger.info("DELETE /api/v1/annotations/$annotationId/words/$wordId")
+        val updatedAnnotation = annotationService.unlinkWordFromAnnotation(annotationId, wordId)
+        val result = AnnotationResponseDTO.fromEntity(updatedAnnotation)
+        return Response.ok(result).build()
+    }
+    
+    @GET
+    @Path("/{id}/words")
+    @Operation(summary = "Get linked words", description = "Returns all words linked to an annotation")
+    fun getLinkedWords(@PathParam("id") annotationId: UUID): Response {
+        logger.info("GET /api/v1/annotations/$annotationId/words")
+        val linkedWords = annotationService.getLinkedWords(annotationId)
+        val result = linkedWords.map { WordResponseDTO.fromEntity(it) }
+        return Response.ok(result).build()
+    }
     
 }

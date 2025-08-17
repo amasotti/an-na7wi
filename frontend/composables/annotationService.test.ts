@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { type Annotation, AnnotationType, MasteryLevel } from '~/types'
+import { mockAnnotation, mockAnnotationWithWords, mockWord } from '~/test/mocks/annotations.mock'
+import { AnnotationType, MasteryLevel } from '~/types'
 import {
   annotationService,
   type CreateAnnotationRequest,
@@ -23,16 +24,7 @@ describe('annotationService', () => {
     vi.clearAllMocks()
   })
 
-  const mockAnnotation: Annotation = {
-    id: '1',
-    textId: '1',
-    type: AnnotationType.VOCABULARY,
-    content: 'هذا',
-    anchorText: 'هذا نص تجريبي',
-    needsReview: false,
-    masteryLevel: MasteryLevel.MASTERED,
-    createdAt: '2024-01-01T00:00:00Z',
-  }
+  // Using mock from test/mocks/annotations.mock.ts
 
   describe('getAnnotation', () => {
     it('should fetch a single annotation by ID', async () => {
@@ -145,6 +137,105 @@ describe('annotationService', () => {
 
       expect(mockApiClient.get).toHaveBeenCalledWith('/annotations/review')
       expect(result).toEqual([mockAnnotation])
+    })
+  })
+
+  describe('word linking methods', () => {
+    describe('getLinkedWords', () => {
+      it('should get linked words for an annotation', async () => {
+        mockApiClient.get.mockResolvedValue({ data: [mockWord] })
+
+        const result = await annotationService.getLinkedWords('annotation-1')
+
+        expect(mockApiClient.get).toHaveBeenCalledWith('/annotations/annotation-1/words')
+        expect(result).toEqual([mockWord])
+      })
+    })
+
+    describe('linkWordToAnnotation', () => {
+      it('should link a word to an annotation', async () => {
+        mockApiClient.post.mockResolvedValue({ data: mockAnnotationWithWords })
+
+        const result = await annotationService.linkWordToAnnotation('annotation-1', 'word-1')
+
+        expect(mockApiClient.post).toHaveBeenCalledWith('/annotations/annotation-1/words/word-1')
+        expect(result).toEqual(mockAnnotationWithWords)
+      })
+    })
+
+    describe('unlinkWordFromAnnotation', () => {
+      it('should unlink a word from an annotation', async () => {
+        mockApiClient.delete.mockResolvedValue({ data: mockAnnotation })
+
+        const result = await annotationService.unlinkWordFromAnnotation('annotation-1', 'word-1')
+
+        expect(mockApiClient.delete).toHaveBeenCalledWith('/annotations/annotation-1/words/word-1')
+        expect(result).toEqual(mockAnnotation)
+      })
+    })
+
+    describe('linkMultipleWords', () => {
+      it('should link multiple words to an annotation', async () => {
+        const updatedAnnotation = { ...mockAnnotation, linkedWords: [mockWord] }
+        mockApiClient.post.mockResolvedValue({ data: updatedAnnotation })
+
+        const result = await annotationService.linkMultipleWords('annotation-1', [
+          'word-1',
+          'word-2',
+        ])
+
+        expect(mockApiClient.post).toHaveBeenCalledTimes(2)
+        expect(mockApiClient.post).toHaveBeenCalledWith('/annotations/annotation-1/words/word-1')
+        expect(mockApiClient.post).toHaveBeenCalledWith('/annotations/annotation-1/words/word-2')
+        expect(result).toEqual(mockAnnotationWithWords)
+      })
+    })
+
+    describe('replaceLinkedWords', () => {
+      it('should replace all linked words for an annotation', async () => {
+        const currentWords = [mockWord]
+        const updatedAnnotation = { ...mockAnnotation, linkedWords: [mockWord] }
+
+        mockApiClient.get.mockResolvedValue({ data: currentWords })
+        mockApiClient.delete.mockResolvedValue({ data: mockAnnotation })
+        mockApiClient.post.mockResolvedValue({ data: updatedAnnotation })
+
+        const result = await annotationService.replaceLinkedWords('annotation-1', ['word-2'])
+
+        expect(mockApiClient.get).toHaveBeenCalledWith('/annotations/annotation-1/words')
+        expect(mockApiClient.delete).toHaveBeenCalledWith('/annotations/annotation-1/words/word-1')
+        expect(mockApiClient.post).toHaveBeenCalledWith('/annotations/annotation-1/words/word-2')
+        expect(result).toEqual(mockAnnotationWithWords)
+      })
+
+      it('should handle empty current words', async () => {
+        const updatedAnnotation = { ...mockAnnotation, linkedWords: [mockWord] }
+
+        mockApiClient.get.mockResolvedValue({ data: [] })
+        mockApiClient.post.mockResolvedValue({ data: updatedAnnotation })
+
+        const result = await annotationService.replaceLinkedWords('annotation-1', ['word-1'])
+
+        expect(mockApiClient.get).toHaveBeenCalledWith('/annotations/annotation-1/words')
+        expect(mockApiClient.delete).not.toHaveBeenCalled()
+        expect(mockApiClient.post).toHaveBeenCalledWith('/annotations/annotation-1/words/word-1')
+        expect(result).toEqual(mockAnnotationWithWords)
+      })
+
+      it('should return annotation when no new words provided', async () => {
+        const currentWords = [mockWord]
+
+        mockApiClient.get.mockResolvedValueOnce({ data: currentWords })
+        mockApiClient.delete.mockResolvedValue({ data: mockAnnotation })
+        mockApiClient.get.mockResolvedValueOnce({ data: mockAnnotation })
+
+        const result = await annotationService.replaceLinkedWords('annotation-1', [])
+
+        expect(mockApiClient.get).toHaveBeenNthCalledWith(1, '/annotations/annotation-1/words')
+        expect(mockApiClient.delete).toHaveBeenCalledWith('/annotations/annotation-1/words/word-1')
+        // The method calls getAnnotation internally, so only one get call to words endpoint
+        expect(result).toEqual(mockAnnotation)
+      })
     })
   })
 })

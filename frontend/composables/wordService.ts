@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios'
-import type { PaginatedResponse, Word } from '~/types'
+import type { PaginatedResponse, Word, WordSearchResult } from '~/types'
 
 export const wordService = {
   /**
@@ -181,5 +181,20 @@ export const wordService = {
   async findMostFrequent(limit = 10): Promise<Word[]> {
     const response = await useApiClient().get(`/words/most-frequent/${limit}`)
     return response.data
+  },
+
+  /**
+   * Search words for autocomplete functionality
+   */
+  async searchWords(query: string, limit = 10): Promise<WordSearchResult[]> {
+    try {
+      const response = await useApiClient().get('/words/search', {
+        params: { q: query, limit },
+      })
+      return response.data
+    } catch (error) {
+      console.error('Word search failed:', error)
+      return []
+    }
   },
 }

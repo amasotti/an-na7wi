@@ -2,6 +2,7 @@ package com.tonihacks.annahwi.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntityBase
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.PrePersist
 import jakarta.persistence.Table
 import java.time.LocalDateTime
@@ -56,11 +58,32 @@ class Annotation : PanacheEntityBase {
     @Column(name = "color")
     var color: String? = null
     
+    @OneToMany(mappedBy = "annotation", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    var annotationWords: MutableList<AnnotationWord> = mutableListOf()
+    
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
     
     @PrePersist
     fun prePersist() {
         createdAt = LocalDateTime.now()
+    }
+    
+    fun getLinkedWords(): List<Word> {
+        return annotationWords.map { it.word }
+    }
+
+  fun linkWord(word: Word) =
+    annotationWords
+      .takeIf { words -> words.none { it.word.id == word.id } }
+      ?.add(
+        AnnotationWord().apply {
+          annotation = this@Annotation
+          this.word = word
+        }
+      )
+    
+    fun unlinkWord(word: Word) {
+        annotationWords.removeIf { it.word.id == word.id }
     }
 }

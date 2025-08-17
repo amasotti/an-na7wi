@@ -56,6 +56,7 @@ describe('textService', () => {
     needsReview: false,
     masteryLevel: MasteryLevel.MASTERED,
     createdAt: '2024-01-01T00:00:00Z',
+    linkedWords: [],
   }
 
   const mockTextVersion: TextVersion = {

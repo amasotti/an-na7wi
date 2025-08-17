@@ -438,6 +438,65 @@ export const useTextStore = defineStore('text', () => {
     fetchTexts()
   }
 
+  // --- Word Linking Methods ---
+
+  async function linkWordToAnnotation(annotationId: string, wordId: string) {
+    try {
+      const updatedAnnotation = await annotationService.linkWordToAnnotation(annotationId, wordId)
+      // Update in the list
+      const index = annotations.value.findIndex(a => a.id === annotationId)
+      if (index !== -1) {
+        annotations.value[index] = updatedAnnotation
+      }
+      return updatedAnnotation
+    } catch (err) {
+      console.error('Failed to link word to annotation', err)
+      throw err
+    }
+  }
+
+  async function unlinkWordFromAnnotation(annotationId: string, wordId: string) {
+    try {
+      const updatedAnnotation = await annotationService.unlinkWordFromAnnotation(
+        annotationId,
+        wordId
+      )
+      // Update in the list
+      const index = annotations.value.findIndex(a => a.id === annotationId)
+      if (index !== -1) {
+        annotations.value[index] = updatedAnnotation
+      }
+      return updatedAnnotation
+    } catch (err) {
+      console.error('Failed to unlink word from annotation', err)
+      throw err
+    }
+  }
+
+  async function getLinkedWords(annotationId: string) {
+    try {
+      return await annotationService.getLinkedWords(annotationId)
+    } catch (err) {
+      console.error('Failed to get linked words', err)
+      throw err
+    }
+  }
+
+  async function replaceLinkedWords(annotationId: string, wordIds: string[]) {
+    try {
+      const updatedAnnotation = await annotationService.replaceLinkedWords(annotationId, wordIds)
+      // Update in the list
+      const index = annotations.value.findIndex(a => a.id === annotationId)
+      if (index !== -1) {
+        annotations.value[index] = updatedAnnotation
+      }
+      return updatedAnnotation
+    } catch (err) {
+      console.error('Failed to replace linked words', err)
+      throw err
+    }
+  }
+
   return {
     // State
     texts,
@@ -490,5 +549,9 @@ export const useTextStore = defineStore('text', () => {
     deleteAnnotation,
     updateAnnotationMastery,
     updateAnnotationReview,
+    linkWordToAnnotation,
+    unlinkWordFromAnnotation,
+    getLinkedWords,
+    replaceLinkedWords,
   }
 })

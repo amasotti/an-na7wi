@@ -22,7 +22,8 @@ data class AnnotationResponseDTO(
     val masteryLevel: MasteryLevel,
     val needsReview: Boolean,
     val color: String?,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val linkedWords: List<WordResponseDTO> = emptyList()
 ) {
     companion object {
         /**
@@ -31,7 +32,7 @@ data class AnnotationResponseDTO(
         fun fromEntity(annotation: Annotation): AnnotationResponseDTO {
             return AnnotationResponseDTO(
                 id = annotation.id,
-                textId = annotation.text.id!!,
+                textId = annotation.text.id,
                 textTitle = annotation.text.title,
                 anchorText = annotation.anchorText,
                 content = annotation.content,
@@ -39,8 +40,15 @@ data class AnnotationResponseDTO(
                 masteryLevel = annotation.masteryLevel,
                 needsReview = annotation.needsReview,
                 color = annotation.color,
-                createdAt = annotation.createdAt
+                createdAt = annotation.createdAt,
+                linkedWords = buildLinkedWordsDTO(annotation)
             )
+        }
+
+      fun buildLinkedWordsDTO(annotation: Annotation) : List<WordResponseDTO> {
+            return annotation
+              .getLinkedWords()
+              .map { word -> WordResponseDTO.fromEntity(word) }
         }
     }
 }

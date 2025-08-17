@@ -2,9 +2,31 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.1.0] - 2025-08-16
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/ce94ee512e1431d8f9e8c02ceefc5d50734e3006..)
+### 🚀 Features
+
+
+- Color picker for annotations ([e70e7db](https://github.com/amasotti/an-na7wi/commit/e70e7db7a8b27f5f02878804187c16bf0bcc5ab3))
+
+- Add monitoring ([6660c74](https://github.com/amasotti/an-na7wi/commit/6660c74c1de530c3a965e355871f30480099e45b))
+
+### 🚜 Refactor
+
+
+- Remove unused options and improve type definitions in components and tests ([6a8b8ba](https://github.com/amasotti/an-na7wi/commit/6a8b8ba2459fb8119d3ccf8043becb7ef4dc2df4))
+
+- From make to just ([47f09b5](https://github.com/amasotti/an-na7wi/commit/47f09b55cf296c94781c5826f25a639b2baeb3cb))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Render html new lines in text ([5453f45](https://github.com/amasotti/an-na7wi/commit/5453f456112db173d0acb7398669664dc91474c1))
+
 ## [2.0.0] - 2025-08-16
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/fb42c9ed3cd810f11be5a1f885bf22f56242a47d..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/fb42c9ed3cd810f11be5a1f885bf22f56242a47d..ce94ee512e1431d8f9e8c02ceefc5d50734e3006)
 ### 🚀 Features
 
 
@@ -46,6 +68,8 @@ All notable changes to this project will be documented in this file (created wit
 - Run biome ([a4e9d55](https://github.com/amasotti/an-na7wi/commit/a4e9d5559a00cf12a4aff1e3792d3d3c1fcd54f8))
 
 - Run biome formatter ([5ef474b](https://github.com/amasotti/an-na7wi/commit/5ef474b475805d31761a787e0d338e6d92d136a8))
+
+- Increase version v2.0.0 ([ce94ee5](https://github.com/amasotti/an-na7wi/commit/ce94ee512e1431d8f9e8c02ceefc5d50734e3006))
 
 ## [1.6.1] - 2025-08-16
 
