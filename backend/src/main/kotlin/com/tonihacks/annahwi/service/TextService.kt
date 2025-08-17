@@ -1,6 +1,7 @@
 package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
+import com.tonihacks.annahwi.dto.response.TextResponseDTO
 import com.tonihacks.annahwi.dto.response.WordResponseDTO
 import com.tonihacks.annahwi.entity.Dialect
 import com.tonihacks.annahwi.entity.Difficulty
@@ -16,6 +17,7 @@ import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
+import com.tonihacks.annahwi.repository.AnnotationLinkedWordRepository
 import com.tonihacks.annahwi.util.getWordCount
 import com.tonihacks.annahwi.util.loggerFor
 import java.time.LocalDateTime
@@ -26,8 +28,8 @@ import java.util.*
  */
 @ApplicationScoped
 class TextService {
-    
-    @Inject
+
+  @Inject
     private lateinit var textRepository: TextRepository
     
     @Inject
@@ -38,6 +40,9 @@ class TextService {
 
     @Inject
     private lateinit var wordRepository: WordRepository
+
+    @Inject
+    private lateinit var annotationLinkedWordRepository: AnnotationLinkedWordRepository
     
     private val logger = loggerFor(TextService::class.java)
     
@@ -282,5 +287,22 @@ class TextService {
             pageSize = size
         )
     }
+
+
+  @Transactional
+  @Suppress("UnusedParameter")
+  fun findByReferencedWord(wordId: UUID, page: Int, size: Int ) : List<TextResponseDTO> {
+      logger.info("Finding texts referencing word with ID: $wordId")
+
+      val word = wordRepository.findById(wordId)
+        ?: throw AppException(AppError.NotFound.Word(wordId.toString()))
+
+      val annotationWordLinks = annotationLinkedWordRepository.findByWordId(word.id!!)
+      logger.info("Found ${annotationWordLinks.size} annotation-word links for word $wordId")
+
+      val texts = annotationWordLinks.map { link -> link.annotation.text }
+
+      return texts.map { TextResponseDTO.fromEntity(it) }
+  }
 
 }

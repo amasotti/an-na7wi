@@ -226,4 +226,32 @@ class TextController {
         
         return Response.ok(adjustedResponse).build()
     }
+
+  @GET
+  @Path("/words/{wordId}")
+  @Operation(summary = "Get texts with a linked word", description = "Returns all texts that contain a specific word")
+  fun getTextsByWordId(
+      @PathParam("wordId") wordId: UUID,
+      @QueryParam("page") @DefaultValue("1") page: Int,
+      @QueryParam("size") @DefaultValue("10") size: Int
+  ): Response {
+      logger.info("GET /api/v1/texts/words/$wordId - page: $page, size: $size")
+
+      // Validate pagination parameters
+      PaginationUtil.validatePageSize(page)
+
+      val actualSize = PaginationUtil.resolvePageSize(size, page)
+      val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
+
+      val texts = textService.findByReferencedWord(wordId, zeroBasedPage, actualSize)
+
+      val response = PaginatedResponse(
+          items = texts,
+          totalCount = texts.size.toLong(),
+          page = page,
+          pageSize = size
+      )
+
+      return Response.ok(response).build()
+  }
 }
