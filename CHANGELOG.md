@@ -2,15 +2,17 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
-## [2.1.0] - 2025-08-16
+## [2.2.0] - 2025-08-17
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/ce94ee512e1431d8f9e8c02ceefc5d50734e3006..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/ce94ee512e1431d8f9e8c02ceefc5d50734e3006..f806c90e9dd2d42273a65f30187ef4d8d5cecb6f)
 ### 🚀 Features
 
 
 - Color picker for annotations ([e70e7db](https://github.com/amasotti/an-na7wi/commit/e70e7db7a8b27f5f02878804187c16bf0bcc5ab3))
 
 - Add monitoring ([6660c74](https://github.com/amasotti/an-na7wi/commit/6660c74c1de530c3a965e355871f30480099e45b))
+
+- *(#9)* Avoid duplicate calls (#10) ([f806c90](https://github.com/amasotti/an-na7wi/commit/f806c90e9dd2d42273a65f30187ef4d8d5cecb6f))
 
 ### 🚜 Refactor
 
@@ -23,6 +25,11 @@ All notable changes to this project will be documented in this file (created wit
 
 
 - Render html new lines in text ([5453f45](https://github.com/amasotti/an-na7wi/commit/5453f456112db173d0acb7398669664dc91474c1))
+
+### Feat
+
+
+- *(#7)* Word annotation links (#8) ([da76213](https://github.com/amasotti/an-na7wi/commit/da76213a72bfeb994cba37d28afec6bc7550a6e8))
 
 ## [2.0.0] - 2025-08-16
 
