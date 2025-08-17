@@ -1,7 +1,7 @@
 <template>
   <LoadingEffect v-if="rootStore.loading" />
 
-  <main v-else-if="rootStore.currentRootWithWords" class="max-w-7xl mx-auto p-4 space-y-6">
+  <main v-else-if="rootStore.currentRootWithWords" class="page-container-detail">
 
     <header class="mb-6">
       <BaseBreadcrumb
@@ -20,16 +20,16 @@
     />
 
     <!-- Content Grid -->
-    <div class="content-grid">
+    <div class="content-grid-detail-3col">
       <!-- Left Column: Root Analysis -->
-      <div class="left-column">
+      <div class="content-main-column-3col">
         <RootAnalysis 
           v-if="rootStore.currentRootWithWords.root.analysis" 
         />
       </div>
 
       <!-- Right Column: Related Words -->
-      <section class="right-column">
+      <section class="content-side-column">
         <RootWordsList />
       </section>
     </div>
@@ -200,28 +200,3 @@ watch(
   }
 )
 </script>
-
-<style scoped>
-.content-grid {
-  @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
-}
-
-.left-column {
-  @apply lg:col-span-2 space-y-6;
-}
-
-.right-column {
-  @apply lg:col-span-1 space-y-6;
-}
-
-@media (max-width: 1024px) {
-  .content-grid {
-    @apply grid-cols-1;
-  }
-  
-  .left-column,
-  .right-column {
-    @apply col-span-1;
-  }
-}
-</style>

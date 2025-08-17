@@ -16,7 +16,7 @@
     </div>
 
     <!-- Text Content -->
-    <div v-else-if="currentText" class="max-w-12xl mx-auto px-6 py-8">
+    <div v-else-if="currentText" class="page-container-detail">
       <!-- Header -->
       <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
@@ -88,9 +88,9 @@
       </div>
 
       <!-- Main Content Layout -->
-      <div class="grid grid-cols-1 xl:grid-cols-5 lg:grid-cols-3 gap-10">
-        <!-- Text Content (3/5 width on xl screens, 2/3 width on lg screens) -->
-        <div class="xl:col-span-3 lg:col-span-2 space-y-6">
+      <div class="content-grid-detail-text">
+        <!-- Text Content (4/6 width on 2xl screens, 3/5 width on xl screens) -->
+        <div class="content-text-main">
           <!-- Annotated Text Content -->
           <AnnotatedTextContent
             ref="annotatedTextRef"
@@ -126,8 +126,8 @@
           />
         </div>
 
-        <!-- Annotations Panel (2/5 width on xl screens, 1/3 width on lg screens) -->
-        <div v-if="showAnnotations" class="xl:col-span-2 lg:col-span-1">
+        <!-- Annotations Panel (2/6 width on 2xl screens, 2/5 width on xl screens) -->
+        <div v-if="showAnnotations" class="content-text-side">
           <AnnotationPanel
             :annotations="annotations"
             @create-annotation="createNewAnnotation"

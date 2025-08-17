@@ -1,6 +1,6 @@
 <template>
   <div class="vocabulary-view">
-    <div class="container mx-auto px-4 py-8">
+    <div class="page-container-index">
       <!-- Header -->
       <VocabularyHeader
         :is-searching="wordStore.isSearching"

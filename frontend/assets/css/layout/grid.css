@@ -15,3 +15,54 @@
 .grid-auto-fit {
   @apply grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6;
 }
+
+/* Detail Page Content Grids */
+.content-grid-detail {
+  @apply grid grid-cols-1 xl:grid-cols-4 2xl:grid-cols-5 gap-8;
+}
+
+.content-grid-detail-3col {
+  @apply grid grid-cols-1 xl:grid-cols-3 2xl:grid-cols-4 gap-8;
+}
+
+.content-grid-detail-text {
+  @apply grid grid-cols-1 2xl:grid-cols-6 xl:grid-cols-5 gap-8 2xl:gap-12;
+}
+
+/* Detail Page Column Classes */
+.content-main-column {
+  @apply xl:col-span-3 2xl:col-span-4 space-y-8;
+}
+
+.content-side-column {
+  @apply xl:col-span-1 space-y-8;
+}
+
+.content-main-column-3col {
+  @apply xl:col-span-2 2xl:col-span-3 space-y-8;
+}
+
+.content-text-main {
+  @apply 2xl:col-span-4 xl:col-span-3 space-y-8;
+}
+
+.content-text-side {
+  @apply 2xl:col-span-2 xl:col-span-2 space-y-8;
+}
+
+/* Responsive Column Adjustments */
+@media (max-width: 1280px) {
+  .content-grid-detail,
+  .content-grid-detail-3col,
+  .content-grid-detail-text {
+    @apply grid-cols-1 gap-6;
+  }
+  
+  .content-main-column,
+  .content-side-column,
+  .content-main-column-3col,
+  .content-text-main,
+  .content-text-side {
+    @apply col-span-1 space-y-6;
+  }
+}

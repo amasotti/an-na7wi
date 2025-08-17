@@ -31,7 +31,7 @@ export const cardClasses = {
     glass: 'bg-white/20 backdrop-blur-md border border-white/30',
   },
 
-  hover: 'hover:scale-[1.02] hover:shadow-xl',
+  hover: 'hover:scale-[1.005] hover:shadow-xl',
 
   padding: {
     none: '',

@@ -8,9 +8,9 @@
 
     <!-- Review Mode Selector (only show when not in active session) -->
     <article v-if="!flashcardStore.isSessionActive && !flashcardStore.showResults" class="review-mode-section">
-      <div class="review-mode-container">
+      <div class="flashcard-container">
         <h2 class="section-title">Choose Review Mode</h2>
-        <section class="mode-buttons">
+        <section class="mode-selection-grid">
           <BaseCard
             v-for="mode in reviewModes" 
             :key="mode.value"
@@ -123,25 +123,12 @@ const updateReviewMode = (mode: ReviewMode) => {
 .stats-section {
   @apply bg-gray-50 border-b border-gray-200;
 }
-
-.stats-container {
-  @apply max-w-4xl mx-auto px-4 py-6;
-}
-
 .review-mode-section {
   @apply bg-white border-b border-gray-200;
 }
 
-.review-mode-container {
-  @apply max-w-4xl mx-auto px-4 py-8;
-}
-
 .section-title {
   @apply text-2xl font-bold text-gray-900 text-center mb-8;
-}
-
-.mode-buttons {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8;
 }
 
 .mode-button {

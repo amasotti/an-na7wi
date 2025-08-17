@@ -3,9 +3,7 @@
     <TheNavigation />
 
     <main class="flex-grow">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <slot />
-      </div>
+      <slot />
     </main>
 
     <footer class="glass border-t border-white/20 mt-12">

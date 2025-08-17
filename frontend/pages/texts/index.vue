@@ -1,5 +1,5 @@
 <template>
-  <div class="texts animate-fade-in">
+  <main class="texts animate-fade-in page-container-index">
     <!-- Header -->
     <TextHeader
       title="Arabic Texts"
@@ -85,7 +85,7 @@
       @close="closeDeleteModal"
       @confirm="handleDeleteText"
     />
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">

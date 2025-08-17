@@ -23,6 +23,6 @@ defineEmits<{
 
 <style scoped>
 .add-button {
-  @apply bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200;
+  @apply bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 shadow-sm hover:shadow-md transform hover:scale-[1.01] transition-all duration-200;
 }
 </style>
