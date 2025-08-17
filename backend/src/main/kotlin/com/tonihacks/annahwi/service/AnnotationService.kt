@@ -187,16 +187,26 @@ class AnnotationService {
         existingAnnotation.needsReview = annotationDTO.needsReview
         existingAnnotation.color = annotationDTO.color
         
-        // Update linked words if provided
+        // Update linked words if provided (idempotent - won't create duplicates)
         if (annotationDTO.linkedWordIds != null) {
-            // Clear existing word links
-            existingAnnotation.annotationWords.clear()
+            // Get currently linked word IDs
+            val currentLinkedWordIds = existingAnnotation.getLinkedWords().map { it.id }.toSet()
+            val requestedWordIds = annotationDTO.linkedWordIds.toSet()
             
-            // Add new word links
+            // Remove words that are no longer in the requested list
+            val wordsToRemove = currentLinkedWordIds - requestedWordIds
+            wordsToRemove.forEach { wordId ->
+                val word = wordRepository.findById(wordId!!)
+                if (word != null) {
+                    existingAnnotation.unlinkWord(word)
+                }
+            }
+            
+            // Add new word links (linkWord is idempotent - won't create duplicates)
             annotationDTO.linkedWordIds.forEach { wordId ->
                 val word = wordRepository.findById(wordId)
                 if (word != null) {
-                    existingAnnotation.linkWord(word)
+                    existingAnnotation.linkWord(word)  // This is idempotent
                 }
             }
         }
@@ -258,7 +268,9 @@ class AnnotationService {
           null -> logger.warn("Word with ID $wordId not found, cannot link to annotation $annotationId")
         }
         
-        return annotation
+        // Return annotation with linked words eagerly loaded
+        return annotationRepository.findByIdWithTextAndWords(annotationId)
+            ?: throw AppException(AppError.NotFound.Annotation(annotationId.toString()))
     }
     
     /**
@@ -272,13 +284,17 @@ class AnnotationService {
 
       val word = wordRepository.findById(wordId) ?: run {
         logger.warn("Word $wordId not found, skipping unlink for annotation $annotationId")
-        return annotation
+        // Still return with eagerly loaded data
+        return annotationRepository.findByIdWithTextAndWords(annotationId)
+            ?: throw AppException(AppError.NotFound.Annotation(annotationId.toString()))
       }
 
       annotation.unlinkWord(word)
       annotationRepository.persist(annotation)
 
-      return annotation
+      // Return annotation with linked words eagerly loaded
+      return annotationRepository.findByIdWithTextAndWords(annotationId)
+          ?: throw AppException(AppError.NotFound.Annotation(annotationId.toString()))
     }
     
     /**
