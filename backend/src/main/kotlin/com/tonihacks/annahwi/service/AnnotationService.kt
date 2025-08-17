@@ -137,8 +137,25 @@ class AnnotationService {
         annotationRepository.persist(annotation)
         
         // Link words if provided
-        annotationDTO.linkedWordIds?.forEach { wordId ->
-            linkWordToAnnotation(annotation.id!!, wordId)
+        if (!annotationDTO.linkedWordIds.isNullOrEmpty()) {
+            val wordIds = annotationDTO.linkedWordIds
+            logger.info("Linking ${wordIds.size} words to annotation ${annotation.id}")
+            wordIds.forEach { wordId ->
+                val word = wordRepository.findById(wordId)
+                if (word !== null) {
+                    annotation.linkWord(word)
+                    logger.info("Successfully linked word $wordId to annotation ${annotation.id}")
+                } else {
+                    logger.warn("Word with ID $wordId not found, cannot link to annotation ${annotation.id}")
+                }
+            }
+
+            // Persist the annotation again after linking words
+            annotationRepository
+              .persistAndFlush(annotation)
+              .also {
+                logger.info("Persisted annotation ${annotation.id} with linked words")
+              }
         }
         
         // Get the annotation with linked words eagerly loaded
