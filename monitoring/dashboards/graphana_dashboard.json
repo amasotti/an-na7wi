@@ -456,6 +456,7 @@
               "mode": "none"
             }
           },
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -469,7 +470,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "s"
         },
         "overrides": []
       },
@@ -497,7 +499,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg by(uri) (rate(http_server_requests_seconds_max{uri!=\"/metrics\"}[5m]))",
+          "expr": "http_server_requests_seconds_max{uri!=\"/metrics\"}",
           "legendFormat": "{{ uri }}",
           "range": true,
           "refId": "A"
@@ -1447,5 +1449,5 @@
   "timezone": "browser",
   "title": "An-Na7wi",
   "uid": "47554693-9d10-4fa1-8fcb-fe0e8908aa98",
-  "version": 2
+  "version": 3
 }
