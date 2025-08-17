@@ -1,5 +1,5 @@
-import type { Text } from './entities'
-import type { Dialect, Difficulty } from './enums'
+import type { Text, Annotation, Word } from './entities'
+import type { Dialect, Difficulty, AnnotationType, MasteryLevel } from './enums'
 
 // API Request/Response types
 export interface PaginatedResponse<T> {
@@ -54,4 +54,38 @@ export interface ExampleDTO {
 
 export interface ExampleGenerationResponse {
   examples: ExampleDTO[]
+}
+
+// Annotation API types
+export interface AnnotationRequest {
+  anchorText: string
+  content: string
+  type: AnnotationType
+  masteryLevel?: MasteryLevel
+  needsReview?: boolean
+  color?: string
+  linkedWordIds?: string[]
+}
+
+export interface AnnotationUpdateRequest {
+  anchorText?: string
+  content?: string
+  type?: AnnotationType
+  masteryLevel?: MasteryLevel
+  needsReview?: boolean
+  color?: string
+  linkedWordIds?: string[]
+}
+
+export interface AnnotationsResponse extends PaginatedResponse<Annotation> {}
+
+// Word linking API responses
+export interface WordLinkingResponse {
+  annotation: Annotation
+  message: string
+}
+
+export interface LinkedWordsResponse {
+  words: Word[]
+  annotationId: string
 }
