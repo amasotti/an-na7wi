@@ -98,6 +98,27 @@
           </div>
         </div>
         
+        <!-- Linked Words -->
+        <article v-if="annotation.linkedWords?.length > 0" class="mt-4">
+          <header class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-gray-600">Linked Words:</span>
+          </header>
+          <section class="flex flex-wrap gap-2">
+            <button
+              v-for="word in annotation.linkedWords"
+              :key="word.id"
+              type="button"
+              class="linked_word_badge"
+              @click.stop="navigateToWord(word.id)"
+            >
+              <span class="font-medium rtl">{{ word.arabic }}</span>
+              <span v-if="word.transliteration" class="ml-1 text-blue-600 italic">
+                {{ word.transliteration }}
+              </span>
+            </button>
+          </section>
+        </article>
+        
         <!-- Optional indicators -->
         <div v-if="annotation.needsReview" class="mt-3 flex items-center">
           <div class="w-2 h-2 bg-yellow-400 rounded-full mr-2"></div>
@@ -142,12 +163,17 @@ const formatAnnotationDate = (dateString: string) => {
     day: 'numeric',
   })
 }
+
+const navigateToWord = (wordId: string) => {
+  navigateTo(`/words/${wordId}`)
+}
 </script>
 
 <style scoped>
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -155,7 +181,12 @@ const formatAnnotationDate = (dateString: string) => {
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.linked_word_badge {
+  @apply inline-flex items-center px-2.5 py-1.5 rounded-md text-xs bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-colors cursor-pointer;
 }
 </style>
