@@ -7,6 +7,7 @@ export interface CreateAnnotationRequest {
   masteryLevel?: MasteryLevel
   needsReview?: boolean
   color?: string
+  linkedWordIds?: string[]
 }
 
 export interface UpdateAnnotationRequest {
@@ -16,6 +17,7 @@ export interface UpdateAnnotationRequest {
   masteryLevel?: MasteryLevel
   needsReview?: boolean
   color?: string
+  linkedWordIds?: string[]
 }
 
 export interface MasteryUpdateRequest {
