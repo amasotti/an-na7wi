@@ -8,9 +8,9 @@
 
     <!-- Review Mode Selector (only show when not in active session) -->
     <article v-if="!flashcardStore.isSessionActive && !flashcardStore.showResults" class="review-mode-section">
-      <div class="flashcard-container">
+      <div class="review-mode-container">
         <h2 class="section-title">Choose Review Mode</h2>
-        <section class="mode-selection-grid">
+        <section class="centered-mode-grid">
           <BaseCard
             v-for="mode in reviewModes" 
             :key="mode.value"
@@ -36,16 +36,18 @@
             @update:model-value="updateSessionLength" 
           />
         </section>
-        <BaseButton 
-          variant="primary"
-          size="lg"
-          class="start-button"
-          :disabled="flashcardStore.loading"
-          :loading="flashcardStore.loading"
-          @click="startSession"
-        >
-          Start Review Session
-        </BaseButton>
+        <div class="start-button-container">
+          <BaseButton 
+            variant="primary"
+            size="lg"
+            class="start-button"
+            :disabled="flashcardStore.loading"
+            :loading="flashcardStore.loading"
+            @click="startSession"
+          >
+            Start Review
+          </BaseButton>
+        </div>
       </div>
     </article>
 
@@ -127,16 +129,24 @@ const updateReviewMode = (mode: ReviewMode) => {
   @apply bg-white border-b border-gray-200;
 }
 
+.review-mode-container {
+  @apply max-w-4xl mx-auto px-6 py-12;
+}
+
+.centered-mode-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-8;
+}
+
 .section-title {
   @apply text-2xl font-bold text-gray-900 text-center mb-8;
 }
 
 .mode-button {
-  @apply hover:border-primary-300 hover:bg-primary-50 transition-all cursor-pointer text-left;
+  @apply border-gray-200 bg-gray-50 hover:border-primary-300 hover:bg-primary-50 transition-all cursor-pointer text-left;
 }
 
 .mode-button.active {
-  @apply border-primary-500 bg-primary-50 ring-2 ring-primary-200;
+  @apply border-primary-500 bg-primary-100 ring-2 ring-primary-200;
 }
 
 .mode-icon {
@@ -151,8 +161,12 @@ const updateReviewMode = (mode: ReviewMode) => {
   @apply text-sm text-gray-600;
 }
 
+.start-button-container {
+  @apply flex justify-center;
+}
+
 .start-button {
-  @apply w-full;
+  @apply px-8 py-3;
 }
 
 .session-length-section {

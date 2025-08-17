@@ -20,9 +20,9 @@
           <div class="flex items-center justify-center space-x-6 text-sm text-gray-500">
             <span>&copy; {{ new Date().getFullYear() }} ToniHacks</span>
             <span>•</span>
-            <a href="#" class="hover:text-primary-600 transition-colors">Documentation</a>
+            <a href="https://github.com/amasotti/an-na7wi" class="hover:text-primary-600 transition-colors">Documentation</a>
             <span>•</span>
-            <a href="#" class="hover:text-primary-600 transition-colors">Support</a>
+            <a href="https://github.com/amasotti/an-na7wi/issues" class="hover:text-primary-600 transition-colors">Support</a>
           </div>
         </div>
       </div>

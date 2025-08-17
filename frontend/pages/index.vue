@@ -43,7 +43,7 @@
     </div>
 
     <!-- Features Grid -->
-    <div class="page-container">
+    <div class="page-container mb-20">
       <div class="text-center mb-10">
         <h2 class="text-3xl font-bold text-gray-900 mb-4">Study Tools</h2>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">Organized resources for your Arabic learning journey</p>
@@ -58,8 +58,13 @@
       </div>
     </div>
 
+    <!-- Section Divider -->
+    <aside class="flex justify-center mb-16">
+      <span class="w-24 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></span>
+    </aside>
+
     <!-- Sample Text Section -->
-    <BaseCard class="mb-12">
+    <BaseCard class="container-feature">
       <template #header>
         <div class="flex items-center justify-between">
           <h3 class="text-2xl font-bold text-gray-900 mb-0">Study Example</h3>
@@ -93,13 +98,13 @@
     </BaseCard>
 
     <!-- Study Overview -->
-    <div class="mb-16">
+    <div class="page-container mb-16">
       <div class="text-center mb-10">
         <h2 class="text-3xl font-bold text-gray-900 mb-4">Your Study Collection</h2>
         <p class="text-lg text-gray-600">Current resources in your personal Arabic library</p>
       </div>
       
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
         <StatCard
           v-for="stat in stats"
           :key="stat.label"

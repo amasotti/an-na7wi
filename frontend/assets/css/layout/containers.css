@@ -33,6 +33,10 @@
   @apply w-full px-4 xl:px-8 2xl:px-12 py-6;
 }
 
+.container-feature {
+  @apply max-w-4xl mx-auto px-6 mb-6;
+}
+
 .page-container-detail {
   @apply w-full px-4 xl:px-8 2xl:px-12 py-6 space-y-6;
 }
