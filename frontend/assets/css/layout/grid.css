@@ -26,7 +26,7 @@
 }
 
 .content-grid-detail-text {
-  @apply grid grid-cols-1 2xl:grid-cols-6 xl:grid-cols-5 gap-8 2xl:gap-12;
+  @apply grid grid-cols-1 2xl:grid-cols-8 xl:grid-cols-6 gap-6 2xl:gap-8;
 }
 
 /* Detail Page Column Classes */
@@ -43,11 +43,11 @@
 }
 
 .content-text-main {
-  @apply 2xl:col-span-4 xl:col-span-3 space-y-8;
+  @apply 2xl:col-span-6 xl:col-span-4 space-y-8;
 }
 
 .content-text-side {
-  @apply 2xl:col-span-2 xl:col-span-2 space-y-8;
+  @apply 2xl:col-span-2 xl:col-span-2 space-y-6;
 }
 
 /* Responsive Column Adjustments */

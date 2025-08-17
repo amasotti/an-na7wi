@@ -1,11 +1,15 @@
 <template>
   <BaseCard class="lg:col-span-3">
-    <div class="space-y-6">
+    <!-- Study Layout: Side-by-side text versions -->
+    <div class="study-layout">
       <!-- Arabic Content -->
-      <section>
-        <h2 class="section-title">Arabic Text</h2>
+      <section class="study-panel arabic-panel">
+        <h3 class="study-panel-title">
+          <span class="title-text">Arabic</span>
+          <span class="title-accent">العربية</span>
+        </h3>
         <div 
-          class="arabic-text-display"
+          class="study-text-content arabic-text-display"
           dir="rtl"
           lang="ar"
           ref="arabicContentRef"
@@ -18,10 +22,12 @@
       </section>
 
       <!-- Transliteration -->
-      <section v-if="displayText?.transliteration">
-        <h2 class="section-title">Transliteration</h2>
+      <section v-if="displayText?.transliteration" class="study-panel transliteration-panel">
+        <h3 class="study-panel-title">
+          <span class="title-text">Transliteration</span>
+        </h3>
         <div 
-          class="text-section transliteration-section"
+          class="study-text-content text-section transliteration-section"
           ref="transliterationRef"
           @mouseup="handleTextSelection"
           @annotation-clicked="handleAnnotationClick"
@@ -31,10 +37,12 @@
       </section>
 
       <!-- Translation -->
-      <section v-if="displayText?.translation">
-        <h2 class="section-title">Translation</h2>
+      <section v-if="displayText?.translation" class="study-panel translation-panel">
+        <h3 class="study-panel-title">
+          <span class="title-text">Translation</span>
+        </h3>
         <div 
-          class="text-section translation-section"
+          class="study-text-content text-section translation-section"
           ref="translationRef"
           @mouseup="handleTextSelection"
           @annotation-clicked="handleAnnotationClick"
@@ -187,32 +195,75 @@ const handleAnnotationSubmit = async (data: CreateAnnotationRequest) => {
 </script>
 
 <style scoped>
-.section-title {
-  @apply text-lg font-semibold text-gray-900 mb-4;
+.study-layout {
+  @apply grid grid-cols-1 lg:grid-cols-7 gap-4 min-h-[500px];
+}
+
+.arabic-panel {
+  @apply lg:col-span-3;
+}
+
+.transliteration-panel {
+  @apply lg:col-span-2;
+}
+
+.translation-panel {
+  @apply lg:col-span-2;
+}
+
+.study-panel {
+  @apply flex flex-col h-full;
+}
+
+.study-panel-title {
+  @apply flex items-center justify-between text-sm font-medium text-gray-600 uppercase tracking-wide mb-3 pb-2 border-b border-gray-200;
+}
+
+.title-text {
+  @apply text-gray-700 font-semibold;
+}
+
+.title-accent {
+  @apply text-xs text-gray-500 font-normal;
+}
+
+.study-text-content {
+  @apply flex-1 text-base leading-relaxed p-4 rounded-lg border min-h-[400px] overflow-y-auto;
+}
+
+.arabic-panel {
+  @apply lg:col-span-3 border-l-2 border-l-amber-300;
+}
+
+.transliteration-panel {
+  @apply lg:col-span-2 border-l-2 border-l-blue-300;
+}
+
+.translation-panel {
+  @apply lg:col-span-2 border-l-2 border-l-green-300;
 }
 
 .text-section {
-  @apply text-lg leading-relaxed p-6 rounded-lg relative;
+  @apply border-gray-200;
 }
 
 .transliteration-section {
-  @apply text-gray-700 italic bg-blue-50;
+  @apply text-gray-700 italic bg-blue-50/70 border-blue-200;
 }
 
 .translation-section {
-  @apply text-gray-800 bg-green-50;
+  @apply text-gray-800 bg-green-50/70 border-green-200;
 }
 
 /* Enhanced Arabic Text Display */
 .arabic-text-display {
-  @apply text-2xl leading-relaxed text-gray-900 font-arabic text-right bg-gradient-to-br from-emerald-50/50 to-green-50/50 p-8 rounded-xl relative border border-emerald-100/30 shadow-sm;
+  @apply text-xl font-arabic text-right bg-amber-50/70 border-amber-200;
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 2;
+  line-height: 1.8;
   word-spacing: 0.1em;
-  min-height: 150px;
   
   /* Selection styling */
   &::selection {
@@ -221,7 +272,7 @@ const handleAnnotationSubmit = async (data: CreateAnnotationRequest) => {
   
   /* Focus and interaction states */
   &:hover {
-    @apply bg-gradient-to-br from-emerald-50/70 to-green-50/70 shadow-md;
+    @apply bg-amber-50 border-amber-300;
     transition: all 0.3s ease;
   }
 }

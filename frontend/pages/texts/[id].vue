@@ -4,21 +4,16 @@
     <LoadingEffect v-if="loading" />
 
     <!-- Error State -->
-    <div v-else-if="error" class="max-w-2xl mx-auto px-4 py-16 text-center">
-      <BaseIcon size="xl" class="mx-auto mb-4 text-red-500">
-        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </BaseIcon>
-      <h1 class="text-2xl font-bold text-gray-900 mb-2">Text Not Found</h1>
-      <p class="text-gray-600 mb-6">{{ error }}</p>
-      <router-link to="/texts" class="text-primary-600 hover:text-primary-700 font-medium">
-        ← Back to Texts
-      </router-link>
-    </div>
+    <BaseErrorState
+      v-else-if="error"
+      message="Text Not Found"
+      :error="error"
+    />
 
     <!-- Text Content -->
-    <div v-else-if="currentText" class="page-container-detail">
+    <main v-else-if="currentText" class="page-container-detail">
       <!-- Header -->
-      <div class="mb-8">
+      <header class="mb-8">
         <div class="flex items-center justify-between mb-4">
           <router-link to="/texts" class="text-primary-600 hover:text-primary-700 font-medium flex items-center">
             <BaseIcon size="sm" class="mr-2">
@@ -85,12 +80,12 @@
             {{ tag }}
           </BaseBadge>
         </div>
-      </div>
+      </header>
 
       <!-- Main Content Layout -->
-      <div class="content-grid-detail-text">
+      <section class="content-grid-detail-text">
         <!-- Text Content (4/6 width on 2xl screens, 3/5 width on xl screens) -->
-        <div class="content-text-main">
+        <section class="content-text-main">
           <!-- Annotated Text Content -->
           <AnnotatedTextContent
             ref="annotatedTextRef"
@@ -103,16 +98,6 @@
             @text-selected="handleTextSelected"
             @selection-cleared="handleSelectionCleared"
           />
-          
-          <!-- Version Manager -->
-          <TextVersionManager
-            v-if="textVersions.length > 0"
-            :versions="textVersions"
-            :selectedVersion="selectedVersion"
-            :isViewingCurrentVersion="isViewingCurrentVersion"
-            @select-version="selectVersion"
-            @restore-version="restoreVersion"
-          />
 
           <!-- Tokenized Words (only show in view mode) -->
           <TextTokenizedWords
@@ -124,7 +109,17 @@
             :page-size="tokenizedWordsPageSize"
             @page-change="handleTokenizedWordsPageChange"
           />
-        </div>
+
+          <!-- Version Manager -->
+          <TextVersionManager
+            v-if="textVersions.length > 0"
+            :versions="textVersions"
+            :selectedVersion="selectedVersion"
+            :isViewingCurrentVersion="isViewingCurrentVersion"
+            @select-version="selectVersion"
+            @restore-version="restoreVersion"
+          />
+        </section>
 
         <!-- Annotations Panel (2/6 width on 2xl screens, 2/5 width on xl screens) -->
         <div v-if="showAnnotations" class="content-text-side">
@@ -134,8 +129,8 @@
             @edit-annotation="editAnnotation"
           />
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
 
     <!-- Text Edit Modal -->
     <TextModal
@@ -176,7 +171,7 @@
     />
 
     <!-- Selection Toolbar (outside all containers for absolute positioning) -->
-    <div 
+    <section
       v-if="showSelectionToolbar" 
       class="fixed bg-white shadow-lg border border-gray-200 rounded-lg p-2 z-[9999] flex items-center space-x-2"
       :style="selectionToolbarStyle"
@@ -193,7 +188,7 @@
         </BaseIcon>
         Add Word
       </BaseButton>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -218,6 +213,7 @@ import { useTextStore } from '~/stores/textStore'
 import { useWordStore } from '~/stores/wordStore'
 import type { Annotation, BadgeVariant, Word } from '~/types'
 import { Dialect, Difficulty } from '~/types'
+import BaseErrorState from "~/components/common/BaseErrorState.vue";
 
 const route = useRoute()
 const textStore = useTextStore()
