@@ -120,14 +120,14 @@ describe('RootsHeader', () => {
     expect(searchIcon).toBeInTheDocument()
   })
 
-  it('emits filter-changed on mount', async () => {
+  it('does not emit filter-changed on mount', async () => {
     const { emitted } = renderWithStore(RootsHeader, {
       props: defaultProps,
     })
 
-    // Should emit filter-changed on mount due to onMounted hook
+    // Should not emit filter-changed on initial render
     await waitFor(() => {
-      expect(emitted('filter-changed')).toBeTruthy()
+      expect(emitted('filter-changed')).toBeUndefined()
     })
   })
 })
