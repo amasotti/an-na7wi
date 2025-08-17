@@ -198,6 +198,7 @@ import AnnotationForm from '~/components/annotation/AnnotationForm.vue'
 import AnnotationPanel from '~/components/annotation/AnnotationPanel.vue'
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
+import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
 import EditButton from '~/components/common/EditButton.vue'
@@ -213,7 +214,6 @@ import { useTextStore } from '~/stores/textStore'
 import { useWordStore } from '~/stores/wordStore'
 import type { Annotation, BadgeVariant, Word } from '~/types'
 import { Dialect, Difficulty } from '~/types'
-import BaseErrorState from "~/components/common/BaseErrorState.vue";
 
 const route = useRoute()
 const textStore = useTextStore()
