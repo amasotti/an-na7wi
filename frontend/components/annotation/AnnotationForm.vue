@@ -304,7 +304,7 @@ const handleSubmit = () => {
     masteryLevel: form.value.masteryLevel,
     needsReview: form.value.needsReview,
     color: form.value.color || undefined,
-    linkedWordIds: form.value.linkedWords.map(word => word.id),
+    linkedWords: form.value.linkedWords,
   } as Omit<Annotation, 'id' | 'textId' | 'createdAt'>)
 }
 

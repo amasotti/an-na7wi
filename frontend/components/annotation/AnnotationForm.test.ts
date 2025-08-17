@@ -234,7 +234,7 @@ describe('AnnotationForm', () => {
         content: 'test content',
         type: AnnotationType.GRAMMAR,
         masteryLevel: MasteryLevel.MASTERED,
-        linkedWordIds: [],
+        linkedWords: [],
         needsReview: true,
         color: '#32a7cf',
       },

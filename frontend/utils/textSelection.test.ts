@@ -25,7 +25,7 @@ describe('textSelection', () => {
   describe('getTextSelection', () => {
     const mockEvent = {
       target: document.createElement('div'),
-    } as MouseEvent
+    } as unknown as MouseEvent
 
     const mockSectionRefs = {
       arabic: document.createElement('div'),
@@ -110,7 +110,7 @@ describe('textSelection', () => {
       const outsideElement = document.createElement('span')
       const outsideEvent = {
         target: outsideElement,
-      } as MouseEvent
+      } as unknown as MouseEvent
 
       const result = getTextSelection(outsideEvent, mockSectionRefs)
 

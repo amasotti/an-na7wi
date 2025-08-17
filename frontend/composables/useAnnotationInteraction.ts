@@ -66,26 +66,37 @@ export const useAnnotationInteraction = (
     }
   }
 
+  // Track timeout for cleanup
+  let annotationTimeoutId: NodeJS.Timeout | null = null
+
   // Set up annotation click listeners
   const setupAnnotationClickListeners = () => {
-    setTimeout(() => {
-      const highlights = document.querySelectorAll('.annotation-highlight')
+    // Clear any existing timeout
+    if (annotationTimeoutId) {
+      clearTimeout(annotationTimeoutId)
+    }
 
-      for (const highlight of highlights) {
-        highlight.addEventListener('click', (event: Event) => {
-          const annotationId = (event.currentTarget as HTMLElement).dataset.annotationId
-          if (annotationId) {
-            const annotation = annotations.value.find(a => a.id === annotationId)
-            if (annotation) {
-              // Emit custom event that parent can handle
-              const customEvent = new CustomEvent('annotation-clicked', {
-                detail: { annotation },
-              })
-              highlight.dispatchEvent(customEvent)
+    annotationTimeoutId = setTimeout(() => {
+      if (typeof document !== 'undefined') {
+        const highlights = document.querySelectorAll('.annotation-highlight')
+
+        for (const highlight of highlights) {
+          highlight.addEventListener('click', (event: Event) => {
+            const annotationId = (event.currentTarget as HTMLElement).dataset.annotationId
+            if (annotationId) {
+              const annotation = annotations.value.find(a => a.id === annotationId)
+              if (annotation) {
+                // Emit custom event that parent can handle
+                const customEvent = new CustomEvent('annotation-clicked', {
+                  detail: { annotation },
+                })
+                highlight.dispatchEvent(customEvent)
+              }
             }
-          }
-        })
+          })
+        }
       }
+      annotationTimeoutId = null
     }, 100)
   }
 
@@ -111,6 +122,11 @@ export const useAnnotationInteraction = (
 
   onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside)
+    // Clean up timeout
+    if (annotationTimeoutId) {
+      clearTimeout(annotationTimeoutId)
+      annotationTimeoutId = null
+    }
   })
 
   return {
