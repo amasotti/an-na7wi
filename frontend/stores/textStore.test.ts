@@ -32,6 +32,7 @@ const mockAnnotation: Annotation = {
   content: 'This (demonstrative pronoun)',
   masteryLevel: MasteryLevel.NEW,
   needsReview: false,
+  linkedWords: [],
   createdAt: new Date().toISOString(),
 }
 
