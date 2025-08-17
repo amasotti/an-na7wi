@@ -1,5 +1,5 @@
 <template>
-  <div class="flashcard-page">
+  <div class="flashcard-page page-container">
     <FlashcardHeader 
       :show-end-button="flashcardStore.isSessionActive && flashcardStore.progress.current > 0"
       :show-progress="flashcardStore.isSessionActive"

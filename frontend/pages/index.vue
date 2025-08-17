@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div>
     <!-- Hero Section -->
     <div class="text-center mb-16">
       <div class="inline-block mb-6">
@@ -43,7 +43,7 @@
     </div>
 
     <!-- Features Grid -->
-    <div class="mb-16">
+    <div class="page-container">
       <div class="text-center mb-10">
         <h2 class="text-3xl font-bold text-gray-900 mb-4">Study Tools</h2>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">Organized resources for your Arabic learning journey</p>
