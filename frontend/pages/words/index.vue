@@ -172,8 +172,13 @@ const handleRelatedWordClick = async (word: Partial<Word>) => {
   }
 }
 
+// Track initialization to prevent duplicate calls
+const isInitialized = ref(false)
+
 // Handle query parameters
 watchEffect(() => {
+  if (!isInitialized.value) return // Prevent firing before onMounted
+  
   const searchParam = route.query.search as string
   if (searchParam && searchParam !== wordStore.filters.search) {
     wordStore.updateFilters({ search: searchParam })
@@ -188,6 +193,7 @@ onMounted(() => {
   } else {
     wordStore.fetchWords()
   }
+  isInitialized.value = true
 })
 </script>
 
