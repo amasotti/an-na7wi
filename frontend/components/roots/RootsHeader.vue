@@ -157,13 +157,16 @@ const handleAddRoot = () => {
   emit('add-root')
 }
 
-watch(() => route.query.search, async (newSearch) => {
-  if (newSearch) {
-    searchQuery.value = newSearch as string
-    await nextTick()
-    handleFilterChange()
+watch(
+  () => route.query.search,
+  async newSearch => {
+    if (newSearch) {
+      searchQuery.value = newSearch as string
+      await nextTick()
+      handleFilterChange()
+    }
   }
-})
+)
 
 onMounted(async () => {
   if (route.query.search) {
@@ -177,5 +180,4 @@ onMounted(async () => {
     handleFilterChange()
   }
 })
-
 </script>
