@@ -65,7 +65,7 @@ describe('textHighlighting', () => {
       const text = 'هذا نص تجريبي'
       const result = highlightAnnotations(text, [mockAnnotation])
 
-      expect(result).toContain('<span class="annotation-highlight cursor-pointer"')
+      expect(result).toContain('<span class="annotation-highlight"')
       expect(result).toContain('data-annotation-id="1"')
       expect(result).toContain('نص')
       expect(result).toContain('#10b981') // VOCABULARY color

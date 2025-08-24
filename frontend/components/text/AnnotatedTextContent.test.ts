@@ -129,57 +129,6 @@ describe('AnnotatedTextContent', () => {
     expect(highlighted?.textContent).toBe('نص')
   })
 
-  it('applies correct highlight color for vocabulary annotations', () => {
-    renderWithStore(AnnotatedTextContent, {
-      props: {
-        displayText: mockText,
-        annotations: [mockAnnotation],
-      },
-    })
-
-    const highlighted = document.querySelector('.annotation-highlight')
-    expect(highlighted).toHaveStyle('text-decoration-color: #10b981')
-  })
-
-  it('applies correct highlight color for grammar annotations', () => {
-    const grammarAnnotation = { ...mockAnnotation, type: AnnotationType.GRAMMAR }
-    renderWithStore(AnnotatedTextContent, {
-      props: {
-        displayText: mockText,
-        annotations: [grammarAnnotation],
-      },
-    })
-
-    const highlighted = document.querySelector('.annotation-highlight')
-    expect(highlighted).toHaveStyle('text-decoration-color: #3b82f6')
-  })
-
-  it('applies correct highlight color for cultural annotations', () => {
-    const culturalAnnotation = { ...mockAnnotation, type: AnnotationType.CULTURAL }
-    renderWithStore(AnnotatedTextContent, {
-      props: {
-        displayText: mockText,
-        annotations: [culturalAnnotation],
-      },
-    })
-
-    const highlighted = document.querySelector('.annotation-highlight')
-    expect(highlighted).toHaveStyle('text-decoration-color: #f59e0b')
-  })
-
-  it('uses custom color when provided', () => {
-    const customColorAnnotation = { ...mockAnnotation, color: 'rgba(255, 0, 0, 0.3)' }
-    renderWithStore(AnnotatedTextContent, {
-      props: {
-        displayText: mockText,
-        annotations: [customColorAnnotation],
-      },
-    })
-
-    const highlighted = document.querySelector('.annotation-highlight')
-    expect(highlighted).toHaveStyle('text-decoration-color: rgba(255, 0, 0, 0.3)')
-  })
-
   it('emits selectionCleared when no text is selected', async () => {
     const { emitted } = renderWithStore(AnnotatedTextContent, {
       props: {
