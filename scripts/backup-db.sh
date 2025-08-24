@@ -11,7 +11,7 @@ TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 BACKUP_FILE="${BACKUP_DIR}/${DB_NAME}_${TIMESTAMP}.sql"
 
 # Tables to include
-TABLES=("annotations" "texts" "text_versions" "arabic_roots" "words" "dictionary_links" "training_sessions" "training_session_results" "word_progress_tracking" "annotation_words")
+TABLES=("annotations" "texts" "text_versions" "arabic_roots" "words" "dictionary_links" "training_sessions" "training_session_results" "training_session_words" "word_progress_tracking" "annotation_words")
 
 # Create backup directory if it doesn't exist
 mkdir -p "${BACKUP_DIR}"
