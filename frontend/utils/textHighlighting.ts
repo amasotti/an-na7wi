@@ -67,8 +67,8 @@ export const highlightAnnotations = (text: string, annotations: Annotation[]): s
     // Escape HTML entities in content for title attribute
     const escapedContent = escapeHtml(content)
 
-    // Create highlighted span
-    const highlightedSpan = `<span class="annotation-highlight cursor-pointer" style="text-decoration: underline; text-decoration-color: ${highlightColor}; text-decoration-thickness: 2px; position: relative;" data-annotation-id="${id}" title="${escapedContent}">${anchorText}</span>`
+    // Create highlighted span with background highlighting
+    const highlightedSpan = `<span class="annotation-highlight" style="background-color: ${highlightColor}20;" data-annotation-id="${id}" title="${escapedContent}">${anchorText}</span>`
 
     result += highlightedSpan
     currentIndex = anchorIndex + anchorText.length

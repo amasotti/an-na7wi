@@ -85,3 +85,12 @@
 .empty-state-actions {
   @apply flex gap-2 justify-center;
 }
+
+/* Text Highlighting */
+.annotation-highlight {
+  @apply cursor-pointer relative px-0.5 rounded-md;
+}
+
+.annotation-highlight:hover {
+  opacity: 0.8;
+}

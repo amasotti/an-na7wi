@@ -277,12 +277,4 @@ const handleAnnotationSubmit = async (data: CreateAnnotationRequest) => {
   }
 }
 
-:deep(.annotation-highlight) {
-  border-radius: 2px;
-  transition: all 0.2s ease;
-}
-
-:deep(.annotation-highlight:hover) {
-  opacity: 0.8;
-}
 </style>
