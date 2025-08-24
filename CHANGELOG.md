@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.5.0] - 2025-08-24
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/fd74f75c43d604519668063badf07f6b1e6ecd44..8fa64883405efb461ac3a1edfac740533524e006)
+### 🚀 Features
+
+
+- Change to highlighting instead of underlying for annotation ([157a323](https://github.com/amasotti/an-na7wi/commit/157a323c90f41375af022e8876fd237d19a71c79))
+
+### 🧪 Testing
+
+
+- Fi tests after changes ([a50726c](https://github.com/amasotti/an-na7wi/commit/a50726ccb0ff5516281d773bb4d1f8655b618bc7))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Add missing table to database backup scripts ([1cad32f](https://github.com/amasotti/an-na7wi/commit/1cad32fb90088bbf92671eea03435a9246ca55fa))
+
+- Improve prefilling search filter is query param is passed - add onMounted hook ([2fd048e](https://github.com/amasotti/an-na7wi/commit/2fd048e0254e40a2d5b81881161d3b56b4413125))
+
+- Improve prefilling search filter is query param is passed - add onMounted hook ([641c131](https://github.com/amasotti/an-na7wi/commit/641c131d5e8e2a768f122789c098b77993992469))
+
+- Update backend dependencies ([08bff31](https://github.com/amasotti/an-na7wi/commit/08bff315861a1981a825aa2d7433e746698996d9))
+
+- Update FE dependencies ([8fa6488](https://github.com/amasotti/an-na7wi/commit/8fa64883405efb461ac3a1edfac740533524e006))
+
 ## [2.4.0] - 2025-08-17
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/1f546b6ac420a03bfff72c5bc73eee2ef5cdf709..fd74f75c43d604519668063badf07f6b1e6ecd44)
