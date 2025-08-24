@@ -157,15 +157,25 @@ const handleAddRoot = () => {
   emit('add-root')
 }
 
-// Watch for query parameters to update search query only
-watch(
-  () => route.query,
-  (query, oldQuery) => {
-    searchQuery.value = query.search ? (query.search as string) : ''
-
-    if (oldQuery !== undefined || oldQuery !== query.search) {
-      handleFilterChange()
-    }
+watch(() => route.query.search, async (newSearch) => {
+  if (newSearch) {
+    searchQuery.value = newSearch as string
+    await nextTick()
+    handleFilterChange()
   }
-)
+})
+
+onMounted(async () => {
+  if (route.query.search) {
+    searchQuery.value = route.query.search as string
+    await nextTick()
+    handleFilterChange()
+  }
+
+  if (searchQuery.value !== '') {
+    await nextTick()
+    handleFilterChange()
+  }
+})
+
 </script>
