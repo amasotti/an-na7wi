@@ -16,10 +16,10 @@ importers:
         version: 0.11.2(magicast@0.3.5)(pinia@3.0.3(typescript@5.9.2)(vue@3.5.19(typescript@5.9.2)))
       '@tailwindcss/forms':
         specifier: ^0.5.10
-        version: 0.5.10(tailwindcss@3.4.17)
+        version: 0.5.10(tailwindcss@4.1.12)
       '@tailwindcss/typography':
         specifier: ^0.5.16
-        version: 0.5.16(tailwindcss@3.4.17)
+        version: 0.5.16(tailwindcss@4.1.12)
       apexcharts:
         specifier: ^5.3.3
         version: 5.3.4
@@ -106,8 +106,8 @@ importers:
         specifier: ^8.5.6
         version: 8.5.6
       tailwindcss:
-        specifier: ^3.4.16
-        version: 3.4.17
+        specifier: ^4.1.12
+        version: 4.1.12
       typescript:
         specifier: ~5.9.2
         version: 5.9.2
@@ -4741,6 +4741,9 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
+  tailwindcss@4.1.12:
+    resolution: {integrity: sha512-DzFtxOi+7NsFf7DBtI3BJsynR+0Yp6etH+nRPTbpWnS2pZBaSksv/JGctNwSWzbFjp0vxSqknaUylseZqMDGrA==}
+
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
 
@@ -6774,18 +6777,18 @@ snapshots:
     dependencies:
       '@svgdotjs/svg.js': 3.2.4
 
-  '@tailwindcss/forms@0.5.10(tailwindcss@3.4.17)':
+  '@tailwindcss/forms@0.5.10(tailwindcss@4.1.12)':
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.4.17
+      tailwindcss: 4.1.12
 
-  '@tailwindcss/typography@0.5.16(tailwindcss@3.4.17)':
+  '@tailwindcss/typography@0.5.16(tailwindcss@4.1.12)':
     dependencies:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.17
+      tailwindcss: 4.1.12
 
   '@testing-library/dom@9.3.4':
     dependencies:
@@ -10449,6 +10452,8 @@ snapshots:
       sucrase: 3.35.0
     transitivePeerDependencies:
       - ts-node
+
+  tailwindcss@4.1.12: {}
 
   tar-stream@3.1.7:
     dependencies:
