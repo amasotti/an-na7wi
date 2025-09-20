@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.2.20"
-quarkus = "3.26.4"
+quarkus = "3.28.0"
 junit = "5.10.1"
 testcontainers = "1.21.3"
 jackson = "2.15.3"
