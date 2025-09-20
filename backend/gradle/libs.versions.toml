@@ -1,13 +1,13 @@
 [versions]
-kotlin = "2.2.10"
-quarkus = "3.25.4"
+kotlin = "2.2.20"
+quarkus = "3.26.4"
 junit = "5.10.1"
 testcontainers = "1.21.3"
 jackson = "2.15.3"
 flyway = "10.0.1"
 detekt = "1.23.8"
 kover = "0.9.1"
-anthropic = "2.5.1"
+anthropic = "2.7.0"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
