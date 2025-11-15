@@ -90,8 +90,8 @@ describe('Interlinear Types', () => {
     }
 
     expect(textDetail.sentences).toHaveLength(1)
-    expect(textDetail.sentences[0].alignments).toHaveLength(1)
-    expect(textDetail.sentences[0].alignments[0].arabicTokens).toBe('السلام')
+    expect(textDetail.sentences[0]?.alignments).toHaveLength(1)
+    expect(textDetail.sentences[0]?.alignments[0]?.arabicTokens).toBe('السلام')
   })
 
   it('should allow optional fields to be undefined', () => {

@@ -22,7 +22,7 @@ GET {{baseUrl}}/api/v1/interlinear-texts/{{textId}}
 Accept: application/json
 
 ### Update Interlinear Text
-PUT {{baseUrl}}/api/v1/interlinear-texts/11a95f5f-b50a-45d6-908e-4d26731d4238
+PUT {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### Delete Interlinear Text
-DELETE {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0
+DELETE {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275
 
 ### Create Text without Description
 POST {{baseUrl}}/api/v1/interlinear-texts
@@ -55,7 +55,7 @@ Accept: application/json
 
 ### Add Sentence to Text
 # @name addSentence
-POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences
 Content-Type: application/json
 
 {
@@ -67,7 +67,7 @@ Content-Type: application/json
 }
 
 ### Add Second Sentence
-POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences
 Content-Type: application/json
 
 {
@@ -112,7 +112,7 @@ Content-Type: application/json
 
 ### Add Word Alignment to Sentence
 # @name addAlignment
-POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences/9639042e-ba48-4102-b7eb-79203705eb9c/alignments
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences/9a35ab4d-e43b-4c60-9237-604f11a79dcc/alignments
 Content-Type: application/json
 
 {
@@ -124,7 +124,7 @@ Content-Type: application/json
 }
 
 ### Add Second Alignment
-POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences/9639042e-ba48-4102-b7eb-79203705eb9c/alignments
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences/9a35ab4d-e43b-4c60-9237-604f11a79dcc/alignments
 Content-Type: application/json
 
 {
