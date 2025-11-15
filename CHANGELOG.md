@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.5.1] - 2025-11-14
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/8fa64883405efb461ac3a1edfac740533524e006..)
+### ⚙️ Miscellaneous Tasks
+
+
+- Bump dependencies 20250920 (#26) ([4aea713](https://github.com/amasotti/an-na7wi/commit/4aea7134a164960e323f4cd2a6905d8e85287e56))
+
+- Update actions and qarkus to latest versions ([bb83573](https://github.com/amasotti/an-na7wi/commit/bb83573a085b88b56733cf6374f88e70cf3c2b92))
+
+- Update backend deps to latest version ([3ddfe2c](https://github.com/amasotti/an-na7wi/commit/3ddfe2cba13223bc41d38586746a7da84ca57353))
+
+- Update frontend deps ([d672086](https://github.com/amasotti/an-na7wi/commit/d6720861e599a5c613d20659537a3798fb003614))
+
+- Update patch version of quarkus ([fada1d2](https://github.com/amasotti/an-na7wi/commit/fada1d27d73c02f685f0b5223a80a16d4e16befb))
+
+- Update anthropic to 2.11.0 ([47c79f5](https://github.com/amasotti/an-na7wi/commit/47c79f504eb33feed638b4482ae31ef20384d8c8))
+
+- Update happy-dom ([03bc0b4](https://github.com/amasotti/an-na7wi/commit/03bc0b48327df569ad29df3d2a5f53d372b8fd59))
+
+- Update fronten deps ([b5311c0](https://github.com/amasotti/an-na7wi/commit/b5311c0bc7e807dc5046aa4dc52a3b4e5716d2f8))
+
 ## [2.5.0] - 2025-08-24
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/fd74f75c43d604519668063badf07f6b1e6ecd44..8fa64883405efb461ac3a1edfac740533524e006)
