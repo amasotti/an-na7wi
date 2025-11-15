@@ -93,3 +93,7 @@
 .results-text {
   @apply text-small text-muted;
 }
+
+.full-width {
+  @apply w-full;
+}
