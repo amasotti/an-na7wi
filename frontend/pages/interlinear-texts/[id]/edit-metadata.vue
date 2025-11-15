@@ -120,6 +120,7 @@ import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
+import type { Dialect } from '~/types'
 
 const route = useRoute()
 const interlinearStore = useInterlinearStore()
@@ -132,7 +133,7 @@ const error = computed(() => interlinearStore.error)
 const textMetadata = ref({
   title: '',
   description: '',
-  dialect: 'MSA' as any,
+  dialect: 'MSA' as Dialect,
 })
 
 const saving = ref(false)

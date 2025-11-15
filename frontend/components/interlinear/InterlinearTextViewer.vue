@@ -39,10 +39,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { InterlinearSentence, InterlinearTextDetail, WordAlignment } from '@/types'
-import InterlinearSentenceViewer from './InterlinearSentenceViewer.vue'
-import SentenceEditModal from './SentenceEditModal.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import { createAlignments } from '~/utils/tokenization'
+import InterlinearSentenceViewer from './InterlinearSentenceViewer.vue'
+import SentenceEditModal from './SentenceEditModal.vue'
 
 interface Props {
   text: InterlinearTextDetail
@@ -168,13 +168,18 @@ const handleUpdateAlignments = async (alignments: WordAlignment[]) => {
   try {
     for (const alignment of alignments) {
       if (alignment.id) {
-        await interlinearStore.updateAlignment(props.text.id, editingSentence.value.id, alignment.id, {
-          arabicTokens: alignment.arabicTokens,
-          transliterationTokens: alignment.transliterationTokens,
-          translationTokens: alignment.translationTokens,
-          tokenOrder: alignment.tokenOrder,
-          vocabularyWordId: alignment.vocabularyWordId,
-        })
+        await interlinearStore.updateAlignment(
+          props.text.id,
+          editingSentence.value.id,
+          alignment.id,
+          {
+            arabicTokens: alignment.arabicTokens,
+            transliterationTokens: alignment.transliterationTokens,
+            translationTokens: alignment.translationTokens,
+            tokenOrder: alignment.tokenOrder,
+            vocabularyWordId: alignment.vocabularyWordId,
+          }
+        )
       }
     }
 
@@ -197,7 +202,11 @@ const handleSplit = async (alignmentIndex: number) => {
     const transliterationTokens = alignment.transliterationTokens.trim().split(/\s+/)
     const translationTokens = alignment.translationTokens.trim().split(/\s+/)
 
-    const maxLength = Math.max(arabicTokens.length, transliterationTokens.length, translationTokens.length)
+    const maxLength = Math.max(
+      arabicTokens.length,
+      transliterationTokens.length,
+      translationTokens.length
+    )
     if (maxLength <= 1) return
 
     // Delete original
@@ -221,7 +230,12 @@ const handleSplit = async (alignmentIndex: number) => {
 }
 
 const handleMerge = async (alignmentIndices: number[]) => {
-  if (!editingSentence.value?.id || !editingSentence.value.alignments || alignmentIndices.length < 2) return
+  if (
+    !editingSentence.value?.id ||
+    !editingSentence.value.alignments ||
+    alignmentIndices.length < 2
+  )
+    return
 
   try {
     const alignmentsToMerge = alignmentIndices
@@ -232,16 +246,29 @@ const handleMerge = async (alignmentIndices: number[]) => {
 
     // Merge tokens
     const mergedAlignment = {
-      arabicTokens: alignmentsToMerge.map(a => a.arabicTokens).filter(t => t).join(' '),
-      transliterationTokens: alignmentsToMerge.map(a => a.transliterationTokens).filter(t => t).join(' '),
-      translationTokens: alignmentsToMerge.map(a => a.translationTokens).filter(t => t).join(' '),
+      arabicTokens: alignmentsToMerge
+        .map(a => a.arabicTokens)
+        .filter(t => t)
+        .join(' '),
+      transliterationTokens: alignmentsToMerge
+        .map(a => a.transliterationTokens)
+        .filter(t => t)
+        .join(' '),
+      translationTokens: alignmentsToMerge
+        .map(a => a.translationTokens)
+        .filter(t => t)
+        .join(' '),
       tokenOrder: alignmentsToMerge[0]!.tokenOrder,
     }
 
     // Delete all selected
     for (const alignment of alignmentsToMerge) {
       if (alignment) {
-        await interlinearStore.deleteAlignment(props.text.id, editingSentence.value.id, alignment.id)
+        await interlinearStore.deleteAlignment(
+          props.text.id,
+          editingSentence.value.id,
+          alignment.id
+        )
       }
     }
 

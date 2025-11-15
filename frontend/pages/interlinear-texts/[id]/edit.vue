@@ -170,7 +170,7 @@ import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
 import WordAlignmentEditor from '~/components/interlinear/WordAlignmentEditor.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import type { InterlinearSentence, WordAlignment } from '~/types'
+import type { Dialect, InterlinearSentence, WordAlignment } from '~/types'
 import { createAlignments } from '~/utils/tokenization'
 
 const route = useRoute()
@@ -184,7 +184,7 @@ const error = computed(() => interlinearStore.error)
 const textMetadata = ref({
   title: '',
   description: '',
-  dialect: null as any,
+  dialect: 'TUNISIAN' as Dialect,
 })
 
 const sentences = ref<Array<Partial<InterlinearSentence> & { tempId?: string }>>([])
@@ -222,7 +222,8 @@ const tokenizeSentence = async (index: number) => {
   if (!sentence) return
 
   if (!sentence.arabicText || !sentence.transliteration || !sentence.translation) {
-    saveError.value = 'All three fields (Arabic, Transliteration, Translation) are required for tokenization'
+    saveError.value =
+      'All three fields (Arabic, Transliteration, Translation) are required for tokenization'
     return
   }
 
@@ -392,9 +393,18 @@ const mergeAlignments = async (sentenceIndex: number, alignmentIndices: number[]
 
     // Combine the tokens from all selected alignments
     const mergedAlignment = {
-      arabicTokens: alignmentsToMerge.map(a => a.arabicTokens).filter(t => t).join(' '),
-      transliterationTokens: alignmentsToMerge.map(a => a.transliterationTokens).filter(t => t).join(' '),
-      translationTokens: alignmentsToMerge.map(a => a.translationTokens).filter(t => t).join(' '),
+      arabicTokens: alignmentsToMerge
+        .map(a => a.arabicTokens)
+        .filter(t => t)
+        .join(' '),
+      transliterationTokens: alignmentsToMerge
+        .map(a => a.transliterationTokens)
+        .filter(t => t)
+        .join(' '),
+      translationTokens: alignmentsToMerge
+        .map(a => a.translationTokens)
+        .filter(t => t)
+        .join(' '),
       tokenOrder: alignmentsToMerge[0]!.tokenOrder, // Use first alignment's order
     }
 

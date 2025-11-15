@@ -378,9 +378,14 @@ const saveEditedAlignment = () => {
       ...editingAlignment.value,
       id: originalAlignment.id,
       arabicTokens: editingAlignment.value.arabicTokens || originalAlignment.arabicTokens,
-      transliterationTokens: editingAlignment.value.transliterationTokens || originalAlignment.transliterationTokens,
-      translationTokens: editingAlignment.value.translationTokens || originalAlignment.translationTokens,
-      tokenOrder: editingAlignment.value.tokenOrder !== undefined ? editingAlignment.value.tokenOrder : originalAlignment.tokenOrder,
+      transliterationTokens:
+        editingAlignment.value.transliterationTokens || originalAlignment.transliterationTokens,
+      translationTokens:
+        editingAlignment.value.translationTokens || originalAlignment.translationTokens,
+      tokenOrder:
+        editingAlignment.value.tokenOrder !== undefined
+          ? editingAlignment.value.tokenOrder
+          : originalAlignment.tokenOrder,
     }
     emit('update', updatedAlignments)
   }
