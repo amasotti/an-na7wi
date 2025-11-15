@@ -1,0 +1,162 @@
+### Variables
+@baseUrl = http://localhost:8080
+@textId = {{createText.response.body.id}}
+
+### Create Interlinear Text
+# @name createText
+POST {{baseUrl}}/api/v1/interlinear-texts
+Content-Type: application/json
+
+{
+  "title": "My First Interlinear Text",
+  "description": "A sample Arabic text with interlinear glossing",
+  "dialect": "TUNISIAN"
+}
+
+### Get All Interlinear Texts (paginated)
+GET {{baseUrl}}/api/v1/interlinear-texts?page=1&size=10&sort=title
+Accept: application/json
+
+### Get Interlinear Text by ID
+GET {{baseUrl}}/api/v1/interlinear-texts/{{textId}}
+Accept: application/json
+
+### Update Interlinear Text
+PUT {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275
+Content-Type: application/json
+
+{
+  "title": "Updated Title",
+  "description": "Updated description",
+  "dialect": "EGYPTIAN"
+}
+
+### Delete Interlinear Text
+DELETE {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275
+
+### Create Text without Description
+POST {{baseUrl}}/api/v1/interlinear-texts
+Content-Type: application/json
+
+{
+  "title": "Minimal Text",
+  "dialect": "TUNISIAN"
+}
+
+### Get All Texts - Page 2
+GET {{baseUrl}}/api/v1/interlinear-texts?page=2&size=5
+Accept: application/json
+
+###
+### Sentence Operations
+###
+
+@sentenceId = {{addSentence.response.body.id}}
+
+### Add Sentence to Text
+# @name addSentence
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences
+Content-Type: application/json
+
+{
+  "arabicText": "السلام عليكم",
+  "transliteration": "as-salamu alaykum",
+  "translation": "Peace be upon you",
+  "annotations": "A common Arabic greeting",
+  "sentenceOrder": 0
+}
+
+### Add Second Sentence
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences
+Content-Type: application/json
+
+{
+  "arabicText": "كيف حالك؟",
+  "transliteration": "kayfa haluk?",
+  "translation": "How are you?",
+  "annotations": null,
+  "sentenceOrder": 1
+}
+
+### Update Sentence
+PUT {{baseUrl}}/api/v1/interlinear-texts/57140a7e-bbb6-4083-9f5b-97e413748631/sentences/e910436e-3dc0-48d0-b8e5-6f43b9aa0abf
+Content-Type: application/json
+
+{
+  "arabicText": "السلام عليكم ورحمة الله",
+  "transliteration": "as-salamu alaykum wa rahmat Allah",
+  "translation": "Peace be upon you and God's mercy",
+  "annotations": "Extended greeting with blessing",
+  "sentenceOrder": 0
+}
+
+### Delete Sentence
+DELETE {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}
+
+### Reorder Sentences
+PUT {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/reorder
+Content-Type: application/json
+
+{
+  "sentenceIds": [
+    "{{sentenceId}}",
+    "another-sentence-id-here"
+  ]
+}
+
+###
+### Word Alignment Operations
+###
+
+@alignmentId = {{addAlignment.response.body.id}}
+
+### Add Word Alignment to Sentence
+# @name addAlignment
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences/9a35ab4d-e43b-4c60-9237-604f11a79dcc/alignments
+Content-Type: application/json
+
+{
+  "arabicTokens": "السلام",
+  "transliterationTokens": "as-salamu",
+  "translationTokens": "peace",
+  "tokenOrder": 0,
+  "vocabularyWordId": null
+}
+
+### Add Second Alignment
+POST {{baseUrl}}/api/v1/interlinear-texts/536d320a-2a1c-4967-85ac-0f88fdef1275/sentences/9a35ab4d-e43b-4c60-9237-604f11a79dcc/alignments
+Content-Type: application/json
+
+{
+  "arabicTokens": "عليكم",
+  "transliterationTokens": "alaykum",
+  "translationTokens": "upon you",
+  "tokenOrder": 1,
+  "vocabularyWordId": null
+}
+
+### Update Word Alignment
+PUT {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}/alignments/{{alignmentId}}
+Content-Type: application/json
+
+{
+  "arabicTokens": "السلام عليكم",
+  "transliterationTokens": "as-salamu alaykum",
+  "translationTokens": "peace be upon you",
+  "tokenOrder": 0,
+  "vocabularyWordId": null
+}
+
+### Delete Word Alignment
+DELETE {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}/alignments/{{alignmentId}}
+
+### Reorder Alignments
+PUT {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}/alignments/reorder
+Content-Type: application/json
+
+{
+  "alignmentIds": [
+    "{{alignmentId}}",
+    "another-alignment-id-here"
+  ]
+}

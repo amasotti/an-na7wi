@@ -18,14 +18,21 @@
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-2">
-          <NavLink
-            v-for="item in navItems"
-            :key="item.name"
-            :to="item.to"
-            :icon="item.icon"
-          >
-            {{ item.label }}
-          </NavLink>
+          <template v-for="item in navItems" :key="item.name">
+            <NavDropdown
+              v-if="item.children"
+              :label="item.label"
+              :icon="item.icon"
+              :children="item.children"
+            />
+            <NavLink
+              v-else
+              :to="item.to"
+              :icon="item.icon"
+            >
+              {{ item.label }}
+            </NavLink>
+          </template>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -69,16 +76,25 @@
       >
         <div v-if="mobileMenuOpen" class="md:hidden py-3 border-t border-gray-200 bg-gray-50">
           <div class="space-y-1 max-h-80 overflow-y-auto">
-            <NavLink
-              v-for="item in navItems"
-              :key="item.name"
-              :to="item.to"
-              :icon="item.icon"
-              mobile
-              @click="closeMobileMenu"
-            >
-              {{ item.label }}
-            </NavLink>
+            <template v-for="item in navItems" :key="item.name">
+              <NavDropdown
+                v-if="item.children"
+                :label="item.label"
+                :icon="item.icon"
+                :children="item.children"
+                mobile
+                @child-click="closeMobileMenu"
+              />
+              <NavLink
+                v-else
+                :to="item.to"
+                :icon="item.icon"
+                mobile
+                @click="closeMobileMenu"
+              >
+                {{ item.label }}
+              </NavLink>
+            </template>
           </div>
         </div>
       </Transition>
@@ -89,11 +105,20 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import BaseIcon from '../common/BaseIcon.vue'
+import NavDropdown from './NavDropdown.vue'
 import NavLink from './NavLink.vue'
+
+interface NavItem {
+  name: string
+  label: string
+  to?: string
+  icon?: string
+  children?: Array<{ name: string; label: string; to: string }>
+}
 
 const mobileMenuOpen = ref(false)
 
-const navItems = [
+const navItems: NavItem[] = [
   {
     name: 'home',
     label: 'Study',
@@ -101,10 +126,21 @@ const navItems = [
     icon: 'HomeIcon',
   },
   {
-    name: 'texts',
+    name: 'library',
     label: 'Library',
-    to: '/texts',
     icon: 'DocumentTextIcon',
+    children: [
+      {
+        name: 'texts',
+        label: 'Texts',
+        to: '/texts',
+      },
+      {
+        name: 'interlinear-texts',
+        label: 'Interlinear Texts',
+        to: '/interlinear-texts',
+      },
+    ],
   },
   {
     name: 'vocabulary',

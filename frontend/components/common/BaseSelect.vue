@@ -51,7 +51,7 @@ const emit = defineEmits<{
 }>()
 
 const selectClasses = computed(() => {
-  const base = 'form-input appearance-none pr-10 cursor-pointer'
+  const base = 'form-input-na7wi appearance-none pr-10 cursor-pointer'
 
   const sizes = {
     sm: 'px-3 py-2 text-sm',

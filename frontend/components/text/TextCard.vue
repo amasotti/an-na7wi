@@ -4,16 +4,8 @@
   >
     <!-- Actions Menu - Top Right Corner -->
     <div class="absolute top-3 right-3 z-10">
-      <button
-        @click="toggleDropdown"
-        :class="actionButtonClasses"
-        aria-label="Text actions menu"
-      >
-        <BaseIcon size="sm">
-          <path fill="currentColor" d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-        </BaseIcon>
-      </button>
-      
+      <HamburgerCardMenu @click="toggleDropdown"/>
+
       <Transition
         enter-active-class="transition-all duration-200 ease-out"
         enter-from-class="opacity-0 scale-95 -translate-y-2"
@@ -56,7 +48,7 @@
         <BaseBadge :variant="difficultyColor" size="sm">
           {{ text.difficulty }}
         </BaseBadge>
-        <BaseBadge variant="neutral" size="sm">
+        <BaseBadge :variant="dialectColor" size="sm">
           {{ dialectLabel }}
         </BaseBadge>
       </div>
@@ -145,6 +137,9 @@ import BaseIcon from '@/components/common/BaseIcon.vue'
 import { cardClasses, combineClasses, layoutClasses, textClasses } from '@/styles/component-classes'
 import type { BadgeVariant, Text } from '@/types'
 import { Dialect, Difficulty } from '@/types'
+import HamburgerCardMenu from '~/components/common/HamburgerCardMenu.vue'
+import { dialectToLabel } from '~/utils/arabicDialects'
+import { formatDate } from '~/utils/dateUtils'
 import ActionMenuItem from './ActionMenuItem.vue'
 
 interface Props {
@@ -203,27 +198,11 @@ const transliterationClasses = computed(() => 'text-gray-600 italic text-sm line
 const tagsContainerClasses = computed(() => `${layoutClasses.flex.wrap} gap-1`)
 
 // Other computed properties
-const difficultyColor = computed(() => {
-  const colors = {
-    [Difficulty.BEGINNER]: 'success',
-    [Difficulty.INTERMEDIATE]: 'warning',
-    [Difficulty.ADVANCED]: 'error',
-  }
-  return colors[props.text.difficulty] as BadgeVariant
-})
+const difficultyColor = computed(() => difficultyToColor[props.text.difficulty])
 
-const dialectLabel = computed(() => {
-  const labels = {
-    [Dialect.TUNISIAN]: 'Tunisian',
-    [Dialect.MOROCCAN]: 'Moroccan',
-    [Dialect.EGYPTIAN]: 'Egyptian',
-    [Dialect.LEVANTINE]: 'Levantine',
-    [Dialect.GULF]: 'Gulf',
-    [Dialect.IRAQI]: 'Iraqi',
-    [Dialect.MSA]: 'MSA',
-  }
-  return labels[props.text.dialect]
-})
+const dialectColor = computed(() => dialectToColor[props.text.dialect])
+
+const dialectLabel = computed(() => dialectToLabel[props.text.dialect])
 
 // Arabic content handling for better readability
 const maxWordsInPreview = computed(() => (props.viewMode === 'grid' ? 15 : 25))
@@ -247,13 +226,7 @@ const remainingWordsCount = computed(() => {
   return Math.max(0, arabicWords.value.length - maxWordsInPreview.value)
 })
 
-const formattedDate = computed(() => {
-  return new Date(props.text.updatedAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-})
+const formattedDate = computed(() => formatDate(props.text.createdAt))
 
 // Methods
 const toggleDropdown = () => {

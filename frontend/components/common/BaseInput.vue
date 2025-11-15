@@ -61,6 +61,7 @@ import BaseIcon from './BaseIcon.vue'
 
 interface Props {
   modelValue?: string | number
+  id?: string
   type?: 'text' | 'email' | 'password' | 'number' | 'search' | 'url' | 'tel'
   label?: string
   placeholder?: string
@@ -84,10 +85,10 @@ const emit = defineEmits<{
   focus: [event: FocusEvent]
 }>()
 
-const inputId = computed(() => `input-${Math.random().toString(36).substring(2, 9)}`)
+const inputId = computed(() => props.id || `input-${Math.random().toString(36).substring(2, 9)}`)
 
 const inputClasses = computed(() => {
-  const base = 'form-input'
+  const base = 'form-input-na7wi'
   const withIcon = props.iconLeft ? 'pl-10' : ''
   const withRightIcon = props.iconRight || props.clearable ? 'pr-10' : ''
   const error = props.error ? 'border-red-300 focus:border-red-500 focus:ring-red-100' : ''

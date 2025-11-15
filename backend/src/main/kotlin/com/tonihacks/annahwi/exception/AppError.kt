@@ -14,11 +14,14 @@ sealed class AppError(
      */
     sealed class NotFound(message: String) : AppError("RESOURCE_NOT_FOUND", message) {
         data class Text(val id: String) : NotFound("Text with ID '$id' not found")
-        data class TextVersion(val textId: String, val versionNumber: Int) : 
+        data class TextVersion(val textId: String, val versionNumber: Int) :
             NotFound("Version $versionNumber not found for text '$textId'")
         data class Word(val id: String) : NotFound("Word with ID '$id' not found")
         data class Annotation(val id: String) : NotFound("Annotation with ID '$id' not found")
         data class Root(val id: String) : NotFound("Root with ID '$id' not found")
+        data class InterlinearText(val id: String) : NotFound("Interlinear text with ID '$id' not found")
+        data class InterlinearSentence(val id: String) : NotFound("Interlinear sentence with ID '$id' not found")
+        data class WordAlignment(val id: String) : NotFound("Word alignment with ID '$id' not found")
     }
     
     /**

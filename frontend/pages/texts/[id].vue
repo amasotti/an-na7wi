@@ -205,7 +205,9 @@ import type { CreateAnnotationRequest } from '~/composables/annotationService'
 import { useTextStore } from '~/stores/textStore'
 import { useWordStore } from '~/stores/wordStore'
 import type { Annotation, BadgeVariant, Word } from '~/types'
-import { Dialect, Difficulty } from '~/types'
+import { type Dialect, Difficulty } from '~/types'
+import { dialectToLabel } from '~/utils/arabicDialects'
+import { formatDate } from '~/utils/dateUtils'
 
 const route = useRoute()
 const textStore = useTextStore()
@@ -255,25 +257,12 @@ const difficultyColor = computed(() => {
 
 const dialectLabel = computed(() => {
   if (!currentText.value) return ''
-  const labels = {
-    [Dialect.TUNISIAN]: 'Tunisian',
-    [Dialect.MOROCCAN]: 'Moroccan',
-    [Dialect.EGYPTIAN]: 'Egyptian',
-    [Dialect.LEVANTINE]: 'Levantine',
-    [Dialect.GULF]: 'Gulf',
-    [Dialect.IRAQI]: 'Iraqi',
-    [Dialect.MSA]: 'MSA',
-  }
-  return labels[currentText.value.dialect]
+  return dialectToLabel[currentText.value.dialect]
 })
 
 const formattedDate = computed(() => {
   if (!currentText.value) return ''
-  return new Date(currentText.value.updatedAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  return formatDate(currentText.value.updatedAt)
 })
 
 // Word for form - pre-fills with selected text if available and Arabic

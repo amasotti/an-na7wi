@@ -122,3 +122,47 @@ export interface WordSearchResult {
   transliteration?: string
   translation?: string
 }
+
+// Interlinear text entities
+export interface InterlinearText {
+  id: string
+  title: string
+  description?: string
+  dialect: Dialect
+  createdAt: string
+  updatedAt: string
+  sentenceCount: number
+}
+
+export interface WordAlignment {
+  id: string
+  arabicTokens: string
+  transliterationTokens: string
+  translationTokens: string
+  tokenOrder: number
+  vocabularyWordId?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface InterlinearSentence {
+  id: string
+  arabicText: string
+  transliteration: string
+  translation: string
+  annotations?: string
+  sentenceOrder: number
+  createdAt: string
+  updatedAt: string
+  alignments: WordAlignment[]
+}
+
+export interface InterlinearTextDetail {
+  id: string
+  title: string
+  description?: string
+  dialect: Dialect
+  createdAt: string
+  updatedAt: string
+  sentences: InterlinearSentence[]
+}
