@@ -4,7 +4,7 @@
     <InterlinearTextHeader
       title="Interlinear Texts"
       subtitle="Create and explore Arabic texts with word-by-word translations"
-      @show-create-modal="navigateTo('/interlinear-texts/create')"
+      @show-create-modal="navigateTo('/interlinear-texts/new')"
     />
 
     <!-- Results Header -->
@@ -40,7 +40,7 @@
       <button
         type="button"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        @click="navigateTo('/interlinear-texts/create')"
+        @click="navigateTo('/interlinear-texts/new')"
       >
         Create Interlinear Text
       </button>

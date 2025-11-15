@@ -36,8 +36,8 @@
           </div>
 
           <!-- Transliteration -->
-          <div class="word-alignment-row transliteration">
-            <div class="word-alignment-label">Transliteration</div>
+          <div class="word-alignment-row translation">
+<!--            <div class="word-alignment-label">Transliteration</div>-->
             <div class="word-alignment-value transliteration-value">
               {{ alignment.transliterationTokens }}
             </div>
@@ -45,7 +45,7 @@
 
           <!-- Translation -->
           <div class="word-alignment-row translation">
-            <div class="word-alignment-label">Translation</div>
+<!--            <div class="word-alignment-label">Translation</div>-->
             <div class="word-alignment-value translation-value">
               {{ alignment.translationTokens }}
             </div>
