@@ -90,8 +90,10 @@
             :sentence="sentence"
             :sentence-id="sentence.tempId || sentence.id || `temp-${index}`"
             :sentence-order="index + 1"
+            :tokenizing="tokenizingIndex === index"
             @update="updateSentence(index, $event)"
             @delete="deleteSentence(index)"
+            @tokenize="tokenizeSentence(index)"
           />
         </div>
 
@@ -154,6 +156,7 @@ import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import type { InterlinearSentence } from '~/types'
+import { createAlignments } from '~/utils/tokenization'
 
 const route = useRoute()
 const interlinearStore = useInterlinearStore()
@@ -172,6 +175,7 @@ const textMetadata = ref({
 const sentences = ref<Array<Partial<InterlinearSentence> & { tempId?: string }>>([])
 const saving = ref(false)
 const saveError = ref<string | null>(null)
+const tokenizingIndex = ref<number | null>(null)
 
 // Methods
 const addNewSentence = () => {
@@ -198,6 +202,69 @@ const deleteSentence = (index: number) => {
   }
 }
 
+const tokenizeSentence = async (index: number) => {
+  const sentence = sentences.value[index]
+  if (!sentence) return
+
+  if (!sentence.arabicText || !sentence.transliteration || !sentence.translation) {
+    saveError.value = 'All three fields (Arabic, Transliteration, Translation) are required for tokenization'
+    return
+  }
+
+  tokenizingIndex.value = index
+  const textId = route.params.id as string
+  let sentenceId = sentence.id
+
+  try {
+    if (!sentenceId) {
+      // Create the sentence first
+      const newSentence = await interlinearStore.addSentence(textId, {
+        arabicText: sentence.arabicText.trim(),
+        transliteration: sentence.transliteration.trim(),
+        translation: sentence.translation.trim(),
+        annotations: sentence.annotations?.trim() || undefined,
+        sentenceOrder: index,
+      })
+      sentenceId = newSentence.id
+      sentences.value[index] = { ...sentences.value[index], id: sentenceId }
+    }
+
+    // Create alignments
+    const alignments = createAlignments(
+      sentence.arabicText,
+      sentence.transliteration,
+      sentence.translation
+    )
+
+    // Delete existing alignments for this sentence
+    if (sentence.alignments) {
+      for (const alignment of sentence.alignments) {
+        await interlinearStore.deleteAlignment(textId, sentenceId!, alignment.id)
+      }
+    }
+
+    // Create new alignments and collect the results
+    const createdAlignments = []
+    for (const alignment of alignments) {
+      const created = await interlinearStore.addAlignment(textId, sentenceId!, alignment)
+      createdAlignments.push(created)
+    }
+
+    // Update local state with new alignments (no page reload!)
+    sentences.value[index] = {
+      ...sentences.value[index],
+      alignments: createdAlignments,
+    }
+
+    saveError.value = null
+  } catch (err) {
+    console.error('Failed to tokenize sentence:', err)
+    saveError.value = 'Failed to tokenize sentence. Please try again.'
+  } finally {
+    tokenizingIndex.value = null
+  }
+}
+
 const handleSave = async () => {
   saveError.value = null
 
@@ -210,6 +277,8 @@ const handleSave = async () => {
   // Validate sentences
   for (let i = 0; i < sentences.value.length; i++) {
     const sentence = sentences.value[i]
+    if (!sentence) continue
+
     if (
       !sentence.arabicText?.trim() ||
       !sentence.transliteration?.trim() ||
@@ -246,6 +315,8 @@ const handleSave = async () => {
     // Update or create sentences
     for (let i = 0; i < sentences.value.length; i++) {
       const sentence = sentences.value[i]
+      if (!sentence) continue
+
       const sentenceData = {
         arabicText: sentence.arabicText!.trim(),
         transliteration: sentence.transliteration!.trim(),
