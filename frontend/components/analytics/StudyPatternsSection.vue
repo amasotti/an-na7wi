@@ -25,7 +25,7 @@
 
       <BaseCard class="study-streak-card">
         <h3 class="card-title">Study Streak</h3>
-        <div class="streak-content">
+        <div class="text-center">
           <div class="streak-number">{{ studyPatterns.studyStreak }}</div>
           <p class="streak-label">{{ studyPatterns.studyStreak === 1 ? 'day' : 'days' }} in a row</p>
         </div>
@@ -112,9 +112,6 @@ const { loading, studyPatterns } = storeToRefs(analyticsStore)
   @apply text-green-600;
 }
 
-.streak-content {
-  @apply text-center;
-}
 
 .streak-number {
   @apply text-4xl font-bold text-green-600 mb-2;
