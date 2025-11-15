@@ -12,6 +12,7 @@
       :readonly="readonly"
       :rows="rows"
       :class="textareaClasses"
+      :dir="arabic ? 'rtl' : undefined"
       :value="modelValue"
       @input="handleInput"
       @blur="handleBlur"
@@ -20,13 +21,13 @@
     ></textarea>
 
     <div v-if="error || hint" class="text-sm">
-      <p v-if="error" class="text-red-600 flex items-center">
+      <p v-if="error" class="text-red-600 flex items-center" id="error">
         <BaseIcon size="sm" class="mr-1 flex-shrink-0">
           <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
         </BaseIcon>
         {{ error }}
       </p>
-      <p v-else-if="hint" class="text-gray-500 italic text-sm">{{ hint }}</p>
+      <p v-else-if="hint" class="text-gray-500 italic text-sm" id="hint">{{ hint }}</p>
     </div>
   </div>
 </template>
@@ -37,6 +38,7 @@ import BaseIcon from './BaseIcon.vue'
 
 interface Props {
   modelValue?: string
+  id?: string
   label?: string
   placeholder?: string
   hint?: string
@@ -61,7 +63,9 @@ const emit = defineEmits<{
   focus: [event: FocusEvent]
 }>()
 
-const textareaId = computed(() => `textarea-${Math.random().toString(36).substring(2, 9)}`)
+const textareaId = computed(
+  () => props.id || `textarea-${Math.random().toString(36).substring(2, 9)}`
+)
 
 const textareaClasses = computed(() => {
   const base = 'form-textarea-na7wi'

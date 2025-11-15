@@ -99,7 +99,6 @@
           <!-- Transliteration -->
           <div class="form-group">
             <div class="form-header">
-              <label for="transliteration" class="form-label">Transliteration</label>
               <BaseButton
                 v-if="form.arabicContent.trim()"
                 type="button"

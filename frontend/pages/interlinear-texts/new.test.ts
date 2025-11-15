@@ -1,6 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { Dialect } from '~/types'
+// @ts-expect-error
 import NewInterlinearTextPage from './new.vue'
 
 // Mock navigateTo
@@ -64,7 +65,7 @@ describe('New Interlinear Text Page', () => {
     const wrapper = createWrapper()
 
     expect(wrapper.find('#title').exists()).toBe(true)
-    expect(wrapper.find('#description').exists()).toBe(true)
+    expect(wrapper.find('textarea').exists()).toBe(true)
     expect(wrapper.find('#dialect').exists()).toBe(true)
     expect(wrapper.find('form').exists()).toBe(true)
   })
@@ -83,9 +84,9 @@ describe('New Interlinear Text Page', () => {
 
     // Should have 8 options (1 placeholder + 7 dialects)
     expect(options).toHaveLength(8)
-    expect(options[0].text()).toBe('Select a dialect')
-    expect(options[1].text()).toContain('Modern Standard Arabic')
-    expect(options[2].text()).toContain('Tunisian')
+    expect(options[0]!.text()).toBe('Select a dialect')
+    expect(options[1]!.text()).toContain('Modern Standard Arabic')
+    expect(options[2]!.text()).toContain('Tunisian')
   })
 
   it('validates required fields on submit', async () => {
@@ -119,10 +120,10 @@ describe('New Interlinear Text Page', () => {
   it('shows character count for description', async () => {
     const wrapper = createWrapper()
 
-    const descriptionTextarea = wrapper.find('#description')
+    const descriptionTextarea = wrapper.find('textarea')
     await descriptionTextarea.setValue('Test description')
 
-    expect(wrapper.find('.form-hint').text()).toContain('16/500')
+    expect(wrapper.find('#hint').text()).toContain('16/250')
   })
 
   it('creates text with valid data', async () => {
@@ -142,7 +143,7 @@ describe('New Interlinear Text Page', () => {
 
     // Fill form
     await wrapper.find('#title').setValue('Test Text')
-    await wrapper.find('#description').setValue('Test Description')
+    await wrapper.find('textarea').setValue('Test Description')
     await wrapper.find('#dialect').setValue(Dialect.TUNISIAN)
 
     // Submit
@@ -237,7 +238,7 @@ describe('New Interlinear Text Page', () => {
 
     // Fill form with extra whitespace
     await wrapper.find('#title').setValue('  Test Text  ')
-    await wrapper.find('#description').setValue('  Test Description  ')
+    await wrapper.find('textarea').setValue('  Test Description  ')
     await wrapper.find('#dialect').setValue(Dialect.EGYPTIAN)
 
     // Submit
@@ -259,7 +260,7 @@ describe('New Interlinear Text Page', () => {
 
     // Find cancel button (first button in form-actions)
     const buttons = wrapper.findAll('[data-testid="base-button"]')
-    const cancelButton = buttons[0]
+    const cancelButton = buttons[0]!
 
     // Verify cancel button exists and can be clicked
     expect(cancelButton.exists()).toBe(true)
@@ -284,7 +285,7 @@ describe('New Interlinear Text Page', () => {
 
     // Check that fields are disabled
     expect(wrapper.find('#title').attributes('disabled')).toBeDefined()
-    expect(wrapper.find('#description').attributes('disabled')).toBeDefined()
+    expect(wrapper.find('textarea').attributes('disabled')).toBeDefined()
     expect(wrapper.find('#dialect').attributes('disabled')).toBeDefined()
   })
 })

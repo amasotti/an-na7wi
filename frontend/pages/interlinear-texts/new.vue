@@ -228,10 +228,6 @@ const handleCancel = () => {
          transition-colors;
 }
 
-.form-hint {
-  @apply text-xs text-gray-500 dark:text-gray-400;
-}
-
 .form-error {
   @apply text-sm text-red-600 dark:text-red-400;
 }

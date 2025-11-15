@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+import {mount, type VueWrapper} from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { InterlinearSentence } from '~/types'
-import InterlinearSentenceEditor from './InterlinearSentenceEditor.vue'
+import {InterlinearSentenceEditor} from '#components'
 
 // Mock child components
 vi.mock('~/components/common/BaseButton.vue', () => ({
@@ -95,7 +95,7 @@ describe('InterlinearSentenceEditor', () => {
     await arabicInput.setValue('مرحبا')
 
     expect(wrapper.emitted('update')).toBeTruthy()
-    expect(wrapper.emitted('update')![0][0]).toMatchObject({
+    expect(wrapper.emitted('update')![0]![0]).toMatchObject({
       arabicText: 'مرحبا',
     })
   })
@@ -107,7 +107,7 @@ describe('InterlinearSentenceEditor', () => {
     await transliterationInput.setValue('marhaba')
 
     expect(wrapper.emitted('update')).toBeTruthy()
-    expect(wrapper.emitted('update')![0][0]).toMatchObject({
+    expect(wrapper.emitted('update')![0]![0]).toMatchObject({
       transliteration: 'marhaba',
     })
   })
@@ -119,7 +119,7 @@ describe('InterlinearSentenceEditor', () => {
     await translationInput.setValue('Hello')
 
     expect(wrapper.emitted('update')).toBeTruthy()
-    expect(wrapper.emitted('update')![0][0]).toMatchObject({
+    expect(wrapper.emitted('update')![0]![0]).toMatchObject({
       translation: 'Hello',
     })
   })
@@ -131,7 +131,7 @@ describe('InterlinearSentenceEditor', () => {
     await annotationsInput.setValue('Updated notes')
 
     expect(wrapper.emitted('update')).toBeTruthy()
-    expect(wrapper.emitted('update')![0][0]).toMatchObject({
+    expect(wrapper.emitted('update')![0]![0]).toMatchObject({
       annotations: 'Updated notes',
     })
   })
@@ -162,7 +162,7 @@ describe('InterlinearSentenceEditor', () => {
   })
 
   it('updates local state when prop changes', async () => {
-    const wrapper = createWrapper()
+    const wrapper: VueWrapper<typeof InterlinearSentenceEditor, any>  = createWrapper()
 
     // Change the sentence prop
     await wrapper.setProps({
@@ -171,7 +171,7 @@ describe('InterlinearSentenceEditor', () => {
         transliteration: 'marhaba bik',
         translation: 'Welcome',
         annotations: 'Welcoming phrase',
-      },
+      }
     })
 
     const arabicInput = wrapper.find('#arabic-test-sentence-1')
@@ -192,7 +192,7 @@ describe('InterlinearSentenceEditor', () => {
     await annotationsInput.setValue('')
 
     expect(wrapper.emitted('update')).toBeTruthy()
-    expect(wrapper.emitted('update')![0][0]).toMatchObject({
+    expect(wrapper.emitted('update')![0]![0]).toMatchObject({
       annotations: '',
     })
   })
@@ -204,7 +204,7 @@ describe('InterlinearSentenceEditor', () => {
     const translationInput = wrapper.find('#translation-test-sentence-1')
     await translationInput.setValue('New translation')
 
-    const updateEvent = wrapper.emitted('update')![0][0] as Partial<InterlinearSentence>
+    const updateEvent = wrapper.emitted('update')![0]![0] as Partial<InterlinearSentence>
 
     // All fields should be present in the update
     expect(updateEvent).toHaveProperty('arabicText')
