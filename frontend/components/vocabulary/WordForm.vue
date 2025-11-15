@@ -78,18 +78,15 @@
             Generate Examples
           </BaseButton>
         </div>
-        <div class="form-group">
-          <label for="example-field" class="form-label">Example Sentence</label>
-          <textarea 
-            id="example-field"
-            v-model="form.example" 
-            rows="3"
-            class="form-input-na7wi rtl resize-none"
-            placeholder="Enter an example sentence..."
-            aria-describedby="example-help"
-          ></textarea>
-          <div id="example-help" class="form-help">Provide a sentence that demonstrates how the word is used</div>
-        </div>
+        <BaseTextArea
+          id="example-field"
+          v-model="form.example"
+          label=""
+          :rows="3"
+          class="rtl resize-none"
+          placeholder="Enter an example sentence..."
+          aria-describedby="example-help"
+        />
         
         <!-- Generated Examples -->
         <div v-if="generatedExamples.length > 0" class="form-preview" role="region" aria-labelledby="generated-examples-title">
@@ -212,18 +209,15 @@
           </BaseIcon>
           Additional Notes
         </h3>
-        <div class="form-group">
-          <label for="notes-field" class="form-label">Notes</label>
-          <textarea
-            id="notes-field"
-            v-model="form.notes"
-            rows="4"
-            class="form-input-na7wi resize-none"
-            placeholder="Add any additional notes, context, or reminders..."
-            aria-describedby="notes-help"
-          ></textarea>
-          <div id="notes-help" class="form-help">Personal notes, memory aids, or additional context</div>
-        </div>
+        <BaseTextArea
+          id="notes-field"
+          v-model="form.notes"
+          label=""
+          :rows="4"
+          class="resize-none"
+          placeholder="Add any additional notes, context, or reminders..."
+          aria-describedby="notes-help"
+        />
       </section>
 
       <!-- Resources Section -->
@@ -267,6 +261,7 @@
 import { computed, ref, watch } from 'vue'
 import type { DictionaryLink, ExampleDTO, Word } from '@/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
+import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import { exampleService } from '~/composables/exampleService'
 import { rootService } from '~/composables/rootService'
 import { wordService } from '~/composables/wordService'

@@ -37,23 +37,15 @@
         </div>
 
         <!-- Description -->
-        <div class="form-field">
-          <label for="description" class="form-label">
-            Description
-          </label>
-          <textarea
-            id="description"
-            v-model="form.description"
-            rows="4"
-            maxlength="500"
-            class="form-textarea-2"
-            placeholder="Optional description or context for this text"
-            :disabled="loading"
-          ></textarea>
-          <p class="form-hint">
-            {{ form.description?.length || 0 }}/500 characters
-          </p>
-        </div>
+        <BaseTextArea
+          id="description"
+          v-model="form.description"
+          label="Description"
+          :rows="4"
+          placeholder="Optional description or context for this text"
+          :disabled="loading"
+          :hint="`${form.description?.length || 0}/250 characters`"
+        />
 
         <!-- Dialect -->
         <div class="form-field">
@@ -112,6 +104,7 @@
 import { ref } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import { Dialect } from '~/types'
 

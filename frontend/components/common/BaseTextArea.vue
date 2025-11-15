@@ -26,7 +26,7 @@
         </BaseIcon>
         {{ error }}
       </p>
-      <p v-else-if="hint" class="text-gray-500">{{ hint }}</p>
+      <p v-else-if="hint" class="text-gray-500 italic text-sm">{{ hint }}</p>
     </div>
   </div>
 </template>
@@ -52,6 +52,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   rows: 3,
   autoResize: false,
+  label: 'Content',
 })
 
 const emit = defineEmits<{
@@ -63,7 +64,7 @@ const emit = defineEmits<{
 const textareaId = computed(() => `textarea-${Math.random().toString(36).substring(2, 9)}`)
 
 const textareaClasses = computed(() => {
-  const base = 'form-textarea-2'
+  const base = 'form-textarea-na7wi'
   const error = props.error ? 'border-red-300 focus:border-red-500 focus:ring-red-100' : ''
   const resize = props.autoResize ? 'resize-none' : 'resize-y'
   const arabic = props.arabic ? 'arabic' : ''
