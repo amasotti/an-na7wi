@@ -107,7 +107,7 @@ const viewText = (textId: string) => {
 }
 
 const editText = (textId: string) => {
-  navigateTo(`/interlinear-texts/${textId}/edit`)
+  navigateTo(`/interlinear-texts/${textId}/edit-metadata`)
 }
 
 const deleteTextConfirm = (textId: string) => {
