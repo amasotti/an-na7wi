@@ -121,12 +121,12 @@ export const handlers = [
   }),
 
   http.post('/api/v1/interlinear-texts', async ({ request }) => {
-    const body = await request.json()
+    const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json({ ...mockInterlinearText, ...body, id: 'new-id' }, { status: 201 })
   }),
 
   http.put('/api/v1/interlinear-texts/:id', async ({ params, request }) => {
-    const body = await request.json()
+    const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json({ ...mockInterlinearText, ...body, id: params.id })
   }),
 
@@ -136,14 +136,17 @@ export const handlers = [
 
   // Interlinear Sentences API
   http.post('/api/v1/interlinear-texts/:textId/sentences', async ({ request }) => {
-    const body = await request.json()
+    const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json({ ...mockSentence, ...body, id: 'new-sentence-id' }, { status: 201 })
   }),
 
-  http.put('/api/v1/interlinear-texts/:textId/sentences/:sentenceId', async ({ params, request }) => {
-    const body = await request.json()
-    return HttpResponse.json({ ...mockSentence, ...body, id: params.sentenceId })
-  }),
+  http.put(
+    '/api/v1/interlinear-texts/:textId/sentences/:sentenceId',
+    async ({ params, request }) => {
+      const body = (await request.json()) as Record<string, unknown>
+      return HttpResponse.json({ ...mockSentence, ...body, id: params.sentenceId })
+    }
+  ),
 
   http.delete('/api/v1/interlinear-texts/:textId/sentences/:sentenceId', () => {
     return new HttpResponse(null, { status: 204 })
@@ -154,19 +157,31 @@ export const handlers = [
   }),
 
   // Word Alignments API
-  http.post('/api/v1/interlinear-texts/:textId/sentences/:sentenceId/alignments', async ({ request }) => {
-    const body = await request.json()
-    return HttpResponse.json({ ...mockAlignment, ...body, id: 'new-alignment-id' }, { status: 201 })
-  }),
+  http.post(
+    '/api/v1/interlinear-texts/:textId/sentences/:sentenceId/alignments',
+    async ({ request }) => {
+      const body = (await request.json()) as Record<string, unknown>
+      return HttpResponse.json(
+        { ...mockAlignment, ...body, id: 'new-alignment-id' },
+        { status: 201 }
+      )
+    }
+  ),
 
-  http.put('/api/v1/interlinear-texts/:textId/sentences/:sentenceId/alignments/:alignmentId', async ({ params, request }) => {
-    const body = await request.json()
-    return HttpResponse.json({ ...mockAlignment, ...body, id: params.alignmentId })
-  }),
+  http.put(
+    '/api/v1/interlinear-texts/:textId/sentences/:sentenceId/alignments/:alignmentId',
+    async ({ params, request }) => {
+      const body = (await request.json()) as Record<string, unknown>
+      return HttpResponse.json({ ...mockAlignment, ...body, id: params.alignmentId })
+    }
+  ),
 
-  http.delete('/api/v1/interlinear-texts/:textId/sentences/:sentenceId/alignments/:alignmentId', () => {
-    return new HttpResponse(null, { status: 204 })
-  }),
+  http.delete(
+    '/api/v1/interlinear-texts/:textId/sentences/:sentenceId/alignments/:alignmentId',
+    () => {
+      return new HttpResponse(null, { status: 204 })
+    }
+  ),
 
   http.put('/api/v1/interlinear-texts/:textId/sentences/:sentenceId/alignments/reorder', () => {
     return new HttpResponse(null, { status: 204 })
