@@ -2,10 +2,12 @@ package com.tonihacks.annahwi.controller.v1
 
 import com.tonihacks.annahwi.dto.request.InterlinearSentenceRequestDTO
 import com.tonihacks.annahwi.dto.request.InterlinearTextRequestDTO
+import com.tonihacks.annahwi.dto.request.WordAlignmentRequestDTO
 import com.tonihacks.annahwi.dto.response.InterlinearSentenceResponseDTO
 import com.tonihacks.annahwi.dto.response.InterlinearTextDetailDTO
 import com.tonihacks.annahwi.dto.response.InterlinearTextResponseDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
+import com.tonihacks.annahwi.dto.response.WordAlignmentResponseDTO
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.service.InterlinearTextService
@@ -167,8 +169,69 @@ class InterlinearTextController {
         interlinearTextService.reorderSentences(textId, request.sentenceIds)
         return Response.noContent().build()
     }
+
+    @POST
+    @Path("/{textId}/sentences/{sentenceId}/alignments")
+    @Operation(summary = "Add word alignment", description = "Adds a new word alignment to a sentence")
+    fun addAlignment(
+        @PathParam("textId") textId: UUID,
+        @PathParam("sentenceId") sentenceId: UUID,
+        alignmentDTO: WordAlignmentRequestDTO
+    ): Response {
+        logger.info("POST /api/v1/interlinear-texts/$textId/sentences/$sentenceId/alignments")
+        val alignment = alignmentDTO.toEntity()
+        val createdAlignment = interlinearTextService.addAlignment(textId, sentenceId, alignment, alignmentDTO.vocabularyWordId)
+        return Response.status(Response.Status.CREATED)
+            .entity(WordAlignmentResponseDTO.fromEntity(createdAlignment))
+            .build()
+    }
+
+    @PUT
+    @Path("/{textId}/sentences/{sentenceId}/alignments/{alignmentId}")
+    @Operation(summary = "Update word alignment", description = "Updates an existing word alignment")
+    fun updateAlignment(
+        @PathParam("textId") textId: UUID,
+        @PathParam("sentenceId") sentenceId: UUID,
+        @PathParam("alignmentId") alignmentId: UUID,
+        alignmentDTO: WordAlignmentRequestDTO
+    ): Response {
+        logger.info("PUT /api/v1/interlinear-texts/$textId/sentences/$sentenceId/alignments/$alignmentId")
+        val alignment = alignmentDTO.toEntity()
+        val updatedAlignment = interlinearTextService.updateAlignment(textId, sentenceId, alignmentId, alignment, alignmentDTO.vocabularyWordId)
+        return Response.ok(WordAlignmentResponseDTO.fromEntity(updatedAlignment)).build()
+    }
+
+    @DELETE
+    @Path("/{textId}/sentences/{sentenceId}/alignments/{alignmentId}")
+    @Operation(summary = "Delete word alignment", description = "Deletes a word alignment from a sentence")
+    fun deleteAlignment(
+        @PathParam("textId") textId: UUID,
+        @PathParam("sentenceId") sentenceId: UUID,
+        @PathParam("alignmentId") alignmentId: UUID
+    ): Response {
+        logger.info("DELETE /api/v1/interlinear-texts/$textId/sentences/$sentenceId/alignments/$alignmentId")
+        interlinearTextService.deleteAlignment(textId, sentenceId, alignmentId)
+        return Response.noContent().build()
+    }
+
+    @PUT
+    @Path("/{textId}/sentences/{sentenceId}/alignments/reorder")
+    @Operation(summary = "Reorder word alignments", description = "Updates the order of word alignments in a sentence")
+    fun reorderAlignments(
+        @PathParam("textId") textId: UUID,
+        @PathParam("sentenceId") sentenceId: UUID,
+        request: ReorderAlignmentsRequest
+    ): Response {
+        logger.info("PUT /api/v1/interlinear-texts/$textId/sentences/$sentenceId/alignments/reorder - ${request.alignmentIds.size} alignments")
+        interlinearTextService.reorderAlignments(textId, sentenceId, request.alignmentIds)
+        return Response.noContent().build()
+    }
 }
 
 data class ReorderSentencesRequest(
     val sentenceIds: List<UUID>
+)
+
+data class ReorderAlignmentsRequest(
+    val alignmentIds: List<UUID>
 )
