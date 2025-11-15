@@ -51,7 +51,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
     "autoprefixer": "^10.4.22",
-    "happy-dom": "^18.0.1",
+    "happy-dom": "^20.0.2",
     "jsdom": "^27.2.0",
     "msw": "^2.12.2",
     "playwright-core": "^1.56.1",
