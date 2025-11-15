@@ -9,7 +9,7 @@
     </div>
 
     <!-- Alignments Display -->
-    <div v-if="alignments.length > 0" class="alignments-container" dir="rtl">
+    <div class="alignments-container" dir="rtl">
       <div
         v-for="(alignment, index) in sortedAlignments"
         :key="alignment.id || `temp-${index}`"
@@ -42,11 +42,6 @@
       </div>
     </div>
 
-    <!-- Empty State -->
-    <div v-else class="empty-state">
-      <p class="empty-text">No alignments yet. Use "Auto-tokenize" to create initial alignments.</p>
-    </div>
-
     <!-- Actions for selected alignment(s) -->
     <div v-if="selectedAlignments.length > 0" class="alignment-actions">
       <div class="selection-info">
@@ -54,7 +49,7 @@
         <BaseButton
           type="button"
           variant="ghost"
-          size="xs"
+          size="sm"
           @click="clearSelection"
         >
           Clear

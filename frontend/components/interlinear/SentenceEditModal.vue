@@ -14,6 +14,7 @@
         :tokenizing="tokenizing"
         @update="handleUpdate"
         @tokenize="handleTokenize"
+        @delete="handleDeleteSentence"
       />
 
       <!-- Word Alignment Editor (if alignments exist and sentence is saved) -->
@@ -72,6 +73,7 @@ const emit = defineEmits<{
   updateAlignments: [alignments: WordAlignment[]]
   split: [alignmentIndex: number]
   merge: [alignmentIndices: number[]]
+  deleteSentence: []
 }>()
 
 const localSentence = ref<Partial<InterlinearSentence>>({})
@@ -106,6 +108,10 @@ const handleAlignmentsUpdate = (alignments: WordAlignment[]) => {
     alignments,
   }
   emit('updateAlignments', alignments)
+}
+
+const handleDeleteSentence = () => {
+  emit('deleteSentence')
 }
 
 const handleSplit = (alignmentIndex: number) => {
