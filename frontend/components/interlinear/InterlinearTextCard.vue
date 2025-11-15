@@ -1,17 +1,11 @@
 <template>
   <BaseCard class="group relative overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
+
     <!-- Actions Menu - Top Right Corner -->
     <div class="absolute top-3 right-3 z-10">
-      <button
-        @click="toggleDropdown"
-        class="p-2 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-100 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm opacity-0 group-hover:opacity-100"
-        aria-label="Text actions menu"
-      >
-        <BaseIcon size="sm">
-          <path fill="currentColor" d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-        </BaseIcon>
-      </button>
+      <HamburgerCardMenu @click="toggleDropdown"/>
 
+      <!-- Hamburger Menu options: TODO: move them to a separate component (see also TextCard)     -->
       <Transition
         enter-active-class="transition-all duration-200 ease-out"
         enter-from-class="opacity-0 scale-95 -translate-y-2"
@@ -46,10 +40,8 @@
       </h3>
 
       <!-- Dialect Badge -->
-      <div class="flex items-center gap-2 mb-4">
-        <BaseBadge variant="neutral" size="sm">
-          {{ dialectLabel }}
-        </BaseBadge>
+      <div class="mb-4">
+        <BaseBadge :variant="dialectColor" size="sm">{{ dialectLabel }}</BaseBadge>
       </div>
 
       <!-- Description Preview -->
@@ -58,16 +50,12 @@
           {{ text.description }}
         </p>
       </div>
-      <div v-else class="mb-4">
-        <p class="text-gray-400 dark:text-gray-500 text-sm italic">
-          No description
-        </p>
-      </div>
     </div>
 
     <!-- Footer - Always at bottom -->
     <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
       <div class="flex items-center justify-between text-xs">
+
         <!-- Sentence Count -->
         <span class="flex items-center text-gray-500 dark:text-gray-400">
           <BaseIcon size="xs" class="mr-1">
@@ -85,16 +73,7 @@
         </span>
 
         <!-- Open Link -->
-        <button
-          @click="viewText"
-          class="flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors text-xs"
-        >
-          <BaseIcon size="xs" class="mr-1">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </BaseIcon>
-          Open
-        </button>
+        <ViewFooterIcon @view="viewText"/>
       </div>
     </div>
   </BaseCard>
@@ -108,6 +87,10 @@ import BaseIcon from '@/components/common/BaseIcon.vue'
 import ActionMenuItem from '@/components/text/ActionMenuItem.vue'
 import type { InterlinearText } from '@/types'
 import { Dialect } from '@/types'
+import HamburgerCardMenu from '~/components/common/HamburgerCardMenu.vue'
+import ViewFooterIcon from '~/components/common/ViewFooterIcon.vue'
+import { dialectToLabel } from '~/utils/arabicDialects'
+import { formatDate } from '~/utils/dateUtils'
 
 interface Props {
   text: InterlinearText
@@ -123,26 +106,11 @@ const emit = defineEmits<{
 
 const dropdownOpen = ref(false)
 
-const dialectLabel = computed(() => {
-  const labels = {
-    [Dialect.TUNISIAN]: 'Tunisian',
-    [Dialect.MOROCCAN]: 'Moroccan',
-    [Dialect.EGYPTIAN]: 'Egyptian',
-    [Dialect.LEVANTINE]: 'Levantine',
-    [Dialect.GULF]: 'Gulf',
-    [Dialect.IRAQI]: 'Iraqi',
-    [Dialect.MSA]: 'MSA',
-  }
-  return labels[props.text.dialect]
-})
+const dialectLabel = computed(() => dialectToLabel[props.text.dialect])
 
-const formattedDate = computed(() => {
-  return new Date(props.text.updatedAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-})
+const dialectColor = computed(() => dialectToColor[props.text.dialect])
+
+const formattedDate = computed(() => formatDate(props.text.createdAt))
 
 // Methods
 const toggleDropdown = () => {
