@@ -10,7 +10,7 @@ DB_USER="annahwi_user"
 BACKUP_FILE=""
 
 # List of tables to truncate and disable triggers on
-TABLES=("annotations" "texts" "text_versions" "arabic_roots" "words" "dictionary_links" "training_sessions" "training_session_results" "training_session_words" "word_progress_tracking" "annotation_words")
+TABLES=("annotations" "texts" "text_versions" "arabic_roots" "words" "dictionary_links" "training_sessions" "training_session_results" "training_session_words" "word_progress_tracking" "annotation_words" "interlinear_texts" "interlinear_sentences" "word_alignments")
 
 usage() {
     echo "Usage: $0 [-f FILENAME] | [-l]"
