@@ -6,7 +6,7 @@ describe('dateUtils', () => {
     it('formats ISO date string correctly', () => {
       const dateString = '2024-01-15T10:30:00Z'
       const result = formatDate(dateString)
-      expect(result).toBe('15 Jan 2024');
+      expect(result).toBe('15 Jan 2024')
     })
 
     it('formats date with time correctly', () => {

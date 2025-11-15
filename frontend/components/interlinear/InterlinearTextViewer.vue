@@ -283,7 +283,6 @@ const handleMerge = async (alignmentIndices: number[]) => {
 }
 
 const handleDeleteSentence = async () => {
-
   if (!editingSentence.value?.id) return
 
   try {
@@ -296,7 +295,6 @@ const handleDeleteSentence = async () => {
     console.error('Failed to delete sentence:', error)
   }
 }
-
 </script>
 
 <style scoped>
