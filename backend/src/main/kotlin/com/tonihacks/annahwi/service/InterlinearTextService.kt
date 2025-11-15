@@ -1,8 +1,10 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.entity.InterlinearSentence
 import com.tonihacks.annahwi.entity.InterlinearText
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
+import com.tonihacks.annahwi.repository.InterlinearSentenceRepository
 import com.tonihacks.annahwi.repository.InterlinearTextRepository
 import com.tonihacks.annahwi.util.loggerFor
 import io.quarkus.panache.common.Page
@@ -18,6 +20,9 @@ class InterlinearTextService {
 
     @Inject
     private lateinit var interlinearTextRepository: InterlinearTextRepository
+
+    @Inject
+    private lateinit var interlinearSentenceRepository: InterlinearSentenceRepository
 
     private val logger = loggerFor(InterlinearTextService::class.java)
 
@@ -99,5 +104,82 @@ class InterlinearTextService {
     fun delete(id: UUID): Boolean {
         logger.info("Deleting interlinear text with ID: $id")
         return interlinearTextRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun addSentence(textId: UUID, sentence: InterlinearSentence): InterlinearSentence {
+        logger.info("Adding sentence to interlinear text with ID: $textId")
+
+        val text = findById(textId)
+        sentence.text = text
+        sentence.createdAt = LocalDateTime.now()
+        sentence.updatedAt = LocalDateTime.now()
+
+        interlinearSentenceRepository.persist(sentence)
+
+        // Initialize lazy collections
+        sentence.alignments.size
+
+        return sentence
+    }
+
+    @Transactional
+    fun updateSentence(textId: UUID, sentenceId: UUID, sentence: InterlinearSentence): InterlinearSentence {
+        logger.info("Updating sentence $sentenceId in text $textId")
+
+        val existingSentence = interlinearSentenceRepository.findById(sentenceId)
+            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+        if (existingSentence.text.id != textId) {
+            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+        }
+
+        existingSentence.arabicText = sentence.arabicText
+        existingSentence.transliteration = sentence.transliteration
+        existingSentence.translation = sentence.translation
+        existingSentence.annotations = sentence.annotations
+        existingSentence.sentenceOrder = sentence.sentenceOrder
+        existingSentence.updatedAt = LocalDateTime.now()
+
+        interlinearSentenceRepository.persist(existingSentence)
+
+        // Initialize lazy collections
+        existingSentence.alignments.size
+
+        return existingSentence
+    }
+
+    @Transactional
+    fun deleteSentence(textId: UUID, sentenceId: UUID): Boolean {
+        logger.info("Deleting sentence $sentenceId from text $textId")
+
+        val sentence = interlinearSentenceRepository.findById(sentenceId)
+            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+        if (sentence.text.id != textId) {
+            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+        }
+
+        return interlinearSentenceRepository.deleteById(sentenceId)
+    }
+
+    @Transactional
+    fun reorderSentences(textId: UUID, sentenceIds: List<UUID>) {
+        logger.info("Reordering ${sentenceIds.size} sentences in text $textId")
+
+        findById(textId) // Verify text exists
+
+        sentenceIds.forEachIndexed { index, sentenceId ->
+            val sentence = interlinearSentenceRepository.findById(sentenceId)
+                ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+            if (sentence.text.id != textId) {
+                throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+            }
+
+            sentence.sentenceOrder = index
+            sentence.updatedAt = LocalDateTime.now()
+            interlinearSentenceRepository.persist(sentence)
+        }
     }
 }

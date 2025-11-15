@@ -1,6 +1,8 @@
 package com.tonihacks.annahwi.controller.v1
 
+import com.tonihacks.annahwi.dto.request.InterlinearSentenceRequestDTO
 import com.tonihacks.annahwi.dto.request.InterlinearTextRequestDTO
+import com.tonihacks.annahwi.dto.response.InterlinearSentenceResponseDTO
 import com.tonihacks.annahwi.dto.response.InterlinearTextDetailDTO
 import com.tonihacks.annahwi.dto.response.InterlinearTextResponseDTO
 import com.tonihacks.annahwi.dto.response.PaginatedResponse
@@ -112,4 +114,61 @@ class InterlinearTextController {
         interlinearTextService.delete(id)
         return Response.noContent().build()
     }
+
+    @POST
+    @Path("/{textId}/sentences")
+    @Operation(summary = "Add sentence", description = "Adds a new sentence to an interlinear text")
+    fun addSentence(
+        @PathParam("textId") textId: UUID,
+        sentenceDTO: InterlinearSentenceRequestDTO
+    ): Response {
+        logger.info("POST /api/v1/interlinear-texts/$textId/sentences")
+        val sentence = sentenceDTO.toEntity()
+        val createdSentence = interlinearTextService.addSentence(textId, sentence)
+        return Response.status(Response.Status.CREATED)
+            .entity(InterlinearSentenceResponseDTO.fromEntity(createdSentence))
+            .build()
+    }
+
+    @PUT
+    @Path("/{textId}/sentences/{sentenceId}")
+    @Operation(summary = "Update sentence", description = "Updates an existing sentence")
+    fun updateSentence(
+        @PathParam("textId") textId: UUID,
+        @PathParam("sentenceId") sentenceId: UUID,
+        sentenceDTO: InterlinearSentenceRequestDTO
+    ): Response {
+        logger.info("PUT /api/v1/interlinear-texts/$textId/sentences/$sentenceId")
+        val sentence = sentenceDTO.toEntity()
+        val updatedSentence = interlinearTextService.updateSentence(textId, sentenceId, sentence)
+        return Response.ok(InterlinearSentenceResponseDTO.fromEntity(updatedSentence)).build()
+    }
+
+    @DELETE
+    @Path("/{textId}/sentences/{sentenceId}")
+    @Operation(summary = "Delete sentence", description = "Deletes a sentence from an interlinear text")
+    fun deleteSentence(
+        @PathParam("textId") textId: UUID,
+        @PathParam("sentenceId") sentenceId: UUID
+    ): Response {
+        logger.info("DELETE /api/v1/interlinear-texts/$textId/sentences/$sentenceId")
+        interlinearTextService.deleteSentence(textId, sentenceId)
+        return Response.noContent().build()
+    }
+
+    @PUT
+    @Path("/{textId}/sentences/reorder")
+    @Operation(summary = "Reorder sentences", description = "Updates the order of sentences in an interlinear text")
+    fun reorderSentences(
+        @PathParam("textId") textId: UUID,
+        request: ReorderSentencesRequest
+    ): Response {
+        logger.info("PUT /api/v1/interlinear-texts/$textId/sentences/reorder - ${request.sentenceIds.size} sentences")
+        interlinearTextService.reorderSentences(textId, request.sentenceIds)
+        return Response.noContent().build()
+    }
 }
+
+data class ReorderSentencesRequest(
+    val sentenceIds: List<UUID>
+)

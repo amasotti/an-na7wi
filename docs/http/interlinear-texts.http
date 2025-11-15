@@ -46,3 +46,60 @@ Content-Type: application/json
 ### Get All Texts - Page 2
 GET {{baseUrl}}/api/v1/interlinear-texts?page=2&size=5
 Accept: application/json
+
+###
+### Sentence Operations
+###
+
+@sentenceId = {{addSentence.response.body.id}}
+
+### Add Sentence to Text
+# @name addSentence
+POST {{baseUrl}}/api/v1/interlinear-texts/57140a7e-bbb6-4083-9f5b-97e413748631/sentences
+Content-Type: application/json
+
+{
+  "arabicText": "السلام عليكم",
+  "transliteration": "as-salamu alaykum",
+  "translation": "Peace be upon you",
+  "annotations": "A common Arabic greeting",
+  "sentenceOrder": 0
+}
+
+### Add Second Sentence
+POST {{baseUrl}}/api/v1/interlinear-texts/57140a7e-bbb6-4083-9f5b-97e413748631/sentences
+Content-Type: application/json
+
+{
+  "arabicText": "كيف حالك؟",
+  "transliteration": "kayfa haluk?",
+  "translation": "How are you?",
+  "annotations": null,
+  "sentenceOrder": 1
+}
+
+### Update Sentence
+PUT {{baseUrl}}/api/v1/interlinear-texts/57140a7e-bbb6-4083-9f5b-97e413748631/sentences/e910436e-3dc0-48d0-b8e5-6f43b9aa0abf
+Content-Type: application/json
+
+{
+  "arabicText": "السلام عليكم ورحمة الله",
+  "transliteration": "as-salamu alaykum wa rahmat Allah",
+  "translation": "Peace be upon you and God's mercy",
+  "annotations": "Extended greeting with blessing",
+  "sentenceOrder": 0
+}
+
+### Delete Sentence
+DELETE {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}
+
+### Reorder Sentences
+PUT {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/reorder
+Content-Type: application/json
+
+{
+  "sentenceIds": [
+    "{{sentenceId}}",
+    "another-sentence-id-here"
+  ]
+}
