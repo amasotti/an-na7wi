@@ -1,8 +1,7 @@
 <template>
   <BaseButton
-    variant="outline"
+    variant="danger"
     size="sm"
-    class="delete-button"
     @click="$emit('click')"
   >
     <BaseIcon size="sm" class="mr-2">
@@ -20,9 +19,3 @@ defineEmits<{
   click: []
 }>()
 </script>
-
-<style scoped>
-.delete-button {
-  @apply text-red-600 hover:text-red-700 border-red-300 hover:border-red-400 hover:bg-red-50 shadow-sm hover:shadow-md transform hover:scale-[1.02] transition-all duration-200;
-}
-</style>

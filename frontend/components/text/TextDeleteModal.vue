@@ -5,7 +5,7 @@
     size="sm"
     @close="handleClose"
   >
-    <div class="text-delete-content">
+    <div class="text-center">
       <div class="warning-icon">
         <BaseIcon size="lg" class="text-red-500">
           <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
@@ -81,10 +81,6 @@ const handleConfirm = () => {
 </script>
 
 <style scoped>
-.text-delete-content {
-  @apply text-center;
-}
-
 .warning-icon {
   @apply flex justify-center mb-4;
 }
