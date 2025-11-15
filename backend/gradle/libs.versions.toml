@@ -7,7 +7,7 @@ jackson = "2.15.3"
 flyway = "10.0.1"
 detekt = "1.23.8"
 kover = "0.9.3"
-anthropic = "2.7.0"
+anthropic = "2.10.0"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
@@ -34,7 +34,7 @@ restassured = { module = "io.rest-assured:rest-assured" }
 quarkus-junit5 = { module = "io.quarkus:quarkus-junit5" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
 testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
-mockk = { module = "io.mockk:mockk", version = "1.14.5" }
+mockk = { module = "io.mockk:mockk", version = "1.14.6" }
 
 # Anthropic
 anthropic-java = { module = "com.anthropic:anthropic-java", version.ref = "anthropic" }
