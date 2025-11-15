@@ -23,6 +23,17 @@
           </NuxtLink>
 
           <div class="flex items-center gap-2">
+            <BaseButton
+              type="button"
+              variant="secondary"
+              size="sm"
+              @click="addSentence"
+            >
+              <BaseIcon size="xs" class="mr-1.5">
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </BaseIcon>
+              Add Sentence
+            </BaseButton>
             <EditButton @click="editText" />
             <DeleteButton @click="deleteText" />
           </div>
@@ -56,6 +67,7 @@
       <!-- Main Content -->
       <section>
         <InterlinearTextViewer
+          ref="textViewer"
           :text="currentText"
           @edit-sentence="editSentence"
           @delete-sentence="deleteSentenceConfirm"
@@ -77,6 +89,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import BaseBadge from '~/components/common/BaseBadge.vue'
+import BaseButton from '~/components/common/BaseButton.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
@@ -93,6 +106,7 @@ const interlinearStore = useInterlinearStore()
 // Local state
 const showDeleteModal = ref(false)
 const deleteLoading = ref(false)
+const textViewer = ref<InstanceType<typeof InterlinearTextViewer> | null>(null)
 
 // Computed properties from store
 const currentText = computed(() => interlinearStore.currentText)
@@ -124,8 +138,14 @@ const formattedDate = computed(() => {
 })
 
 // Methods
+const addSentence = () => {
+  if (textViewer.value) {
+    textViewer.value.openAddSentenceModal()
+  }
+}
+
 const editText = () => {
-  navigateTo(`/interlinear-texts/${route.params.id}/edit`)
+  navigateTo(`/interlinear-texts/${route.params.id}/edit-metadata`)
 }
 
 const deleteText = () => {

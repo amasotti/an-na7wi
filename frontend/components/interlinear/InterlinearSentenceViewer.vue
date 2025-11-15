@@ -1,90 +1,49 @@
 <template>
-  <div class="interlinear-sentence">
-    <!-- Sentence Header -->
-    <div class="sentence-header">
-      <div class="sentence-content">
-        <h3 class="sentence-arabic" dir="rtl">
-          {{ sentence.arabicText }}
-        </h3>
-        <p class="sentence-transliteration">
-          {{ sentence.transliteration }}
-        </p>
-        <p class="sentence-translation">
-          {{ sentence.translation }}
-        </p>
-      </div>
-    </div>
+  <article class="interlinear-sentence group">
+    <!-- Edit Button -->
+    <button
+      type="button"
+      class="edit-sentence-btn"
+      @click="$emit('edit')"
+      title="Edit this sentence"
+    >
+      <BaseIcon size="xs">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </BaseIcon>
+    </button>
 
-    <!-- Word Alignments -->
-    <div v-if="sortedAlignments.length > 0" class="word-alignments">
-      <h4 class="word-alignments-title">
-        Word-by-Word Breakdown
-      </h4>
-
-      <div class="word-alignments-grid" dir="rtl">
-        <div
-          v-for="alignment in sortedAlignments"
-          :key="alignment.id"
-          class="word-alignment-card"
-        >
-          <!-- Arabic -->
-          <div class="word-alignment-row arabic">
-<!--            <div class="word-alignment-label">Arabic</div>-->
-            <div class="word-alignment-value arabic-value" dir="rtl">
-              {{ alignment.arabicTokens }}
-            </div>
-          </div>
-
-          <!-- Transliteration -->
-          <div class="word-alignment-row translation">
-<!--            <div class="word-alignment-label">Transliteration</div>-->
-            <div class="word-alignment-value transliteration-value">
-              {{ alignment.transliterationTokens }}
-            </div>
-          </div>
-
-          <!-- Translation -->
-          <div class="word-alignment-row translation">
-<!--            <div class="word-alignment-label">Translation</div>-->
-            <div class="word-alignment-value translation-value">
-              {{ alignment.translationTokens }}
-            </div>
-          </div>
-
-          <!-- Vocabulary Link (if exists) -->
-          <div v-if="alignment.vocabularyWordId" class="vocabulary-link-container">
-            <NuxtLink
-              :to="`/words/${alignment.vocabularyWordId}`"
-              class="vocabulary-link"
-            >
-              <BaseIcon size="xs">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </BaseIcon>
-              View in vocabulary
-            </NuxtLink>
-          </div>
+    <!-- Interlinear Words (flowing inline like text) -->
+    <div v-if="sortedAlignments.length > 0" class="interlinear-line" dir="rtl">
+      <NuxtLink
+        v-for="alignment in sortedAlignments"
+        :key="alignment.id"
+        :to="alignment.vocabularyWordId ? `/words/${alignment.vocabularyWordId}` : undefined"
+        :class="['interlinear-word', { 'is-linked': alignment.vocabularyWordId }]"
+        :title="alignment.vocabularyWordId ? 'Click to view in vocabulary' : undefined"
+      >
+        <div class="word-arabic" dir="rtl">{{ alignment.arabicTokens }}</div>
+        <div class="word-gloss">
+          <span class="word-transliteration">{{ alignment.transliterationTokens }}</span>
+          <span class="word-translation">{{ alignment.translationTokens }}</span>
         </div>
-      </div>
+      </NuxtLink>
     </div>
 
-    <!-- No Alignments -->
-    <div v-else class="no-alignments">
-      No word alignments for this sentence yet.
+    <!-- Fallback: show full sentence if no alignments -->
+    <div v-else class="sentence-fallback">
+      <div class="sentence-arabic" dir="rtl">{{ sentence.arabicText }}</div>
+      <div class="sentence-transliteration">{{ sentence.transliteration }}</div>
+      <div class="sentence-translation">{{ sentence.translation }}</div>
     </div>
 
-    <!-- Annotations (if any) -->
-    <div v-if="sentence.annotations" class="annotations-section">
-      <div class="annotations-container">
-        <BaseIcon size="sm" class="annotations-icon">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-        </BaseIcon>
-        <div>
-          <h5 class="annotations-title">Notes</h5>
-          <p class="annotations-text">{{ sentence.annotations }}</p>
-        </div>
-      </div>
+    <!-- Annotations -->
+    <div v-if="sentence.annotations" class="annotations-block">
+      <BaseIcon size="xs" class="note-icon">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+      </BaseIcon>
+      <span class="note-text">{{ sentence.annotations }}</span>
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -111,108 +70,78 @@ const sortedAlignments = computed(() => {
 
 <style scoped>
 .interlinear-sentence {
-  @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 transition-all duration-200;
+  @apply relative py-5 border-b border-gray-200 dark:border-gray-700 last:border-b-0;
 }
 
-.interlinear-sentence:hover {
-  @apply shadow-lg border-gray-300 dark:border-gray-600;
+.edit-sentence-btn {
+  @apply absolute top-3 left-0 p-1.5 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 opacity-0 group-hover:opacity-100 transition-all rounded-md hover:bg-primary-50 dark:hover:bg-primary-900/20;
 }
 
-.sentence-header {
-  @apply flex items-start justify-between mb-6 pb-6 border-b border-gray-200 dark:border-gray-700;
+/* Interlinear line - words flow inline like reading text */
+.interlinear-line {
+  @apply flex flex-wrap gap-x-4 gap-y-3 items-start pl-8;
 }
 
-.sentence-content {
-  @apply flex-1;
+.interlinear-word {
+  @apply relative inline-flex flex-col items-center text-center;
 }
 
-.sentence-arabic {
-  @apply text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 font-arabic text-right;
+/* Linked words - different color, clickable */
+.interlinear-word.is-linked {
+  @apply cursor-pointer;
 }
 
-.sentence-transliteration {
-  @apply text-gray-600 dark:text-gray-400 italic mb-1;
+.interlinear-word.is-linked .word-arabic {
+  @apply text-primary-600 dark:text-primary-400;
 }
 
-.sentence-translation {
-  @apply text-gray-700 dark:text-gray-300 font-medium;
+.interlinear-word.is-linked:hover .word-arabic {
+  @apply text-primary-700 dark:text-primary-300 underline;
 }
 
-.word-alignments {
-  @apply mt-6;
+.word-arabic {
+  @apply text-lg font-arabic text-gray-900 dark:text-gray-100 mb-0.5 leading-tight transition-colors;
 }
 
-.word-alignments-title {
-  @apply text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide;
+.word-gloss {
+  @apply flex flex-col items-center gap-0 text-xs leading-tight;
 }
 
-.word-alignments-grid {
-  @apply grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4;
+.word-transliteration {
+  @apply text-gray-500 dark:text-gray-400 italic;
 }
 
-.word-alignment-card {
-  @apply bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50
-         rounded-lg p-4 border border-gray-200 dark:border-gray-700
-         transition-all duration-200 hover:scale-[1.02];
+.word-translation {
+  @apply text-gray-600 dark:text-gray-300;
 }
 
-.word-alignment-card:hover {
-  @apply border-primary-400 dark:border-primary-600 shadow-md;
+/* Fallback for sentences without alignments */
+.sentence-fallback {
+  @apply space-y-1 pl-8;
 }
 
-.word-alignment-row {
-  @apply mb-2.5 last:mb-0;
+.sentence-fallback .sentence-arabic {
+  @apply text-xl font-arabic text-gray-900 dark:text-gray-100 leading-relaxed;
 }
 
-.word-alignment-label {
-  @apply text-xs text-gray-500 dark:text-gray-500 uppercase tracking-wide mb-1 font-semibold;
+.sentence-fallback .sentence-transliteration {
+  @apply text-sm text-gray-500 dark:text-gray-400 italic leading-relaxed;
 }
 
-.word-alignment-value {
-  @apply break-words;
+.sentence-fallback .sentence-translation {
+  @apply text-base text-gray-700 dark:text-gray-300 leading-relaxed;
 }
 
-.arabic-value {
-  @apply text-lg text-gray-900 dark:text-gray-100 font-arabic;
+/* Annotations - minimal styling */
+.annotations-block {
+  @apply flex items-start gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50 pl-8;
 }
 
-.transliteration-value {
-  @apply text-sm text-gray-600 dark:text-gray-400 italic;
+.note-icon {
+  @apply text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0;
 }
 
-.translation-value {
-  @apply text-sm text-gray-700 dark:text-gray-300 font-medium;
-}
-
-.vocabulary-link-container {
-  @apply mt-3 pt-3 border-t border-gray-200 dark:border-gray-700;
-}
-
-.vocabulary-link {
-  @apply text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1;
-}
-
-.no-alignments {
-  @apply text-center py-6 text-gray-500 dark:text-gray-400 text-sm;
-}
-
-.annotations-section {
-  @apply mt-6 pt-6 border-t border-gray-200 dark:border-gray-700;
-}
-
-.annotations-container {
-  @apply flex items-start gap-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-200 dark:border-amber-800;
-}
-
-.annotations-icon {
-  @apply text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0;
-}
-
-.annotations-title {
-  @apply text-sm font-semibold text-amber-900 dark:text-amber-300 mb-1.5;
-}
-
-.annotations-text {
-  @apply text-sm text-amber-800 dark:text-amber-200 leading-relaxed;
+.note-text {
+  @apply text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic;
 }
 </style>
