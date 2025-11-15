@@ -84,17 +84,31 @@
 
         <!-- Sentence Editors -->
         <div v-else class="sentences-list">
-          <InterlinearSentenceEditor
+          <div
             v-for="(sentence, index) in sentences"
             :key="sentence.tempId || sentence.id"
-            :sentence="sentence"
-            :sentence-id="sentence.tempId || sentence.id || `temp-${index}`"
-            :sentence-order="index + 1"
-            :tokenizing="tokenizingIndex === index"
-            @update="updateSentence(index, $event)"
-            @delete="deleteSentence(index)"
-            @tokenize="tokenizeSentence(index)"
-          />
+            class="sentence-block"
+          >
+            <InterlinearSentenceEditor
+              :sentence="sentence"
+              :sentence-id="sentence.tempId || sentence.id || `temp-${index}`"
+              :sentence-order="index + 1"
+              :tokenizing="tokenizingIndex === index"
+              @update="updateSentence(index, $event)"
+              @delete="deleteSentence(index)"
+              @tokenize="tokenizeSentence(index)"
+            />
+
+            <!-- Word Alignment Editor (shown if alignments exist) -->
+            <WordAlignmentEditor
+              v-if="sentence.alignments && sentence.alignments.length > 0"
+              :alignments="sentence.alignments"
+              :sentence-id="sentence.id || sentence.tempId || `temp-${index}`"
+              @update="updateAlignments(index, $event)"
+              @split="splitAlignment(index, $event)"
+              @merge="mergeAlignments(index, $event)"
+            />
+          </div>
         </div>
 
         <!-- Add Sentence Button (after all sentences) -->
@@ -154,8 +168,9 @@ import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
+import WordAlignmentEditor from '~/components/interlinear/WordAlignmentEditor.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import type { InterlinearSentence } from '~/types'
+import type { InterlinearSentence, WordAlignment } from '~/types'
 import { createAlignments } from '~/utils/tokenization'
 
 const route = useRoute()
@@ -262,6 +277,150 @@ const tokenizeSentence = async (index: number) => {
     saveError.value = 'Failed to tokenize sentence. Please try again.'
   } finally {
     tokenizingIndex.value = null
+  }
+}
+
+const updateAlignments = async (sentenceIndex: number, updatedAlignments: WordAlignment[]) => {
+  const sentence = sentences.value[sentenceIndex]
+  if (!sentence || !sentence.id) return
+
+  const textId = route.params.id as string
+  const sentenceId = sentence.id
+
+  try {
+    // Update all alignments in the backend
+    for (const alignment of updatedAlignments) {
+      if (alignment.id) {
+        await interlinearStore.updateAlignment(textId, sentenceId, alignment.id, {
+          arabicTokens: alignment.arabicTokens,
+          transliterationTokens: alignment.transliterationTokens,
+          translationTokens: alignment.translationTokens,
+          tokenOrder: alignment.tokenOrder,
+          vocabularyWordId: alignment.vocabularyWordId,
+        })
+      }
+    }
+
+    // Update local state
+    sentences.value[sentenceIndex] = {
+      ...sentences.value[sentenceIndex],
+      alignments: updatedAlignments,
+    }
+
+    saveError.value = null
+  } catch (err) {
+    console.error('Failed to update alignments:', err)
+    saveError.value = 'Failed to update alignments. Please try again.'
+  }
+}
+
+const splitAlignment = async (sentenceIndex: number, alignmentIndex: number) => {
+  const sentence = sentences.value[sentenceIndex]
+  if (!sentence || !sentence.alignments) return
+
+  const alignment = sentence.alignments[alignmentIndex]
+  if (!alignment) return
+
+  // Split the alignment into individual tokens
+  const arabicTokens = alignment.arabicTokens.trim().split(/\s+/)
+  const transliterationTokens = alignment.transliterationTokens.trim().split(/\s+/)
+  const translationTokens = alignment.translationTokens.trim().split(/\s+/)
+
+  // Find the maximum length
+  const maxLength = Math.max(
+    arabicTokens.length,
+    transliterationTokens.length,
+    translationTokens.length
+  )
+
+  // Only split if there are multiple tokens
+  if (maxLength <= 1) {
+    saveError.value = 'Cannot split: alignment contains only one token'
+    return
+  }
+
+  const textId = route.params.id as string
+  const sentenceId = sentence.id
+  if (!sentenceId) return
+
+  try {
+    // Delete the original alignment
+    await interlinearStore.deleteAlignment(textId, sentenceId, alignment.id)
+
+    // Create new alignments for each token
+    const newAlignments: WordAlignment[] = []
+    for (let i = 0; i < maxLength; i++) {
+      const newAlignment = await interlinearStore.addAlignment(textId, sentenceId, {
+        arabicTokens: arabicTokens[i] || '',
+        transliterationTokens: transliterationTokens[i] || '',
+        translationTokens: translationTokens[i] || '',
+        tokenOrder: alignment.tokenOrder + i * 0.1, // Preserve relative order
+      })
+      newAlignments.push(newAlignment)
+    }
+
+    // Update local state
+    const updatedAlignments = [...sentence.alignments]
+    updatedAlignments.splice(alignmentIndex, 1, ...newAlignments)
+    sentences.value[sentenceIndex] = {
+      ...sentences.value[sentenceIndex],
+      alignments: updatedAlignments,
+    }
+
+    saveError.value = null
+  } catch (err) {
+    console.error('Failed to split alignment:', err)
+    saveError.value = 'Failed to split alignment. Please try again.'
+  }
+}
+
+const mergeAlignments = async (sentenceIndex: number, alignmentIndices: number[]) => {
+  const sentence = sentences.value[sentenceIndex]
+  if (!sentence || !sentence.alignments || alignmentIndices.length < 2) return
+
+  const textId = route.params.id as string
+  const sentenceId = sentence.id
+  if (!sentenceId) return
+
+  try {
+    // Get all alignments to merge (in sorted order)
+    const alignmentsToMerge = alignmentIndices
+      .map(i => sentence.alignments![i])
+      .filter((a): a is WordAlignment => a !== undefined)
+
+    if (alignmentsToMerge.length === 0) return
+
+    // Combine the tokens from all selected alignments
+    const mergedAlignment = {
+      arabicTokens: alignmentsToMerge.map(a => a.arabicTokens).filter(t => t).join(' '),
+      transliterationTokens: alignmentsToMerge.map(a => a.transliterationTokens).filter(t => t).join(' '),
+      translationTokens: alignmentsToMerge.map(a => a.translationTokens).filter(t => t).join(' '),
+      tokenOrder: alignmentsToMerge[0]!.tokenOrder, // Use first alignment's order
+    }
+
+    // Delete all selected alignments from backend
+    for (const alignment of alignmentsToMerge) {
+      if (alignment) {
+        await interlinearStore.deleteAlignment(textId, sentenceId, alignment.id)
+      }
+    }
+
+    // Create the merged alignment
+    const newAlignment = await interlinearStore.addAlignment(textId, sentenceId, mergedAlignment)
+
+    // Update local state
+    const updatedAlignments = sentence.alignments.filter((_, i) => !alignmentIndices.includes(i))
+    updatedAlignments.push(newAlignment)
+
+    sentences.value[sentenceIndex] = {
+      ...sentences.value[sentenceIndex],
+      alignments: updatedAlignments,
+    }
+
+    saveError.value = null
+  } catch (err) {
+    console.error('Failed to merge alignments:', err)
+    saveError.value = 'Failed to merge alignments. Please try again.'
   }
 }
 
@@ -473,7 +632,11 @@ onMounted(async () => {
 }
 
 .sentences-list {
-  @apply space-y-4;
+  @apply space-y-6;
+}
+
+.sentence-block {
+  @apply space-y-3;
 }
 
 .add-sentence-container {

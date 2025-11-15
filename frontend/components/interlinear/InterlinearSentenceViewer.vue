@@ -29,7 +29,7 @@
         >
           <!-- Arabic -->
           <div class="word-alignment-row arabic">
-            <div class="word-alignment-label">Arabic</div>
+<!--            <div class="word-alignment-label">Arabic</div>-->
             <div class="word-alignment-value arabic-value" dir="rtl">
               {{ alignment.arabicTokens }}
             </div>
