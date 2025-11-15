@@ -13,6 +13,9 @@ test:
     cd backend && ./gradlew test
     cd frontend && pnpm run test
 
+test-quarkus:
+    cd backend && ./gradlew check
+
 clean:
     docker compose down -v
     docker system prune -f
