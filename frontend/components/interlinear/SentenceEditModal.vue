@@ -81,7 +81,7 @@ const saving = ref(false)
 // Watch for sentence changes
 watch(
   () => props.sentence,
-  (newSentence) => {
+  newSentence => {
     if (newSentence) {
       localSentence.value = { ...newSentence }
     }

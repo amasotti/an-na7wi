@@ -96,7 +96,7 @@ import DeleteButton from '~/components/common/DeleteButton.vue'
 import EditButton from '~/components/common/EditButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
-import InterlinearTextViewer from '~/components/interlinear/InterlinearTextViewer.vue'
+import type InterlinearTextViewer from '~/components/interlinear/InterlinearTextViewer.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import { Dialect } from '~/types'
 
