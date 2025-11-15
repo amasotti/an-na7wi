@@ -7,6 +7,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
   // State
   const texts = ref<InterlinearText[]>([])
   const currentText = ref<InterlinearTextDetail | null>(null)
+  const currentSentence = ref<InterlinearSentence | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
   const totalCount = ref(0)

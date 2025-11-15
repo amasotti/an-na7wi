@@ -1,8 +1,5 @@
 <template>
   <article>
-    <!-- Sentence Order Badge -->
-    <div class="sentence-order-badge">Sentence #{{ sentenceOrder }}</div>
-
     <!-- Arabic Text -->
     <div class="margin-bottom-md">
       <BaseTextArea

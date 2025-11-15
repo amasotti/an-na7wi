@@ -21,8 +21,6 @@
         :alignments="localSentence.alignments"
         :sentence-id="sentence.id"
         @update="handleAlignmentsUpdate"
-        @split="handleSplit"
-        @merge="handleMerge"
       />
 
       <!-- Actions -->
@@ -67,7 +65,6 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   close: []
   save: [sentence: Partial<InterlinearSentence>]
-  tokenize: []
   updateAlignments: [alignments: WordAlignment[]]
   split: [alignmentIndex: number]
   merge: [alignmentIndices: number[]]
@@ -105,14 +102,6 @@ const handleAlignmentsUpdate = (alignments: WordAlignment[]) => {
 
 const handleDeleteSentence = () => {
   emit('deleteSentence')
-}
-
-const handleSplit = (alignmentIndex: number) => {
-  emit('split', alignmentIndex)
-}
-
-const handleMerge = (alignmentIndices: number[]) => {
-  emit('merge', alignmentIndices)
 }
 
 const handleSave = () => {
