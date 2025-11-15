@@ -30,6 +30,7 @@
       @update-alignments="handleUpdateAlignments"
       @split="handleSplit"
       @merge="handleMerge"
+      @delete-sentence="handleDeleteSentence"
     />
   </div>
 </template>
@@ -280,6 +281,22 @@ const handleMerge = async (alignmentIndices: number[]) => {
     console.error('Failed to merge alignments:', error)
   }
 }
+
+const handleDeleteSentence = async () => {
+
+  if (!editingSentence.value?.id) return
+
+  try {
+    await interlinearStore.deleteSentence(props.text.id, editingSentence.value.id)
+
+    // Refresh the text
+    await interlinearStore.fetchTextById(props.text.id)
+    closeEditModal()
+  } catch (error) {
+    console.error('Failed to delete sentence:', error)
+  }
+}
+
 </script>
 
 <style scoped>
