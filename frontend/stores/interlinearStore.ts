@@ -1,11 +1,7 @@
-import { computed, ref } from 'vue'
-import { interlinearService } from '~/composables/interlinearService'
-import type {
-  InterlinearSentence,
-  InterlinearText,
-  InterlinearTextDetail,
-  WordAlignment,
-} from '~/types'
+import {computed, ref} from 'vue'
+import {interlinearService} from '~/composables/interlinearService'
+import type {InterlinearSentence, InterlinearText, InterlinearTextDetail, WordAlignment,} from '~/types'
+import {isNil} from "lodash-es";
 
 export const useInterlinearStore = defineStore('interlinear', () => {
   // State
@@ -107,7 +103,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
       }
 
       if (currentText.value?.id === id) {
-        currentText.value = { ...currentText.value, ...updatedText }
+        currentText.value = {...currentText.value, ...updatedText}
       }
 
       return updatedText
@@ -216,6 +212,27 @@ export const useInterlinearStore = defineStore('interlinear', () => {
   }
 
   // Actions - Alignment Operations
+
+  async function autoAlign(
+    sentenceId: string
+  ) {
+    loading.value = true
+    error.value = null
+
+    if (isNil(currentText.value)) return;
+
+    try {
+      await interlinearService.autocreateAlignments(currentText.value.id, sentenceId)
+      await fetchTextById(currentText.value.id)
+    } catch (err) {
+      error.value = 'Failed to autoalign the sentence'
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function addAlignment(
     textId: string,
     sentenceId: string,
@@ -317,7 +334,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
             .map((id, index) => {
               const alignment = sentence.alignments.find(a => a.id === id)
               if (alignment) {
-                return { ...alignment, tokenOrder: index }
+                return {...alignment, tokenOrder: index}
               }
               return null
             })
@@ -365,6 +382,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     deleteSentence,
 
     // Actions - Alignment
+    autoAlign,
     addAlignment,
     updateAlignment,
     deleteAlignment,

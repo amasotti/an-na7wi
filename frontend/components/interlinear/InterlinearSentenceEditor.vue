@@ -75,16 +75,16 @@
           type="button"
           variant="secondary"
           size="sm"
-          :disabled="!canTokenize || tokenizing"
-          :loading="tokenizing"
+          :disabled="!canTokenize"
           @click="handleTokenize"
         >
           <BaseIcon size="xs" class="button-icon">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </BaseIcon>
-          {{ tokenizing ? 'Tokenizing...' : 'Auto-tokenize' }}
+          Tokenize
         </BaseButton>
       </div>
+    <p class="tokenize-hint">The "tokenize" function will try to create tokens based on empty spaces and the convention that dashed words belong together</p>
   </article>
 </template>
 
@@ -100,18 +100,16 @@ interface Props {
   sentence: Partial<InterlinearSentence>
   sentenceId: string
   sentenceOrder: number
-  tokenizing?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  tokenizing: false,
-})
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   update: [sentence: Partial<InterlinearSentence>]
   delete: []
-  tokenize: []
 }>()
+
+const interlinearStore = useInterlinearStore()
 
 // Local state to track changes
 const localSentence = ref<Partial<InterlinearSentence>>({
@@ -149,8 +147,14 @@ const emitUpdate = () => {
   emit('update', { ...localSentence.value })
 }
 
-// Handle tokenization
-const handleTokenize = () => {
-  emit('tokenize')
+const handleTokenize = async () => {
+  await interlinearStore.autoAlign(props.sentenceId)
 }
+
 </script>
+
+<style scoped>
+.tokenize-hint {
+  @apply text-sm text-gray-600 text-center mt-2 italic;
+}
+</style>
