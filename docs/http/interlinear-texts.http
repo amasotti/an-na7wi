@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### Delete Interlinear Text
-DELETE {{baseUrl}}/api/v1/interlinear-texts/11a95f5f-b50a-45d6-908e-4d26731d4238
+DELETE {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0
 
 ### Create Text without Description
 POST {{baseUrl}}/api/v1/interlinear-texts
@@ -55,7 +55,7 @@ Accept: application/json
 
 ### Add Sentence to Text
 # @name addSentence
-POST {{baseUrl}}/api/v1/interlinear-texts/57140a7e-bbb6-4083-9f5b-97e413748631/sentences
+POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences
 Content-Type: application/json
 
 {
@@ -67,7 +67,7 @@ Content-Type: application/json
 }
 
 ### Add Second Sentence
-POST {{baseUrl}}/api/v1/interlinear-texts/57140a7e-bbb6-4083-9f5b-97e413748631/sentences
+POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences
 Content-Type: application/json
 
 {
@@ -101,5 +101,62 @@ Content-Type: application/json
   "sentenceIds": [
     "{{sentenceId}}",
     "another-sentence-id-here"
+  ]
+}
+
+###
+### Word Alignment Operations
+###
+
+@alignmentId = {{addAlignment.response.body.id}}
+
+### Add Word Alignment to Sentence
+# @name addAlignment
+POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences/9639042e-ba48-4102-b7eb-79203705eb9c/alignments
+Content-Type: application/json
+
+{
+  "arabicTokens": "السلام",
+  "transliterationTokens": "as-salamu",
+  "translationTokens": "peace",
+  "tokenOrder": 0,
+  "vocabularyWordId": null
+}
+
+### Add Second Alignment
+POST {{baseUrl}}/api/v1/interlinear-texts/b04bc6f1-b874-413e-b5cc-13dc66fe54b0/sentences/9639042e-ba48-4102-b7eb-79203705eb9c/alignments
+Content-Type: application/json
+
+{
+  "arabicTokens": "عليكم",
+  "transliterationTokens": "alaykum",
+  "translationTokens": "upon you",
+  "tokenOrder": 1,
+  "vocabularyWordId": null
+}
+
+### Update Word Alignment
+PUT {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}/alignments/{{alignmentId}}
+Content-Type: application/json
+
+{
+  "arabicTokens": "السلام عليكم",
+  "transliterationTokens": "as-salamu alaykum",
+  "translationTokens": "peace be upon you",
+  "tokenOrder": 0,
+  "vocabularyWordId": null
+}
+
+### Delete Word Alignment
+DELETE {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}/alignments/{{alignmentId}}
+
+### Reorder Alignments
+PUT {{baseUrl}}/api/v1/interlinear-texts/{{textId}}/sentences/{{sentenceId}}/alignments/reorder
+Content-Type: application/json
+
+{
+  "alignmentIds": [
+    "{{alignmentId}}",
+    "another-alignment-id-here"
   ]
 }

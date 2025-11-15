@@ -2,10 +2,13 @@ package com.tonihacks.annahwi.service
 
 import com.tonihacks.annahwi.entity.InterlinearSentence
 import com.tonihacks.annahwi.entity.InterlinearText
+import com.tonihacks.annahwi.entity.WordAlignment
 import com.tonihacks.annahwi.exception.AppError
 import com.tonihacks.annahwi.exception.AppException
 import com.tonihacks.annahwi.repository.InterlinearSentenceRepository
 import com.tonihacks.annahwi.repository.InterlinearTextRepository
+import com.tonihacks.annahwi.repository.WordAlignmentRepository
+import com.tonihacks.annahwi.repository.WordRepository
 import com.tonihacks.annahwi.util.loggerFor
 import io.quarkus.panache.common.Page
 import io.quarkus.panache.common.Sort
@@ -23,6 +26,12 @@ class InterlinearTextService {
 
     @Inject
     private lateinit var interlinearSentenceRepository: InterlinearSentenceRepository
+
+    @Inject
+    private lateinit var wordAlignmentRepository: WordAlignmentRepository
+
+    @Inject
+    private lateinit var wordRepository: WordRepository
 
     private val logger = loggerFor(InterlinearTextService::class.java)
 
@@ -180,6 +189,103 @@ class InterlinearTextService {
             sentence.sentenceOrder = index
             sentence.updatedAt = LocalDateTime.now()
             interlinearSentenceRepository.persist(sentence)
+        }
+    }
+
+    @Transactional
+    fun addAlignment(textId: UUID, sentenceId: UUID, alignment: WordAlignment, vocabularyWordId: UUID?): WordAlignment {
+        logger.info("Adding alignment to sentence $sentenceId in text $textId")
+
+        val sentence = interlinearSentenceRepository.findById(sentenceId)
+            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+        if (sentence.text.id != textId) {
+            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+        }
+
+        alignment.sentence = sentence
+        alignment.createdAt = LocalDateTime.now()
+        alignment.updatedAt = LocalDateTime.now()
+
+        if (vocabularyWordId != null) {
+            val word = wordRepository.findById(vocabularyWordId)
+            if (word != null) {
+                alignment.vocabularyWord = word
+            } else {
+                logger.warn("Word with ID $vocabularyWordId not found, creating alignment without vocabulary link")
+            }
+        }
+
+        wordAlignmentRepository.persist(alignment)
+
+        return alignment
+    }
+
+    @Transactional
+    fun updateAlignment(textId: UUID, sentenceId: UUID, alignmentId: UUID, alignment: WordAlignment, vocabularyWordId: UUID?): WordAlignment {
+        logger.info("Updating alignment $alignmentId in sentence $sentenceId")
+
+        val existingAlignment = wordAlignmentRepository.findById(alignmentId)
+            ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+
+        if (existingAlignment.sentence.id != sentenceId || existingAlignment.sentence.text.id != textId) {
+            throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+        }
+
+        existingAlignment.arabicTokens = alignment.arabicTokens
+        existingAlignment.transliterationTokens = alignment.transliterationTokens
+        existingAlignment.translationTokens = alignment.translationTokens
+        existingAlignment.tokenOrder = alignment.tokenOrder
+        existingAlignment.updatedAt = LocalDateTime.now()
+
+        if (vocabularyWordId != null) {
+            val word = wordRepository.findById(vocabularyWordId)
+            existingAlignment.vocabularyWord = word
+        } else {
+            existingAlignment.vocabularyWord = null
+        }
+
+        wordAlignmentRepository.persist(existingAlignment)
+
+        return existingAlignment
+    }
+
+    @Transactional
+    fun deleteAlignment(textId: UUID, sentenceId: UUID, alignmentId: UUID): Boolean {
+        logger.info("Deleting alignment $alignmentId from sentence $sentenceId")
+
+        val alignment = wordAlignmentRepository.findById(alignmentId)
+            ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+
+        if (alignment.sentence.id != sentenceId || alignment.sentence.text.id != textId) {
+            throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+        }
+
+        return wordAlignmentRepository.deleteById(alignmentId)
+    }
+
+    @Transactional
+    fun reorderAlignments(textId: UUID, sentenceId: UUID, alignmentIds: List<UUID>) {
+        logger.info("Reordering ${alignmentIds.size} alignments in sentence $sentenceId")
+
+        val sentence = interlinearSentenceRepository.findById(sentenceId)
+            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+        if (sentence.text.id != textId) {
+            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+        }
+
+        alignmentIds.forEachIndexed { index, alignmentId ->
+            val alignment = wordAlignmentRepository.findById(alignmentId)
+                ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+
+            if (alignment.sentence.id != sentenceId) {
+                throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+            }
+
+            alignment.tokenOrder = index
+            alignment.updatedAt = LocalDateTime.now()
+            wordAlignmentRepository.persist(alignment)
         }
     }
 }
