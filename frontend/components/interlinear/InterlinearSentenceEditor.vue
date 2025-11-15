@@ -64,19 +64,45 @@
       ></textarea>
     </div>
 
+    <!-- Alignments Preview (after tokenization) -->
+    <div v-if="sentence.alignments && sentence.alignments.length > 0" class="alignments-preview">
+      <div class="alignments-header">
+        <BaseIcon size="xs" class="alignments-icon">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </BaseIcon>
+        <span class="alignments-text">Tokenized: {{ sentence.alignments.length }} word alignments created</span>
+      </div>
+    </div>
+
     <!-- Actions -->
     <div class="sentence-actions">
-      <BaseButton
-        type="button"
-        variant="danger"
-        size="sm"
-        @click="$emit('delete')"
-      >
-        <BaseIcon size="xs" class="button-icon">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </BaseIcon>
-        Delete Sentence
-      </BaseButton>
+      <div class="action-buttons-left">
+        <BaseButton
+          type="button"
+          variant="danger"
+          size="sm"
+          @click="$emit('delete')"
+        >
+          <BaseIcon size="xs" class="button-icon">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </BaseIcon>
+          Delete Sentence
+        </BaseButton>
+
+        <BaseButton
+          type="button"
+          variant="secondary"
+          size="sm"
+          :disabled="!canTokenize || tokenizing"
+          :loading="tokenizing"
+          @click="handleTokenize"
+        >
+          <BaseIcon size="xs" class="button-icon">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </BaseIcon>
+          {{ tokenizing ? 'Tokenizing...' : 'Auto-tokenize' }}
+        </BaseButton>
+      </div>
 
       <div class="sentence-order-badge">
         Sentence #{{ sentenceOrder }}
@@ -86,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import type { InterlinearSentence } from '~/types'
@@ -95,13 +121,17 @@ interface Props {
   sentence: Partial<InterlinearSentence>
   sentenceId: string
   sentenceOrder: number
+  tokenizing?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  tokenizing: false,
+})
 
 const emit = defineEmits<{
   update: [sentence: Partial<InterlinearSentence>]
   delete: []
+  tokenize: []
 }>()
 
 // Local state to track changes
@@ -126,9 +156,23 @@ watch(
   { deep: true }
 )
 
+// Check if sentence can be tokenized (all three fields filled)
+const canTokenize = computed(() => {
+  return (
+    localSentence.value.arabicText?.trim() &&
+    localSentence.value.transliteration?.trim() &&
+    localSentence.value.translation?.trim()
+  )
+})
+
 // Emit updates to parent
 const emitUpdate = () => {
   emit('update', { ...localSentence.value })
+}
+
+// Handle tokenization
+const handleTokenize = () => {
+  emit('tokenize')
 }
 </script>
 
@@ -171,11 +215,31 @@ const emitUpdate = () => {
   @apply flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700;
 }
 
+.action-buttons-left {
+  @apply flex items-center gap-2;
+}
+
 .button-icon {
   @apply mr-1.5;
 }
 
 .sentence-order-badge {
   @apply text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 px-3 py-1 rounded-full;
+}
+
+.alignments-preview {
+  @apply mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg;
+}
+
+.alignments-header {
+  @apply flex items-center gap-2;
+}
+
+.alignments-icon {
+  @apply text-green-600 dark:text-green-400;
+}
+
+.alignments-text {
+  @apply text-sm font-medium text-green-800 dark:text-green-200;
 }
 </style>
