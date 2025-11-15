@@ -51,8 +51,7 @@
     </div>
 
     <!-- Actions -->
-    <div class="sentence-actions">
-      <div class="action-buttons-left">
+      <div class="form-actions" role="group" aria-label="Form actions">
         <BaseButton
           type="button"
           variant="danger"
@@ -79,11 +78,6 @@
           {{ tokenizing ? 'Tokenizing...' : 'Auto-tokenize' }}
         </BaseButton>
       </div>
-
-      <div class="sentence-order-badge">
-        Sentence #{{ sentenceOrder }}
-      </div>
-    </div>
   </article>
 </template>
 
@@ -153,21 +147,3 @@ const handleTokenize = () => {
   emit('tokenize')
 }
 </script>
-
-<style scoped>
-.sentence-actions {
-  @apply flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700;
-}
-
-.action-buttons-left {
-  @apply flex items-center gap-2;
-}
-
-.button-icon {
-  @apply mr-1.5;
-}
-
-.sentence-order-badge {
-  @apply text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 px-3 py-1 rounded-full;
-}
-</style>

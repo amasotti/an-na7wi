@@ -29,7 +29,7 @@
               size="sm"
               @click="addSentence"
             >
-              <BaseIcon size="xs" class="mr-1.5">
+              <BaseIcon size="xs" class="button-icon">
                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </BaseIcon>
               Add Sentence
