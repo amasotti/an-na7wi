@@ -13,7 +13,7 @@ importers:
         version: 6.14.0(magicast@0.5.1)(yaml@2.8.1)
       '@pinia/nuxt':
         specifier: latest
-        version: 0.11.3(magicast@0.5.1)(pinia@3.0.3(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3)))
+        version: 0.11.3(magicast@0.5.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3)))
       '@tailwindcss/forms':
         specifier: ^0.5.10
         version: 0.5.10(tailwindcss@3.4.18(yaml@2.8.1))
@@ -47,7 +47,7 @@ importers:
         version: 2.3.5
       '@nuxt/test-utils':
         specifier: ^3.20.1
-        version: 3.20.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.2)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)
+        version: 3.20.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.10)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -67,8 +67,8 @@ importers:
         specifier: ^24.10.1
         version: 24.10.1
       '@typescript/native-preview':
-        specifier: 7.0.0-dev.20250818.1
-        version: 7.0.0-dev.20250818.1
+        specifier: 7.0.0-dev.20250922.1
+        version: 7.0.0-dev.20250922.1
       '@vitejs/plugin-vue':
         specifier: ^6.0.1
         version: 6.0.1(vite@7.2.2(@types/node@24.10.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1))(vue@3.5.24(typescript@5.9.3))
@@ -92,7 +92,7 @@ importers:
         version: 10.4.22(postcss@8.5.6)
       happy-dom:
         specifier: ^20.0.2
-        version: 20.0.2
+        version: 20.0.10
       jsdom:
         specifier: ^27.2.0
         version: 27.2.0
@@ -113,7 +113,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.2)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
+        version: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.10)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
       vue-tsc:
         specifier: ^3.1.3
         version: 3.1.3(typescript@5.9.3)
@@ -1450,51 +1450,43 @@ packages:
   '@types/whatwg-mimetype@3.0.2':
     resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-LVYgDjaOHMxy2OKG9WKPgYKcUFB/VxbhXHwMjPGPZMpx96YwgeVnhVY4hTHE/rIfUm1tdeUXSSDxUMUv6KMJZw==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-R4sKE/cQYMGrmaz8OBnnseABdB6W0ZCQ9muHQnoxuyukf7m0wLLqvGNorQZSWVl9xQ7qNniXcZJlCKp4JmRr6w==}
     cpu: [arm64]
     os: [darwin]
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-z9FMbVVnppjsES3kmzIekozyJLp0TwYwTfvP+f5BX/2W5KZ+06GKZf5rI7ZaEoWscFmD/QCnfCe/k8LZlNhmXg==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-Hhh+9e/75ZQxdatdA8TFKOKjPwqjXWNI2a8vswvMU6zOmiVYZoYaUGEGFhk0W1WPGnt/kZSM1Mb4a9nVaEwhZQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-80gfjzmvyJRPJAl7RSXona76xyrkh8343ebUcFzia/yFL9x1dij3i+jAA7LI0hrjcp5+27KtSTfB99mxdmuelA==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-Rw74z0tf0NEujnl0W58fQ5pbh8P1fr2ujQTMkQYz9WpH+hYuysQgcOiDEoht62CxtLHflexu3dUWJI8/LUPyHA==}
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-XVYgb2d2jtf/IRbK7b0PsIWCBDzylc27UXnZj3pGzSHdkBSral+sb3X3bZivWnDMy4jSKdSYq1MS/4YASug41w==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-4JbSk4B0SUo2c+S9YKGLAaMQXA16Pd9Cd7GLhMiABRtOLEHFDAaFmFbVoGYX5Dyicix711oziX/WAhD6nuC73A==}
     cpu: [arm]
     os: [linux]
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-mo7v4rkuwg239i8Rmyvjgv2XrWCIjMGn+L0fX765Yxbw9wSPlvT8IkmJOTGoxIGByjeId6AKTgYHuJZb3uUwxQ==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-lY6JAZgzeJxLwciC8Wc9l7OlDYwVbuo3JK+qHfLlyxu8h1Q3cGF5VMpgSlAj9CKLDQ0h4kDAecLLiEEOod78aw==}
     cpu: [x64]
     os: [linux]
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-yeHHlhotR8q6OhBKLX6MSy6bNenE6pxuAUeXI5Ym5Mrm/ZxVcEd8iFusA3QWwa4Fx0a+WKNNOS+LUpGNAlVogQ==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-pGzWqNx7x6Sqs20Ea5Xn/JC9eZ9Do6bu6K+dmfpewYYhwUv8jiOhh+fr9TJFZ8MlaZDTp9FclQIGpW+2MZ8UOw==}
     cpu: [arm64]
     os: [win32]
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-E3XzKN0bLSjfMy7/gklqotdDN8Ih5czWiq1Zll8KfFEHSfmUJ1x3/SP76qF+zGk2n2b851b81lWj7VplHkk99A==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-RoNm3P69p5F/ZJ7O7nIoUJB0OVG5nGIEVzP/VF2lm8jBbDN8aCRNT+DkZrQvdXJEBg2fM0WrTzcik9KVXAyEag==}
     cpu: [x64]
     os: [win32]
 
-  '@typescript/native-preview@7.0.0-dev.20250818.1':
-    resolution: {integrity: sha512-fJ2mjyx0Sk0ylOzBTjA3ubsNDCLshNcGFmS4Ouv1wx4Sf/G/o2YpyGw+ImsG+pXumpVC3nuAlLjvqoM+VpSsyQ==}
-    engines: {node: '>=20.6.0'}
+  '@typescript/native-preview@7.0.0-dev.20250922.1':
+    resolution: {integrity: sha512-B7svR7Fm4cLLL8ARBVc9Xx2KFcZuCkNsdR7LBZjSqaDM6am11XizhPORrI7x8rlVQ71CBoQVgOp/2/Bn3x+OgA==}
     hasBin: true
 
   '@unhead/vue@2.0.19':
@@ -2601,8 +2593,8 @@ packages:
   h3@1.15.4:
     resolution: {integrity: sha512-z5cFQWDffyOe4vQ9xIqNfCZdV4p//vy6fBnr8Q1AWnVZ0teurKMG66rLj++TKwKPUP3u7iMUvrvKaEUiQw2QWQ==}
 
-  happy-dom@20.0.2:
-    resolution: {integrity: sha512-pYOyu624+6HDbY+qkjILpQGnpvZOusItCk+rvF5/V+6NkcgTKnbOldpIy22tBnxoaLtlM9nXgoqAcW29/B7CIw==}
+  happy-dom@20.0.10:
+    resolution: {integrity: sha512-6umCCHcjQrhP5oXhrHQQvLB0bwb1UzHAHdsXy+FjtKoYjUhmNZsQL8NivwM1vDvNEChJabVrUYxUnp/ZdYmy2g==}
     engines: {node: '>=20.0.0'}
 
   has-bigints@1.1.0:
@@ -3475,11 +3467,11 @@ packages:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
     engines: {node: '>=0.10.0'}
 
-  pinia@3.0.3:
-    resolution: {integrity: sha512-ttXO/InUULUXkMHpTdp9Fj4hLpD/2AoJdmAbAeW2yu1iy1k+pkFekQXw5VpC0/5p51IOR/jDaDRfRWRnMMsGOA==}
+  pinia@3.0.4:
+    resolution: {integrity: sha512-l7pqLUFTI/+ESXn6k3nu30ZIzW5E2WZF/LaHJEpoq6ElcLD+wduZoB2kBN19du6K/4FDpPMazY2wJr+IndBtQw==}
     peerDependencies:
-      typescript: '>=4.4.4'
-      vue: ^2.7.0 || ^3.5.11
+      typescript: '>=4.5.0'
+      vue: ^3.5.11
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -5494,7 +5486,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@nuxt/test-utils@3.20.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.2)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)':
+  '@nuxt/test-utils@3.20.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.10)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)':
     dependencies:
       '@nuxt/kit': 4.2.1(magicast@0.5.1)
       c12: 3.3.2(magicast@0.5.1)
@@ -5518,16 +5510,16 @@ snapshots:
       tinyexec: 1.0.2
       ufo: 1.6.1
       unplugin: 2.3.10
-      vitest-environment-nuxt: 1.0.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.2)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)
+      vitest-environment-nuxt: 1.0.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.10)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)
       vue: 3.5.24(typescript@5.9.3)
     optionalDependencies:
       '@testing-library/vue': 8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3))
       '@vitest/ui': 3.2.4(vitest@3.2.4)
       '@vue/test-utils': 2.4.6
-      happy-dom: 20.0.2
+      happy-dom: 20.0.10
       jsdom: 27.2.0
       playwright-core: 1.56.1
-      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.2)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
+      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.10)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
     transitivePeerDependencies:
       - magicast
       - typescript
@@ -5834,10 +5826,10 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.5.1
       '@parcel/watcher-win32-x64': 2.5.1
 
-  '@pinia/nuxt@0.11.3(magicast@0.5.1)(pinia@3.0.3(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3)))':
+  '@pinia/nuxt@0.11.3(magicast@0.5.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3)))':
     dependencies:
       '@nuxt/kit': 4.2.1(magicast@0.5.1)
-      pinia: 3.0.3(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3))
+      pinia: 3.0.4(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3))
     transitivePeerDependencies:
       - magicast
 
@@ -6106,36 +6098,36 @@ snapshots:
 
   '@types/whatwg-mimetype@3.0.2': {}
 
-  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250818.1':
+  '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250922.1':
     optional: true
 
-  '@typescript/native-preview-darwin-x64@7.0.0-dev.20250818.1':
+  '@typescript/native-preview-darwin-x64@7.0.0-dev.20250922.1':
     optional: true
 
-  '@typescript/native-preview-linux-arm64@7.0.0-dev.20250818.1':
+  '@typescript/native-preview-linux-arm64@7.0.0-dev.20250922.1':
     optional: true
 
-  '@typescript/native-preview-linux-arm@7.0.0-dev.20250818.1':
+  '@typescript/native-preview-linux-arm@7.0.0-dev.20250922.1':
     optional: true
 
-  '@typescript/native-preview-linux-x64@7.0.0-dev.20250818.1':
+  '@typescript/native-preview-linux-x64@7.0.0-dev.20250922.1':
     optional: true
 
-  '@typescript/native-preview-win32-arm64@7.0.0-dev.20250818.1':
+  '@typescript/native-preview-win32-arm64@7.0.0-dev.20250922.1':
     optional: true
 
-  '@typescript/native-preview-win32-x64@7.0.0-dev.20250818.1':
+  '@typescript/native-preview-win32-x64@7.0.0-dev.20250922.1':
     optional: true
 
-  '@typescript/native-preview@7.0.0-dev.20250818.1':
+  '@typescript/native-preview@7.0.0-dev.20250922.1':
     optionalDependencies:
-      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20250818.1
-      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20250818.1
-      '@typescript/native-preview-linux-arm': 7.0.0-dev.20250818.1
-      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20250818.1
-      '@typescript/native-preview-linux-x64': 7.0.0-dev.20250818.1
-      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20250818.1
-      '@typescript/native-preview-win32-x64': 7.0.0-dev.20250818.1
+      '@typescript/native-preview-darwin-arm64': 7.0.0-dev.20250922.1
+      '@typescript/native-preview-darwin-x64': 7.0.0-dev.20250922.1
+      '@typescript/native-preview-linux-arm': 7.0.0-dev.20250922.1
+      '@typescript/native-preview-linux-arm64': 7.0.0-dev.20250922.1
+      '@typescript/native-preview-linux-x64': 7.0.0-dev.20250922.1
+      '@typescript/native-preview-win32-arm64': 7.0.0-dev.20250922.1
+      '@typescript/native-preview-win32-x64': 7.0.0-dev.20250922.1
 
   '@unhead/vue@2.0.19(vue@3.5.24(typescript@5.9.3))':
     dependencies:
@@ -6192,7 +6184,7 @@ snapshots:
       magicast: 0.3.5
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.2)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
+      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.10)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -6211,7 +6203,7 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.2)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
+      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.10)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -6261,7 +6253,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.2)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
+      vitest: 3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.10)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -7369,7 +7361,7 @@ snapshots:
       ufo: 1.6.1
       uncrypto: 0.1.3
 
-  happy-dom@20.0.2:
+  happy-dom@20.0.10:
     dependencies:
       '@types/node': 20.19.25
       '@types/whatwg-mimetype': 3.0.2
@@ -8499,7 +8491,7 @@ snapshots:
 
   pify@2.3.0: {}
 
-  pinia@3.0.3(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3)):
+  pinia@3.0.4(typescript@5.9.3)(vue@3.5.24(typescript@5.9.3)):
     dependencies:
       '@vue/devtools-api': 7.7.8
       vue: 3.5.24(typescript@5.9.3)
@@ -9576,9 +9568,9 @@ snapshots:
       terser: 5.44.1
       yaml: 2.8.1
 
-  vitest-environment-nuxt@1.0.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.2)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4):
+  vitest-environment-nuxt@1.0.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.10)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4):
     dependencies:
-      '@nuxt/test-utils': 3.20.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.2)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)
+      '@nuxt/test-utils': 3.20.1(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.24)(vue@3.5.24(typescript@5.9.3)))(@vitest/ui@3.2.4)(@vue/test-utils@2.4.6)(happy-dom@20.0.10)(jsdom@27.2.0)(magicast@0.5.1)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4)
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@jest/globals'
@@ -9593,7 +9585,7 @@ snapshots:
       - typescript
       - vitest
 
-  vitest@3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.2)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1):
+  vitest@3.2.4(@types/node@24.10.1)(@vitest/ui@3.2.4)(happy-dom@20.0.10)(jiti@2.6.1)(jsdom@27.2.0)(msw@2.12.2(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(yaml@2.8.1):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/expect': 3.2.4
@@ -9621,7 +9613,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.10.1
       '@vitest/ui': 3.2.4(vitest@3.2.4)
-      happy-dom: 20.0.2
+      happy-dom: 20.0.10
       jsdom: 27.2.0
     transitivePeerDependencies:
       - jiti
