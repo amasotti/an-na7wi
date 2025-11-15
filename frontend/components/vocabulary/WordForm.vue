@@ -84,7 +84,7 @@
             id="example-field"
             v-model="form.example" 
             rows="3"
-            class="form-input rtl resize-none"
+            class="form-input-na7wi rtl resize-none"
             placeholder="Enter an example sentence..."
             aria-describedby="example-help"
           ></textarea>
@@ -218,7 +218,7 @@
             id="notes-field"
             v-model="form.notes"
             rows="4"
-            class="form-input resize-none"
+            class="form-input-na7wi resize-none"
             placeholder="Add any additional notes, context, or reminders..."
             aria-describedby="notes-help"
           ></textarea>

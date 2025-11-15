@@ -78,7 +78,7 @@
           <textarea
             id="arabic-content"
             v-model="form.arabicContent"
-            class="form-input arabic-text-input"
+            class="form-input-na7wi arabic-text-input"
             rows="12"
             placeholder="أدخل النص العربي هنا..."
             dir="rtl"
@@ -123,7 +123,7 @@
             <textarea
               id="transliteration"
               v-model="form.transliteration"
-              class="form-input italic"
+              class="form-input-na7wi italic"
               rows="8"
               placeholder="Enter romanized pronunciation..."
               aria-describedby="transliteration-help"
@@ -139,7 +139,7 @@
             <textarea
               id="translation"
               v-model="form.translation"
-              class="form-input"
+              class="form-input-na7wi"
               rows="8"
               placeholder="Enter English translation..."
               aria-describedby="translation-help"
@@ -203,7 +203,7 @@
           <textarea
             id="comments"
             v-model="form.comments"
-            class="form-input resize-none"
+            class="form-input-na7wi resize-none"
             rows="4"
             placeholder="Add contextual notes, cultural insights, teaching tips, or other comments..."
             aria-describedby="comments-help"

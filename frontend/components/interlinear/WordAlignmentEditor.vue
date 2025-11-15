@@ -155,7 +155,7 @@
             v-model="editingAlignment.arabicTokens"
             type="text"
             dir="rtl"
-            class="form-input arabic-input"
+            class="form-input-na7wi arabic-input"
             placeholder="Arabic tokens"
           />
         </div>
@@ -165,7 +165,7 @@
           <input
             v-model="editingAlignment.transliterationTokens"
             type="text"
-            class="form-input"
+            class="form-input-na7wi"
             placeholder="Transliteration tokens"
           />
         </div>
@@ -175,7 +175,7 @@
           <input
             v-model="editingAlignment.translationTokens"
             type="text"
-            class="form-input"
+            class="form-input-na7wi"
             placeholder="Translation tokens"
           />
         </div>
@@ -213,7 +213,7 @@
           <input
             v-model="vocabSearchQuery"
             type="search"
-            class="form-input"
+            class="form-input-na7wi"
             placeholder="Type at least 3 characters to search..."
             @focus="showVocabDropdown = true"
           />
@@ -648,17 +648,6 @@ watch(vocabSearchQuery, newQuery => {
 
 .form-field {
   @apply space-y-2;
-}
-
-.form-label {
-  @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
-}
-
-.form-input {
-  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-         bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
-         transition-colors;
 }
 
 .arabic-input {

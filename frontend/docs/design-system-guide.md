@@ -82,7 +82,7 @@ Based on the component analysis, here are key recommendations for better semanti
     <legend class="form-legend">Text Details</legend>
     <div class="form-field">
       <label for="title" class="form-label">Title</label>
-      <input id="title" type="text" class="form-input" required>
+      <input id="title" type="text" class="form-input-na7wi" required>
       <small class="form-help">Enter a descriptive title</small>
     </div>
   </fieldset>
@@ -218,7 +218,7 @@ The An-Na7wi design system provides a comprehensive set of semantic CSS classes 
 **Form Structure:**
 - `.form-group` - Form field grouping
 - `.form-label` - Consistent label styling
-- `.form-input` - Standard input field
+- `.form-input-na7wi` - Standard input field
 - `.form-error` - Error message styling
 - `.form-help` - Help text styling
 

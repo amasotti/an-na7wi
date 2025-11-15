@@ -39,3 +39,19 @@
 .gap-xl {
   @apply gap-8;
 }
+
+.margin-bottom-sm {
+  @apply mb-3;
+}
+
+.margin-bottom-md {
+  @apply mb-4;
+}
+
+.margin-bottom-lg {
+  @apply mb-6;
+}
+
+.margin-top-sm {
+  @apply mt-3;
+}

@@ -1,77 +1,53 @@
 <template>
-  <div class="sentence-editor">
+  <article>
     <!-- Arabic Text -->
-    <div class="form-field">
-      <label :for="`arabic-${sentenceId}`" class="form-label">
-        Arabic Text <span class="required-marker">*</span>
-      </label>
-      <textarea
-        :id="`arabic-${sentenceId}`"
+    <div class="margin-bottom-md">
+      <BaseTextArea
         v-model="localSentence.arabicText"
-        rows="2"
-        required
-        dir="rtl"
-        class="form-textarea arabic-input"
+        label="Arabic"
+        :rows="1"
+        :required="true"
         placeholder="أدخل النص العربي"
+        arabic
         @input="emitUpdate"
-      ></textarea>
+      />
     </div>
 
     <!-- Transliteration -->
-    <div class="form-field">
-      <label :for="`transliteration-${sentenceId}`" class="form-label">
-        Transliteration <span class="required-marker">*</span>
-      </label>
-      <input
-        :id="`transliteration-${sentenceId}`"
+    <div class="margin-bottom-md">
+      <BaseInput
         v-model="localSentence.transliteration"
         type="text"
-        required
-        class="form-input"
-        placeholder="Enter transliteration"
+        label="Transliteration"
+        placeholder="Enter transliteration..."
+        :clearable="true"
+        :required="true"
         @input="emitUpdate"
       />
     </div>
 
     <!-- Translation -->
-    <div class="form-field">
-      <label :for="`translation-${sentenceId}`" class="form-label">
-        Translation <span class="required-marker">*</span>
-      </label>
-      <input
-        :id="`translation-${sentenceId}`"
+    <div class="margin-bottom-md">
+      <BaseInput
         v-model="localSentence.translation"
         type="text"
-        required
-        class="form-input"
+        label="Translation"
         placeholder="Enter English translation"
+        :clearable="true"
+        :required="true"
         @input="emitUpdate"
       />
     </div>
 
     <!-- Annotations (Optional) -->
-    <div class="form-field">
-      <label :for="`annotations-${sentenceId}`" class="form-label">
-        Notes (Markdown)
-      </label>
-      <textarea
-        :id="`annotations-${sentenceId}`"
+    <div class="margin-bottom-md">
+      <BaseTextArea
         v-model="localSentence.annotations"
-        rows="3"
-        class="form-textarea"
-        placeholder="Optional notes about grammar, vocabulary, or cultural context (Markdown supported)"
+        label="Notes (Markdown)"
+        :rows="3"
+        placeholder="Optional notes"
         @input="emitUpdate"
-      ></textarea>
-    </div>
-
-    <!-- Alignments Preview (after tokenization) -->
-    <div v-if="sentence.alignments && sentence.alignments.length > 0" class="alignments-preview">
-      <div class="alignments-header">
-        <BaseIcon size="xs" class="alignments-icon">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </BaseIcon>
-        <span class="alignments-text">Tokenized: {{ sentence.alignments.length }} word alignments created</span>
-      </div>
+      />
     </div>
 
     <!-- Actions -->
@@ -108,13 +84,15 @@
         Sentence #{{ sentenceOrder }}
       </div>
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import BaseInput from '~/components/common/BaseInput.vue'
+import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import type { InterlinearSentence } from '~/types'
 
 interface Props {
@@ -177,40 +155,6 @@ const handleTokenize = () => {
 </script>
 
 <style scoped>
-.sentence-editor {
-  @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-4;
-}
-
-.form-field {
-  @apply space-y-2;
-}
-
-.form-label {
-  @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
-}
-
-.required-marker {
-  @apply text-red-500;
-}
-
-.form-input {
-  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-         bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
-         transition-colors;
-}
-
-.form-textarea {
-  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-         bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
-         resize-y transition-colors;
-}
-
-.arabic-input {
-  @apply font-arabic text-lg;
-}
-
 .sentence-actions {
   @apply flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700;
 }
@@ -225,21 +169,5 @@ const handleTokenize = () => {
 
 .sentence-order-badge {
   @apply text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 px-3 py-1 rounded-full;
-}
-
-.alignments-preview {
-  @apply mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg;
-}
-
-.alignments-header {
-  @apply flex items-center gap-2;
-}
-
-.alignments-icon {
-  @apply text-green-600 dark:text-green-400;
-}
-
-.alignments-text {
-  @apply text-sm font-medium text-green-800 dark:text-green-200;
 }
 </style>

@@ -46,7 +46,7 @@
             v-model="textMetadata.title"
             type="text"
             required
-            class="form-input"
+            class="form-input-na7wi"
             placeholder="Text title"
           />
         </div>
@@ -59,7 +59,7 @@
             id="description"
             v-model="textMetadata.description"
             rows="2"
-            class="form-textarea"
+            class="form-textarea-2"
             placeholder="Optional description"
           ></textarea>
         </div>
@@ -589,28 +589,6 @@ onMounted(async () => {
 
 .form-field {
   @apply space-y-2;
-}
-
-.form-label {
-  @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
-}
-
-.required-marker {
-  @apply text-red-500;
-}
-
-.form-input {
-  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-         bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
-         transition-colors;
-}
-
-.form-textarea {
-  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-         bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
-         resize-y transition-colors;
 }
 
 .sentences-section {
