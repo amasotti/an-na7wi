@@ -33,30 +33,10 @@
           Clear Selection
         </BaseButton>
 
-        <template v-if="selectedAlignments.length === 1">
-          <BaseButton
-            type="button"
-            variant="outline"
-            size="sm"
-            @click="editAlignment"
-          >
-            <BaseIcon size="xs" class="button-icon">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </BaseIcon>
-            Edit
-          </BaseButton>
 
-          <BaseButton
-            type="button"
-            variant="outline"
-            size="sm"
-            @click="splitAlignment"
-          >
-            <BaseIcon size="xs" class="button-icon">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </BaseIcon>
-            Split
-          </BaseButton>
+          <EditButton
+            @click="editAlignment"
+          />
 
           <BaseButton
             type="button"
@@ -70,45 +50,6 @@
             Link to Vocabulary
           </BaseButton>
 
-          <BaseButton
-            type="button"
-            variant="danger"
-            size="sm"
-            @click="deleteAlignment"
-          >
-            <BaseIcon size="xs" class="button-icon">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </BaseIcon>
-            Delete
-          </BaseButton>
-        </template>
-
-        <!-- Multi-selection actions -->
-        <template v-else-if="selectedAlignments.length > 1">
-          <BaseButton
-            type="button"
-            variant="primary"
-            size="sm"
-            @click="mergeAlignments"
-          >
-            <BaseIcon size="xs" class="button-icon">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </BaseIcon>
-            Merge
-          </BaseButton>
-
-          <BaseButton
-            type="button"
-            variant="danger"
-            size="sm"
-            @click="deleteSelectedAlignments"
-          >
-            <BaseIcon size="xs" class="button-icon">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </BaseIcon>
-            Delete Selected
-          </BaseButton>
-        </template>
       </div>
     </div>
 
@@ -251,6 +192,7 @@ import BaseModal from '~/components/common/BaseModal.vue'
 import { wordService } from '~/composables/wordService'
 import type { WordAlignment, WordSearchResult } from '~/types'
 import InteractiveGlossa from "~/components/interlinear/alignment/InteractiveGlossa.vue";
+import EditButton from "~/components/common/EditButton.vue";
 
 interface Props {
   alignments: WordAlignment[]
@@ -558,14 +500,6 @@ watch(vocabSearchQuery, newQuery => {
 
 .alignment-actions {
   @apply mt-4 pt-4 border-t border-gray-200;
-}
-
-.selection-info {
-  @apply flex items-center justify-between pb-2;
-}
-
-.selection-count {
-  @apply text-sm font-medium text-gray-700 dark:text-gray-300;
 }
 
 .actions-row {
