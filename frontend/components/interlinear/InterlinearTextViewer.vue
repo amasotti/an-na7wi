@@ -26,7 +26,6 @@
       :text-id="text.id"
       @close="closeEditModal"
       @save="handleSave"
-      @tokenize="handleTokenize"
       @update-alignments="handleUpdateAlignments"
       @split="handleSplit"
       @merge="handleMerge"
@@ -121,44 +120,6 @@ const handleSave = async (updatedSentence: Partial<InterlinearSentence>) => {
     closeEditModal()
   } catch (error) {
     console.error('Failed to save sentence:', error)
-  }
-}
-
-const handleTokenize = async () => {
-  if (!editingSentence.value) return
-
-  const sentence = editingSentence.value
-  if (!sentence.arabicText || !sentence.transliteration || !sentence.translation) return
-
-  const sentenceId = sentence.id
-  if (!sentenceId) return
-
-  try {
-    // Create alignments
-    const alignments = createAlignments(
-      sentence.arabicText,
-      sentence.transliteration,
-      sentence.translation
-    )
-
-    // Delete existing alignments
-    if (sentence.alignments) {
-      for (const alignment of sentence.alignments) {
-        await interlinearStore.deleteAlignment(props.text.id, sentenceId, alignment.id)
-      }
-    }
-
-    // Create new alignments
-    const createdAlignments = []
-    for (const alignment of alignments) {
-      const created = await interlinearStore.addAlignment(props.text.id, sentenceId, alignment)
-      createdAlignments.push(created)
-    }
-
-    // Refresh the text
-    await interlinearStore.fetchTextById(props.text.id)
-  } catch (error) {
-    console.error('Failed to tokenize sentence:', error)
   }
 }
 

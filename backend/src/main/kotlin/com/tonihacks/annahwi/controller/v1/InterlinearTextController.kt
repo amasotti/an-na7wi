@@ -171,6 +171,18 @@ class InterlinearTextController {
     }
 
     @POST
+    @Path("/{textId}/sentences/{sentenceId}/autolignment")
+    @Operation(summary = "Add word alignment", description = "Adds a new word alignment to a sentence")
+    fun autocreateAlignment(
+      @PathParam("textId") textId: UUID,
+      @PathParam("sentenceId") sentenceId: UUID,
+    ): Response {
+      logger.info("POST /api/v1/interlinear-texts/$textId/sentences/$sentenceId/autolignment")
+      interlinearTextService.tokenize(textId, sentenceId)
+      return Response.noContent().build()
+    }
+
+    @POST
     @Path("/{textId}/sentences/{sentenceId}/alignments")
     @Operation(summary = "Add word alignment", description = "Adds a new word alignment to a sentence")
     fun addAlignment(

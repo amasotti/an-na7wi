@@ -21,20 +21,18 @@
 
     <!-- Actions for selected alignment(s) -->
     <div v-if="selectedAlignments.length > 0" class="alignment-actions">
-      <div class="selection-info">
-        <span class="selection-count">{{ selectedAlignments.length }} alignment{{ selectedAlignments.length > 1 ? 's' : '' }} selected</span>
-        <BaseButton
-          type="button"
-          variant="ghost"
-          size="sm"
-          @click="clearSelection"
-        >
-          Clear
-        </BaseButton>
-      </div>
 
       <div class="actions-row">
         <!-- Single selection actions -->
+        <BaseButton
+          type="button"
+          variant="outline"
+          size="sm"
+          @click="clearSelection"
+        >
+          Clear Selection
+        </BaseButton>
+
         <template v-if="selectedAlignments.length === 1">
           <BaseButton
             type="button"
@@ -559,7 +557,7 @@ watch(vocabSearchQuery, newQuery => {
 }
 
 .alignment-actions {
-  @apply mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3;
+  @apply mt-4 pt-4 border-t border-gray-200;
 }
 
 .selection-info {

@@ -11,9 +11,7 @@
         :sentence="localSentence"
         :sentence-id="sentence?.id || 'editing'"
         :sentence-order="sentenceOrder"
-        :tokenizing="tokenizing"
         @update="handleUpdate"
-        @tokenize="handleTokenize"
         @delete="handleDeleteSentence"
       />
 
@@ -77,7 +75,6 @@ const emit = defineEmits<{
 }>()
 
 const localSentence = ref<Partial<InterlinearSentence>>({})
-const tokenizing = ref(false)
 const saving = ref(false)
 
 // Watch for sentence changes
@@ -96,10 +93,6 @@ const handleUpdate = (updatedSentence: Partial<InterlinearSentence>) => {
     ...localSentence.value,
     ...updatedSentence,
   }
-}
-
-const handleTokenize = () => {
-  emit('tokenize')
 }
 
 const handleAlignmentsUpdate = (alignments: WordAlignment[]) => {

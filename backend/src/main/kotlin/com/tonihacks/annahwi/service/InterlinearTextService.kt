@@ -1,5 +1,6 @@
 package com.tonihacks.annahwi.service
 
+import com.tonihacks.annahwi.dto.request.WordAlignmentRequestDTO
 import com.tonihacks.annahwi.entity.InterlinearSentence
 import com.tonihacks.annahwi.entity.InterlinearText
 import com.tonihacks.annahwi.entity.WordAlignment
@@ -192,6 +193,42 @@ class InterlinearTextService {
         }
     }
 
+  @Transactional
+  fun tokenize(textId: UUID, sentenceId: UUID) {
+    logger.info("Tokenizing sentence $sentenceId in text $textId")
+
+    val sentence = interlinearSentenceRepository.findById(sentenceId)
+      ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+    require(sentence.text.id == textId) {
+      "Sentence $sentenceId does not belong to text $textId"
+    }
+
+    logger.warn("This will delete existing alignments for sentence $sentenceId")
+    cleanAlignements(textId, sentenceId)
+
+    val arabicTokens = sentence.arabicText.tokenize()
+    val transliterationTokens = sentence.transliteration.tokenize().map { it.convertDashes() }
+    val translationTokens = sentence.translation.tokenize().map { it.convertDashes() }
+
+    val now = LocalDateTime.now()
+
+    val alignments = arabicTokens.indices.map { i ->
+      WordAlignmentRequestDTO(
+        arabicTokens = arabicTokens[i],
+        transliterationTokens = transliterationTokens.getOrElse(i) { "" },
+        translationTokens = translationTokens.getOrElse(i) { "" },
+        tokenOrder = i
+      ).toEntity().apply {
+        this.sentence = sentence
+        createdAt = now
+        updatedAt = now
+      }
+    }
+
+    alignments.forEach { it.persist() }
+  }
+
     @Transactional
     fun addAlignment(textId: UUID, sentenceId: UUID, alignment: WordAlignment, vocabularyWordId: UUID?): WordAlignment {
         logger.info("Adding alignment to sentence $sentenceId in text $textId")
@@ -289,4 +326,29 @@ class InterlinearTextService {
             wordAlignmentRepository.persist(alignment)
         }
     }
+
+  @Transactional
+  fun cleanAlignements(textId: UUID, sentenceId: UUID) {
+
+    logger.info("Cleaning alignments in sentence $sentenceId of text $textId")
+
+    val sentence = interlinearSentenceRepository.findById(sentenceId)
+      ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+    require(sentence.text.id == textId) {
+      "Sentence $sentenceId does not belong to text $textId"
+    }
+
+    val alignments = wordAlignmentRepository.find("sentence", sentence).list()
+
+    alignments.forEach { it.delete() }
+
+    wordAlignmentRepository.flush()
+  }
+
+  private fun String.tokenize(): List<String> =
+    split(Regex("\\s+")).filter(String::isNotBlank)
+
+  private fun String.convertDashes(): String =
+    replace(Regex("(?<!^el)(?<!^al)-"), " ")
 }

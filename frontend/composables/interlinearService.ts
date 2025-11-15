@@ -92,6 +92,14 @@ export const interlinearService = {
   //   await useApiClient().put(`/interlinear-texts/${textId}/sentences/reorder`, { sentenceIds })
   // },
 
+  async autocreateAlignments(
+    textId: string,
+    sentenceId: string,
+  ) : Promise<void> {
+    await useApiClient().post(
+      `/interlinear-texts/${textId}/sentences/${sentenceId}/autolignment`, {})
+  },
+
   /**
    * Add a word alignment to a sentence
    */
