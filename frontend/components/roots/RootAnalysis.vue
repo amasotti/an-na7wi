@@ -7,7 +7,8 @@
     </div>
     
     <div class="p-6">
-      <div class="text-gray-800 prose prose-sm max-w-none prose-headings:text-gray-900 prose-strong:text-gray-900" v-html="$markdownit.render(currentRoot.analysis)"></div>
+      <div v-if="rootAnalysis" class="text-gray-800 prose prose-sm max-w-none prose-headings:text-gray-900 prose-strong:text-gray-900" v-html="$markdownit.render(rootAnalysis)"></div>
+      <div v-else class="text-gray-600">No linguistic analysis available for this root.</div>
     </div>
   </div>
 </template>
@@ -17,5 +18,5 @@ import { useRootStore } from '~/stores/rootStore'
 
 const rootStore = useRootStore()
 
-const currentRoot = computed(() => rootStore.currentRootWithWords?.root!)
+const rootAnalysis = computed(() => rootStore.currentRootWithWords?.root?.analysis ?? null)
 </script>

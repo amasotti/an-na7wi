@@ -1,5 +1,5 @@
 <template>
-  <article class="root-hero">
+  <article class="root-hero" v-if="currentRoot">
     <!-- Actions Toolbar -->
     <section class="actions-toolbar">
       <AddButton @click="$emit('add-word')">
@@ -87,6 +87,9 @@
       </article>
     </section>
   </article>
+  <div v-else>
+    <p class="text-gray-600">No root selected.</p>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -99,7 +102,7 @@ import { formatDate } from '~/utils/dateUtils'
 
 const rootStore = useRootStore()
 
-const currentRoot = computed(() => rootStore.currentRootWithWords?.root!)
+const currentRoot = computed(() => rootStore.currentRootWithWords?.root ?? null)
 
 defineEmits<{
   edit: []
@@ -108,6 +111,8 @@ defineEmits<{
 }>()
 
 const rootType = computed(() => {
+  if (!currentRoot.value) return 'N/A'
+
   const letterCount = currentRoot.value.letterCount
   switch (letterCount) {
     case 2:
