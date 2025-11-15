@@ -1,0 +1,48 @@
+### Variables
+@baseUrl = http://localhost:8080
+@textId = {{createText.response.body.id}}
+
+### Create Interlinear Text
+# @name createText
+POST {{baseUrl}}/api/v1/interlinear-texts
+Content-Type: application/json
+
+{
+  "title": "My First Interlinear Text",
+  "description": "A sample Arabic text with interlinear glossing",
+  "dialect": "TUNISIAN"
+}
+
+### Get All Interlinear Texts (paginated)
+GET {{baseUrl}}/api/v1/interlinear-texts?page=1&size=10&sort=title
+Accept: application/json
+
+### Get Interlinear Text by ID
+GET {{baseUrl}}/api/v1/interlinear-texts/{{textId}}
+Accept: application/json
+
+### Update Interlinear Text
+PUT {{baseUrl}}/api/v1/interlinear-texts/11a95f5f-b50a-45d6-908e-4d26731d4238
+Content-Type: application/json
+
+{
+  "title": "Updated Title",
+  "description": "Updated description",
+  "dialect": "EGYPTIAN"
+}
+
+### Delete Interlinear Text
+DELETE {{baseUrl}}/api/v1/interlinear-texts/11a95f5f-b50a-45d6-908e-4d26731d4238
+
+### Create Text without Description
+POST {{baseUrl}}/api/v1/interlinear-texts
+Content-Type: application/json
+
+{
+  "title": "Minimal Text",
+  "dialect": "TUNISIAN"
+}
+
+### Get All Texts - Page 2
+GET {{baseUrl}}/api/v1/interlinear-texts?page=2&size=5
+Accept: application/json
