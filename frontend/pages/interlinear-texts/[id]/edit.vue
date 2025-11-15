@@ -599,10 +599,6 @@ onMounted(async () => {
   @apply flex items-center justify-between mb-4;
 }
 
-.button-icon {
-  @apply mr-1.5;
-}
-
 .empty-state {
   @apply text-center py-12 px-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700;
 }

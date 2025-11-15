@@ -1,6 +1,6 @@
 <template>
   <span :class="badgeClasses">
-    <BaseIcon v-if="icon" :size="iconSize" class="mr-1.5">
+    <BaseIcon v-if="icon" :size="iconSize" class="button-icon">
       <component :is="icon" />
     </BaseIcon>
     
