@@ -52,22 +52,15 @@
           </BaseIcon>
           Linguistic Analysis
         </h3>
-        <div class="form-group">
-          <label for="analysisInput" class="form-label">
-            Analysis (Optional)
-          </label>
-          <textarea
-            id="analysisInput"
+          <BaseTextArea
             v-model="analysisInput"
+            id="analysisInput"
             placeholder="Enter linguistic analysis, cognitive metaphors, grammatical patterns, verb forms, semantic relationships..."
-            class="form-input-na7wi"
             :rows="dynamicAreaTextSize"
             aria-describedby="analysis-help"
+            label="Analysis"
+            hint="Provide detailed linguistic insights about the root"
           />
-          <div id="analysis-help" class="form-help">
-            Include morphological patterns, semantic extensions, cultural context, and related concepts
-          </div>
-        </div>
       </section>
 
       <!-- Error Display -->
@@ -109,6 +102,7 @@ import BaseIcon from '@/components/common/BaseIcon.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import type { Root } from '@/types'
+import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
 import { rootService } from '~/composables/rootService'
 

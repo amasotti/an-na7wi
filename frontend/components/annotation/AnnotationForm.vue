@@ -23,36 +23,31 @@
         <p v-if="isEditing && !canEditAnchorText" class="mt-1 text-xs text-gray-500">
           Anchor text cannot be changed for existing annotations
         </p>
+        <BaseButton
+          v-if="form.anchorText"
+          type="button"
+          variant="outline"
+          size="sm"
+          :loading="loadingExamples"
+          @click="generateExamples"
+          class="whitespace-nowrap"
+        >
+          <BaseIcon class="w-4 h-4 mr-1">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m0 16v2m8.485-8.485l-1.414-1.414M4.929 4.929L3.515 3.515M21 12h-2M5 12H3m15.364 6.364l-1.414-1.414m-12.728 0l-1.414 1.414M16 8a4 4 0 11-8 0 4 4 0 018 0z" />
+          </BaseIcon>
+          Generate Examples
+        </BaseButton>
       </div>
 
       <!-- Content -->
       <div>
-        <div class="flex justify-between items-center mb-1">
-          <label for="content" class="block text-sm font-medium text-gray-700">
-            Content <span class="text-red-500">*</span>
-          </label>
-          <BaseButton
-            v-if="form.anchorText"
-            type="button"
-            variant="outline"
-            size="sm"
-            :loading="loadingExamples"
-            @click="generateExamples"
-            class="whitespace-nowrap"
-          >
-            <BaseIcon class="w-4 h-4 mr-1">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v2m0 16v2m8.485-8.485l-1.414-1.414M4.929 4.929L3.515 3.515M21 12h-2M5 12H3m15.364 6.364l-1.414-1.414m-12.728 0l-1.414 1.414M16 8a4 4 0 11-8 0 4 4 0 018 0z" />
-            </BaseIcon>
-            Generate Examples
-          </BaseButton>
-        </div>
-        <textarea
+        <BaseTextArea
           id="content"
           v-model="form.content"
-          rows="6"
+          :rows="5"
           required
-          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 resize-y"
-        ></textarea>
+          label="Annotation"
+        />
         <div v-if="generatedExamples.length > 0" class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
           <h4 class="text-sm font-medium text-blue-900 mb-2">Generated Examples:</h4>
           <div class="space-y-2">
@@ -177,6 +172,7 @@ import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum 
 import WordSelector from '~/components/annotation/WordSelector.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
+import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import ColorPicker from '~/components/common/ColorPicker.vue'
 import type { CreateAnnotationRequest } from '~/composables/annotationService'
 import { exampleService } from '~/composables/exampleService'

@@ -43,18 +43,13 @@
           />
         </div>
 
-        <div class="form-field">
-          <label for="description" class="form-label">
-            Description
-          </label>
-          <textarea
-            id="description"
-            v-model="textMetadata.description"
-            rows="3"
-            class="form-textarea-2"
-            placeholder="Optional description"
-          ></textarea>
-        </div>
+        <BaseTextArea
+          id="description"
+          v-model="textMetadata.description"
+          label="Description"
+          :rows="3"
+          placeholder="Optional description"
+        />
 
         <div class="form-field">
           <label for="dialect" class="form-label">
@@ -118,6 +113,7 @@ import { computed, onMounted, ref } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import type { Dialect } from '~/types'
