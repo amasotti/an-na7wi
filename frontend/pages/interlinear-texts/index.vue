@@ -47,9 +47,7 @@
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <InterlinearTextCardSkeleton v-for="i in 6" :key="i" />
-    </div>
+    <LoadingEffect v-if="loading" />
 
     <!-- Pagination -->
     <div v-if="totalCount > pageSize" class="mt-12 flex justify-center">
@@ -76,10 +74,10 @@ import { computed, onMounted, ref } from 'vue'
 import type { InterlinearText } from '@/types'
 import Pagination from '~/components/common/Pagination.vue'
 import InterlinearTextCard from '~/components/interlinear/InterlinearTextCard.vue'
-import InterlinearTextCardSkeleton from '~/components/interlinear/InterlinearTextCardSkeleton.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
 import InterlinearTextHeader from '~/components/interlinear/InterlinearTextHeader.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
+import LoadingEffect from "~/components/common/LoadingEffect.vue";
 
 const interlinearStore = useInterlinearStore()
 const showDeleteModal = ref(false)
