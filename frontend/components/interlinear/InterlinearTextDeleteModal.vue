@@ -43,10 +43,10 @@
 
 <script setup lang="ts">
 import type { InterlinearText } from '@/types'
+import DeleteButton from '~/components/common/DeleteButton.vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
-import DeleteButton from "~/components/common/DeleteButton.vue";
 
 interface Props {
   open: boolean

@@ -210,19 +210,6 @@ describe('interlinearService', () => {
     })
   })
 
-  describe('reorderSentences', () => {
-    it('should reorder sentences', async () => {
-      const sentenceIds = ['s2', 's1', 's3']
-      mockApiClient.put.mockResolvedValue({})
-
-      await interlinearService.reorderSentences('1', sentenceIds)
-
-      expect(mockApiClient.put).toHaveBeenCalledWith('/interlinear-texts/1/sentences/reorder', {
-        sentenceIds,
-      })
-    })
-  })
-
   describe('addAlignment', () => {
     it('should add a word alignment to a sentence', async () => {
       const alignmentData: Partial<WordAlignment> = {

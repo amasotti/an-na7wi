@@ -86,10 +86,11 @@ export const interlinearService = {
 
   /**
    * Reorder sentences in a text
+   * -- not yet implemented in the frontend
    */
-  async reorderSentences(textId: string, sentenceIds: string[]): Promise<void> {
-    await useApiClient().put(`/interlinear-texts/${textId}/sentences/reorder`, { sentenceIds })
-  },
+  // async reorderSentences(textId: string, sentenceIds: string[]): Promise<void> {
+  //   await useApiClient().put(`/interlinear-texts/${textId}/sentences/reorder`, { sentenceIds })
+  // },
 
   /**
    * Add a word alignment to a sentence

@@ -215,35 +215,6 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     }
   }
 
-  async function reorderSentences(textId: string, sentenceIds: string[]) {
-    loading.value = true
-    error.value = null
-
-    try {
-      await interlinearService.reorderSentences(textId, sentenceIds)
-
-      if (currentText.value?.id === textId) {
-        const orderedSentences = sentenceIds
-          .map((id, index) => {
-            const sentence = currentText.value?.sentences.find(s => s.id === id)
-            if (sentence) {
-              return { ...sentence, sentenceOrder: index }
-            }
-            return null
-          })
-          .filter((s): s is InterlinearSentence => s !== null)
-
-        currentText.value.sentences = orderedSentences
-      }
-    } catch (err) {
-      error.value = 'Failed to reorder sentences'
-      console.error(err)
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
   // Actions - Alignment Operations
   async function addAlignment(
     textId: string,
@@ -342,7 +313,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
       if (currentText.value?.id === textId) {
         const sentence = currentText.value.sentences.find(s => s.id === sentenceId)
         if (sentence) {
-          const orderedAlignments = alignmentIds
+          sentence.alignments = alignmentIds
             .map((id, index) => {
               const alignment = sentence.alignments.find(a => a.id === id)
               if (alignment) {
@@ -351,8 +322,6 @@ export const useInterlinearStore = defineStore('interlinear', () => {
               return null
             })
             .filter((a): a is WordAlignment => a !== null)
-
-          sentence.alignments = orderedAlignments
         }
       }
     } catch (err) {
@@ -367,20 +336,6 @@ export const useInterlinearStore = defineStore('interlinear', () => {
   // Utility actions
   function setPage(page: number) {
     currentPage.value = page
-    lastFetchParams.value = ''
-  }
-
-  function clearCache() {
-    lastFetchParams.value = ''
-  }
-
-  function resetState() {
-    texts.value = []
-    currentText.value = null
-    loading.value = false
-    error.value = null
-    totalCount.value = 0
-    currentPage.value = 1
     lastFetchParams.value = ''
   }
 
@@ -408,7 +363,6 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     addSentence,
     updateSentence,
     deleteSentence,
-    reorderSentences,
 
     // Actions - Alignment
     addAlignment,
@@ -418,7 +372,5 @@ export const useInterlinearStore = defineStore('interlinear', () => {
 
     // Utilities
     setPage,
-    clearCache,
-    resetState,
   }
 })
