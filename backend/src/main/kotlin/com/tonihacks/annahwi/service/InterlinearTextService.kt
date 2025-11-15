@@ -265,6 +265,7 @@ class InterlinearTextService {
     }
 
     @Transactional
+    @Suppress("ThrowsCount")
     fun reorderAlignments(textId: UUID, sentenceId: UUID, alignmentIds: List<UUID>) {
         logger.info("Reordering ${alignmentIds.size} alignments in sentence $sentenceId")
 
