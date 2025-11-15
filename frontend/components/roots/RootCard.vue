@@ -1,6 +1,6 @@
 <template>
   <article 
-    class="root-card group flex flex-col"
+    class="card-interactive group flex flex-col"
     :class="mobileClasses"
     @click="handleClick"
   >
@@ -104,10 +104,6 @@ const handleDelete = (event: Event) => {
 </script>
 
 <style scoped>
-.root-card {
-  @apply relative bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer transition-all duration-200 hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5;
-}
-
 .action-button {
   @apply p-1.5 rounded-full bg-white/90 text-red-500 hover:bg-red-50 hover:text-red-600 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200/50 backdrop-blur-sm opacity-0 group-hover:opacity-100;
 }

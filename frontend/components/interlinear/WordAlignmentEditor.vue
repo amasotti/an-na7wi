@@ -10,36 +10,13 @@
 
     <!-- Alignments Display -->
     <div class="alignments-container" dir="rtl">
-      <div
+      <InteractiveGlossa
         v-for="(alignment, index) in sortedAlignments"
-        :key="alignment.id || `temp-${index}`"
-        class="alignment-card"
-        :class="{ 'alignment-selected': selectedAlignments.includes(index) }"
-        @click="toggleSelection(index, $event)"
-      >
-        <!-- Arabic -->
-        <div class="alignment-row arabic">
-          <div class="alignment-value arabic-text">{{ alignment.arabicTokens }}</div>
-        </div>
-
-        <!-- Transliteration -->
-        <div class="alignment-row transliteration">
-          <div class="alignment-value">{{ alignment.transliterationTokens }}</div>
-        </div>
-
-        <!-- Translation -->
-        <div class="alignment-row translation">
-          <div class="alignment-value">{{ alignment.translationTokens }}</div>
-        </div>
-
-        <!-- Vocabulary Link Badge -->
-        <div v-if="alignment.vocabularyWordId" class="vocab-badge">
-          <BaseIcon size="xs">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </BaseIcon>
-          Linked
-        </div>
-      </div>
+        :alignment="alignment"
+        :index="index"
+        :is-selected="selectedAlignments.includes(index)"
+        @toggle-selection="toggleSelection"
+      />
     </div>
 
     <!-- Actions for selected alignment(s) -->
@@ -275,6 +252,7 @@ import BaseIcon from '~/components/common/BaseIcon.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
 import { wordService } from '~/composables/wordService'
 import type { WordAlignment, WordSearchResult } from '~/types'
+import InteractiveGlossa from "~/components/interlinear/alignment/InteractiveGlossa.vue";
 
 interface Props {
   alignments: WordAlignment[]
@@ -575,46 +553,9 @@ watch(vocabSearchQuery, newQuery => {
   @apply grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-3;
 }
 
-.alignment-card {
-  @apply bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900/50 dark:to-gray-800/50
-         rounded-lg p-3 border-2 border-gray-200 dark:border-gray-700
-         cursor-pointer transition-all duration-200 hover:scale-[1.02] hover:border-primary-300 dark:hover:border-primary-700;
-}
-
-.alignment-selected {
-  @apply border-primary-500 dark:border-primary-500 bg-primary-50 dark:bg-primary-900/20 shadow-md;
-}
-
-.alignment-row {
-  @apply mb-2 last:mb-0;
-}
-
-.alignment-value {
-  @apply text-sm break-words;
-}
 
 .arabic-text {
   @apply text-base font-arabic text-gray-900 dark:text-gray-100 font-semibold;
-}
-
-.alignment-row.transliteration .alignment-value {
-  @apply text-gray-600 dark:text-gray-400 italic;
-}
-
-.alignment-row.translation .alignment-value {
-  @apply text-gray-700 dark:text-gray-300;
-}
-
-.vocab-badge {
-  @apply mt-2 pt-2 border-t border-gray-300 dark:border-gray-600 flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 font-medium;
-}
-
-.empty-state {
-  @apply text-center py-8 px-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700;
-}
-
-.empty-text {
-  @apply text-sm text-gray-600 dark:text-gray-400;
 }
 
 .alignment-actions {
