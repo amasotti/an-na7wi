@@ -1,23 +1,14 @@
 <template>
   <article class="interlinear-sentence group">
     <!-- Edit Button -->
-    <button
-      type="button"
-      class="edit-sentence-btn"
-      @click="$emit('edit')"
-      title="Edit this sentence"
-    >
-      <BaseIcon size="xs">
-        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-      </BaseIcon>
-    </button>
+    <EditButton @click="$emit('edit')" />
 
     <!-- Interlinear Words (flowing inline like text) -->
     <div v-if="sortedAlignments.length > 0" class="interlinear-line" dir="rtl">
       <NuxtLink
         v-for="alignment in sortedAlignments"
         :key="alignment.id"
-        :to="alignment.vocabularyWordId ? `/words/${alignment.vocabularyWordId}` : undefined"
+        :to="wordLink(alignment)"
         :class="['interlinear-word', { 'is-linked': alignment.vocabularyWordId }]"
         :title="alignment.vocabularyWordId ? 'Click to view in vocabulary' : undefined"
       >
@@ -31,14 +22,14 @@
 
     <!-- Fallback: show full sentence if no alignments -->
     <div v-else class="sentence-fallback">
-      <div class="sentence-arabic" dir="rtl">{{ sentence.arabicText }}</div>
-      <div class="sentence-transliteration">{{ sentence.transliteration }}</div>
-      <div class="sentence-translation">{{ sentence.translation }}</div>
+      <div class="arabic">{{ sentence.arabicText }}</div>
+      <div class="sentence-transliteration" dir="rtl">{{ sentence.transliteration }}</div>
+      <div class="sentence-translation" dir="rtl">{{ sentence.translation }}</div>
     </div>
 
     <!-- Annotations -->
     <div v-if="sentence.annotations" class="annotations-block">
-      <BaseIcon size="xs" class="note-icon">
+      <BaseIcon size="sm" class="note-icon">
         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
       </BaseIcon>
       <span class="note-text">{{ sentence.annotations }}</span>
@@ -50,12 +41,13 @@
 import { computed } from 'vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
 import type { InterlinearSentence } from '@/types'
+import EditButton from "~/components/common/EditButton.vue";
 
-interface Props {
+interface InterlinearSentenceProps {
   sentence: InterlinearSentence
 }
 
-const props = defineProps<Props>()
+const props = defineProps<InterlinearSentenceProps>()
 
 defineEmits<{
   edit: []
@@ -66,15 +58,15 @@ const sortedAlignments = computed(() => {
   if (!props.sentence.alignments) return []
   return [...props.sentence.alignments].sort((a, b) => a.tokenOrder - b.tokenOrder)
 })
+
+const wordLink = (alignment: { vocabularyWordId?: string }) => {
+  return alignment.vocabularyWordId ? `/words/${alignment.vocabularyWordId}` : undefined
+}
 </script>
 
 <style scoped>
 .interlinear-sentence {
   @apply relative py-5 border-b border-gray-200 dark:border-gray-700 last:border-b-0;
-}
-
-.edit-sentence-btn {
-  @apply absolute top-3 left-0 p-1.5 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 opacity-0 group-hover:opacity-100 transition-all rounded-md hover:bg-primary-50 dark:hover:bg-primary-900/20;
 }
 
 /* Interlinear line - words flow inline like reading text */
@@ -120,10 +112,6 @@ const sortedAlignments = computed(() => {
   @apply space-y-1 pl-8;
 }
 
-.sentence-fallback .sentence-arabic {
-  @apply text-xl font-arabic text-gray-900 dark:text-gray-100 leading-relaxed;
-}
-
 .sentence-fallback .sentence-transliteration {
   @apply text-sm text-gray-500 dark:text-gray-400 italic leading-relaxed;
 }
@@ -134,7 +122,9 @@ const sortedAlignments = computed(() => {
 
 /* Annotations - minimal styling */
 .annotations-block {
-  @apply flex items-start gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50 pl-8;
+  @apply flex gap-2 mt-3 pt-3
+  border-t border-gray-100 dark:border-gray-700/50;
+  @apply bg-neutral-100/50 dark:bg-gray-800/50 p-3 rounded-md;
 }
 
 .note-icon {

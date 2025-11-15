@@ -1,14 +1,12 @@
 <template>
-  <div class="interlinear-text-viewer">
+  <div class="full-width">
     <!-- Empty State -->
-    <div v-if="!text.sentences || text.sentences.length === 0" class="empty-state">
-      <h3 class="empty-state-title">
-        No sentences yet
-      </h3>
-      <p class="empty-state-description">
-        This interlinear text doesn't have any sentences yet.
-      </p>
-    </div>
+    <BaseEmptyState
+      v-if="!text.sentences || text.sentences.length === 0"
+      link="#"
+      linkText="Add a sentence to start"
+      message="No sentences are available for this interlinear text."
+    />
 
     <!-- Sentences -->
     <div v-else class="sentences-list">
@@ -43,6 +41,7 @@ import { useInterlinearStore } from '~/stores/interlinearStore'
 import { createAlignments } from '~/utils/tokenization'
 import InterlinearSentenceViewer from './InterlinearSentenceViewer.vue'
 import SentenceEditModal from './SentenceEditModal.vue'
+import BaseEmptyState from "~/components/common/BaseEmptyState.vue";
 
 interface Props {
   text: InterlinearTextDetail
@@ -284,22 +283,6 @@ const handleMerge = async (alignmentIndices: number[]) => {
 </script>
 
 <style scoped>
-.interlinear-text-viewer {
-  @apply w-full;
-}
-
-.empty-state {
-  @apply text-center py-12 px-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700;
-}
-
-.empty-state-title {
-  @apply text-lg font-medium text-gray-900 dark:text-gray-100 mb-2;
-}
-
-.empty-state-description {
-  @apply text-gray-600 dark:text-gray-400;
-}
-
 .sentences-list {
   @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 px-6 py-2;
 }
