@@ -41,7 +41,7 @@
 import { computed } from 'vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
 import type { InterlinearSentence } from '@/types'
-import EditButton from "~/components/common/EditButton.vue";
+import EditButton from '~/components/common/EditButton.vue'
 
 interface InterlinearSentenceProps {
   sentence: InterlinearSentence

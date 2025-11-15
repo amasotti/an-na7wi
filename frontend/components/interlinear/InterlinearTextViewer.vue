@@ -37,11 +37,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { InterlinearSentence, InterlinearTextDetail, WordAlignment } from '@/types'
+import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import { createAlignments } from '~/utils/tokenization'
 import InterlinearSentenceViewer from './InterlinearSentenceViewer.vue'
 import SentenceEditModal from './SentenceEditModal.vue'
-import BaseEmptyState from "~/components/common/BaseEmptyState.vue";
 
 interface Props {
   text: InterlinearTextDetail

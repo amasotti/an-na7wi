@@ -171,9 +171,9 @@ describe('createAlignments', () => {
     const result: TokenAlignment[] = createAlignments('a b c', 'd e f', 'g h i')
 
     expect(result).toHaveLength(3)
-    expect(result[0]!!.tokenOrder).toBe(0)
-    expect(result[1]!!.tokenOrder).toBe(1)
-    expect(result[2]!!.tokenOrder).toBe(2)
+    expect(result[0]!.tokenOrder).toBe(0)
+    expect(result[1]!.tokenOrder).toBe(1)
+    expect(result[2]!.tokenOrder).toBe(2)
   })
 
   it('handles extra spaces in input', () => {

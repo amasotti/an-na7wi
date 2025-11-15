@@ -1,7 +1,7 @@
-import {mount, type VueWrapper} from '@vue/test-utils'
+import { mount, type VueWrapper } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { InterlinearSentenceEditor } from '#components'
 import type { InterlinearSentence } from '~/types'
-import {InterlinearSentenceEditor} from '#components'
 
 // Mock child components
 vi.mock('~/components/common/BaseButton.vue', () => ({
@@ -162,7 +162,7 @@ describe('InterlinearSentenceEditor', () => {
   })
 
   it('updates local state when prop changes', async () => {
-    const wrapper: VueWrapper<typeof InterlinearSentenceEditor, any>  = createWrapper()
+    const wrapper: VueWrapper<typeof InterlinearSentenceEditor, any> = createWrapper()
 
     // Change the sentence prop
     await wrapper.setProps({
@@ -171,7 +171,7 @@ describe('InterlinearSentenceEditor', () => {
         transliteration: 'marhaba bik',
         translation: 'Welcome',
         annotations: 'Welcoming phrase',
-      }
+      },
     })
 
     const arabicInput = wrapper.find('#arabic-test-sentence-1')

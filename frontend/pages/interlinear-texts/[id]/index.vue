@@ -99,6 +99,8 @@ import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearText
 import type InterlinearTextViewer from '~/components/interlinear/InterlinearTextViewer.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import { Dialect } from '~/types'
+import { dialectToLabel } from '~/utils/arabicDialects'
+import { formatDate } from '~/utils/dateUtils'
 
 const route = useRoute()
 const interlinearStore = useInterlinearStore()
@@ -116,25 +118,12 @@ const error = computed(() => interlinearStore.error)
 // Computed UI properties
 const dialectLabel = computed(() => {
   if (!currentText.value) return ''
-  const labels = {
-    [Dialect.TUNISIAN]: 'Tunisian',
-    [Dialect.MOROCCAN]: 'Moroccan',
-    [Dialect.EGYPTIAN]: 'Egyptian',
-    [Dialect.LEVANTINE]: 'Levantine',
-    [Dialect.GULF]: 'Gulf',
-    [Dialect.IRAQI]: 'Iraqi',
-    [Dialect.MSA]: 'MSA',
-  }
-  return labels[currentText.value.dialect]
+  return dialectToLabel[currentText.value.dialect]
 })
 
 const formattedDate = computed(() => {
   if (!currentText.value) return ''
-  return new Date(currentText.value.updatedAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  return formatDate(currentText.value.updatedAt)
 })
 
 // Methods
