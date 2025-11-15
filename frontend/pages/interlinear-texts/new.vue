@@ -27,7 +27,7 @@
             type="text"
             required
             maxlength="200"
-            class="form-input"
+            class="form-input-na7wi"
             placeholder="Enter the title of the text"
             :disabled="loading"
           />
@@ -46,7 +46,7 @@
             v-model="form.description"
             rows="4"
             maxlength="500"
-            class="form-textarea"
+            class="form-textarea-2"
             placeholder="Optional description or context for this text"
             :disabled="loading"
           ></textarea>
@@ -225,30 +225,6 @@ const handleCancel = () => {
 
 .form-field {
   @apply space-y-2;
-}
-
-.form-label {
-  @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
-}
-
-.required-marker {
-  @apply text-red-500;
-}
-
-.form-input {
-  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-         bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
-         disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed
-         transition-colors;
-}
-
-.form-textarea {
-  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm
-         focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-         bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100
-         disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed
-         resize-y transition-colors;
 }
 
 .form-select {

@@ -15,6 +15,7 @@
 @import '../typography/headings.css';
 @import '../typography/body-text.css';
 @import '../typography/arabic.css';
+@import '../typography/text-effects.css';
 
 /* Utilities */
 @import '../utilities/spacing.css';

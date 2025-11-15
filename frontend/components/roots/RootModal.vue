@@ -60,7 +60,7 @@
             id="analysisInput"
             v-model="analysisInput"
             placeholder="Enter linguistic analysis, cognitive metaphors, grammatical patterns, verb forms, semantic relationships..."
-            class="form-input"
+            class="form-input-na7wi"
             :rows="dynamicAreaTextSize"
             aria-describedby="analysis-help"
           />
