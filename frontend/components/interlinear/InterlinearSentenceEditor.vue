@@ -1,8 +1,12 @@
 <template>
   <article>
+    <!-- Sentence Order Badge -->
+    <div class="sentence-order-badge">Sentence #{{ sentenceOrder }}</div>
+
     <!-- Arabic Text -->
     <div class="margin-bottom-md">
       <BaseTextArea
+        :id="`arabic-${sentenceId}`"
         v-model="localSentence.arabicText"
         label="Arabic"
         :rows="1"
@@ -16,6 +20,7 @@
     <!-- Transliteration -->
     <div class="margin-bottom-md">
       <BaseInput
+        :id="`transliteration-${sentenceId}`"
         v-model="localSentence.transliteration"
         type="text"
         label="Transliteration"
@@ -29,6 +34,7 @@
     <!-- Translation -->
     <div class="margin-bottom-md">
       <BaseInput
+        :id="`translation-${sentenceId}`"
         v-model="localSentence.translation"
         type="text"
         label="Translation"
@@ -42,6 +48,7 @@
     <!-- Annotations (Optional) -->
     <div class="margin-bottom-md">
       <BaseTextArea
+        :id="`annotations-${sentenceId}`"
         v-model="localSentence.annotations"
         label="Notes (Markdown)"
         :rows="3"
