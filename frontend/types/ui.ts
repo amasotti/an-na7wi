@@ -1,5 +1,6 @@
 // UI Component types
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
+export type ButtonRole = 'button' | 'submit' | 'reset' | undefined
 export type ButtonSize = 'sm' | 'md' | 'lg'
 export type ColorVariant =
   | 'red'
