@@ -28,7 +28,7 @@
             type="button"
             variant="outline"
             size="sm"
-          @click="clearSelection"
+          @click="store.clearAlignmentSelection()"
           >
           Clear Selection
           </BaseButton>
@@ -104,9 +104,9 @@
 
     <!-- Vocabulary Link Modal -->
     <BaseModal
-      :open="showVocabModal"
+      :open="showVocabLinkModal"
       title="Link to Vocabulary"
-      @close="closeVocabModal"
+      @close="store.closeVocabLinkModal()"
     >
       <div class="vocab-modal">
         <div class="vocab-preview" v-if="linkingAlignment">
@@ -139,7 +139,7 @@
               :key="word.id"
               type="button"
               class="vocab-dropdown-item"
-              @click="selectVocabularyWord(word)"
+              @click="store.linkAlignmentToVocab(word.id); showVocabDropdown = false"
             >
               <div class="vocab-item-content">
                 <div class="vocab-item-arabic arabic-text" dir="rtl">{{ word.arabic }}</div>
@@ -167,7 +167,7 @@
               type="button"
               variant="danger"
               size="sm"
-              @click="unlinkVocabularyWord"
+              @click="store.unlinkAlignmentFromVocab()"
             >
               Unlink
             </BaseButton>
@@ -175,7 +175,7 @@
         </div>
 
         <div class="modal-actions">
-          <BaseButton type="button" variant="outline" @click="closeVocabModal">
+          <BaseButton type="button" variant="outline" @click="store.closeVocabLinkModal()">
             Close
           </BaseButton>
         </div>
@@ -189,119 +189,60 @@ import { computed, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
-import { wordService } from '~/composables/wordService'
-import type { WordAlignment, WordSearchResult } from '~/types'
-import InteractiveGlossa from "~/components/interlinear/alignment/InteractiveGlossa.vue";
-import EditButton from "~/components/common/EditButton.vue";
+import EditButton from '~/components/common/EditButton.vue'
+import InteractiveGlossa from '~/components/interlinear/alignment/InteractiveGlossa.vue'
 
-interface Props {
-  alignments: WordAlignment[]
-  sentenceId: string
-}
+const store = useInterlinearStore()
+const {
+  sortedAlignments,
+  selectedAlignments,
+  showVocabLinkModal,
+  vocabSearchQuery,
+  vocabSearchResults,
+  currentLinkedWord,
+  linkingAlignment,
+  vocabSearching,
+} = storeToRefs(store)
 
-const props = defineProps<Props>()
-
-const emit = defineEmits<{
-  update: [alignments: WordAlignment[]]
-  split: [alignmentIndex: number]
-  merge: [alignmentIndices: number[]]
-}>()
-
-// State
-const selectedAlignments = ref<number[]>([])
+// Local UI state for edit modal
 const showEditModal = ref(false)
-const editingAlignment = ref<Partial<WordAlignment> | null>(null)
-const editingIndex = ref<number | null>(null)
-
-// Vocabulary linking state
-const showVocabModal = ref(false)
-const linkingAlignment = ref<WordAlignment | null>(null)
-const linkingIndex = ref<number | null>(null)
-const vocabSearchQuery = ref('')
-const vocabSearchResults = ref<WordSearchResult[]>([])
+const editingAlignment = ref<{
+  id: string
+  arabicTokens: string
+  transliterationTokens: string
+  translationTokens: string
+} | null>(null)
 const showVocabDropdown = ref(false)
-const currentLinkedWord = ref<WordSearchResult | null>(null)
 
-// Computed
-const sortedAlignments = computed(() => {
-  return [...props.alignments].sort((a, b) => a.tokenOrder - b.tokenOrder)
-})
-
-// Methods
+// Methods - delegated to store
 const toggleSelection = (index: number, event: MouseEvent) => {
-  if (event.shiftKey && selectedAlignments.value.length > 0) {
-    // Shift-click: Select range
-    const lastSelected = selectedAlignments.value[selectedAlignments.value.length - 1]
-    if (lastSelected === undefined) return
-    const start = Math.min(lastSelected, index)
-    const end = Math.max(lastSelected, index)
-    const range = Array.from({ length: end - start + 1 }, (_, i) => start + i)
-    selectedAlignments.value = [...new Set([...selectedAlignments.value, ...range])]
-  } else if (event.metaKey || event.ctrlKey) {
-    // Ctrl/Cmd-click: Toggle individual selection
-    const idx = selectedAlignments.value.indexOf(index)
-    if (idx > -1) {
-      selectedAlignments.value.splice(idx, 1)
-    } else {
-      selectedAlignments.value.push(index)
-    }
-  } else {
-    // Regular click: Select only this one
-    if (selectedAlignments.value.length === 1 && selectedAlignments.value[0] === index) {
-      selectedAlignments.value = []
-    } else {
-      selectedAlignments.value = [index]
-    }
-  }
-}
-
-const clearSelection = () => {
-  selectedAlignments.value = []
+  store.toggleAlignmentSelection(index, event)
 }
 
 const editAlignment = () => {
   if (selectedAlignments.value.length !== 1) return
-
   const index = selectedAlignments.value[0]
   if (index === undefined) return
-
   const alignment = sortedAlignments.value[index]
   if (!alignment) return
 
-  editingAlignment.value = { ...alignment }
-  editingIndex.value = index
+  editingAlignment.value = {
+    id: alignment.id!,
+    arabicTokens: alignment.arabicTokens,
+    transliterationTokens: alignment.transliterationTokens,
+    translationTokens: alignment.translationTokens,
+  }
   showEditModal.value = true
 }
 
-const saveEditedAlignment = () => {
-  if (!editingAlignment.value || editingIndex.value === null) return
+const saveEditedAlignment = async () => {
+  if (!editingAlignment.value) return
 
-  const sortedAlignment = sortedAlignments.value[editingIndex.value]
-  if (!sortedAlignment) return
-
-  const updatedAlignments = [...props.alignments]
-  const originalIndex = props.alignments.findIndex(a => a.id === sortedAlignment.id)
-
-  if (originalIndex !== -1) {
-    const originalAlignment = updatedAlignments[originalIndex]
-    if (!originalAlignment) return
-
-    updatedAlignments[originalIndex] = {
-      ...originalAlignment,
-      ...editingAlignment.value,
-      id: originalAlignment.id,
-      arabicTokens: editingAlignment.value.arabicTokens || originalAlignment.arabicTokens,
-      transliterationTokens:
-        editingAlignment.value.transliterationTokens || originalAlignment.transliterationTokens,
-      translationTokens:
-        editingAlignment.value.translationTokens || originalAlignment.translationTokens,
-      tokenOrder:
-        editingAlignment.value.tokenOrder !== undefined
-          ? editingAlignment.value.tokenOrder
-          : originalAlignment.tokenOrder,
-    }
-    emit('update', updatedAlignments)
-  }
+  await store.updateAlignmentTokens(editingAlignment.value.id, {
+    arabicTokens: editingAlignment.value.arabicTokens,
+    transliterationTokens: editingAlignment.value.transliterationTokens,
+    translationTokens: editingAlignment.value.translationTokens,
+  })
 
   closeEditModal()
 }
@@ -309,24 +250,6 @@ const saveEditedAlignment = () => {
 const closeEditModal = () => {
   showEditModal.value = false
   editingAlignment.value = null
-  editingIndex.value = null
-}
-
-const splitAlignment = () => {
-  if (selectedAlignments.value.length !== 1) return
-  const index = selectedAlignments.value[0]
-  if (index === undefined) return
-  emit('split', index)
-  selectedAlignments.value = []
-}
-
-const mergeAlignments = () => {
-  if (selectedAlignments.value.length < 2) return
-
-  // Sort the indices to merge in order
-  const sortedIndices = [...selectedAlignments.value].sort((a, b) => a - b)
-  emit('merge', sortedIndices)
-  selectedAlignments.value = []
 }
 
 const linkToVocabulary = async () => {
@@ -334,128 +257,7 @@ const linkToVocabulary = async () => {
   const index = selectedAlignments.value[0]
   if (index === undefined) return
 
-  const alignment = sortedAlignments.value[index]
-  if (!alignment) return
-
-  linkingAlignment.value = alignment
-  linkingIndex.value = index
-
-  // Check if there's already a linked vocabulary word
-  if (alignment.vocabularyWordId) {
-    try {
-      const word = await wordService.getWord(alignment.vocabularyWordId)
-      currentLinkedWord.value = {
-        id: word.id,
-        arabic: word.arabic,
-        transliteration: word.transliteration,
-        translation: word.translation,
-      }
-    } catch (error) {
-      console.error('Failed to fetch linked vocabulary word:', error)
-      currentLinkedWord.value = null
-    }
-  } else {
-    currentLinkedWord.value = null
-  }
-
-  showVocabModal.value = true
-}
-
-const searchVocabularyWords = async (query: string) => {
-  if (query.length < 3) {
-    vocabSearchResults.value = []
-    return
-  }
-  try {
-    const results = await wordService.searchWords(query)
-    vocabSearchResults.value = results
-  } catch (err) {
-    console.error('Failed to search vocabulary words:', err)
-    vocabSearchResults.value = []
-  }
-}
-
-const selectVocabularyWord = async (word: WordSearchResult) => {
-  if (!linkingAlignment.value || linkingIndex.value === null) return
-
-  const alignment = linkingAlignment.value
-
-  // Update the alignment with the vocabulary word ID
-  const updatedAlignments = [...props.alignments]
-  const originalIndex = props.alignments.findIndex(a => a.id === alignment.id)
-
-  if (originalIndex !== -1) {
-    const originalAlignment = updatedAlignments[originalIndex]
-    if (!originalAlignment) return
-
-    updatedAlignments[originalIndex] = {
-      ...originalAlignment,
-      vocabularyWordId: word.id,
-    }
-    emit('update', updatedAlignments)
-  }
-
-  // Update current linked word and close search
-  currentLinkedWord.value = word
-  vocabSearchQuery.value = ''
-  vocabSearchResults.value = []
-  showVocabDropdown.value = false
-}
-
-const unlinkVocabularyWord = () => {
-  if (!linkingAlignment.value || linkingIndex.value === null) return
-
-  const alignment = linkingAlignment.value
-
-  // Update the alignment to remove the vocabulary word ID
-  const updatedAlignments = [...props.alignments]
-  const originalIndex = props.alignments.findIndex(a => a.id === alignment.id)
-
-  if (originalIndex !== -1) {
-    const originalAlignment = updatedAlignments[originalIndex]
-    if (!originalAlignment) return
-
-    updatedAlignments[originalIndex] = {
-      ...originalAlignment,
-      vocabularyWordId: undefined,
-    }
-    emit('update', updatedAlignments)
-  }
-
-  currentLinkedWord.value = null
-}
-
-const closeVocabModal = () => {
-  showVocabModal.value = false
-  linkingAlignment.value = null
-  linkingIndex.value = null
-  vocabSearchQuery.value = ''
-  vocabSearchResults.value = []
-  showVocabDropdown.value = false
-  currentLinkedWord.value = null
-}
-
-const deleteAlignment = () => {
-  if (selectedAlignments.value.length !== 1) return
-
-  if (confirm('Delete this alignment?')) {
-    const index = selectedAlignments.value[0]
-    const updatedAlignments = props.alignments.filter((_, i) => i !== index)
-    emit('update', updatedAlignments)
-    selectedAlignments.value = []
-  }
-}
-
-const deleteSelectedAlignments = () => {
-  if (selectedAlignments.value.length === 0) return
-
-  if (confirm(`Delete ${selectedAlignments.value.length} alignments?`)) {
-    const updatedAlignments = props.alignments.filter(
-      (_, index) => !selectedAlignments.value.includes(index)
-    )
-    emit('update', updatedAlignments)
-    selectedAlignments.value = []
-  }
+  await store.openVocabLinkModal(index)
 }
 
 // Watchers
@@ -464,11 +266,9 @@ let vocabSearchTimer: ReturnType<typeof setTimeout> | null = null
 watch(vocabSearchQuery, newQuery => {
   if (vocabSearchTimer) clearTimeout(vocabSearchTimer)
   if (!newQuery.trim()) {
-    vocabSearchResults.value = []
-    showVocabDropdown.value = false
     return
   }
-  vocabSearchTimer = setTimeout(() => searchVocabularyWords(newQuery.trim()), 400)
+  vocabSearchTimer = setTimeout(() => store.searchVocabulary(newQuery.trim()), 400)
 })
 </script>
 
