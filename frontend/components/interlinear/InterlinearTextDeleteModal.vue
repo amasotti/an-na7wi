@@ -24,7 +24,7 @@
         <div class="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 mb-4">
           <p class="font-medium mb-1">This will also delete:</p>
           <ul class="list-disc list-inside space-y-1">
-            <li>All sentences ({{ text.sentenceCount || 0 }} total)</li>
+            <li>All sentences ({{ sentenceCount }} total)</li>
             <li>All word alignments</li>
             <li>Associated metadata</li>
           </ul>
@@ -42,24 +42,33 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import CancelButton from '~/components/common/CancelButton.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
-import type { InterlinearText } from '~/types'
+import type { InterlinearText, InterlinearTextDetail } from '~/types'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
 
 interface TextDeleteModalProps {
   open: boolean
   loading?: boolean
-  text: InterlinearText
+  text: InterlinearText | InterlinearTextDetail
 }
 
-defineProps<TextDeleteModalProps>()
+const props = defineProps<TextDeleteModalProps>()
 
 const emit = defineEmits<{
   close: []
   confirm: []
 }>()
+
+const sentenceCount = computed(() => {
+  // Type guard: if 'sentences' exists, it's InterlinearTextDetail
+  if ('sentences' in props.text) {
+    return props.text.sentences.length
+  }
+  return props.text.sentenceCount
+})
 
 const handleClose = () => {
   emit('close')
