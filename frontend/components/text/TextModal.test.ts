@@ -49,10 +49,9 @@ describe('TextModal', () => {
         props: defaultProps,
       })
 
-      expect(screen.getByText('Create New Text')).toBeInTheDocument()
+      expect(screen.getByText('Save')).toBeInTheDocument()
       expect(screen.getByPlaceholderText('Enter a descriptive title...')).toBeInTheDocument()
       expect(screen.getByText('Arabic Content')).toBeInTheDocument()
-      expect(screen.getByText('Create Text')).toBeInTheDocument()
     })
 
     it('disables submit button when form is invalid in create mode', () => {
@@ -60,7 +59,7 @@ describe('TextModal', () => {
         props: defaultProps,
       })
 
-      const submitButton = screen.getByRole('button', { name: 'Create new text' })
+      const submitButton = screen.getByRole('button', { name: 'Save' })
       expect(submitButton).toBeDisabled()
     })
   })
@@ -72,7 +71,7 @@ describe('TextModal', () => {
       })
 
       expect(screen.getByText('Edit Text')).toBeInTheDocument()
-      expect(screen.getByText('Save Changes')).toBeInTheDocument()
+      expect(screen.getByText('Save')).toBeInTheDocument()
     })
 
     it('populates form fields with text data in edit mode', () => {
@@ -103,7 +102,7 @@ describe('TextModal', () => {
         props: { ...defaultProps, open: false },
       })
 
-      expect(screen.queryByText('Create New Text')).not.toBeInTheDocument()
+      expect(screen.queryByText('Save')).not.toBeInTheDocument()
       expect(screen.queryByText('Edit Text')).not.toBeInTheDocument()
     })
 
@@ -149,7 +148,7 @@ describe('TextModal', () => {
       })
 
       expect(screen.getByText('Cancel')).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Create new text' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
     })
 
     it('emits close event when cancel button clicked', async () => {
@@ -305,7 +304,7 @@ describe('TextModal', () => {
         props: { ...defaultProps, loading: true },
       })
 
-      const submitButton = screen.getByRole('button', { name: 'Create new text' })
+      const submitButton = screen.getByRole('button', { name: 'Save' })
       expect(submitButton).toBeDisabled()
     })
 

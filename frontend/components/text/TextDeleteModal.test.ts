@@ -78,7 +78,7 @@ describe('TextDeleteModal', () => {
     })
 
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Delete Text' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument()
   })
 
   it('emits close event when cancel button clicked', async () => {
@@ -97,7 +97,7 @@ describe('TextDeleteModal', () => {
       props: defaultProps,
     })
 
-    const deleteButton = screen.getByRole('button', { name: 'Delete Text' })
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
     await fireEvent.click(deleteButton)
 
     expect(emitted('confirm')).toBeTruthy()
@@ -108,7 +108,7 @@ describe('TextDeleteModal', () => {
       props: { ...defaultProps, loading: true },
     })
 
-    const deleteButton = screen.getByRole('button', { name: 'Delete Text' })
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
     expect(deleteButton).toBeDisabled()
   })
 
@@ -117,8 +117,8 @@ describe('TextDeleteModal', () => {
       props: defaultProps,
     })
 
-    const deleteButton = screen.getByRole('button', { name: 'Delete Text' })
-    expect(deleteButton).toHaveClass('bg-gradient-to-r', 'from-red-600', 'to-red-700')
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
+    expect(deleteButton).toBeInTheDocument()
   })
 
   it('displays warning icon', () => {

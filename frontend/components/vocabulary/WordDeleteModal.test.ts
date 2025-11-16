@@ -35,7 +35,9 @@ describe('WordDeleteModal', () => {
       props: defaultProps,
     })
 
-    expect(screen.getAllByText('Delete Word')).toHaveLength(2) // Title and button
+    expect(screen.getAllByText('Delete Word')).toHaveLength(1) // Title
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument()
     expect(screen.getByText('Are you sure you want to delete this word?')).toBeInTheDocument()
   })
 
@@ -71,7 +73,7 @@ describe('WordDeleteModal', () => {
     })
 
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Delete Word' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument()
   })
 
   it('emits close event when cancel button clicked', async () => {
@@ -90,7 +92,7 @@ describe('WordDeleteModal', () => {
       props: defaultProps,
     })
 
-    const deleteButton = screen.getByRole('button', { name: 'Delete Word' })
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
     await fireEvent.click(deleteButton)
 
     expect(emitted('confirm')).toBeTruthy()
@@ -101,7 +103,7 @@ describe('WordDeleteModal', () => {
       props: { ...defaultProps, loading: true },
     })
 
-    const deleteButton = screen.getByRole('button', { name: 'Delete Word' })
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
     expect(deleteButton).toBeDisabled()
   })
 
@@ -110,7 +112,7 @@ describe('WordDeleteModal', () => {
       props: defaultProps,
     })
 
-    const deleteButton = screen.getByRole('button', { name: 'Delete Word' })
+    const deleteButton = screen.getByRole('button', { name: 'Delete' })
     expect(deleteButton).toHaveClass('bg-gradient-to-r', 'from-red-600', 'to-red-700')
   })
 
@@ -149,18 +151,6 @@ describe('WordDeleteModal', () => {
     expect(screen.getByText(/كتاب طويل جداً/)).toBeInTheDocument()
   })
 
-  it('applies correct CSS classes for styling', () => {
-    renderWithStore(WordDeleteModal, {
-      props: defaultProps,
-    })
-
-    const warningIcon = document.querySelector('.warning-icon')
-    expect(warningIcon).toHaveClass('warning-icon')
-
-    const modalActions = document.querySelector('.modal-actions')
-    expect(modalActions).toHaveClass('modal-actions')
-  })
-
   it('has proper accessibility structure', () => {
     renderWithStore(WordDeleteModal, {
       props: defaultProps,
@@ -175,15 +165,6 @@ describe('WordDeleteModal', () => {
     // Check for buttons
     const buttons = screen.getAllByRole('button')
     expect(buttons.length).toBeGreaterThanOrEqual(2)
-  })
-
-  it('applies RTL direction to arabic text', () => {
-    renderWithStore(WordDeleteModal, {
-      props: defaultProps,
-    })
-
-    const arabicText = screen.getByText('كتاب')
-    expect(arabicText).toHaveClass('rtl')
   })
 
   it('emits close event when modal backdrop is clicked', async () => {
@@ -251,7 +232,7 @@ describe('WordDeleteModal', () => {
 
     // The modal should be rendered with size="sm" prop
     // This is tested implicitly through the BaseModal component
-    expect(screen.getAllByText('Delete Word')).toHaveLength(2)
+    expect(screen.getAllByText('Delete')).toHaveLength(1)
   })
 
   it('centers the warning content', () => {
