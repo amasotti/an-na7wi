@@ -22,176 +22,199 @@ import java.util.*
 @ApplicationScoped
 class InterlinearTextService {
 
-    @Inject
-    private lateinit var interlinearTextRepository: InterlinearTextRepository
+  @Inject
+  private lateinit var interlinearTextRepository: InterlinearTextRepository
 
-    @Inject
-    private lateinit var interlinearSentenceRepository: InterlinearSentenceRepository
+  @Inject
+  private lateinit var interlinearSentenceRepository: InterlinearSentenceRepository
 
-    @Inject
-    private lateinit var wordAlignmentRepository: WordAlignmentRepository
+  @Inject
+  private lateinit var wordAlignmentRepository: WordAlignmentRepository
 
-    @Inject
-    private lateinit var wordRepository: WordRepository
+  @Inject
+  private lateinit var wordRepository: WordRepository
 
-    private val logger = loggerFor(InterlinearTextService::class.java)
+  private val logger = loggerFor(InterlinearTextService::class.java)
 
-    @Transactional
-    fun findAll(page: Int, size: Int, sortField: String = "title"): List<InterlinearText> {
-        logger.info("Finding all interlinear texts, page: $page, size: $size, sortField: $sortField")
+  @Transactional
+  fun findAll(page: Int, size: Int, sortField: String = "title"): List<InterlinearText> {
+    logger.info("Finding all interlinear texts, page: $page, size: $size, sortField: $sortField")
 
-        val sortOption = Sort.by(sortField)
-        val paginationOption = Page.of(page, size)
+    val sortOption = Sort.by(sortField)
+    val paginationOption = Page.of(page, size)
 
-        val texts = interlinearTextRepository
-            .findAll(sortOption)
-            .page(paginationOption)
-            .list()
+    val texts = interlinearTextRepository
+      .findAll(sortOption)
+      .page(paginationOption)
+      .list()
 
-        // Initialize lazy collections to prevent LazyInitializationException
-        texts.forEach { text ->
-            text.sentences.size
-        }
-
-        return texts
+    // Initialize lazy collections to prevent LazyInitializationException
+    texts.forEach { text ->
+      text.sentences.size
     }
 
-    fun countAll(): Long {
-        return interlinearTextRepository.count()
+    return texts
+  }
+
+  @Transactional
+  fun searchTexts(query: String, page: Int, size: Int, sortField: String = "title"): List<InterlinearText> {
+    logger.info("Searching interlinear texts with query: '$query', page: $page, size: $size, sortField: $sortField")
+
+    val sortOption = Sort.by(sortField)
+    val paginationOption = Page.of(page, size)
+
+    val sanitizedQuery = query.replace("%", "\\%").replace("_", "\\_")
+
+    val texts = interlinearTextRepository
+      .find("title LIKE ?1 OR description LIKE ?1", sortOption, "%$sanitizedQuery%")
+      .page(paginationOption)
+      .list()
+
+    // Initialize lazy collections to prevent LazyInitializationException
+    texts.forEach { text ->
+      text.sentences.size
     }
 
-    @Transactional
-    fun findById(id: UUID): InterlinearText {
-        logger.info("Finding interlinear text by ID: $id")
-        val text = interlinearTextRepository.findById(id)
-            ?: throw AppException(AppError.NotFound.InterlinearText(id.toString()))
+    return texts
+  }
 
-        // Initialize lazy collections to prevent LazyInitializationException
-        text.sentences.size
-        text.sentences.forEach { sentence ->
-            sentence.alignments.size
-        }
 
-        return text
+  fun countAll(): Long {
+    return interlinearTextRepository.count()
+  }
+
+  @Transactional
+  fun findById(id: UUID): InterlinearText {
+    logger.info("Finding interlinear text by ID: $id")
+    val text = interlinearTextRepository.findById(id)
+      ?: throw AppException(AppError.NotFound.InterlinearText(id.toString()))
+
+    // Initialize lazy collections to prevent LazyInitializationException
+    text.sentences.size
+    text.sentences.forEach { sentence ->
+      sentence.alignments.size
     }
 
-    @Transactional
-    fun create(text: InterlinearText): InterlinearText {
-        logger.info("Creating new interlinear text: ${text.title}")
+    return text
+  }
 
-        val now = LocalDateTime.now()
-        text.createdAt = now
-        text.updatedAt = now
+  @Transactional
+  fun create(text: InterlinearText): InterlinearText {
+    logger.info("Creating new interlinear text: ${text.title}")
 
-        interlinearTextRepository.persist(text)
+    val now = LocalDateTime.now()
+    text.createdAt = now
+    text.updatedAt = now
 
-        // Initialize lazy collections to prevent LazyInitializationException
-        text.sentences.size
+    interlinearTextRepository.persist(text)
 
-        return text
+    // Initialize lazy collections to prevent LazyInitializationException
+    text.sentences.size
+
+    return text
+  }
+
+  @Transactional
+  fun update(id: UUID, text: InterlinearText): InterlinearText {
+    logger.info("Updating interlinear text with ID: $id")
+
+    val existingText = findById(id)
+
+    existingText.title = text.title
+    existingText.description = text.description
+    existingText.dialect = text.dialect
+    existingText.updatedAt = LocalDateTime.now()
+
+    interlinearTextRepository.persist(existingText)
+
+    // Initialize lazy collections to prevent LazyInitializationException
+    existingText.sentences.size
+
+    return existingText
+  }
+
+  @Transactional
+  fun delete(id: UUID): Boolean {
+    logger.info("Deleting interlinear text with ID: $id")
+    return interlinearTextRepository.deleteById(id)
+  }
+
+  @Transactional
+  fun addSentence(textId: UUID, sentence: InterlinearSentence): InterlinearSentence {
+    logger.info("Adding sentence to interlinear text with ID: $textId")
+
+    val text = findById(textId)
+    sentence.text = text
+    sentence.createdAt = LocalDateTime.now()
+    sentence.updatedAt = LocalDateTime.now()
+
+    interlinearSentenceRepository.persist(sentence)
+
+    // Initialize lazy collections
+    sentence.alignments.size
+
+    return sentence
+  }
+
+  @Transactional
+  fun updateSentence(textId: UUID, sentenceId: UUID, sentence: InterlinearSentence): InterlinearSentence {
+    logger.info("Updating sentence $sentenceId in text $textId")
+
+    val existingSentence = interlinearSentenceRepository.findById(sentenceId)
+      ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+    if (existingSentence.text.id != textId) {
+      throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
     }
 
-    @Transactional
-    fun update(id: UUID, text: InterlinearText): InterlinearText {
-        logger.info("Updating interlinear text with ID: $id")
+    existingSentence.arabicText = sentence.arabicText
+    existingSentence.transliteration = sentence.transliteration
+    existingSentence.translation = sentence.translation
+    existingSentence.annotations = sentence.annotations
+    existingSentence.sentenceOrder = sentence.sentenceOrder
+    existingSentence.updatedAt = LocalDateTime.now()
 
-        val existingText = findById(id)
+    interlinearSentenceRepository.persist(existingSentence)
 
-        existingText.title = text.title
-        existingText.description = text.description
-        existingText.dialect = text.dialect
-        existingText.updatedAt = LocalDateTime.now()
+    // Initialize lazy collections
+    existingSentence.alignments.size
 
-        interlinearTextRepository.persist(existingText)
+    return existingSentence
+  }
 
-        // Initialize lazy collections to prevent LazyInitializationException
-        existingText.sentences.size
+  @Transactional
+  fun deleteSentence(textId: UUID, sentenceId: UUID): Boolean {
+    logger.info("Deleting sentence $sentenceId from text $textId")
 
-        return existingText
+    val sentence = interlinearSentenceRepository.findById(sentenceId)
+      ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+    if (sentence.text.id != textId) {
+      throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
     }
 
-    @Transactional
-    fun delete(id: UUID): Boolean {
-        logger.info("Deleting interlinear text with ID: $id")
-        return interlinearTextRepository.deleteById(id)
+    return interlinearSentenceRepository.deleteById(sentenceId)
+  }
+
+  @Transactional
+  fun reorderSentences(textId: UUID, sentenceIds: List<UUID>) {
+    logger.info("Reordering ${sentenceIds.size} sentences in text $textId")
+
+    findById(textId) // Verify text exists
+
+    sentenceIds.forEachIndexed { index, sentenceId ->
+      val sentence = interlinearSentenceRepository.findById(sentenceId)
+        ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+      if (sentence.text.id != textId) {
+        throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+      }
+
+      sentence.sentenceOrder = index
+      sentence.updatedAt = LocalDateTime.now()
+      interlinearSentenceRepository.persist(sentence)
     }
-
-    @Transactional
-    fun addSentence(textId: UUID, sentence: InterlinearSentence): InterlinearSentence {
-        logger.info("Adding sentence to interlinear text with ID: $textId")
-
-        val text = findById(textId)
-        sentence.text = text
-        sentence.createdAt = LocalDateTime.now()
-        sentence.updatedAt = LocalDateTime.now()
-
-        interlinearSentenceRepository.persist(sentence)
-
-        // Initialize lazy collections
-        sentence.alignments.size
-
-        return sentence
-    }
-
-    @Transactional
-    fun updateSentence(textId: UUID, sentenceId: UUID, sentence: InterlinearSentence): InterlinearSentence {
-        logger.info("Updating sentence $sentenceId in text $textId")
-
-        val existingSentence = interlinearSentenceRepository.findById(sentenceId)
-            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-
-        if (existingSentence.text.id != textId) {
-            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-        }
-
-        existingSentence.arabicText = sentence.arabicText
-        existingSentence.transliteration = sentence.transliteration
-        existingSentence.translation = sentence.translation
-        existingSentence.annotations = sentence.annotations
-        existingSentence.sentenceOrder = sentence.sentenceOrder
-        existingSentence.updatedAt = LocalDateTime.now()
-
-        interlinearSentenceRepository.persist(existingSentence)
-
-        // Initialize lazy collections
-        existingSentence.alignments.size
-
-        return existingSentence
-    }
-
-    @Transactional
-    fun deleteSentence(textId: UUID, sentenceId: UUID): Boolean {
-        logger.info("Deleting sentence $sentenceId from text $textId")
-
-        val sentence = interlinearSentenceRepository.findById(sentenceId)
-            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-
-        if (sentence.text.id != textId) {
-            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-        }
-
-        return interlinearSentenceRepository.deleteById(sentenceId)
-    }
-
-    @Transactional
-    fun reorderSentences(textId: UUID, sentenceIds: List<UUID>) {
-        logger.info("Reordering ${sentenceIds.size} sentences in text $textId")
-
-        findById(textId) // Verify text exists
-
-        sentenceIds.forEachIndexed { index, sentenceId ->
-            val sentence = interlinearSentenceRepository.findById(sentenceId)
-                ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-
-            if (sentence.text.id != textId) {
-                throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-            }
-
-            sentence.sentenceOrder = index
-            sentence.updatedAt = LocalDateTime.now()
-            interlinearSentenceRepository.persist(sentence)
-        }
-    }
+  }
 
   @Transactional
   fun tokenize(textId: UUID, sentenceId: UUID) {
@@ -229,118 +252,118 @@ class InterlinearTextService {
     alignments.forEach { it.persist() }
   }
 
-    @Transactional
-    fun addAlignment(
-      textId: UUID,
-      sentenceId: UUID,
-      alignment: WordAlignment,
-      vocabularyWordId: UUID?): WordAlignment
-    {
-        logger.info("Adding alignment to sentence $sentenceId in text $textId")
+  @Transactional
+  fun addAlignment(
+    textId: UUID,
+    sentenceId: UUID,
+    alignment: WordAlignment,
+    vocabularyWordId: UUID?
+  ): WordAlignment {
+    logger.info("Adding alignment to sentence $sentenceId in text $textId")
 
-        val sentence = interlinearSentenceRepository.findById(sentenceId)
-            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+    val sentence = interlinearSentenceRepository.findById(sentenceId)
+      ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
 
-        if (sentence.text.id != textId) {
-            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-        }
-
-        alignment.sentence = sentence
-        alignment.createdAt = LocalDateTime.now()
-        alignment.updatedAt = LocalDateTime.now()
-
-        if (vocabularyWordId != null) {
-            val word = wordRepository.findById(vocabularyWordId)
-            if (word != null) {
-                alignment.vocabularyWord = word
-            } else {
-                logger.warn("Word with ID $vocabularyWordId not found, creating alignment without vocabulary link")
-            }
-        }
-
-        wordAlignmentRepository.persist(alignment)
-
-        return alignment
+    if (sentence.text.id != textId) {
+      throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
     }
 
-    @Transactional
-    fun updateAlignment(
-      textId: UUID,
-      sentenceId: UUID,
-      alignmentId: UUID,
-      alignment: WordAlignment,
-      vocabularyWordId: UUID?,
-      updateTokenOrder: Boolean = true): WordAlignment
-    {
-        logger.info("Updating alignment $alignmentId in sentence $sentenceId")
+    alignment.sentence = sentence
+    alignment.createdAt = LocalDateTime.now()
+    alignment.updatedAt = LocalDateTime.now()
 
-        val existingAlignment = wordAlignmentRepository.findById(alignmentId)
-            ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
-
-        if (existingAlignment.sentence.id != sentenceId || existingAlignment.sentence.text.id != textId) {
-            throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
-        }
-
-        existingAlignment.arabicTokens = alignment.arabicTokens
-        existingAlignment.transliterationTokens = alignment.transliterationTokens
-        existingAlignment.translationTokens = alignment.translationTokens
-        // Only update tokenOrder if explicitly requested
-        if (updateTokenOrder) {
-            existingAlignment.tokenOrder = alignment.tokenOrder
-        }
-        existingAlignment.updatedAt = LocalDateTime.now()
-
-        if (vocabularyWordId != null) {
-            val word = wordRepository.findById(vocabularyWordId)
-            existingAlignment.vocabularyWord = word
-        } else {
-            existingAlignment.vocabularyWord = null
-        }
-
-        wordAlignmentRepository.persist(existingAlignment)
-
-        return existingAlignment
+    if (vocabularyWordId != null) {
+      val word = wordRepository.findById(vocabularyWordId)
+      if (word != null) {
+        alignment.vocabularyWord = word
+      } else {
+        logger.warn("Word with ID $vocabularyWordId not found, creating alignment without vocabulary link")
+      }
     }
 
-    @Transactional
-    fun deleteAlignment(textId: UUID, sentenceId: UUID, alignmentId: UUID): Boolean {
-        logger.info("Deleting alignment $alignmentId from sentence $sentenceId")
+    wordAlignmentRepository.persist(alignment)
 
-        val alignment = wordAlignmentRepository.findById(alignmentId)
-            ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+    return alignment
+  }
 
-        if (alignment.sentence.id != sentenceId || alignment.sentence.text.id != textId) {
-            throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
-        }
+  @Transactional
+  fun updateAlignment(
+    textId: UUID,
+    sentenceId: UUID,
+    alignmentId: UUID,
+    alignment: WordAlignment,
+    vocabularyWordId: UUID?,
+    updateTokenOrder: Boolean = true
+  ): WordAlignment {
+    logger.info("Updating alignment $alignmentId in sentence $sentenceId")
 
-        return wordAlignmentRepository.deleteById(alignmentId)
+    val existingAlignment = wordAlignmentRepository.findById(alignmentId)
+      ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+
+    if (existingAlignment.sentence.id != sentenceId || existingAlignment.sentence.text.id != textId) {
+      throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
     }
 
-    @Transactional
-    @Suppress("ThrowsCount")
-    fun reorderAlignments(textId: UUID, sentenceId: UUID, alignmentIds: List<UUID>) {
-        logger.info("Reordering ${alignmentIds.size} alignments in sentence $sentenceId")
-
-        val sentence = interlinearSentenceRepository.findById(sentenceId)
-            ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-
-        if (sentence.text.id != textId) {
-            throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
-        }
-
-        alignmentIds.forEachIndexed { index, alignmentId ->
-            val alignment = wordAlignmentRepository.findById(alignmentId)
-                ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
-
-            if (alignment.sentence.id != sentenceId) {
-                throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
-            }
-
-            alignment.tokenOrder = index
-            alignment.updatedAt = LocalDateTime.now()
-            wordAlignmentRepository.persist(alignment)
-        }
+    existingAlignment.arabicTokens = alignment.arabicTokens
+    existingAlignment.transliterationTokens = alignment.transliterationTokens
+    existingAlignment.translationTokens = alignment.translationTokens
+    // Only update tokenOrder if explicitly requested
+    if (updateTokenOrder) {
+      existingAlignment.tokenOrder = alignment.tokenOrder
     }
+    existingAlignment.updatedAt = LocalDateTime.now()
+
+    if (vocabularyWordId != null) {
+      val word = wordRepository.findById(vocabularyWordId)
+      existingAlignment.vocabularyWord = word
+    } else {
+      existingAlignment.vocabularyWord = null
+    }
+
+    wordAlignmentRepository.persist(existingAlignment)
+
+    return existingAlignment
+  }
+
+  @Transactional
+  fun deleteAlignment(textId: UUID, sentenceId: UUID, alignmentId: UUID): Boolean {
+    logger.info("Deleting alignment $alignmentId from sentence $sentenceId")
+
+    val alignment = wordAlignmentRepository.findById(alignmentId)
+      ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+
+    if (alignment.sentence.id != sentenceId || alignment.sentence.text.id != textId) {
+      throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+    }
+
+    return wordAlignmentRepository.deleteById(alignmentId)
+  }
+
+  @Transactional
+  @Suppress("ThrowsCount")
+  fun reorderAlignments(textId: UUID, sentenceId: UUID, alignmentIds: List<UUID>) {
+    logger.info("Reordering ${alignmentIds.size} alignments in sentence $sentenceId")
+
+    val sentence = interlinearSentenceRepository.findById(sentenceId)
+      ?: throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+
+    if (sentence.text.id != textId) {
+      throw AppException(AppError.NotFound.InterlinearSentence(sentenceId.toString()))
+    }
+
+    alignmentIds.forEachIndexed { index, alignmentId ->
+      val alignment = wordAlignmentRepository.findById(alignmentId)
+        ?: throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+
+      if (alignment.sentence.id != sentenceId) {
+        throw AppException(AppError.NotFound.WordAlignment(alignmentId.toString()))
+      }
+
+      alignment.tokenOrder = index
+      alignment.updatedAt = LocalDateTime.now()
+      wordAlignmentRepository.persist(alignment)
+    }
+  }
 
   @Transactional
   fun cleanAlignements(textId: UUID, sentenceId: UUID) {
