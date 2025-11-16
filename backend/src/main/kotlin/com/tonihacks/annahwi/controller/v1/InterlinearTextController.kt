@@ -209,7 +209,9 @@ class InterlinearTextController {
     ): Response {
         logger.info("PUT /api/v1/interlinear-texts/$textId/sentences/$sentenceId/alignments/$alignmentId")
         val alignment = alignmentDTO.toEntity()
-        val updatedAlignment = interlinearTextService.updateAlignment(textId, sentenceId, alignmentId, alignment, alignmentDTO.vocabularyWordId)
+        // Only update tokenOrder if it was explicitly provided in the request
+        val shouldUpdateTokenOrder = alignmentDTO.tokenOrder != null
+        val updatedAlignment = interlinearTextService.updateAlignment(textId, sentenceId, alignmentId, alignment, alignmentDTO.vocabularyWordId, shouldUpdateTokenOrder)
         return Response.ok(WordAlignmentResponseDTO.fromEntity(updatedAlignment)).build()
     }
 

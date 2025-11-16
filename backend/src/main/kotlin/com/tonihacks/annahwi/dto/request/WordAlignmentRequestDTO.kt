@@ -7,7 +7,7 @@ data class WordAlignmentRequestDTO(
     val arabicTokens: String,
     val transliterationTokens: String,
     val translationTokens: String,
-    val tokenOrder: Int,
+    val tokenOrder: Int? = null,
     val vocabularyWordId: UUID? = null
 ) {
     fun toEntity(): WordAlignment {
@@ -15,7 +15,7 @@ data class WordAlignmentRequestDTO(
         alignment.arabicTokens = arabicTokens
         alignment.transliterationTokens = transliterationTokens
         alignment.translationTokens = translationTokens
-        alignment.tokenOrder = tokenOrder
+        alignment.tokenOrder = tokenOrder ?: 0
         return alignment
     }
 
@@ -23,7 +23,9 @@ data class WordAlignmentRequestDTO(
         existingAlignment.arabicTokens = arabicTokens
         existingAlignment.transliterationTokens = transliterationTokens
         existingAlignment.translationTokens = translationTokens
-        existingAlignment.tokenOrder = tokenOrder
+        // Only update tokenOrder if provided
+        tokenOrder?.let { existingAlignment.tokenOrder = it }
+        vocabularyWordId?.let { existingAlignment.vocabularyWord = null } // Will be set by service
         return existingAlignment
     }
 }
