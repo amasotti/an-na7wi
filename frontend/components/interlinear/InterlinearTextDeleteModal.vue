@@ -43,10 +43,10 @@
 
 <script setup lang="ts">
 import DeleteButton from '~/components/common/DeleteButton.vue'
+import type { InterlinearText } from '~/types'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
-import type {InterlinearText} from "~/types";
 
 interface TextDeleteModalProps {
   open: boolean
@@ -58,17 +58,15 @@ const props = defineProps<TextDeleteModalProps>()
 
 const emit = defineEmits<{
   close: []
+  confirm: []
 }>()
-
-const interlinearStore = useInterlinearStore()
 
 const handleClose = () => {
   emit('close')
 }
 
-const handleConfirm = async () => {
-  await interlinearStore.deleteText(props.text.id)
-  emit('close')
+const handleConfirm = () => {
+  emit('confirm')
 }
 </script>
 

@@ -1,10 +1,17 @@
-import {computed, ref} from 'vue'
-import {interlinearService} from '~/composables/interlinearService'
-import type {InterlinearSentence, InterlinearText, InterlinearTextDetail, WordAlignment,} from '~/types'
-import {isNil} from "lodash-es";
+import { isNil } from 'lodash-es'
+import { computed, ref } from 'vue'
+import { interlinearService } from '~/composables/interlinearService'
+import { wordService } from '~/composables/wordService'
+import type {
+  InterlinearSentence,
+  InterlinearText,
+  InterlinearTextDetail,
+  WordAlignment,
+  WordSearchResult,
+} from '~/types'
 
 export const useInterlinearStore = defineStore('interlinear', () => {
-  // State
+  // State - Data
   const texts = ref<InterlinearText[]>([])
   const currentText = ref<InterlinearTextDetail | null>(null)
   const currentSentence = ref<InterlinearSentence | null>(null)
@@ -18,9 +25,36 @@ export const useInterlinearStore = defineStore('interlinear', () => {
   const lastFetchParams = ref<string>('')
   const isCurrentlyFetching = ref(false)
 
+  // State - Sentence Editing Modal
+  const showSentenceEditModal = ref(false)
+  const editingSentence = ref<Partial<InterlinearSentence> | null>(null)
+  const editingSentenceOrder = ref(0)
+  const sentenceSaving = ref(false)
+
+  // State - Alignment Editing
+  const selectedAlignments = ref<number[]>([])
+
+  // State - Vocabulary Linking Modal
+  const showVocabLinkModal = ref(false)
+  const linkingAlignmentIndex = ref<number | null>(null)
+  const vocabSearchQuery = ref('')
+  const vocabSearchResults = ref<WordSearchResult[]>([])
+  const currentLinkedWord = ref<WordSearchResult | null>(null)
+  const vocabSearching = ref(false)
+
   // Getters
   const hasMorePages = computed(() => {
     return totalCount.value > currentPage.value * pageSize.value
+  })
+
+  const sortedAlignments = computed(() => {
+    if (!editingSentence.value?.alignments) return []
+    return [...editingSentence.value.alignments].sort((a, b) => a.tokenOrder - b.tokenOrder)
+  })
+
+  const linkingAlignment = computed(() => {
+    if (linkingAlignmentIndex.value === null || !sortedAlignments.value) return null
+    return sortedAlignments.value[linkingAlignmentIndex.value]
   })
 
   // Actions - Text Operations
@@ -104,7 +138,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
       }
 
       if (currentText.value?.id === id) {
-        currentText.value = {...currentText.value, ...updatedText}
+        currentText.value = { ...currentText.value, ...updatedText }
       }
 
       return updatedText
@@ -221,11 +255,24 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     loading.value = true
     error.value = null
 
-    if (isNil(currentText.value) || isNil(currentSentence.value)) return;
+    if (isNil(currentText.value) || isNil(editingSentence.value?.id)) {
+      loading.value = false
+      return
+    }
 
     try {
-      await interlinearService.autocreateAlignments(currentText.value.id, currentSentence.value.id)
+      await interlinearService.autocreateAlignments(currentText.value.id, editingSentence.value.id)
       await fetchTextById(currentText.value.id)
+
+      // Update editing sentence with fresh data including alignments
+      if (currentText.value) {
+        const updatedSentence = currentText.value.sentences.find(
+          s => s.id === editingSentence.value?.id
+        )
+        if (updatedSentence) {
+          editingSentence.value = { ...updatedSentence }
+        }
+      }
     } catch (err) {
       error.value = 'Failed to autoalign the sentence'
       console.error(err)
@@ -336,7 +383,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
             .map((id, index) => {
               const alignment = sentence.alignments.find(a => a.id === id)
               if (alignment) {
-                return {...alignment, tokenOrder: index}
+                return { ...alignment, tokenOrder: index }
               }
               return null
             })
@@ -352,31 +399,282 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     }
   }
 
+  // Actions - Sentence Editing Modal
+  function openSentenceEditModal(sentence?: InterlinearSentence) {
+    if (sentence) {
+      // Editing existing sentence
+      editingSentence.value = { ...sentence }
+      const index = currentText.value?.sentences.findIndex(s => s.id === sentence.id)
+      editingSentenceOrder.value = index !== undefined && index !== -1 ? index + 1 : 0
+    } else {
+      // Adding new sentence
+      const newSentenceOrder = (currentText.value?.sentences?.length || 0) + 1
+      editingSentence.value = {
+        arabicText: '',
+        transliteration: '',
+        translation: '',
+        annotations: '',
+        sentenceOrder: newSentenceOrder - 1,
+        alignments: [],
+      }
+      editingSentenceOrder.value = newSentenceOrder
+    }
+    showSentenceEditModal.value = true
+  }
+
+  function closeSentenceEditModal() {
+    showSentenceEditModal.value = false
+    editingSentence.value = null
+    editingSentenceOrder.value = 0
+    selectedAlignments.value = []
+  }
+
+  function updateSentenceField(field: keyof InterlinearSentence, value: string | undefined) {
+    if (!editingSentence.value) return
+    editingSentence.value = {
+      ...editingSentence.value,
+      [field]: value,
+    }
+  }
+
+  async function saveSentence() {
+    if (!editingSentence.value || !currentText.value) return
+
+    sentenceSaving.value = true
+    error.value = null
+
+    try {
+      if (editingSentence.value.id) {
+        // Update existing sentence
+        await interlinearService.updateSentence(currentText.value.id, editingSentence.value.id, {
+          arabicText: editingSentence.value.arabicText!,
+          transliteration: editingSentence.value.transliteration!,
+          translation: editingSentence.value.translation!,
+          annotations: editingSentence.value.annotations,
+          sentenceOrder: editingSentence.value.sentenceOrder || 0,
+        })
+      } else {
+        // Create new sentence
+        await interlinearService.addSentence(currentText.value.id, {
+          arabicText: editingSentence.value.arabicText!,
+          transliteration: editingSentence.value.transliteration!,
+          translation: editingSentence.value.translation!,
+          annotations: editingSentence.value.annotations,
+          sentenceOrder: editingSentence.value.sentenceOrder || 0,
+        })
+      }
+
+      // Refresh the text to get updated data
+      await fetchTextById(currentText.value.id)
+      closeSentenceEditModal()
+    } catch (err) {
+      error.value = 'Failed to save sentence'
+      console.error(err)
+      throw err
+    } finally {
+      sentenceSaving.value = false
+    }
+  }
+
+  async function deleteSentenceFromModal() {
+    if (!editingSentence.value?.id || !currentText.value) return
+
+    loading.value = true
+    error.value = null
+
+    try {
+      await interlinearService.deleteSentence(currentText.value.id, editingSentence.value.id)
+      await fetchTextById(currentText.value.id)
+      closeSentenceEditModal()
+    } catch (err) {
+      error.value = 'Failed to delete sentence'
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Actions - Alignment Editing
+  function toggleAlignmentSelection(index: number, event?: MouseEvent) {
+    if (!event) {
+      // Simple toggle
+      const idx = selectedAlignments.value.indexOf(index)
+      if (idx > -1) {
+        selectedAlignments.value.splice(idx, 1)
+      } else {
+        selectedAlignments.value = [index]
+      }
+      return
+    }
+
+    if (event.shiftKey && selectedAlignments.value.length > 0) {
+      // Shift-click: Select range
+      const lastSelected = selectedAlignments.value[selectedAlignments.value.length - 1]
+      if (lastSelected === undefined) return
+      const start = Math.min(lastSelected, index)
+      const end = Math.max(lastSelected, index)
+      const range = Array.from({ length: end - start + 1 }, (_, i) => start + i)
+      selectedAlignments.value = [...new Set([...selectedAlignments.value, ...range])]
+    } else if (event.metaKey || event.ctrlKey) {
+      // Ctrl/Cmd-click: Toggle individual selection
+      const idx = selectedAlignments.value.indexOf(index)
+      if (idx > -1) {
+        selectedAlignments.value.splice(idx, 1)
+      } else {
+        selectedAlignments.value.push(index)
+      }
+    } else {
+      // Regular click: Select only this one
+      if (selectedAlignments.value.length === 1 && selectedAlignments.value[0] === index) {
+        selectedAlignments.value = []
+      } else {
+        selectedAlignments.value = [index]
+      }
+    }
+  }
+
+  function clearAlignmentSelection() {
+    selectedAlignments.value = []
+  }
+
+  async function updateAlignmentTokens(alignmentId: string, updates: Partial<WordAlignment>) {
+    if (!editingSentence.value?.alignments) return
+
+    const alignments = editingSentence.value.alignments
+    const index = alignments.findIndex(a => a.id === alignmentId)
+    if (index === -1) return
+
+    const currentAlignment = alignments[index]
+    if (!currentAlignment) return
+
+    // Update local state - only update provided fields
+    alignments[index] = {
+      ...currentAlignment,
+      ...updates,
+      // Ensure required fields are never undefined
+      id: currentAlignment.id,
+      arabicTokens: updates.arabicTokens ?? currentAlignment.arabicTokens,
+      transliterationTokens:
+        updates.transliterationTokens ?? currentAlignment.transliterationTokens,
+      translationTokens: updates.translationTokens ?? currentAlignment.translationTokens,
+      tokenOrder: updates.tokenOrder ?? currentAlignment.tokenOrder,
+      createdAt: currentAlignment.createdAt,
+      updatedAt: currentAlignment.updatedAt,
+    }
+
+    // Update on server if sentence is saved
+    if (editingSentence.value.id && currentText.value) {
+      try {
+        await interlinearService.updateAlignment(
+          currentText.value.id,
+          editingSentence.value.id,
+          alignmentId,
+          updates
+        )
+      } catch (err) {
+        error.value = 'Failed to update alignment'
+        console.error(err)
+        throw err
+      }
+    }
+  }
+
+  // Actions - Vocabulary Linking Modal
+  async function openVocabLinkModal(alignmentIndex: number) {
+    if (!sortedAlignments.value[alignmentIndex]) return
+
+    linkingAlignmentIndex.value = alignmentIndex
+    const alignment = sortedAlignments.value[alignmentIndex]
+
+    // Check if there's already a linked vocabulary word
+    if (alignment.vocabularyWordId) {
+      try {
+        const word = await wordService.getWord(alignment.vocabularyWordId)
+        currentLinkedWord.value = {
+          id: word.id,
+          arabic: word.arabic,
+          transliteration: word.transliteration,
+          translation: word.translation,
+        }
+      } catch (err) {
+        console.error('Failed to fetch linked vocabulary word:', err)
+        currentLinkedWord.value = null
+      }
+    } else {
+      currentLinkedWord.value = null
+    }
+
+    showVocabLinkModal.value = true
+  }
+
+  function closeVocabLinkModal() {
+    showVocabLinkModal.value = false
+    linkingAlignmentIndex.value = null
+    vocabSearchQuery.value = ''
+    vocabSearchResults.value = []
+    currentLinkedWord.value = null
+  }
+
+  async function searchVocabulary(query: string) {
+    if (query.length < 3) {
+      vocabSearchResults.value = []
+      return
+    }
+
+    vocabSearching.value = true
+    try {
+      vocabSearchResults.value = await wordService.searchWords(query)
+    } catch (err) {
+      console.error('Failed to search vocabulary words:', err)
+      vocabSearchResults.value = []
+    } finally {
+      vocabSearching.value = false
+    }
+  }
+
+  async function linkAlignmentToVocab(wordId: string) {
+    const alignment = linkingAlignment.value
+    if (!alignment || !editingSentence.value) return
+
+    await updateAlignmentTokens(alignment.id!, { vocabularyWordId: wordId })
+
+    // Update current linked word for display
+    const word = vocabSearchResults.value.find(w => w.id === wordId)
+    if (word) {
+      currentLinkedWord.value = word
+    }
+
+    // Clear search
+    vocabSearchQuery.value = ''
+    vocabSearchResults.value = []
+  }
+
+  async function unlinkAlignmentFromVocab() {
+    const alignment = linkingAlignment.value
+    if (!alignment || !editingSentence.value) return
+
+    await updateAlignmentTokens(alignment.id!, { vocabularyWordId: undefined })
+    currentLinkedWord.value = null
+  }
+
   // Utility actions
   function setPage(page: number) {
     currentPage.value = page
     lastFetchParams.value = ''
   }
 
-  function setCurrentSentence(sentence: InterlinearSentence) {
-    currentSentence.value = sentence
-  }
-
-  function clearCurrentSentence() {
-    currentSentence.value = null
-  }
-
   function openNewTextPage() {
-      navigateTo('/interlinear-texts/new')
+    navigateTo('/interlinear-texts/new')
   }
 
   async function openTextDetailPage(textId: string) {
-      await fetchTextById(textId)
-      navigateTo(`/interlinear-texts/${textId}`)
+    await fetchTextById(textId)
+    navigateTo(`/interlinear-texts/${textId}`)
   }
 
   return {
-    // State
+    // State - Data
     texts,
     currentText,
     loading,
@@ -386,8 +684,27 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     currentSentence,
     pageSize,
 
+    // State - Sentence Editing Modal
+    showSentenceEditModal,
+    editingSentence,
+    editingSentenceOrder,
+    sentenceSaving,
+
+    // State - Alignment Editing
+    selectedAlignments,
+
+    // State - Vocabulary Linking Modal
+    showVocabLinkModal,
+    linkingAlignmentIndex,
+    vocabSearchQuery,
+    vocabSearchResults,
+    currentLinkedWord,
+    vocabSearching,
+
     // Getters
     hasMorePages,
+    sortedAlignments,
+    linkingAlignment,
 
     // Actions - Text
     fetchTexts,
@@ -396,10 +713,17 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     updateText,
     deleteText,
 
-    // Actions - Sentence
+    // Actions - Sentence (original CRUD - kept for backward compatibility)
     addSentence,
     updateSentence,
     deleteSentence,
+
+    // Actions - Sentence Editing Modal
+    openSentenceEditModal,
+    closeSentenceEditModal,
+    updateSentenceField,
+    saveSentence,
+    deleteSentenceFromModal,
 
     // Actions - Alignment
     autoAlign,
@@ -408,11 +732,21 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     deleteAlignment,
     reorderAlignments,
 
+    // Actions - Alignment Editing
+    toggleAlignmentSelection,
+    clearAlignmentSelection,
+    updateAlignmentTokens,
+
+    // Actions - Vocabulary Linking
+    openVocabLinkModal,
+    closeVocabLinkModal,
+    searchVocabulary,
+    linkAlignmentToVocab,
+    unlinkAlignmentFromVocab,
+
     // Utilities
     setPage,
-    setCurrentSentence,
-    clearCurrentSentence,
     openNewTextPage,
-    openTextDetailPage
+    openTextDetailPage,
   }
 })

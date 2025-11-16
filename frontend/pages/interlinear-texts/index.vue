@@ -72,12 +72,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { InterlinearText } from '@/types'
+import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import Pagination from '~/components/common/Pagination.vue'
 import InterlinearTextCard from '~/components/interlinear/InterlinearTextCard.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
 import InterlinearTextHeader from '~/components/interlinear/InterlinearTextHeader.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import LoadingEffect from "~/components/common/LoadingEffect.vue";
 
 const interlinearStore = useInterlinearStore()
 const showDeleteModal = ref(false)
@@ -119,8 +119,6 @@ const deleteTextConfirm = (textId: string) => {
     showDeleteModal.value = true
   }
 }
-
-
 
 const closeDeleteModal = () => {
   showDeleteModal.value = false

@@ -20,19 +20,17 @@
 </template>
 
 <script setup lang="ts">
-import type {WordAlignment} from "~/types";
+import type { WordAlignment } from '~/types'
 
 type InteractiveGlossaProps = {
-  alignment: WordAlignment;
-  index: number;
-  isSelected: boolean;
-};
+  alignment: WordAlignment
+  index: number
+  isSelected: boolean
+}
 
-defineProps<InteractiveGlossaProps>();
+defineProps<InteractiveGlossaProps>()
 
-defineEmits<{
-  (e: 'toggle-selection', index: number, event: MouseEvent): void;
-}>();
+defineEmits<(e: 'toggle-selection', index: number, event: MouseEvent) => void>()
 </script>
 
 

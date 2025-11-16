@@ -66,12 +66,7 @@
 
       <!-- Main Content -->
       <section>
-        <InterlinearTextViewer
-          ref="textViewer"
-          :text="currentText"
-          @edit-sentence="editSentence"
-          @delete-sentence="deleteSentenceConfirm"
-        />
+        <InterlinearTextViewer />
       </section>
     </main>
 
@@ -96,9 +91,7 @@ import DeleteButton from '~/components/common/DeleteButton.vue'
 import EditButton from '~/components/common/EditButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
-import type InterlinearTextViewer from '~/components/interlinear/InterlinearTextViewer.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import { Dialect } from '~/types'
 import { dialectToLabel } from '~/utils/arabicDialects'
 import { formatDate } from '~/utils/dateUtils'
 
@@ -108,7 +101,6 @@ const interlinearStore = useInterlinearStore()
 // Local state
 const showDeleteModal = ref(false)
 const deleteLoading = ref(false)
-const textViewer = ref<InstanceType<typeof InterlinearTextViewer> | null>(null)
 
 // Computed properties from store
 const currentText = computed(() => interlinearStore.currentText)
@@ -128,9 +120,7 @@ const formattedDate = computed(() => {
 
 // Methods
 const addSentence = () => {
-  if (textViewer.value) {
-    textViewer.value.openAddSentenceModal()
-  }
+  interlinearStore.openSentenceEditModal()
 }
 
 const editText = () => {
@@ -158,16 +148,6 @@ const handleDeleteText = async () => {
   } finally {
     deleteLoading.value = false
   }
-}
-
-const editSentence = (sentenceId: string) => {
-  // TODO: Implement sentence editing in Phase 6
-  console.log('Edit sentence:', sentenceId)
-}
-
-const deleteSentenceConfirm = (sentenceId: string) => {
-  // TODO: Implement sentence deletion in Phase 6
-  console.log('Delete sentence:', sentenceId)
 }
 
 // Lifecycle
