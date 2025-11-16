@@ -2,6 +2,7 @@
   <BaseButton
     variant="outline"
     size="sm"
+    :type="type"
     :disabled="disabled"
     :loading="loading"
     class="edit-button"

@@ -1,20 +1,23 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-md">
-      <BaseInput
-        v-model="localData.arabicTokens"
-        label="Arabic Word"
-        required
-        class="arabic text-2xl"
-        aria-describedby="arabic-help"
-      />
+    <!--  Arabic token  -->
+    <BaseInput
+      v-model="localData.arabicTokens"
+      label="Arabic Word"
+      required
+      class="arabic text-2xl"
+      aria-describedby="arabic-help"
+    />
 
+    <!-- Transliteration -->
     <BaseInput
       v-model="localData.transliterationTokens"
+      label="Transliteration"
       placeholder="Transliteration tokens"
-      label="Transliteration Tokens"
       required
-      />
+    />
 
+    <!-- Translation  -->
     <BaseInput
       v-model="localData.translationTokens"
       placeholder="Translation tokens"
@@ -24,6 +27,7 @@
 
     <div class="form-actions">
       <CancelButton type="button" @click="$emit('close')" />
+      <EditButton @click="handleAutoTransliterate" :disabled="!localData.arabicTokens" text="Transliterate" />
       <SaveButton type="submit" :loading="loading" />
     </div>
   </form>
@@ -33,7 +37,9 @@
 import { ref, watch } from 'vue'
 import BaseInput from '~/components/common/BaseInput.vue'
 import CancelButton from '~/components/common/CancelButton.vue'
+import EditButton from '~/components/common/EditButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
+import { textService } from '~/composables/textService'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 
 type AlignmentEditFormProps = {
@@ -63,12 +69,21 @@ watch(
   () => [props.arabicTokens, props.transliterationTokens, props.translationTokens],
   ([arabic, transliteration, translation]) => {
     localData.value = {
-      arabicTokens: arabic,
-      transliterationTokens: transliteration,
-      translationTokens: translation,
+      arabicTokens: arabic!,
+      transliterationTokens: transliteration!,
+      translationTokens: translation!,
     }
   }
 )
+
+const handleAutoTransliterate = async () => {
+  try {
+    const response = await textService.transliterateText(localData.value.arabicTokens)
+    localData.value.transliterationTokens = response.transliteratedText
+  } catch (err) {
+    console.error('Failed to transliterate:', err)
+  }
+}
 
 const handleSubmit = async () => {
   await store.updateAlignmentTokens(props.alignmentId, localData.value)
