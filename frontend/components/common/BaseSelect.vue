@@ -1,5 +1,9 @@
 <template>
   <div class="relative">
+    <label v-if="label" :for="id" class="form-label">
+      {{ label }}
+      <span v-if="required" class="text-red-500 ml-1">*</span>
+    </label>
     <select
       :value="modelValue"
       :class="selectClasses"
@@ -35,6 +39,9 @@ interface Option {
 }
 
 interface Props {
+  label?: string
+  id?: string
+  required?: boolean
   modelValue?: string | number | null
   options: Option[]
   placeholder?: string
@@ -44,6 +51,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   size: 'md',
+  label: 'Select',
+  disabled: false,
 })
 
 const emit = defineEmits<{

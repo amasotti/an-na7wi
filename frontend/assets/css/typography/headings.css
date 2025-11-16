@@ -19,3 +19,11 @@
 .heading-sm {
   @apply text-xl font-semibold text-gray-700 mb-2;
 }
+
+.page-title {
+  @apply text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2;
+}
+
+.page-description {
+  @apply text-gray-600 dark:text-gray-400;
+}

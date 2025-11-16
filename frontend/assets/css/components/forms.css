@@ -37,7 +37,7 @@
 }
 
 .form-actions {
-  @apply flex gap-3 justify-end mt-4;
+  @apply flex gap-3 justify-end mt-4 pt-4;
 }
 
 .form-error {
