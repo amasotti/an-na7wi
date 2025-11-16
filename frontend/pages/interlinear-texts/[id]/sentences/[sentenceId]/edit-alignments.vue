@@ -220,7 +220,7 @@ onUnmounted(() => {
 }
 
 .alignments-grid {
-  @apply grid grid-cols-[repeat(auto-fill,minmax(190px,1fr))] gap-5;
+  @apply flex flex-wrap items-start gap-y-6;
   direction: rtl;
 }
 </style>
