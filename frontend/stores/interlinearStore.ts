@@ -149,6 +149,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
 
       if (currentText.value?.id === textId) {
         currentText.value.sentences.push(newSentence)
+        currentSentence.value = newSentence
       }
 
       return newSentence
@@ -177,6 +178,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
       )
 
       if (currentText.value?.id === textId) {
+        currentSentence.value = updatedSentence
         const index = currentText.value.sentences.findIndex(s => s.id === sentenceId)
         if (index !== -1) {
           currentText.value.sentences[index] = updatedSentence
@@ -199,6 +201,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
 
     try {
       await interlinearService.deleteSentence(textId, sentenceId)
+      currentSentence.value = null
 
       if (currentText.value?.id === textId) {
         currentText.value.sentences = currentText.value.sentences.filter(s => s.id !== sentenceId)
@@ -214,16 +217,14 @@ export const useInterlinearStore = defineStore('interlinear', () => {
 
   // Actions - Alignment Operations
 
-  async function autoAlign(
-    sentenceId: string
-  ) {
+  async function autoAlign() {
     loading.value = true
     error.value = null
 
-    if (isNil(currentText.value)) return;
+    if (isNil(currentText.value) || isNil(currentSentence.value)) return;
 
     try {
-      await interlinearService.autocreateAlignments(currentText.value.id, sentenceId)
+      await interlinearService.autocreateAlignments(currentText.value.id, currentSentence.value.id)
       await fetchTextById(currentText.value.id)
     } catch (err) {
       error.value = 'Failed to autoalign the sentence'
@@ -357,6 +358,23 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     lastFetchParams.value = ''
   }
 
+  function setCurrentSentence(sentence: InterlinearSentence) {
+    currentSentence.value = sentence
+  }
+
+  function clearCurrentSentence() {
+    currentSentence.value = null
+  }
+
+  function openNewTextPage() {
+      navigateTo('/interlinear-texts/new')
+  }
+
+  async function openTextDetailPage(textId: string) {
+      await fetchTextById(textId)
+      navigateTo(`/interlinear-texts/${textId}`)
+  }
+
   return {
     // State
     texts,
@@ -365,6 +383,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     error,
     totalCount,
     currentPage,
+    currentSentence,
     pageSize,
 
     // Getters
@@ -391,5 +410,9 @@ export const useInterlinearStore = defineStore('interlinear', () => {
 
     // Utilities
     setPage,
+    setCurrentSentence,
+    clearCurrentSentence,
+    openNewTextPage,
+    openTextDetailPage
   }
 })

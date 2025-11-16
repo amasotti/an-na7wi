@@ -77,60 +77,47 @@ const wordLink = (alignment: { vocabularyWordId?: string }) => {
 .interlinear-word {
   @apply relative inline-flex flex-col items-center text-center;
 }
-
 /* Linked words - different color, clickable */
 .interlinear-word.is-linked {
   @apply cursor-pointer;
 }
-
 .interlinear-word.is-linked .word-arabic {
   @apply text-primary-600 dark:text-primary-400;
 }
-
 .interlinear-word.is-linked:hover .word-arabic {
   @apply text-primary-700 dark:text-primary-300 underline;
 }
-
 .word-arabic {
   @apply text-lg font-arabic text-gray-900 dark:text-gray-100 mb-0.5 leading-tight transition-colors;
 }
-
 .word-gloss {
   @apply flex flex-col items-center gap-0 text-xs leading-tight;
 }
-
 .word-transliteration {
   @apply text-gray-500 dark:text-gray-400 italic;
 }
-
 .word-translation {
   @apply text-gray-600 dark:text-gray-300;
 }
-
 /* Fallback for sentences without alignments */
 .sentence-fallback {
   @apply space-y-1 pl-8;
 }
-
 .sentence-fallback .sentence-transliteration {
   @apply text-sm text-gray-500 dark:text-gray-400 italic leading-relaxed;
 }
-
 .sentence-fallback .sentence-translation {
   @apply text-base text-gray-700 dark:text-gray-300 leading-relaxed;
 }
-
 /* Annotations - minimal styling */
 .annotations-block {
   @apply flex gap-2 mt-3 pt-3
   border-t border-gray-100 dark:border-gray-700/50;
   @apply bg-neutral-100/50 dark:bg-gray-800/50 p-3 rounded-md;
 }
-
 .note-icon {
   @apply text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0;
 }
-
 .note-text {
   @apply text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic;
 }

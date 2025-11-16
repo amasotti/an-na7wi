@@ -24,7 +24,7 @@
         <div class="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 mb-4">
           <p class="font-medium mb-1">This will also delete:</p>
           <ul class="list-disc list-inside space-y-1">
-            <li>All sentences ({{ text?.sentences.length || 0 }} total)</li>
+            <li>All sentences ({{ text.sentenceCount || 0 }} total)</li>
             <li>All word alignments</li>
             <li>Associated metadata</li>
           </ul>
@@ -46,33 +46,29 @@ import DeleteButton from '~/components/common/DeleteButton.vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
-import {computed} from "vue";
+import type {InterlinearText} from "~/types";
 
-interface Props {
+interface TextDeleteModalProps {
   open: boolean
   loading?: boolean
+  text: InterlinearText
 }
 
-withDefaults(defineProps<Props>(), {
-  loading: false,
-  text: null,
-})
-
-const interlinearStore = useInterlinearStore()
-const text = computed(() => interlinearStore.currentText)
-
+const props = defineProps<TextDeleteModalProps>()
 
 const emit = defineEmits<{
   close: []
-  confirm: []
 }>()
+
+const interlinearStore = useInterlinearStore()
 
 const handleClose = () => {
   emit('close')
 }
 
-const handleConfirm = () => {
-  emit('confirm')
+const handleConfirm = async () => {
+  await interlinearStore.deleteText(props.text.id)
+  emit('close')
 }
 </script>
 

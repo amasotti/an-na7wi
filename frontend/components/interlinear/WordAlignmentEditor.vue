@@ -24,14 +24,14 @@
 
       <div class="actions-row">
         <!-- Single selection actions -->
-        <BaseButton
-          type="button"
-          variant="outline"
-          size="sm"
+          <BaseButton
+            type="button"
+            variant="outline"
+            size="sm"
           @click="clearSelection"
-        >
+          >
           Clear Selection
-        </BaseButton>
+          </BaseButton>
 
 
           <EditButton

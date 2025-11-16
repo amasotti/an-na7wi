@@ -68,6 +68,9 @@
       <section>
         <InterlinearTextViewer
           ref="textViewer"
+          :text="currentText"
+          @edit-sentence="editSentence"
+          @delete-sentence="deleteSentenceConfirm"
         />
       </section>
     </main>
@@ -95,6 +98,7 @@ import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
 import type InterlinearTextViewer from '~/components/interlinear/InterlinearTextViewer.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
+import { Dialect } from '~/types'
 import { dialectToLabel } from '~/utils/arabicDialects'
 import { formatDate } from '~/utils/dateUtils'
 
@@ -154,6 +158,11 @@ const handleDeleteText = async () => {
   } finally {
     deleteLoading.value = false
   }
+}
+
+const editSentence = (sentenceId: string) => {
+  // TODO: Implement sentence editing in Phase 6
+  console.log('Edit sentence:', sentenceId)
 }
 
 const deleteSentenceConfirm = (sentenceId: string) => {
