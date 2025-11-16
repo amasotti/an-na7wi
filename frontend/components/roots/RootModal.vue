@@ -73,23 +73,17 @@
 
       <!-- Form Actions -->
       <footer class="form-actions" role="group" aria-label="Form actions">
-        <BaseButton
-          type="button"
+        <CancelButton
           variant="outline"
           @click="handleClose"
           :disabled="loading"
-          aria-label="Cancel and close form"
-        >
-          Cancel
-        </BaseButton>
-        <BaseButton
-          type="submit"
+        />
+        <SaveButton
           :disabled="!canSubmit || loading"
           :loading="loading"
+          :text="isEditing ? 'Update Root' : 'Add Root'"
           :aria-label="isEditing ? 'Update root information' : 'Create new root'"
-        >
-          {{ isEditing ? 'Update Root' : 'Add Root' }}
-        </BaseButton>
+        />
       </footer>
     </form>
   </BaseModal>
@@ -103,7 +97,9 @@ import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import type { Root } from '@/types'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
+import SaveButton from '~/components/common/SaveButton.vue'
 import { rootService } from '~/composables/rootService'
 
 interface Props {

@@ -199,23 +199,13 @@
 
     <template #footer>
       <div class="form-actions" role="group" aria-label="Form actions">
-        <BaseButton
-          type="button"
-          variant="outline"
-          @click="handleClose"
-          aria-label="Cancel and close form"
-        >
-          Cancel
-        </BaseButton>
-        <BaseButton
-          type="submit"
-          @click="handleSubmit"
+        <CancelButton @click="handleClose" />
+        <SaveButton
+          :is-editing="isEditing"
           :disabled="!isValid || loading"
           :loading="loading"
-          :aria-label="isEditing ? 'Save changes to text' : 'Create new text'"
-        >
-          {{ isEditing ? 'Save Changes' : 'Create Text' }}
-        </BaseButton>
+          @click="handleSubmit"
+        />
       </div>
     </template>
   </BaseModal>
@@ -226,6 +216,8 @@ import { computed, ref, watch } from 'vue'
 import type { SelectOption, Text } from '@/types'
 import { Dialect, Difficulty } from '@/types'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
+import SaveButton from '~/components/common/SaveButton.vue'
 import { textService } from '~/composables/textService'
 import BaseBadge from '../common/BaseBadge.vue'
 import BaseButton from '../common/BaseButton.vue'
@@ -493,39 +485,6 @@ watch(
 
 .form-header {
   @apply flex items-center justify-between mb-3;
-}
-
-/* Arabic Text Input Enhancement */
-.arabic-text-input {
-  @apply text-right text-xl leading-relaxed font-arabic;
-  direction: rtl;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  resize: vertical;
-  min-height: 200px;
-
-  /* Better focus state for Arabic input */
-
-  &:focus {
-    @apply ring-emerald-100 border-emerald-500 bg-emerald-50/30;
-    box-shadow: 0 0 0 3px rgb(16 185 129 / 0.1);
-  }
-
-  /* Placeholder styling for RTL */
-
-  &::placeholder {
-    @apply text-gray-400 text-lg;
-    font-weight: 400;
-  }
-}
-
-/* RTL Support */
-.rtl-text {
-  @apply text-right;
-  font-family: 'Noto Sans Arabic', 'Arial Unicode MS', sans-serif;
-  direction: rtl;
 }
 
 /* Enhanced Interactions */

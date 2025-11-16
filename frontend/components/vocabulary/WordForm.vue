@@ -237,21 +237,11 @@
 
       <!-- Form Actions -->
       <footer class="form-actions" role="group" aria-label="Form actions">
-        <BaseButton 
-          type="button" 
-          variant="outline" 
-          @click="handleClose"
-          aria-label="Cancel and close form"
-        >
-          Cancel
-        </BaseButton>
-        <BaseButton 
-          type="submit" 
-          :loading="loading"
-          :aria-label="isEditing ? 'Update word information' : 'Add new word to vocabulary'"
-        >
-          {{ isEditing ? 'Update Word' : 'Add Word' }}
-        </BaseButton>
+        <CancelButton @click="handleClose" />
+        <SaveButton :loading="loading"
+                    :text="isEditing ? 'Update Word' : 'Add Word'"
+                    :aria-label="isEditing ? 'Update word information' : 'Add new word to vocabulary'"
+        />
       </footer>
     </form>
   </BaseModal>
@@ -262,6 +252,8 @@ import { computed, ref, watch } from 'vue'
 import type { DictionaryLink, ExampleDTO, Word } from '@/types'
 import { Dialect, Difficulty, MasteryLevel, PartOfSpeech } from '@/types/enums'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
+import SaveButton from '~/components/common/SaveButton.vue'
 import { exampleService } from '~/composables/exampleService'
 import { rootService } from '~/composables/rootService'
 import { wordService } from '~/composables/wordService'

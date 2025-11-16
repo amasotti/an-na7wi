@@ -91,13 +91,9 @@
           />
         </div>
 
-        <div class="modal-actions">
-          <BaseButton type="button" variant="outline" @click="closeEditModal">
-            Cancel
-          </BaseButton>
-          <BaseButton type="submit" variant="primary">
-            Save
-          </BaseButton>
+        <div class="form-actions">
+          <CancelButton type="button" @click="closeEditModal" />
+          <SaveButton type="submit" text="Save" />
         </div>
       </form>
     </BaseModal>
@@ -189,7 +185,9 @@ import { computed, ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
 import EditButton from '~/components/common/EditButton.vue'
+import SaveButton from '~/components/common/SaveButton.vue'
 import InteractiveGlossa from '~/components/interlinear/alignment/InteractiveGlossa.vue'
 
 const store = useInterlinearStore()
@@ -201,7 +199,6 @@ const {
   vocabSearchResults,
   currentLinkedWord,
   linkingAlignment,
-  vocabSearching,
 } = storeToRefs(store)
 
 // Local UI state for edit modal

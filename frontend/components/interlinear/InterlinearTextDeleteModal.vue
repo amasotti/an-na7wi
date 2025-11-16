@@ -33,8 +33,8 @@
     </div>
 
     <template #footer>
-      <div class="modal-actions">
-        <BaseButton variant="outline" @click="handleClose">Cancel</BaseButton>
+      <div class="form-actions">
+        <CancelButton @click="handleClose" />
         <DeleteButton @click="handleConfirm"/>
       </div>
     </template>
@@ -42,9 +42,9 @@
 </template>
 
 <script setup lang="ts">
+import CancelButton from '~/components/common/CancelButton.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
 import type { InterlinearText } from '~/types'
-import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
 
@@ -54,7 +54,7 @@ interface TextDeleteModalProps {
   text: InterlinearText
 }
 
-const props = defineProps<TextDeleteModalProps>()
+defineProps<TextDeleteModalProps>()
 
 const emit = defineEmits<{
   close: []
@@ -73,9 +73,5 @@ const handleConfirm = () => {
 <style scoped>
 .warning-icon {
   @apply flex justify-center mb-4;
-}
-
-.modal-actions {
-  @apply flex gap-3 justify-end;
 }
 </style>
