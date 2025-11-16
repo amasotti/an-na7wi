@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
+import WordAlignmentEditor from '~/components/interlinear/alignment/WordAlignmentEditor.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
-import WordAlignmentEditor from '~/components/interlinear/WordAlignmentEditor.vue'
 
 const store = useInterlinearStore()
 const { showSentenceEditModal, editingSentence, editingSentenceOrder, sentenceSaving } =
