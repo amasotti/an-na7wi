@@ -1,6 +1,7 @@
 <template>
   <component
     :is="tag"
+    :type="type"
     :class="computedButtonClasses"
     :disabled="disabled || loading"
     v-bind="$attrs"
@@ -27,13 +28,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { buttonClasses, combineClasses } from '@/styles/component-classes'
-import type { ButtonSize, ButtonVariant } from '@/types'
+import type {ButtonRole, ButtonSize, ButtonVariant} from '@/types'
 import BaseIcon from './BaseIcon.vue'
 
 interface Props {
   variant?: ButtonVariant
   size?: ButtonSize
   tag?: 'button' | 'a' | 'router-link'
+  type?: ButtonRole
   disabled?: boolean
   loading?: boolean
   iconLeft?: string

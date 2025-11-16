@@ -5,6 +5,14 @@
   @apply relative py-5 border-b border-gray-200 dark:border-gray-700 last:border-b-0;
 }
 
+.interlinear-sentence-actions {
+  @apply flex gap-2 mb-3 opacity-0 group-hover:opacity-100 transition-opacity;
+}
+
+.button-icon {
+  @apply mr-1;
+}
+
 /* Word Grid - words flow inline like text */
 .interlinear-word-grid {
   @apply flex flex-wrap items-start pl-8;
