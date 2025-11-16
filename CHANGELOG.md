@@ -2,9 +2,155 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
-## [2.5.1] - 2025-11-14
+## [2.6.0] - 2025-11-16
 
-[Compare with last version](https://github.com/amasotti/an-na7wi/compare/8fa64883405efb461ac3a1edfac740533524e006..)
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/abd06439d2251248edcb1ab58802a630ff1c100f..e985143252003ea458445f2e90359dbe899bc59f)
+### 🚀 Features
+
+
+- Add migration for interlinear feature ([0c69dd7](https://github.com/amasotti/an-na7wi/commit/0c69dd7a636c0976bb25af57f99843afed287ffc))
+
+- Add entity classes for interlinear feature ([0736c18](https://github.com/amasotti/an-na7wi/commit/0736c18814e27129bc9e14d345a7dadfa915eda9))
+
+- Add repository classes for interlinear feature ([56660ce](https://github.com/amasotti/an-na7wi/commit/56660ce149e848e8d361d1a95608e17b1ba29f79))
+
+- Add DTO and tests for interlinear sentence and text features ([0e34260](https://github.com/amasotti/an-na7wi/commit/0e34260f7fe137c96afe767fa4c36069312c9410))
+
+- Add InterlinearText service and error handling for not found cases ([97031ba](https://github.com/amasotti/an-na7wi/commit/97031ba859091a5e12e30b8b0140876a793fc620))
+
+- Add InterlinearTextController with CRUD operations and pagination support ([ae903e2](https://github.com/amasotti/an-na7wi/commit/ae903e23627ffb1a25ecb854b76c646df05f4c41))
+
+- Add sentence management operations to InterlinearTextController and service ([3e83e21](https://github.com/amasotti/an-na7wi/commit/3e83e21b10dbbffbda4e500bbb0d9c3392fae385))
+
+- Add word alignment operations to InterlinearTextController and service ([ac814cb](https://github.com/amasotti/an-na7wi/commit/ac814cb58c1fbf2a8f07e1e08dbc5c46b75149e3))
+
+- Add interlinear text entities and mock data for testing ([519bdac](https://github.com/amasotti/an-na7wi/commit/519bdac78df717bb1600f313ee4936829f115f09))
+
+- Implement interlinear text display with CRUD operations and loading states ([2919712](https://github.com/amasotti/an-na7wi/commit/2919712d01779c1a053da598345e7faebb5cdba8))
+
+- Add interlinear text viewer and sentence viewer components with loading and error states ([f5d1ecc](https://github.com/amasotti/an-na7wi/commit/f5d1ecc921f0f854837cd3d970b3e9ea5587fe32))
+
+- Create new interlinear text page with form validation and submission ([575b60c](https://github.com/amasotti/an-na7wi/commit/575b60cf2bcb2396023326ff6f78f0dcc7193314))
+
+- Add edit functionality for interlinear texts with sentence management ([a52ffd3](https://github.com/amasotti/an-na7wi/commit/a52ffd3306e323f4d744b9cdbd4fdd9761eca6e4))
+
+- Add tokenization functionality for interlinear sentences with alignment creation ([92c84f1](https://github.com/amasotti/an-na7wi/commit/92c84f1a98a3ccdbb20389b13dff3ff9c70e39f1))
+
+- Add link to vocabulary in interlinear text ([b90a2f4](https://github.com/amasotti/an-na7wi/commit/b90a2f44ba1d260542a9b34ebb136f21a3431ff3))
+
+- Add metadata editing functionality for interlinear texts with form validation ([38edc81](https://github.com/amasotti/an-na7wi/commit/38edc81e6d9030e3eca6becc2900ace1d6edb1a9))
+
+- Add NavDropdown component and integrate into navigation structure ([51579e7](https://github.com/amasotti/an-na7wi/commit/51579e7ceaee3dc97e0da766795d104c8c7477fd))
+
+- Update form input styles and add BaseTextArea component for improved text handling ([d2c67ea](https://github.com/amasotti/an-na7wi/commit/d2c67eaa36974d6cb7a5bc1b76331d28802cf736))
+
+- Refactor button icon styles and clean up unused CSS in interlinear editor ([ad6b89c](https://github.com/amasotti/an-na7wi/commit/ad6b89c1309b1126e6d0717231a8baecabfdfda5))
+
+- Integrate BaseTextArea component across multiple forms for consistent text input handling ([5416f8d](https://github.com/amasotti/an-na7wi/commit/5416f8db1733afbd0af87e0b56efecacd9ff8291))
+
+- Enhance interlinear text viewer with full-width layout and improved empty state handling ([1f4888d](https://github.com/amasotti/an-na7wi/commit/1f4888dd81436ea4a5709d9f5e0dbadd114447f8))
+
+- Implement dialect and date formatting utilities for improved text display ([3c67383](https://github.com/amasotti/an-na7wi/commit/3c673835ab3f258cb0f59ebb7f97629666e84324))
+
+- Add sentence deletion functionality to interlinear text viewer and edit modal ([99d34ab](https://github.com/amasotti/an-na7wi/commit/99d34ab12e57df80b8d1d38b9256b057be55c61d))
+
+- Remove unused reorder sentences functionality and clean up related code ([f1f01fb](https://github.com/amasotti/an-na7wi/commit/f1f01fb834f2a547a6ee5ee2de52a5fe4de04bd0))
+
+- Enhance DeleteButton component with props and integrate into sentence editor ([12a58e6](https://github.com/amasotti/an-na7wi/commit/12a58e6f2824f7765c02d4237ebe1153e0ccbc43))
+
+- Reusabel interlinear css ([ea62b9e](https://github.com/amasotti/an-na7wi/commit/ea62b9eb3c43810380f1044db41b702dd96e3dc6))
+
+- Update edit metadata form with reusable components and improve dialect selection ([6257c92](https://github.com/amasotti/an-na7wi/commit/6257c922b8b3ccea6ca1e3e955139b23b3ed01ef))
+
+- Implement metadata editing functionality with validation and error handling ([c9799a7](https://github.com/amasotti/an-na7wi/commit/c9799a7430d2b0683fcf67c4541acf8b61e6c540))
+
+- Add controller endpoint for search ([d5ad2a2](https://github.com/amasotti/an-na7wi/commit/d5ad2a2dc16cac2d40a0a673fd1925a174c32d78))
+
+- Add clear alignments functionality ([aa3e57a](https://github.com/amasotti/an-na7wi/commit/aa3e57ae028ab5bebd425dcc2acd684dc456e496))
+
+- Move word alignment editor to a separate page ([4d3f29d](https://github.com/amasotti/an-na7wi/commit/4d3f29d7bd1ff532e1a930514a73e0a505f14da7))
+
+- Update alignment edit form to use close event and loading state ([fee5f33](https://github.com/amasotti/an-na7wi/commit/fee5f33dc67b1678526195cd8f8132dfdced3db2))
+
+- Add auto-transliteration feature (very basic) ([44253b6](https://github.com/amasotti/an-na7wi/commit/44253b69ddcd3bbe3441f94817f5c7627787b90f))
+
+- Conditionally render clear selection button based on alignment selection ([e3a4de6](https://github.com/amasotti/an-na7wi/commit/e3a4de641974487ddde055c8607914e344b6db04))
+
+### 🐛 Bug Fixes
+
+
+- Enhance alignment update logic to conditionally update tokenOrder ([710c8e2](https://github.com/amasotti/an-na7wi/commit/710c8e23337af9ee9b659bafa5cd32c1e2ac83df))
+
+- Let the delete modal accept both types depending on who's calling it ([e57c747](https://github.com/amasotti/an-na7wi/commit/e57c747e76adebe857161e41e3bc839f6edc48c2))
+
+### 🚜 Refactor
+
+
+- Implement interactive glossa component for alignment display and enhance card styles ([b4d1b8b](https://github.com/amasotti/an-na7wi/commit/b4d1b8b22fd9b2979d999944ac145cd8ccb1bcdd))
+
+- Move auto-tokenization to the backend ([ec1ef97](https://github.com/amasotti/an-na7wi/commit/ec1ef97ba328afc18b6f8146be3887df2ffd99d6))
+
+- Clean up unused sentence editing functionality and improve text viewer logic ([6d54502](https://github.com/amasotti/an-na7wi/commit/6d5450227fea06f071d7f2695cee1b16af723c5f))
+
+- Start refactoring of crud logic to be moved in the store ([2f46ff3](https://github.com/amasotti/an-na7wi/commit/2f46ff3b2bc01a8161a5f126a8db173fa8f41ce0))
+
+- Streamline sentence editing functionality and enhance alignment handling ([b5ee2ca](https://github.com/amasotti/an-na7wi/commit/b5ee2ca3b39d61d73eb65d3b35a1a00e850a4a67))
+
+- Create common save and cancel buttons ([4b788da](https://github.com/amasotti/an-na7wi/commit/4b788da6e0f4101f1b7744f55c13ff7d3958468d))
+
+- Use the common cancel and save buttons ([4f7de08](https://github.com/amasotti/an-na7wi/commit/4f7de085c3e5c8e04e586d39774f116362e6ee8b))
+
+- Extract interlinear text header ([d898fd1](https://github.com/amasotti/an-na7wi/commit/d898fd1515961186149aee2fefdd2596adcccf1d))
+
+- Improve alignment components ([d153c9d](https://github.com/amasotti/an-na7wi/commit/d153c9d15e422965a33930ca0bf153fe39662f8c))
+
+### 🎨 Styling
+
+
+- Improve look and feel of the glossa cards ([eabb24c](https://github.com/amasotti/an-na7wi/commit/eabb24c6e08d310d5e456e3fad4962d08ba30571))
+
+- Improve look and feel of the glossa cards ([815d6db](https://github.com/amasotti/an-na7wi/commit/815d6db7414d5591a79f1bf9796e6b9e1992a2b7))
+
+- Enhance interlinear text components and improve layout responsiveness ([e985143](https://github.com/amasotti/an-na7wi/commit/e985143252003ea458445f2e90359dbe899bc59f))
+
+### 🧪 Testing
+
+
+- Fix tests after migrating to BaseTextArea.vue ([f72e2b2](https://github.com/amasotti/an-na7wi/commit/f72e2b212a4592a3304cc1b5d85cc366cb9323cc))
+
+- Fix tests after migration to new buttons ([6c0ec4c](https://github.com/amasotti/an-na7wi/commit/6c0ec4c8f6a61e5ad1ebde62b26b57d207ec711b))
+
+### ⚙️ Miscellaneous Tasks
+
+
+- Suppress detekt warning ([0bafe4d](https://github.com/amasotti/an-na7wi/commit/0bafe4dad06733071b2705cc45b0c177782bb4ba))
+
+- Expand backup scripts ([86aac46](https://github.com/amasotti/an-na7wi/commit/86aac46c5b36f6bacd83a76b44eb6e82fd65dd54))
+
+- Update date formatting in tests to use abbreviated month names ([f3944e2](https://github.com/amasotti/an-na7wi/commit/f3944e2f9aea047416c809e80f61d74bc2aff7ca))
+
+- Use default loading state component ([b44b69b](https://github.com/amasotti/an-na7wi/commit/b44b69b3fb8351aee158791419c65234bed36b9a))
+
+- Small improvements delete modal ([af9169d](https://github.com/amasotti/an-na7wi/commit/af9169d7d1768c739487da1fd5b035e140e44cd2))
+
+- Update typescript go ([400d9eb](https://github.com/amasotti/an-na7wi/commit/400d9ebe41e41f541d11fee5d402d1a39099c06c))
+
+- Reduce line length ([a30dada](https://github.com/amasotti/an-na7wi/commit/a30dadab31d94291305ce830184ada8537ccd4e3))
+
+- Css improvements ([3836884](https://github.com/amasotti/an-na7wi/commit/3836884f5782a692a52291a7da2b126424d85814))
+
+- Improve edit btn (add more props) ([34ea6aa](https://github.com/amasotti/an-na7wi/commit/34ea6aab06c4a278a9703eeb4d91a346f243aa38))
+
+- Add butn role enum ([9a62d91](https://github.com/amasotti/an-na7wi/commit/9a62d916b32c12536271ffdcfa90401368431155))
+
+## [2.5.1] - 2025-11-15
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/8fa64883405efb461ac3a1edfac740533524e006..abd06439d2251248edcb1ab58802a630ff1c100f)
+### 🚀 Features
+
+
+- Enhance root analysis and detail header with conditional rendering ([abd0643](https://github.com/amasotti/an-na7wi/commit/abd06439d2251248edcb1ab58802a630ff1c100f))
+
 ### ⚙️ Miscellaneous Tasks
 
 
