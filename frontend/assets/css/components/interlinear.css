@@ -1,0 +1,76 @@
+/* Interlinear Text Components */
+
+/* Sentence Container */
+.interlinear-sentence {
+  @apply relative py-5 border-b border-gray-200 dark:border-gray-700 last:border-b-0;
+}
+
+/* Word Grid - words flow inline like text */
+.interlinear-word-grid {
+  @apply flex flex-wrap items-start pl-8;
+}
+
+/* Individual Word/Alignment */
+.interlinear-word {
+  @apply relative inline-flex flex-col items-center text-center;
+}
+
+.interlinear-word-linked {
+  @apply cursor-pointer;
+}
+
+.interlinear-word-linked:hover .interlinear-word-arabic {
+  @apply underline;
+}
+
+/* Arabic Token */
+.interlinear-word-arabic {
+  @apply text-lg font-arabic text-gray-900 dark:text-gray-100 mb-0.5 leading-tight transition-colors;
+}
+
+.interlinear-word-arabic-linked {
+  @apply text-primary-600 dark:text-primary-400;
+}
+
+.interlinear-word-arabic-linked:hover {
+  @apply text-primary-700 dark:text-primary-300;
+}
+
+/* Gloss (transliteration + translation) */
+.interlinear-gloss {
+  @apply flex flex-col items-center text-xs leading-tight;
+}
+
+.interlinear-transliteration {
+  @apply text-gray-500 dark:text-gray-400 italic;
+}
+
+.interlinear-translation {
+  @apply text-gray-600 dark:text-gray-300;
+}
+
+/* Sentence Fallback (no alignments) */
+.interlinear-fallback {
+  @apply pl-8;
+}
+
+.interlinear-fallback-transliteration {
+  @apply text-sm text-gray-500 dark:text-gray-400 italic leading-relaxed;
+}
+
+.interlinear-fallback-translation {
+  @apply text-base text-gray-700 dark:text-gray-300 leading-relaxed;
+}
+
+/* Annotations */
+.interlinear-annotations {
+  @apply flex mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50 bg-neutral-100/50 dark:bg-gray-800/50 p-3 rounded-md;
+}
+
+.interlinear-annotations-icon {
+  @apply text-gray-400 dark:text-gray-500 mt-0.5 flex-shrink-0;
+}
+
+.interlinear-annotations-text {
+  @apply text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic;
+}
