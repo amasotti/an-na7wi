@@ -40,7 +40,7 @@
         <div v-if="sortedAlignments.length > 0" class="space-md">
           <!-- Action Buttons -->
           <div class="form-actions">
-            <CancelButton variant="outline" size="sm" @click="store.clearAlignmentSelection()" text="Clear Selection" />
+            <CancelButton v-if="selectedAlignments.length > 0" variant="outline" size="sm" @click="store.clearAlignmentSelection()" text="Clear Selection" />
             <!--  single selection actions -->
             <EditButton v-if="selectedAlignments.length === 1" @click="handleEdit" />
             <EditButton v-if="selectedAlignments.length === 1" text="Link Word" size="sm" @click="handleLinkToVocabulary" />
@@ -123,10 +123,10 @@ import DeleteButton from '~/components/common/DeleteButton.vue'
 import EditButton from '~/components/common/EditButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import AlignmentEditForm from '~/components/interlinear/alignment/AlignmentEditForm.vue'
+import InteractiveGlossa from '~/components/interlinear/alignment/InteractiveGlossa.vue'
 import TokenizeBtn from '~/components/interlinear/alignment/TokenizeBtn.vue'
 import VocabularyLinkingPanel from '~/components/interlinear/alignment/VocabularyLinkingPanel.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import InteractiveGlossa from "~/components/interlinear/alignment/InteractiveGlossa.vue";
 
 const route = useRoute()
 const router = useRouter()
