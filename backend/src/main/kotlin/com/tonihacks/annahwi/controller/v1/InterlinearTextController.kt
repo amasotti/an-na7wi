@@ -78,6 +78,48 @@ class InterlinearTextController {
     return Response.ok(textDTO).build()
   }
 
+  @GET
+  @Path("/search")
+  @Operation(
+    summary = "Search interlinear texts",
+    description = "Searches interlinear texts by title with pagination"
+  )
+  fun searchTexts(
+    @QueryParam("query") query: String,
+    @QueryParam("page") @DefaultValue("1") page: Int,
+    @QueryParam("size") @DefaultValue("10") size: Int,
+    @QueryParam("pageSize") pageSize: Int?,
+    @QueryParam("sort") @DefaultValue("title") sort: String
+  ): Response {
+    if (page < 1) {
+      throw AppException(AppError.ValidationError.InvalidPageNumber(page))
+    }
+    if (size < 1 || (pageSize != null && pageSize < 1)) {
+      throw AppException(
+        AppError.ValidationError.InvalidPageSize(
+          size = if (pageSize != null) pageSize else size
+        )
+      )
+    }
+
+    val actualSize = PaginationUtil.resolvePageSize(size, pageSize)
+    val zeroBasedPage = PaginationUtil.toZeroBasedPage(page)
+    logger.info("GET /api/v1/interlinear-texts/search - query: $query")
+
+    val texts = interlinearTextService.searchTexts(query, zeroBasedPage, actualSize, sort)
+    val totalCount = interlinearTextService.countAll()
+    val textDTOs = texts.map { InterlinearTextResponseDTO.fromEntity(it) }
+
+    val response = PaginatedResponse(
+      items = textDTOs,
+      totalCount = totalCount,
+      page = page,
+      pageSize = actualSize
+    )
+
+    return Response.ok(response).build()
+  }
+
   @POST
   @Operation(summary = "Create interlinear text", description = "Creates a new interlinear text")
   fun createText(textDTO: InterlinearTextRequestDTO): Response {
@@ -216,6 +258,18 @@ class InterlinearTextController {
       shouldUpdateTokenOrder
     )
     return Response.ok(WordAlignmentResponseDTO.fromEntity(updatedAlignment)).build()
+  }
+
+  @DELETE
+  @Path("/{textId}/sentences/{sentenceId}/alignments")
+  @Operation(summary = "Clear all word alignments", description = "Deletes all word alignments from a sentence")
+  fun clearAlignment(
+    @PathParam("textId") textId: UUID,
+    @PathParam("sentenceId") sentenceId: UUID,
+  ): Response {
+    logger.info("DELETE /api/v1/interlinear-texts/$textId/sentences/$sentenceId/alignments")
+    interlinearTextService.cleanAlignements(textId, sentenceId)
+    return Response.noContent().build()
   }
 
   @DELETE
