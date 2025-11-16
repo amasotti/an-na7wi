@@ -230,7 +230,12 @@ class InterlinearTextService {
   }
 
     @Transactional
-    fun addAlignment(textId: UUID, sentenceId: UUID, alignment: WordAlignment, vocabularyWordId: UUID?): WordAlignment {
+    fun addAlignment(
+      textId: UUID,
+      sentenceId: UUID,
+      alignment: WordAlignment,
+      vocabularyWordId: UUID?): WordAlignment
+    {
         logger.info("Adding alignment to sentence $sentenceId in text $textId")
 
         val sentence = interlinearSentenceRepository.findById(sentenceId)
@@ -259,7 +264,14 @@ class InterlinearTextService {
     }
 
     @Transactional
-    fun updateAlignment(textId: UUID, sentenceId: UUID, alignmentId: UUID, alignment: WordAlignment, vocabularyWordId: UUID?, updateTokenOrder: Boolean = true): WordAlignment {
+    fun updateAlignment(
+      textId: UUID,
+      sentenceId: UUID,
+      alignmentId: UUID,
+      alignment: WordAlignment,
+      vocabularyWordId: UUID?,
+      updateTokenOrder: Boolean = true): WordAlignment
+    {
         logger.info("Updating alignment $alignmentId in sentence $sentenceId")
 
         val existingAlignment = wordAlignmentRepository.findById(alignmentId)
