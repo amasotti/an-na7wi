@@ -27,24 +27,12 @@
     </div>
 
     <!-- Empty State -->
-    <div
+    <BaseEmptyState
       v-else-if="!loading && texts"
-      class="text-center py-12 px-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
-    >
-      <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-        No interlinear texts yet
-      </h3>
-      <p class="text-gray-600 dark:text-gray-400 mb-6">
-        Create your first interlinear text to start learning with word-aligned translations
-      </p>
-      <button
-        type="button"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        @click="createText"
-      >
-        Create Interlinear Text
-      </button>
-    </div>
+      link="/interlinear-texts/new"
+      linkText="Create Interlinear Text"
+      message="No interlinear texts yet"
+    />
 
     <!-- Loading State -->
     <LoadingEffect v-if="loading" />
@@ -72,6 +60,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { InterlinearText } from '@/types'
+import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import Pagination from '~/components/common/Pagination.vue'
 import InterlinearTextCard from '~/components/interlinear/InterlinearTextCard.vue'

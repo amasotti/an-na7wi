@@ -212,8 +212,8 @@ onUnmounted(() => {
 
 <style scoped>
 .tokenize-hint {
-   @apply text-sm text-gray-600 text-center mt-2 italic;
- }
+  @apply text-sm text-gray-600 text-center mt-2 italic;
+}
 
 .annotation-item {
   @apply text-sm pt-2 mt-2 bottom-3 text-gray-500 border-t-2;
