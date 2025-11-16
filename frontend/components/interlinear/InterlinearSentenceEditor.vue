@@ -56,19 +56,7 @@
 
     <!-- Actions -->
     <div class="form-actions" role="group" aria-label="Form actions">
-      <BaseButton
-        v-if="editingSentence?.id"
-        type="button"
-        variant="danger"
-        size="sm"
-        @click="store.deleteSentenceFromModal()"
-      >
-        <BaseIcon size="xs" class="button-icon">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </BaseIcon>
-        Delete Sentence
-      </BaseButton>
-
+      <DeleteButton v-if="editingSentence?.id" @click="store.deleteSentenceFromModal()" text="Delete Sentence" />
       <BaseButton
         type="button"
         variant="secondary"
@@ -92,6 +80,7 @@ import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import BaseInput from '~/components/common/BaseInput.vue'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
 
 interface Props {
   sentenceId: string

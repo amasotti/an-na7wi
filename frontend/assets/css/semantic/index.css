@@ -10,6 +10,7 @@
 @import '../components/buttons.css';
 @import '../components/badges.css';
 @import '../components/forms.css';
+@import '../components/interlinear.css';
 
 /* Typography */
 @import '../typography/headings.css';
