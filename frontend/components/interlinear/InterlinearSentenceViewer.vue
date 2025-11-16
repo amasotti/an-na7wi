@@ -1,6 +1,9 @@
 <template>
   <article class="interlinear-sentence group">
-    <EditButton @click="$emit('edit')" />
+    <div class="interlinear-sentence-actions">
+      <EditButton @click="openEditMode" text="Edit text" />
+      <EditButton @click="openAlignmentEditor" text="Edit alignments" />
+    </div>
 
     <!-- Interlinear Words (flowing inline like text) -->
     <div v-if="sortedAlignments.length > 0" class="interlinear-word-grid gap-sm gap-x-4" dir="rtl">
@@ -56,13 +59,23 @@ interface InterlinearSentenceProps {
 const props = defineProps<InterlinearSentenceProps>()
 
 defineEmits<{
-  edit: []
   delete: []
 }>()
+
+const store = useInterlinearStore()
 
 const sortedAlignments = computed(() => {
   if (!props.sentence.alignments) return []
   return [...props.sentence.alignments].sort((a, b) => a.tokenOrder - b.tokenOrder)
 })
+
+const openEditMode = () => {
+  store.openSentenceEditModal(props.sentence)
+}
+
+const openAlignmentEditor = () => {
+  const url = "/interlinear-texts/" + store.currentText?.id + "/sentences/" + props.sentence.id + "/edit-alignments"
+  navigateTo(url)
+}
 </script>
 

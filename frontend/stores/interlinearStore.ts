@@ -256,9 +256,19 @@ export const useInterlinearStore = defineStore('interlinear', () => {
 
   // Actions - Alignment Operations
 
-  async function autoAlign() {
+  async function autoAlign(askForConfirmation = true) {
     loading.value = true
     error.value = null
+
+    if (askForConfirmation) {
+      const ok = confirm("The tokenize function will remove already available tokens and " +
+        "try to create tokens based on empty spaces and the convention that dashed words belong together")
+
+      if (!ok) {
+        loading.value = false
+        return
+      }
+    }
 
     if (isNil(currentText.value) || isNil(editingSentence.value?.id)) {
       loading.value = false
@@ -482,7 +492,10 @@ export const useInterlinearStore = defineStore('interlinear', () => {
   }
 
   async function clearSentenceAlignments() {
-    if (!editingSentence.value?.id || !currentText.value) return
+    if (!editingSentence.value?.id || !currentText.value) {
+      console.warn("No sentence is being edited or no current text available")
+      return
+    }
 
     loading.value = true
     error.value = null
@@ -758,6 +771,24 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     metadataSaveError.value = null
   }
 
+  // Actions - Alignment Editor Lifecycle
+  function openAlignmentEditor(sentenceId: string) {
+    if (!currentText.value) return
+
+    const sentence = currentText.value.sentences.find(s => s.id === sentenceId)
+    if (!sentence) return
+
+    // Reuse sentence editing state for alignment editor
+    editingSentence.value = { ...sentence }
+    selectedAlignments.value = []
+  }
+
+  function closeAlignmentEditor() {
+    editingSentence.value = null
+    selectedAlignments.value = []
+    closeVocabLinkModal()
+  }
+
   // Utility actions
   function setPage(page: number) {
     currentPage.value = page
@@ -855,6 +886,10 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     updateMetadataField,
     saveMetadata,
     cancelMetadataEdit,
+
+    // Actions - Alignment Editor Lifecycle
+    openAlignmentEditor,
+    closeAlignmentEditor,
 
     // Utilities
     setPage,

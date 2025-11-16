@@ -14,7 +14,6 @@
         v-for="sentence in sortedSentences"
         :key="sentence.id"
         :sentence="sentence"
-        @edit="store.openSentenceEditModal(sentence)"
       />
     </div>
 
@@ -35,11 +34,6 @@ const { currentText } = storeToRefs(store)
 const sortedSentences = computed(() => {
   if (!currentText.value?.sentences) return []
   return [...currentText.value.sentences].sort((a, b) => a.sentenceOrder - b.sentenceOrder)
-})
-
-// Expose methods for parent component
-defineExpose({
-  openAddSentenceModal: () => store.openSentenceEditModal(),
 })
 </script>
 
