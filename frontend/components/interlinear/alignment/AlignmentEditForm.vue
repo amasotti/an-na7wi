@@ -23,17 +23,18 @@
     />
 
     <div class="form-actions">
-      <CancelButton type="button" @click="$emit('cancel')" />
-      <SaveButton type="submit" />
+      <CancelButton type="button" @click="$emit('close')" />
+      <SaveButton type="submit" :loading="loading" />
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import BaseInput from '~/components/common/BaseInput.vue'
 import CancelButton from '~/components/common/CancelButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
-import BaseInput from "~/components/common/BaseInput.vue";
+import { useInterlinearStore } from '~/stores/interlinearStore'
 
 type AlignmentEditFormProps = {
   alignmentId: string
@@ -45,9 +46,11 @@ type AlignmentEditFormProps = {
 const props = defineProps<AlignmentEditFormProps>()
 
 const emit = defineEmits<{
-  save: [data: { arabicTokens: string; transliterationTokens: string; translationTokens: string }]
-  cancel: []
+  close: []
 }>()
+
+const store = useInterlinearStore()
+const { loading } = storeToRefs(store)
 
 const localData = ref({
   arabicTokens: props.arabicTokens,
@@ -67,11 +70,8 @@ watch(
   }
 )
 
-const handleSubmit = () => {
-  emit('save', {
-    arabicTokens: localData.value.arabicTokens,
-    transliterationTokens: localData.value.transliterationTokens,
-    translationTokens: localData.value.translationTokens,
-  })
+const handleSubmit = async () => {
+  await store.updateAlignmentTokens(props.alignmentId, localData.value)
+  emit('close')
 }
 </script>

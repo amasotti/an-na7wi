@@ -27,8 +27,8 @@
 import BaseModal from '~/components/common/BaseModal.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
+import TokenizeBtn from '~/components/interlinear/alignment/TokenizeBtn.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
-import TokenizeBtn from "~/components/interlinear/alignment/TokenizeBtn.vue";
 
 const store = useInterlinearStore()
 const { showSentenceEditModal, editingSentence, editingSentenceOrder, sentenceSaving } =

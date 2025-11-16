@@ -79,8 +79,7 @@
         :arabic-tokens="editingAlignment.arabicTokens"
         :transliteration-tokens="editingAlignment.transliterationTokens"
         :translation-tokens="editingAlignment.translationTokens"
-        @save="saveAlignment"
-        @cancel="closeEditModal"
+        @close="closeEditModal"
       />
     </BaseModal>
 
@@ -107,19 +106,17 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
-import BaseButton from '~/components/common/BaseButton.vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import AlignmentEditForm from '~/components/interlinear/alignment/AlignmentEditForm.vue'
 import AlignmentGrid from '~/components/interlinear/alignment/AlignmentGrid.vue'
+import TokenizeBtn from '~/components/interlinear/alignment/TokenizeBtn.vue'
 import VocabularyLinkingPanel from '~/components/interlinear/alignment/VocabularyLinkingPanel.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import DeleteButton from "~/components/common/DeleteButton.vue";
-import CancelButton from "~/components/common/CancelButton.vue";
-import SaveButton from "~/components/common/SaveButton.vue";
-import TokenizeBtn from "~/components/interlinear/alignment/TokenizeBtn.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -174,17 +171,6 @@ const handleEdit = () => {
 const closeEditModal = () => {
   showEditModal.value = false
   editingAlignment.value = null
-}
-
-const saveAlignment = async (data: {
-  arabicTokens: string
-  transliterationTokens: string
-  translationTokens: string
-}) => {
-  if (!editingAlignment.value) return
-
-  await store.updateAlignmentTokens(editingAlignment.value.id, data)
-  closeEditModal()
 }
 
 const handleLinkToVocabulary = async () => {

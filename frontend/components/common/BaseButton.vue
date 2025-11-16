@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { buttonClasses, combineClasses } from '@/styles/component-classes'
-import type {ButtonRole, ButtonSize, ButtonVariant} from '@/types'
+import type { ButtonRole, ButtonSize, ButtonVariant } from '@/types'
 import BaseIcon from './BaseIcon.vue'
 
 interface Props {

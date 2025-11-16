@@ -9,10 +9,10 @@
 
 
 <script setup lang="ts">
-import BaseButton from "~/components/common/BaseButton.vue";
-import BaseIcon from "~/components/common/BaseIcon.vue";
-import {useInterlinearStore} from "#imports";
-import {computed} from "vue";
+import { computed } from 'vue'
+import { useInterlinearStore } from '#imports'
+import BaseButton from '~/components/common/BaseButton.vue'
+import BaseIcon from '~/components/common/BaseIcon.vue'
 
 type TokenBtnProps = {
   withConfirmation?: boolean
@@ -22,7 +22,7 @@ withDefaults(defineProps<TokenBtnProps>(), {
   withConfirmation: false,
 })
 
-const store = useInterlinearStore();
+const store = useInterlinearStore()
 const { editingSentence } = storeToRefs(store)
 
 const canTokenize = computed(() => {

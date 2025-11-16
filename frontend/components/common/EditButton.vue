@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
-import type {ButtonRole} from "~/types";
+import type { ButtonRole } from '~/types'
 
 interface EditBtnProps {
   text?: string

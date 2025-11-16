@@ -91,14 +91,12 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import BaseButton from '@/components/common/BaseButton.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import type { Root } from '@/types'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import CancelButton from '~/components/common/CancelButton.vue'
-import DeleteButton from '~/components/common/DeleteButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
 import { rootService } from '~/composables/rootService'
 

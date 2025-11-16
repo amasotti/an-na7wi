@@ -62,5 +62,4 @@ import BaseTextArea from '~/components/common/BaseTextArea.vue'
 
 const store = useInterlinearStore()
 const { editingSentence } = storeToRefs(store)
-
 </script>
