@@ -43,7 +43,7 @@
 
         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
           <div class="flex items-center gap-2">
-            <BaseBadge variant="neutral" size="sm">
+            <BaseBadge :variant="dialectColor" size="sm">
               {{ dialectLabel }}
             </BaseBadge>
           </div>
@@ -72,6 +72,7 @@
 
     <!-- Delete Text Modal -->
     <InterlinearTextDeleteModal
+      v-if="currentText"
       :open="showDeleteModal"
       :loading="deleteLoading"
       :text="currentText"
@@ -83,6 +84,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { dialectToColor } from '#imports'
 import BaseBadge from '~/components/common/BaseBadge.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
@@ -92,6 +94,7 @@ import EditButton from '~/components/common/EditButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
+import { Dialect } from '~/types'
 import { dialectToLabel } from '~/utils/arabicDialects'
 import { formatDate } from '~/utils/dateUtils'
 
@@ -111,6 +114,11 @@ const error = computed(() => interlinearStore.error)
 const dialectLabel = computed(() => {
   if (!currentText.value) return ''
   return dialectToLabel[currentText.value.dialect]
+})
+
+const dialectColor = computed(() => {
+  if (!currentText.value) return 'gray'
+  return dialectToColor[currentText.value.dialect]
 })
 
 const formattedDate = computed(() => {
