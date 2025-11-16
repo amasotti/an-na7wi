@@ -481,6 +481,34 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     }
   }
 
+  async function clearSentenceAlignments() {
+    if (!editingSentence.value?.id || !currentText.value) return
+
+    loading.value = true
+    error.value = null
+
+    try {
+      await interlinearService.clearAlignments(currentText.value.id, editingSentence.value.id)
+      await fetchTextById(currentText.value.id)
+
+      // Update editing sentence with fresh data including alignments
+      if (currentText.value) {
+        const updatedSentence = currentText.value.sentences.find(
+          s => s.id === editingSentence.value?.id
+        )
+        if (updatedSentence) {
+          editingSentence.value = { ...updatedSentence }
+        }
+      }
+    } catch (err) {
+      error.value = 'Failed to clear alignments'
+      console.error(err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function deleteSentenceFromModal() {
     if (!editingSentence.value?.id || !currentText.value) return
 
@@ -813,6 +841,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     toggleAlignmentSelection,
     clearAlignmentSelection,
     updateAlignmentTokens,
+    clearSentenceAlignments,
 
     // Actions - Vocabulary Linking
     openVocabLinkModal,

@@ -19,29 +19,28 @@
 
       <!-- Actions -->
       <div class="modal-actions">
-        <BaseButton
+        <CancelButton
           type="button"
-          variant="outline"
           @click="store.closeSentenceEditModal()"
-        >
-          Close
-        </BaseButton>
-        <BaseButton
-          type="button"
-          variant="primary"
+          text="Close"
+        />
+        <DeleteButton v-if="editingSentence?.id" @click="store.clearSentenceAlignments()" text="Clean Alignements" />
+        <SaveButton
+          v-if="editingSentence?.id"
           :loading="sentenceSaving"
           @click="store.saveSentence()"
-        >
-          {{ editingSentence?.id ? 'Save Changes' : 'Add Sentence' }}
-        </BaseButton>
+          :text="editingSentence?.id ? 'Save Changes' : 'Add Sentence'"
+        />
       </div>
     </div>
   </BaseModal>
 </template>
 
 <script setup lang="ts">
-import BaseButton from '~/components/common/BaseButton.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
+import SaveButton from '~/components/common/SaveButton.vue'
 import WordAlignmentEditor from '~/components/interlinear/alignment/WordAlignmentEditor.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
 

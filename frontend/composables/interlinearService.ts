@@ -139,6 +139,10 @@ export const interlinearService = {
     )
   },
 
+  async clearAlignments(textId: string, sentenceId: string): Promise<void> {
+    await useApiClient().delete(`/interlinear-texts/${textId}/sentences/${sentenceId}/alignments`)
+  },
+
   /**
    * Reorder alignments in a sentence
    */
