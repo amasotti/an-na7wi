@@ -14,12 +14,11 @@
     <div v-else-if="currentText" class="edit-container">
       <!-- Header -->
       <div class="page-header">
-        <NuxtLink :to="`/interlinear-texts/${route.params.id}`" class="back-link">
-          <BaseIcon size="sm" class="back-icon">
-            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </BaseIcon>
-          Back to Text
-        </NuxtLink>
+        <BaseBreadcrumb
+          :parent-link="`/interlinear-texts/${route.params.id}`"
+          :parent-text="currentText.title"
+          item="Edit Metadata"
+        />
 
         <h1 class="page-title">Edit Text Information</h1>
         <p class="page-description">
@@ -29,19 +28,13 @@
 
       <!-- Text Metadata Form -->
       <div class="metadata-section">
-        <div class="form-field">
-          <label for="title" class="form-label">
-            Title <span class="required-marker">*</span>
-          </label>
-          <input
-            id="title"
-            v-model="textMetadata.title"
-            type="text"
-            required
-            class="form-input-na7wi"
-            placeholder="Text title"
-          />
-        </div>
+        <BaseInput
+          id="title"
+          v-model="textMetadata.title"
+          label="Title"
+          required
+          placeholder="Text title"
+        />
 
         <BaseTextArea
           id="description"
@@ -51,27 +44,14 @@
           placeholder="Optional description"
         />
 
-        <div class="form-field">
-          <label for="dialect" class="form-label">
-            Dialect <span class="required-marker">*</span>
-          </label>
-          <select
-            id="dialect"
-            v-model="textMetadata.dialect"
-            class="form-input-na7wi"
-            required
-          >
-            <option value="MSA">Modern Standard Arabic (MSA)</option>
-            <option value="EGYPTIAN">Egyptian</option>
-            <option value="LEVANTINE">Levantine</option>
-            <option value="GULF">Gulf</option>
-            <option value="MAGHREBI">Maghrebi</option>
-            <option value="IRAQI">Iraqi</option>
-            <option value="YEMENI">Yemeni</option>
-            <option value="SUDANESE">Sudanese</option>
-            <option value="OTHER">Other</option>
-          </select>
-        </div>
+        <BaseSelect
+          v-model="textMetadata.dialect"
+          :options="dialectOptions"
+          placeholder="Select dialect"
+          required
+          aria-describedby="dialect-help"
+        />
+
         <div class="form-actions">
           <CancelButton @click="handleCancel" :disabled="saving" />
           <SaveButton @click="handleSave" :loading="saving" />
@@ -94,15 +74,18 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import BaseButton from '~/components/common/BaseButton.vue'
+import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
+import BaseInput from '~/components/common/BaseInput.vue'
+import BaseSelect from '~/components/common/BaseSelect.vue'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import CancelButton from '~/components/common/CancelButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
+import { dialectOptions } from '~/constants/dialects'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import type { Dialect } from '~/types'
+import { Dialect } from '~/types'
 
 const route = useRoute()
 const interlinearStore = useInterlinearStore()
@@ -115,7 +98,7 @@ const error = computed(() => interlinearStore.error)
 const textMetadata = ref({
   title: '',
   description: '',
-  dialect: 'MSA' as Dialect,
+  dialect: Dialect.MSA,
 })
 
 const saving = ref(false)
@@ -222,14 +205,6 @@ onMounted(async () => {
 
 .required-marker {
   @apply text-red-500;
-}
-
-.actions-section {
-  @apply sticky bottom-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 pt-6 pb-4;
-}
-
-.actions-container {
-  @apply flex justify-end gap-3;
 }
 
 .save-error {

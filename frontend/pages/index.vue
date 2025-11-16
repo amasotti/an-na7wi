@@ -153,11 +153,11 @@ const features: Feature[] = [
     link: '/roots',
   },
   {
-    title: 'Dialect Studies',
+    title: 'Interlinear Texts',
     description: 'Explore different Arabic dialects: Tunisian, Moroccan, Egyptian, and MSA.',
     icon: 'globe',
     color: 'secondary',
-    link: '/texts',
+    link: '/interlinear-texts',
   },
   {
     title: 'Study Progress',

@@ -43,7 +43,7 @@
         <BaseSelect
           id="dialect"
           v-model="form.dialect"
-          :options="dialects"
+          :options="dialectOptions"
           placeholder="Select a dialect"
           label="Dialect"
           required
@@ -76,8 +76,9 @@ import BaseSelect from '~/components/common/BaseSelect.vue'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import CancelButton from '~/components/common/CancelButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
+import { dialectOptions } from '~/constants/dialects'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import { Dialect } from '~/types'
+import type { Dialect } from '~/types'
 
 // Store
 const interlinearStore = useInterlinearStore()
@@ -93,17 +94,6 @@ const form = ref({
 const loading = ref(false)
 const errors = ref<Record<string, string>>({})
 const submitError = ref<string | null>(null)
-
-// Dialect options
-const dialects = [
-  { value: Dialect.MSA, label: 'Modern Standard Arabic (MSA)' },
-  { value: Dialect.TUNISIAN, label: 'Tunisian' },
-  { value: Dialect.MOROCCAN, label: 'Moroccan' },
-  { value: Dialect.EGYPTIAN, label: 'Egyptian' },
-  { value: Dialect.LEVANTINE, label: 'Levantine' },
-  { value: Dialect.GULF, label: 'Gulf' },
-  { value: Dialect.IRAQI, label: 'Iraqi' },
-]
 
 // Validation
 const validateForm = (): boolean => {

@@ -3,7 +3,7 @@
     :open="open"
     title="Delete Interlinear Text"
     size="sm"
-    @close="handleClose"
+    @close="$emit('close')"
   >
     <div class="text-center">
       <div class="warning-icon">
@@ -34,7 +34,7 @@
 
     <template #footer>
       <div class="form-actions">
-        <CancelButton @click="handleClose" />
+        <CancelButton @click="$emit('close')" />
         <DeleteButton @click="handleConfirm"/>
       </div>
     </template>
@@ -51,7 +51,6 @@ import BaseModal from '../common/BaseModal.vue'
 
 interface TextDeleteModalProps {
   open: boolean
-  loading?: boolean
   text: InterlinearText | InterlinearTextDetail
 }
 
@@ -59,8 +58,9 @@ const props = defineProps<TextDeleteModalProps>()
 
 const emit = defineEmits<{
   close: []
-  confirm: []
 }>()
+
+const interlinearStore = useInterlinearStore()
 
 const sentenceCount = computed(() => {
   // Type guard: if 'sentences' exists, it's InterlinearTextDetail
@@ -70,12 +70,15 @@ const sentenceCount = computed(() => {
   return props.text.sentenceCount
 })
 
-const handleClose = () => {
-  emit('close')
-}
-
-const handleConfirm = () => {
-  emit('confirm')
+const handleConfirm = async () => {
+  try {
+    await interlinearStore.deleteText(props.text.id)
+    navigateTo('/interlinear-texts')
+  } catch (error) {
+    console.error('Failed to delete interlinear text:', error)
+  } finally {
+    emit('close')
+  }
 }
 </script>
 

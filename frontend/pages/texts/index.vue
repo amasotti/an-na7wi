@@ -92,8 +92,7 @@
 // import router from '@/router' // Not needed in Nuxt
 
 import { computed, onMounted, ref } from 'vue'
-import type { SelectOption, Text } from '@/types'
-import { Dialect, Difficulty } from '@/types'
+import type { Dialect, Difficulty, SelectOption, Text } from '@/types'
 import Pagination from '~/components/common/Pagination.vue'
 import EmptyState from '~/components/text/EmptyState.vue'
 import TextCard from '~/components/text/TextCard.vue'
@@ -103,6 +102,8 @@ import TextFilters from '~/components/text/TextFilters.vue'
 import TextHeader from '~/components/text/TextHeader.vue'
 import TextListControls from '~/components/text/TextListControls.vue'
 import TextModal from '~/components/text/TextModal.vue'
+import { dialectOptions } from '~/constants/dialects'
+import { difficultyOptions } from '~/constants/difficulty'
 import { useTextStore } from '~/stores/textStore'
 import { layoutClasses } from '~/styles/component-classes'
 
@@ -129,22 +130,6 @@ const sortBy = ref('updatedAt')
 const activeTags = ref<string[]>([])
 
 // Options
-const dialectOptions: SelectOption<Dialect>[] = [
-  { value: Dialect.TUNISIAN, label: 'Tunisian' },
-  { value: Dialect.MOROCCAN, label: 'Moroccan' },
-  { value: Dialect.EGYPTIAN, label: 'Egyptian' },
-  { value: Dialect.LEVANTINE, label: 'Levantine' },
-  { value: Dialect.GULF, label: 'Gulf' },
-  { value: Dialect.IRAQI, label: 'Iraqi' },
-  { value: Dialect.MSA, label: 'Modern Standard Arabic' },
-]
-
-const difficultyOptions: SelectOption<Difficulty>[] = [
-  { value: Difficulty.BEGINNER, label: 'Beginner' },
-  { value: Difficulty.INTERMEDIATE, label: 'Intermediate' },
-  { value: Difficulty.ADVANCED, label: 'Advanced' },
-]
-
 const sortOptions: SelectOption<string>[] = [
   { value: 'updatedAt', label: 'Recently Updated' },
   { value: 'createdAt', label: 'Recently Created' },
