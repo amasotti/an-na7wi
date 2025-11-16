@@ -13,56 +13,7 @@
     <!-- Text Content -->
     <main v-else-if="currentText" class="page-container-detail">
       <!-- Header -->
-      <header class="mb-8">
-        <div class="flex items-center justify-between mb-4">
-          <NuxtLink to="/interlinear-texts" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium flex items-center">
-            <BaseIcon size="sm" class="mr-2">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </BaseIcon>
-            Back to Interlinear Texts
-          </NuxtLink>
-
-          <div class="flex items-center gap-2">
-            <BaseButton
-              type="button"
-              variant="secondary"
-              size="sm"
-              @click="addSentence"
-            >
-              <BaseIcon size="xs" class="button-icon">
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </BaseIcon>
-              Add Sentence
-            </BaseButton>
-            <EditButton @click="editText" />
-            <DeleteButton @click="deleteText" />
-          </div>
-        </div>
-
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ currentText.title }}</h1>
-
-        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-          <div class="flex items-center gap-2">
-            <BaseBadge :variant="dialectColor" size="sm">
-              {{ dialectLabel }}
-            </BaseBadge>
-          </div>
-
-          <div class="flex items-center">
-            <BaseIcon size="xs" class="mr-1">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </BaseIcon>
-            {{ currentText.sentences?.length || 0 }} {{ currentText.sentences?.length === 1 ? 'sentence' : 'sentences' }}
-          </div>
-
-          <span>Updated {{ formattedDate }}</span>
-        </div>
-
-        <!-- Description -->
-        <div v-if="currentText.description" class="mt-4 text-gray-700 dark:text-gray-300">
-          <p>{{ currentText.description }}</p>
-        </div>
-      </header>
+      <InterlinearTextDetailHeader @delete="openDeleteModal" />
 
       <!-- Main Content -->
       <section>
@@ -84,19 +35,12 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { dialectToColor } from '#imports'
-import BaseBadge from '~/components/common/BaseBadge.vue'
-import BaseButton from '~/components/common/BaseButton.vue'
+import { InterlinearTextViewer } from '#components'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
-import BaseIcon from '~/components/common/BaseIcon.vue'
-import DeleteButton from '~/components/common/DeleteButton.vue'
-import EditButton from '~/components/common/EditButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
+import InterlinearTextDetailHeader from '~/components/interlinear/text-detail/InterlinearTextDetailHeader.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
-import { Dialect } from '~/types'
-import { dialectToLabel } from '~/utils/arabicDialects'
-import { formatDate } from '~/utils/dateUtils'
 
 const route = useRoute()
 const interlinearStore = useInterlinearStore()
@@ -110,32 +54,9 @@ const currentText = computed(() => interlinearStore.currentText)
 const loading = computed(() => interlinearStore.loading)
 const error = computed(() => interlinearStore.error)
 
-// Computed UI properties
-const dialectLabel = computed(() => {
-  if (!currentText.value) return ''
-  return dialectToLabel[currentText.value.dialect]
-})
-
-const dialectColor = computed(() => {
-  if (!currentText.value) return 'gray'
-  return dialectToColor[currentText.value.dialect]
-})
-
-const formattedDate = computed(() => {
-  if (!currentText.value) return ''
-  return formatDate(currentText.value.updatedAt)
-})
-
 // Methods
-const addSentence = () => {
-  interlinearStore.openSentenceEditModal()
-}
 
-const editText = () => {
-  navigateTo(`/interlinear-texts/${route.params.id}/edit-metadata`)
-}
-
-const deleteText = () => {
+const openDeleteModal = () => {
   showDeleteModal.value = true
 }
 
