@@ -261,8 +261,10 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     error.value = null
 
     if (askForConfirmation) {
-      const ok = confirm("The tokenize function will remove already available tokens and " +
-        "try to create tokens based on empty spaces and the convention that dashed words belong together")
+      const ok = confirm(
+        'The tokenize function will remove already available tokens and ' +
+          'try to create tokens based on empty spaces and the convention that dashed words belong together'
+      )
 
       if (!ok) {
         loading.value = false
@@ -493,7 +495,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
 
   async function clearSentenceAlignments() {
     if (!editingSentence.value?.id || !currentText.value) {
-      console.warn("No sentence is being edited or no current text available")
+      console.warn('No sentence is being edited or no current text available')
       return
     }
 

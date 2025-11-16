@@ -74,7 +74,12 @@ const openEditMode = () => {
 }
 
 const openAlignmentEditor = () => {
-  const url = "/interlinear-texts/" + store.currentText?.id + "/sentences/" + props.sentence.id + "/edit-alignments"
+  const url =
+    '/interlinear-texts/' +
+    store.currentText?.id +
+    '/sentences/' +
+    props.sentence.id +
+    '/edit-alignments'
   navigateTo(url)
 }
 </script>

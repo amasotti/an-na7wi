@@ -37,7 +37,6 @@
 import type { Word } from '@/types'
 import CancelButton from '~/components/common/CancelButton.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
-import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
 
