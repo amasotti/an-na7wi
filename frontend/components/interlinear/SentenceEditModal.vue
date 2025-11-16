@@ -52,16 +52,13 @@ import BaseModal from '~/components/common/BaseModal.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
 import WordAlignmentEditor from '~/components/interlinear/WordAlignmentEditor.vue'
 import type { InterlinearSentence, WordAlignment } from '~/types'
-
 interface Props {
   open: boolean
   sentence: InterlinearSentence | null
   sentenceOrder: number
   textId: string
 }
-
 const props = defineProps<Props>()
-
 const emit = defineEmits<{
   close: []
   save: [sentence: Partial<InterlinearSentence>]
@@ -70,10 +67,8 @@ const emit = defineEmits<{
   merge: [alignmentIndices: number[]]
   deleteSentence: []
 }>()
-
 const localSentence = ref<Partial<InterlinearSentence>>({})
 const saving = ref(false)
-
 // Watch for sentence changes
 watch(
   () => props.sentence,
@@ -84,7 +79,6 @@ watch(
   },
   { immediate: true, deep: true }
 )
-
 const handleUpdate = (updatedSentence: Partial<InterlinearSentence>) => {
   localSentence.value = {
     ...localSentence.value,
@@ -113,7 +107,6 @@ const handleSave = () => {
 .sentence-edit-modal {
   @apply space-y-4;
 }
-
 .modal-actions {
   @apply flex justify-end gap-3 pt-4 mt-6 border-t border-gray-200 dark:border-gray-700;
 }

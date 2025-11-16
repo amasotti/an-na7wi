@@ -4,7 +4,7 @@
     <InterlinearTextHeader
       title="Interlinear Texts"
       subtitle="Create and explore Arabic texts with word-by-word translations"
-      @show-create-modal="navigateTo('/interlinear-texts/new')"
+      @show-create-modal="createText"
     />
 
     <!-- Results Header -->
@@ -40,7 +40,7 @@
       <button
         type="button"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        @click="navigateTo('/interlinear-texts/new')"
+        @click="createText"
       >
         Create Interlinear Text
       </button>
@@ -60,11 +60,11 @@
 
     <!-- Delete Confirmation Modal -->
     <InterlinearTextDeleteModal
+      v-if="textToDelete"
       :open="showDeleteModal"
       :loading="deleteLoading"
       :text="textToDelete"
       @close="closeDeleteModal"
-      @confirm="handleDeleteText"
     />
   </main>
 </template>
@@ -72,12 +72,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { InterlinearText } from '@/types'
-import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import Pagination from '~/components/common/Pagination.vue'
 import InterlinearTextCard from '~/components/interlinear/InterlinearTextCard.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
 import InterlinearTextHeader from '~/components/interlinear/InterlinearTextHeader.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
+import LoadingEffect from "~/components/common/LoadingEffect.vue";
 
 const interlinearStore = useInterlinearStore()
 const showDeleteModal = ref(false)
@@ -108,6 +108,10 @@ const editText = (textId: string) => {
   navigateTo(`/interlinear-texts/${textId}/edit-metadata`)
 }
 
+const createText = () => {
+  interlinearStore.openNewTextPage()
+}
+
 const deleteTextConfirm = (textId: string) => {
   const text = texts.value.find(t => t.id === textId)
   if (text) {
@@ -116,19 +120,7 @@ const deleteTextConfirm = (textId: string) => {
   }
 }
 
-const handleDeleteText = async () => {
-  if (!textToDelete.value) return
 
-  deleteLoading.value = true
-  try {
-    await interlinearStore.deleteText(textToDelete.value.id)
-    closeDeleteModal()
-  } catch (error) {
-    console.error('Failed to delete interlinear text:', error)
-  } finally {
-    deleteLoading.value = false
-  }
-}
 
 const closeDeleteModal = () => {
   showDeleteModal.value = false

@@ -85,6 +85,10 @@
   @apply text-small text-gray-700;
 }
 
+.page-metadata {
+    @apply text-gray-600 dark:text-gray-400 mb-4;
+}
+
 /* Results Info */
 .results-info {
   @apply px-6 py-4 text-center border-t border-gray-200;

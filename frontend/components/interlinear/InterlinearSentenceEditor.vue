@@ -145,7 +145,7 @@ const emitUpdate = () => {
 }
 
 const handleTokenize = async () => {
-  await interlinearStore.autoAlign(props.sentenceId)
+  await interlinearStore.autoAlign()
 }
 
 </script>

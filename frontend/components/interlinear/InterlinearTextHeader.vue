@@ -15,14 +15,11 @@
 
 <script setup lang="ts">
 import AddButton from '../common/AddButton.vue'
-
 interface Props {
   title: string
   subtitle: string
 }
-
 defineProps<Props>()
-
 defineEmits<{
   showCreateModal: []
 }>()

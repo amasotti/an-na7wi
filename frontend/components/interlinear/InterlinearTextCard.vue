@@ -99,12 +99,12 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  view: [textId: string]
-  edit: [textId: string]
   delete: [textId: string]
 }>()
 
 const dropdownOpen = ref(false)
+
+const interlinearStore = useInterlinearStore()
 
 const dialectLabel = computed(() => dialectToLabel[props.text.dialect])
 
@@ -118,13 +118,11 @@ const toggleDropdown = () => {
 }
 
 const viewText = () => {
-  dropdownOpen.value = false
-  emit('view', props.text.id)
+  interlinearStore.openTextDetailPage(props.text.id)
 }
 
-const editText = () => {
-  dropdownOpen.value = false
-  emit('edit', props.text.id)
+const editText = (textId: string) => {
+  navigateTo(`/interlinear-texts/${textId}/edit-metadata`)
 }
 
 const deleteText = () => {

@@ -41,7 +41,6 @@ import InterlinearSentenceViewer from './InterlinearSentenceViewer.vue'
 import SentenceEditModal from './SentenceEditModal.vue'
 
 const interlinearStore = useInterlinearStore()
-
 // Modal state
 const showEditModal = ref(false)
 const editingSentence = ref<InterlinearSentence | null>(null)
@@ -52,14 +51,12 @@ const sortedSentences = computed(() => {
   if (!currentText.value?.sentences) return []
   return [...currentText.value.sentences].sort((a, b) => a.sentenceOrder - b.sentenceOrder)
 })
-
 // Methods
 const openEditModal = (sentence: InterlinearSentence, index: number) => {
   editingSentence.value = sentence
   editingSentenceOrder.value = index + 1
   showEditModal.value = true
 }
-
 const openAddSentenceModal = () => {
   // Create a new empty sentence
   const newSentenceOrder = (currentText.value?.sentences?.length || 0) + 1
@@ -73,18 +70,15 @@ const openAddSentenceModal = () => {
   editingSentenceOrder.value = newSentenceOrder
   showEditModal.value = true
 }
-
 const closeEditModal = () => {
   showEditModal.value = false
   editingSentence.value = null
   editingSentenceOrder.value = 0
 }
-
 // Expose methods for parent component
 defineExpose({
   openAddSentenceModal,
 })
-
 const handleSave = async (updatedSentence: Partial<InterlinearSentence>) => {
   try {
     if (editingSentence.value?.id) {
@@ -106,7 +100,6 @@ const handleSave = async (updatedSentence: Partial<InterlinearSentence>) => {
         sentenceOrder: editingSentence.value?.sentenceOrder || 0,
       })
     }
-
     // Refresh the text to get updated data
     await interlinearStore.fetchTextById(currentText.value!.id)
     closeEditModal()
@@ -117,7 +110,6 @@ const handleSave = async (updatedSentence: Partial<InterlinearSentence>) => {
 
 const handleUpdateAlignments = async (alignments: WordAlignment[]) => {
   if (!editingSentence.value?.id) return
-
   try {
     for (const alignment of alignments) {
       if (alignment.id) {
@@ -135,7 +127,6 @@ const handleUpdateAlignments = async (alignments: WordAlignment[]) => {
         )
       }
     }
-
     // Refresh the text
     await interlinearStore.fetchTextById(currentText.value!.id)
   } catch (error) {
