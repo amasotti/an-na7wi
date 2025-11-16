@@ -5,7 +5,7 @@
     size="xl"
     @close="store.closeSentenceEditModal()"
   >
-    <div class="sentence-edit-modal">
+    <div class="space-y-4">
       <!-- Sentence Editor -->
       <InterlinearSentenceEditor
         :sentence-id="editingSentence?.id || 'editing'"
@@ -18,7 +18,7 @@
       />
 
       <!-- Actions -->
-      <div class="modal-actions">
+      <div class="form-actions">
         <CancelButton
           type="button"
           @click="store.closeSentenceEditModal()"
@@ -48,12 +48,3 @@ const store = useInterlinearStore()
 const { showSentenceEditModal, editingSentence, editingSentenceOrder, sentenceSaving } =
   storeToRefs(store)
 </script>
-
-<style scoped>
-.sentence-edit-modal {
-  @apply space-y-4;
-}
-.modal-actions {
-  @apply flex justify-end gap-3 pt-4 mt-6 border-t border-gray-200 dark:border-gray-700;
-}
-</style>
