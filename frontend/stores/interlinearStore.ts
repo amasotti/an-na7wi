@@ -42,6 +42,11 @@ export const useInterlinearStore = defineStore('interlinear', () => {
   const currentLinkedWord = ref<WordSearchResult | null>(null)
   const vocabSearching = ref(false)
 
+  // State - Metadata Editing
+  const editingMetadata = ref<Partial<InterlinearText> | null>(null)
+  const metadataSaving = ref(false)
+  const metadataSaveError = ref<string | null>(null)
+
   // Getters
   const hasMorePages = computed(() => {
     return totalCount.value > currentPage.value * pageSize.value
@@ -666,6 +671,65 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     currentLinkedWord.value = null
   }
 
+  // Actions - Metadata Editing
+  function openMetadataEditor() {
+    const text = currentText.value
+    if (!text) return
+
+    editingMetadata.value = {
+      title: text.title,
+      description: text.description,
+      dialect: text.dialect,
+    }
+    metadataSaveError.value = null
+  }
+
+  function updateMetadataField(field: keyof InterlinearText, value: string | undefined) {
+    if (!editingMetadata.value) return
+    editingMetadata.value = {
+      ...editingMetadata.value,
+      [field]: value,
+    }
+  }
+
+  async function saveMetadata(textId: string): Promise<boolean> {
+    if (!editingMetadata.value) return false
+
+    // Validation
+    if (!editingMetadata.value.title?.trim()) {
+      metadataSaveError.value = 'Title is required'
+      return false
+    }
+    if (!editingMetadata.value.dialect) {
+      metadataSaveError.value = 'Dialect is required'
+      return false
+    }
+
+    metadataSaving.value = true
+    metadataSaveError.value = null
+
+    try {
+      await updateText(textId, {
+        title: editingMetadata.value.title.trim(),
+        description: editingMetadata.value.description?.trim() || undefined,
+        dialect: editingMetadata.value.dialect,
+      })
+      editingMetadata.value = null
+      return true
+    } catch (err) {
+      metadataSaveError.value = 'Failed to save changes. Please try again.'
+      console.error(err)
+      return false
+    } finally {
+      metadataSaving.value = false
+    }
+  }
+
+  function cancelMetadataEdit() {
+    editingMetadata.value = null
+    metadataSaveError.value = null
+  }
+
   // Utility actions
   function setPage(page: number) {
     currentPage.value = page
@@ -709,6 +773,11 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     currentLinkedWord,
     vocabSearching,
 
+    // State - Metadata Editing
+    editingMetadata,
+    metadataSaving,
+    metadataSaveError,
+
     // Getters
     hasMorePages,
     sortedAlignments,
@@ -751,6 +820,12 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     searchVocabulary,
     linkAlignmentToVocab,
     unlinkAlignmentFromVocab,
+
+    // Actions - Metadata Editing
+    openMetadataEditor,
+    updateMetadataField,
+    saveMetadata,
+    cancelMetadataEdit,
 
     // Utilities
     setPage,
