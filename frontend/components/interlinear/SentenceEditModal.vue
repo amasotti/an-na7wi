@@ -7,26 +7,13 @@
   >
     <div class="space-y-4">
       <!-- Sentence Editor -->
-      <InterlinearSentenceEditor
-        :sentence-id="editingSentence?.id || 'editing'"
-        :sentence-order="editingSentenceOrder"
-      />
-
-      <!-- Word Alignment Editor (if alignments exist and sentence is saved) -->
-      <WordAlignmentEditor
-        v-if="editingSentence?.id && editingSentence.alignments && editingSentence.alignments.length > 0"
-      />
+      <InterlinearSentenceEditor />
 
       <!-- Actions -->
       <div class="form-actions">
-        <CancelButton
-          type="button"
-          @click="store.closeSentenceEditModal()"
-          text="Close"
-        />
-        <DeleteButton v-if="editingSentence?.id" @click="store.clearSentenceAlignments()" text="Clean Alignements" />
+        <DeleteButton v-if="editingSentence?.id" @click="store.deleteSentenceFromModal()" text="Delete Sentence" />
+        <TokenizeBtn v-if="editingSentence?.id" />
         <SaveButton
-          v-if="editingSentence?.id"
           :loading="sentenceSaving"
           @click="store.saveSentence()"
           :text="editingSentence?.id ? 'Save Changes' : 'Add Sentence'"
@@ -38,11 +25,10 @@
 
 <script setup lang="ts">
 import BaseModal from '~/components/common/BaseModal.vue'
-import CancelButton from '~/components/common/CancelButton.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
-import WordAlignmentEditor from '~/components/interlinear/alignment/WordAlignmentEditor.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
+import TokenizeBtn from "~/components/interlinear/alignment/TokenizeBtn.vue";
 
 const store = useInterlinearStore()
 const { showSentenceEditModal, editingSentence, editingSentenceOrder, sentenceSaving } =
