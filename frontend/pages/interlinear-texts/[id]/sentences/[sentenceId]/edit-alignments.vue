@@ -16,7 +16,7 @@
           item="Edit Word Alignments"
         />
 
-        <h1 class="page-title">Edit Word Alignments</h1>
+        <h2>Edit Word Alignments</h2>
         <p class="page-description">
           Manage word-by-word alignments between Arabic, transliteration, and translation
         </p>
@@ -30,21 +30,39 @@
           <div class="text-small text-center">{{ currentSentence.transliteration }}</div>
           <div class="italic text-center">{{ currentSentence.translation }}</div>
         </div>
+        <p class="annotation-item">{{currentSentence.annotations}}</p>
       </div>
 
       <!-- Alignments Section -->
       <div class="card-base card-padding space-md">
         <h2 class="heading-sm">Word Alignments</h2>
 
-        <AlignmentGrid
-          v-if="sortedAlignments.length > 0"
-          :alignments="sortedAlignments"
-          :selected-indices="selectedAlignments"
-          @toggle-selection="store.toggleAlignmentSelection"
-          @clear-selection="store.clearAlignmentSelection"
-          @edit-alignment="handleEdit"
-          @link-to-vocabulary="handleLinkToVocabulary"
-        />
+        <div v-if="sortedAlignments.length > 0" class="space-md">
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <CancelButton variant="outline" size="sm" @click="store.clearAlignmentSelection()" text="Clear Selection" />
+            <!--  single selection actions -->
+            <EditButton v-if="selectedAlignments.length === 1" @click="handleEdit" />
+            <EditButton v-if="selectedAlignments.length === 1" text="Link Word" size="sm" @click="handleLinkToVocabulary" />
+          </div>
+
+          <!-- Alignments Grid -->
+          <div class="alignments-grid">
+            <InteractiveGlossa
+              v-for="(alignment, index) in sortedAlignments"
+              :key="alignment.id || `temp-${index}`"
+              :alignment="alignment"
+              :index="index"
+              :is-selected="selectedAlignments.includes(index)"
+              @toggle-selection="store.toggleAlignmentSelection"
+            />
+          </div>
+
+          <!-- Helper Text -->
+<!--          <p v-if="selectedAlignments.length === 0" class="form-help">-->
+<!--            Click an alignment to select it. Use Cmd/Ctrl+click to select multiple, or Shift+click to select a range.-->
+<!--          </p>-->
+        </div>
 
         <BaseEmptyState
           v-else
@@ -89,49 +107,33 @@
       title="Link to Vocabulary"
       @close="store.closeVocabLinkModal()"
     >
-      <VocabularyLinkingPanel
-        :alignment="linkingAlignment"
-        :search-query="vocabSearchQuery"
-        :search-results="vocabSearchResults"
-        :linked-word="currentLinkedWord"
-        @update:search-query="vocabSearchQuery = $event"
-        @link="handleLinkWord"
-        @unlink="store.unlinkAlignmentFromVocab()"
-        @close="store.closeVocabLinkModal()"
-      />
+      <VocabularyLinkingPanel />
     </BaseModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import BaseBreadcrumb from '~/components/common/BaseBreadcrumb.vue'
 import BaseEmptyState from '~/components/common/BaseEmptyState.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
 import CancelButton from '~/components/common/CancelButton.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
+import EditButton from '~/components/common/EditButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import AlignmentEditForm from '~/components/interlinear/alignment/AlignmentEditForm.vue'
-import AlignmentGrid from '~/components/interlinear/alignment/AlignmentGrid.vue'
 import TokenizeBtn from '~/components/interlinear/alignment/TokenizeBtn.vue'
 import VocabularyLinkingPanel from '~/components/interlinear/alignment/VocabularyLinkingPanel.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
+import InteractiveGlossa from "~/components/interlinear/alignment/InteractiveGlossa.vue";
 
 const route = useRoute()
 const router = useRouter()
 const store = useInterlinearStore()
 
-const {
-  currentText,
-  loading,
-  error,
-  sortedAlignments,
-  selectedAlignments,
-  showVocabLinkModal,
-  linkingAlignment,
-  currentLinkedWord,
-} = storeToRefs(store)
+const { currentText, loading, error, sortedAlignments, selectedAlignments, showVocabLinkModal } =
+  storeToRefs(store)
 
 // Local state for edit modal
 const showEditModal = ref(false)
@@ -141,10 +143,6 @@ const editingAlignment = ref<{
   transliterationTokens: string
   translationTokens: string
 } | null>(null)
-
-// Local state for vocabulary search
-const vocabSearchQuery = ref('')
-const vocabSearchResults = computed(() => store.vocabSearchResults)
 
 const currentSentence = computed(() => {
   if (!currentText.value) return null
@@ -181,23 +179,9 @@ const handleLinkToVocabulary = async () => {
   await store.openVocabLinkModal(index)
 }
 
-const handleLinkWord = async (wordId: string) => {
-  await store.linkAlignmentToVocab(wordId)
-}
-
 const handleBack = () => {
   router.push(`/interlinear-texts/${route.params.id}`)
 }
-
-// Watch for vocabulary search query changes
-let vocabSearchTimer: ReturnType<typeof setTimeout> | null = null
-watch(vocabSearchQuery, newQuery => {
-  if (vocabSearchTimer) clearTimeout(vocabSearchTimer)
-  if (!newQuery.trim()) {
-    return
-  }
-  vocabSearchTimer = setTimeout(() => store.searchVocabulary(newQuery.trim()), 400)
-})
 
 onMounted(async () => {
   const textId = route.params.id as string
@@ -231,4 +215,12 @@ onUnmounted(() => {
    @apply text-sm text-gray-600 text-center mt-2 italic;
  }
 
+.annotation-item {
+  @apply text-sm pt-2 mt-2 bottom-3 text-gray-500 border-t-2;
+}
+
+.alignments-grid {
+  @apply grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-3;
+  direction: rtl;
+}
 </style>

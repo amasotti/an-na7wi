@@ -1,12 +1,12 @@
 <template>
   <div class="space-md">
     <!-- Alignment Preview -->
-    <div v-if="alignment" class="vocab-preview">
+    <div v-if="linkingAlignment" class="vocab-preview">
       <p class="vocab-preview-label">Linking alignment:</p>
       <div class="vocab-preview-content space-xs">
-        <div class="arabic-text" dir="rtl">{{ alignment.arabicTokens }}</div>
-        <div class="text-gray-700 dark:text-gray-300">{{ alignment.transliterationTokens }}</div>
-        <div class="text-gray-600 dark:text-gray-400">{{ alignment.translationTokens }}</div>
+        <div class="arabic-text" dir="rtl">{{ linkingAlignment.arabicTokens }}</div>
+        <div class="text-gray-700 dark:text-gray-300">{{ linkingAlignment.transliterationTokens }}</div>
+        <div class="text-gray-600 dark:text-gray-400">{{ linkingAlignment.translationTokens }}</div>
       </div>
     </div>
 
@@ -15,8 +15,7 @@
       <label class="form-label">Search Vocabulary</label>
       <div class="relative">
         <input
-          :value="searchQuery"
-          @input="$emit('update:search-query', ($event.target as HTMLInputElement).value)"
+          v-model="vocabSearchQuery"
           type="search"
           class="form-input-na7wi"
           placeholder="Type at least 3 characters to search..."
@@ -25,11 +24,11 @@
 
         <!-- Search Results Dropdown -->
         <div
-          v-if="showDropdown && searchResults.length > 0"
+          v-if="showDropdown && vocabSearchResults.length > 0"
           class="vocab-dropdown"
         >
           <button
-            v-for="word in searchResults"
+            v-for="word in vocabSearchResults"
             :key="word.id"
             type="button"
             class="vocab-dropdown-item"
@@ -43,26 +42,26 @@
           </button>
         </div>
 
-        <p v-if="searchQuery.length > 0 && searchQuery.length < 3" class="vocab-hint">
+        <p v-if="vocabSearchQuery.length > 0 && vocabSearchQuery.length < 3" class="vocab-hint">
           Type at least 3 characters to search
         </p>
       </div>
     </div>
 
     <!-- Currently Linked Word -->
-    <div v-if="linkedWord" class="linked-vocab-section">
+    <div v-if="currentLinkedWord" class="linked-vocab-section">
       <p class="linked-vocab-label">Currently linked to:</p>
       <div class="linked-vocab-card">
         <div class="linked-vocab-content space-xs">
-          <div class="linked-vocab-arabic arabic-text" dir="rtl">{{ linkedWord.arabic }}</div>
-          <div class="linked-vocab-transliteration">{{ linkedWord.transliteration }}</div>
-          <div class="linked-vocab-translation">{{ linkedWord.translation }}</div>
+          <div class="linked-vocab-arabic arabic-text" dir="rtl">{{ currentLinkedWord.arabic }}</div>
+          <div class="linked-vocab-transliteration">{{ currentLinkedWord.transliteration }}</div>
+          <div class="linked-vocab-translation">{{ currentLinkedWord.translation }}</div>
         </div>
         <BaseButton
           type="button"
           variant="danger"
           size="sm"
-          @click="$emit('unlink')"
+          @click="store.unlinkAlignmentFromVocab()"
         >
           Unlink
         </BaseButton>
@@ -71,7 +70,7 @@
 
     <!-- Actions -->
     <div class="form-actions">
-      <BaseButton type="button" variant="outline" @click="$emit('close')">
+      <BaseButton type="button" variant="outline" @click="store.closeVocabLinkModal()">
         Close
       </BaseButton>
     </div>
@@ -79,32 +78,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import BaseButton from '~/components/common/BaseButton.vue'
-import type { WordAlignment, WordSearchResult } from '~/types'
+import { useInterlinearStore } from '~/stores/interlinearStore'
 
-type VocabularyLinkingPanelProps = {
-  alignment: WordAlignment | null
-  searchQuery: string
-  searchResults: WordSearchResult[]
-  linkedWord: WordSearchResult | null
-}
-
-defineProps<VocabularyLinkingPanelProps>()
-
-const emit = defineEmits<{
-  'update:search-query': [value: string]
-  link: [wordId: string]
-  unlink: []
-  close: []
-}>()
+const store = useInterlinearStore()
+const { vocabSearchQuery, vocabSearchResults, currentLinkedWord, linkingAlignment } =
+  storeToRefs(store)
 
 const showDropdown = ref(false)
 
-const handleSelectWord = (wordId: string) => {
-  emit('link', wordId)
+const handleSelectWord = async (wordId: string) => {
+  await store.linkAlignmentToVocab(wordId)
   showDropdown.value = false
 }
+
+// Watch for vocabulary search query changes
+let vocabSearchTimer: ReturnType<typeof setTimeout> | null = null
+watch(vocabSearchQuery, newQuery => {
+  if (vocabSearchTimer) clearTimeout(vocabSearchTimer)
+  if (!newQuery.trim()) {
+    return
+  }
+  vocabSearchTimer = setTimeout(() => store.searchVocabulary(newQuery.trim()), 400)
+})
 </script>
 
 <style scoped>
