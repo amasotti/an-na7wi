@@ -72,29 +72,14 @@
             <option value="OTHER">Other</option>
           </select>
         </div>
+        <div class="form-actions">
+          <CancelButton @click="handleCancel" :disabled="saving" />
+          <SaveButton @click="handleSave" :loading="saving" />
+          </div>
       </div>
 
       <!-- Actions -->
-      <div class="actions-section">
-        <div class="actions-container">
-          <BaseButton
-            type="button"
-            variant="outline"
-            @click="handleCancel"
-            :disabled="saving"
-          >
-            Cancel
-          </BaseButton>
 
-          <BaseButton
-            type="button"
-            variant="primary"
-            :loading="saving"
-            @click="handleSave"
-          >
-            Save Changes
-          </BaseButton>
-        </div>
 
         <!-- Error Message -->
         <div v-if="saveError" class="save-error">
@@ -103,7 +88,6 @@
           </BaseIcon>
           <span>{{ saveError }}</span>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -114,7 +98,9 @@ import BaseButton from '~/components/common/BaseButton.vue'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import BaseIcon from '~/components/common/BaseIcon.vue'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
+import SaveButton from '~/components/common/SaveButton.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 import type { Dialect } from '~/types'
 

@@ -18,24 +18,16 @@
         </h3>
         
         <p class="text-gray-600 mb-4">
-          Are you sure you want to delete the word <span class="font-bold rtl">{{ word?.arabic }}</span>?
+          Are you sure you want to delete the word <span class="font-bold arabic">{{ word?.arabic }}</span>?
           This action cannot be undone.
         </p>
       </div>
     </div>
 
     <template #footer>
-      <div class="modal-actions">
-        <BaseButton variant="outline" @click="handleClose">
-          Cancel
-        </BaseButton>
-        <BaseButton 
-          variant="danger"
-          @click="handleConfirm" 
-          :loading="loading"
-        >
-          Delete Word
-        </BaseButton>
+      <div class="form-actions">
+        <CancelButton  @click="handleClose" />
+        <DeleteButton @click="handleConfirm" :loading="loading" />
       </div>
     </template>
   </BaseModal>
@@ -43,6 +35,8 @@
 
 <script setup lang="ts">
 import type { Word } from '@/types'
+import CancelButton from '~/components/common/CancelButton.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
@@ -53,7 +47,7 @@ interface Props {
   word?: Word | null
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   loading: false,
   word: null,
 })
@@ -81,11 +75,4 @@ const handleConfirm = () => {
   @apply flex justify-center mb-4;
 }
 
-.modal-actions {
-  @apply flex gap-3 justify-end;
-}
-
-.rtl {
-  direction: rtl;
-}
 </style>

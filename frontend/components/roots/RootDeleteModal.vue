@@ -26,17 +26,9 @@
     </div>
 
     <template #footer>
-      <div class="modal-actions">
-        <BaseButton variant="outline" @click="handleClose">
-          Cancel
-        </BaseButton>
-        <BaseButton 
-          variant="danger"
-          @click="handleConfirm" 
-          :loading="loading"
-        >
-          Delete Root
-        </BaseButton>
+      <div class="form-actions">
+        <CancelButton variant="outline" @click="handleClose" />
+        <DeleteButton :loading="loading" @click="handleConfirm" />
       </div>
     </template>
   </BaseModal>
@@ -44,7 +36,8 @@
 
 <script setup lang="ts">
 import type { Root } from '@/types'
-import BaseButton from '../common/BaseButton.vue'
+import CancelButton from '~/components/common/CancelButton.vue'
+import DeleteButton from '~/components/common/DeleteButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
 import BaseModal from '../common/BaseModal.vue'
 
@@ -80,10 +73,6 @@ const handleConfirm = () => {
 
 .warning-icon {
   @apply flex justify-center mb-4;
-}
-
-.modal-actions {
-  @apply flex gap-3 justify-end;
 }
 
 .arabic {
