@@ -13,7 +13,7 @@
 type BreadcrumbProps = {
   parentLink: string
   parentText: string
-  separator: string
+  separator?: string
   item: string
 }
 
