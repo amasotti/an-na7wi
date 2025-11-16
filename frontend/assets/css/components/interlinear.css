@@ -1,4 +1,7 @@
-/* Interlinear Text Components */
+/* ===================================================================
+   Interlinear Text Components
+   Supports both interactive (edit mode) and read-only (view mode) layouts
+   =================================================================== */
 
 /* Sentence Container */
 .interlinear-sentence {
@@ -9,16 +12,73 @@
   @apply flex gap-2 mb-3 opacity-0 group-hover:opacity-100 transition-opacity;
 }
 
-.button-icon {
-  @apply mr-1;
+/* ===================================================================
+   Gloss Word Components - Inline interlinear flow
+   =================================================================== */
+
+/* Base gloss word - inline word unit that flows like text */
+.gloss-word {
+  @apply relative inline-flex flex-col items-center text-center
+  px-3 py-2 mx-1;
 }
+
+/* Interactive variant - for edit/alignment pages */
+.gloss-word-interactive {
+  @apply gloss-word
+  rounded-lg cursor-pointer
+  transition-all duration-150
+  hover:bg-gray-100 dark:hover:bg-gray-800;
+}
+
+/* Selected state (interactive only) */
+.gloss-word-selected {
+  @apply bg-primary-100 dark:bg-primary-900/40
+  ring-2 ring-primary-300 dark:ring-primary-700
+  shadow-sm;
+}
+
+/* Vocabulary link indicator - subtle accent line */
+.vocab-accent {
+  @apply absolute top-0 left-1/2 -translate-x-1/2
+  w-8 h-1 rounded-full
+  bg-green-500 dark:bg-green-400;
+}
+
+/* Individual gloss lines */
+.gloss-line {
+  @apply leading-tight;
+}
+
+/* Arabic - main text */
+.gloss-arabic {
+  @apply text-xl font-arabic font-bold
+  text-gray-900 dark:text-gray-50
+  mb-1;
+}
+
+/* Transliteration - supporting */
+.gloss-transliteration {
+  @apply text-xs text-gray-600 dark:text-gray-400
+  italic font-medium
+  mb-0.5;
+}
+
+/* Translation - tertiary */
+.gloss-translation {
+  @apply text-xs text-gray-500 dark:text-gray-500;
+}
+
+/* ===================================================================
+   Legacy Classes - Read-only view (detail pages)
+   Maintained for backward compatibility
+   =================================================================== */
 
 /* Word Grid - words flow inline like text */
 .interlinear-word-grid {
   @apply flex flex-wrap items-start pl-8;
 }
 
-/* Individual Word/Alignment */
+/* Individual Word/Alignment (read-only) */
 .interlinear-word {
   @apply relative inline-flex flex-col items-center text-center;
 }
@@ -33,7 +93,9 @@
 
 /* Arabic Token */
 .interlinear-word-arabic {
-  @apply text-lg font-arabic text-gray-900 dark:text-gray-100 mb-0.5 leading-tight transition-colors;
+  @apply font-arabic-text text-gray-900 dark:text-gray-100 mb-1 leading-tight transition-colors;
+  font-weight: 300;
+  font-size: 1.7rem;
 }
 
 .interlinear-word-arabic-linked {
@@ -50,14 +112,17 @@
 }
 
 .interlinear-transliteration {
-  @apply text-gray-500 dark:text-gray-400 italic;
+  @apply text-xs text-gray-600 dark:text-gray-400 italic font-medium mb-0.5;
 }
 
 .interlinear-translation {
-  @apply text-gray-600 dark:text-gray-300;
+  @apply text-xs text-gray-500 dark:text-gray-500;
 }
 
-/* Sentence Fallback (no alignments) */
+/* ===================================================================
+   Sentence Fallback (no alignments)
+   =================================================================== */
+
 .interlinear-fallback {
   @apply pl-8;
 }
@@ -70,7 +135,10 @@
   @apply text-base text-gray-700 dark:text-gray-300 leading-relaxed;
 }
 
-/* Annotations */
+/* ===================================================================
+   Annotations
+   =================================================================== */
+
 .interlinear-annotations {
   @apply flex mt-3 pt-3 border-t border-gray-100 dark:border-gray-700/50 bg-neutral-100/50 dark:bg-gray-800/50 p-3 rounded-md;
 }

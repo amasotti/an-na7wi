@@ -42,7 +42,7 @@
 }
 
 .page-container-detail {
-  @apply w-full px-4 xl:px-8 2xl:px-12 py-6 space-y-6;
+  @apply max-w-full px-4 xl:px-8 2xl:px-24 py-6 space-y-6;
 }
 
 .page-container-index {
