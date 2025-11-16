@@ -16,19 +16,15 @@
       <InterlinearTextDetailHeader @delete="openDeleteModal" />
 
       <!-- Main Content -->
-      <section>
-        <InterlinearTextViewer />
-      </section>
+      <InterlinearTextViewer />
     </main>
 
     <!-- Delete Text Modal -->
     <InterlinearTextDeleteModal
       v-if="currentText"
       :open="showDeleteModal"
-      :loading="deleteLoading"
       :text="currentText"
       @close="closeDeleteModal"
-      @confirm="handleDeleteText"
     />
   </div>
 </template>
@@ -47,7 +43,6 @@ const interlinearStore = useInterlinearStore()
 
 // Local state
 const showDeleteModal = ref(false)
-const deleteLoading = ref(false)
 
 // Computed properties from store
 const currentText = computed(() => interlinearStore.currentText)
@@ -55,28 +50,12 @@ const loading = computed(() => interlinearStore.loading)
 const error = computed(() => interlinearStore.error)
 
 // Methods
-
 const openDeleteModal = () => {
   showDeleteModal.value = true
 }
 
 const closeDeleteModal = () => {
   showDeleteModal.value = false
-}
-
-const handleDeleteText = async () => {
-  if (!currentText.value) return
-
-  deleteLoading.value = true
-  try {
-    await interlinearStore.deleteText(currentText.value.id)
-    closeDeleteModal()
-    navigateTo('/interlinear-texts')
-  } catch (error) {
-    console.error('Failed to delete interlinear text:', error)
-  } finally {
-    deleteLoading.value = false
-  }
 }
 
 // Lifecycle

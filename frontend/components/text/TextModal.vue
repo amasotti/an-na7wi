@@ -213,12 +213,13 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import type { SelectOption, Text } from '@/types'
-import { Dialect, Difficulty } from '@/types'
+import type { Dialect, Difficulty, Text } from '@/types'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import CancelButton from '~/components/common/CancelButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
 import { textService } from '~/composables/textService'
+import { dialectOptions } from '~/constants/dialects'
+import { difficultyOptions } from '~/constants/difficulty'
 import BaseBadge from '../common/BaseBadge.vue'
 import BaseButton from '../common/BaseButton.vue'
 import BaseIcon from '../common/BaseIcon.vue'
@@ -270,20 +271,6 @@ const form = ref<TextForm>({
 const tagInput = ref('')
 const errors = ref<Record<string, string>>({})
 const transliterationLoading = ref(false)
-
-// Options
-const difficultyOptions: SelectOption<Difficulty>[] = [
-  { value: Difficulty.BEGINNER, label: 'Beginner' },
-  { value: Difficulty.INTERMEDIATE, label: 'Intermediate' },
-  { value: Difficulty.ADVANCED, label: 'Advanced' },
-]
-
-const dialectOptions: SelectOption<Dialect>[] = [
-  { value: Dialect.TUNISIAN, label: 'Tunisian' },
-  { value: Dialect.MOROCCAN, label: 'Moroccan' },
-  { value: Dialect.EGYPTIAN, label: 'Egyptian' },
-  { value: Dialect.MSA, label: 'Modern Standard Arabic' },
-]
 
 // Computed
 const isEditing = computed(() => !!props.text)

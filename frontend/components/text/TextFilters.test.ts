@@ -1,6 +1,8 @@
 import { fireEvent, screen } from '@testing-library/vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TextFilters } from '#components'
+import { dialectOptions } from '~/constants/dialects'
+import { difficultyOptions } from '~/constants/difficulty'
 import { renderWithStore } from '~/test/test-utils'
 
 const defaultProps = {
@@ -9,14 +11,8 @@ const defaultProps = {
   selectedDifficulty: '',
   activeTags: [],
   hasActiveFilters: false,
-  dialectOptions: [
-    { value: 'MSA', label: 'MSA' },
-    { value: 'EGYPTIAN', label: 'Egyptian' },
-  ],
-  difficultyOptions: [
-    { value: 'BEGINNER', label: 'Beginner' },
-    { value: 'INTERMEDIATE', label: 'Intermediate' },
-  ],
+  dialectOptions: dialectOptions,
+  difficultyOptions: difficultyOptions,
 }
 
 describe('TextFilters', () => {
