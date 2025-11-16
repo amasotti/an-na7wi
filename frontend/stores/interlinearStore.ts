@@ -548,8 +548,8 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     const currentAlignment = alignments[index]
     if (!currentAlignment) return
 
-    // Update local state - only update provided fields
-    alignments[index] = {
+    // Merge updates with current alignment
+    const mergedAlignment = {
       ...currentAlignment,
       ...updates,
       // Ensure required fields are never undefined
@@ -563,6 +563,9 @@ export const useInterlinearStore = defineStore('interlinear', () => {
       updatedAt: currentAlignment.updatedAt,
     }
 
+    // Update local state
+    alignments[index] = mergedAlignment
+
     // Update on server if sentence is saved
     if (editingSentence.value.id && currentText.value) {
       try {
@@ -570,7 +573,12 @@ export const useInterlinearStore = defineStore('interlinear', () => {
           currentText.value.id,
           editingSentence.value.id,
           alignmentId,
-          updates
+          {
+            arabicTokens: mergedAlignment.arabicTokens,
+            transliterationTokens: mergedAlignment.transliterationTokens,
+            translationTokens: mergedAlignment.translationTokens,
+            vocabularyWordId: mergedAlignment.vocabularyWordId,
+          }
         )
       } catch (err) {
         error.value = 'Failed to update alignment'
