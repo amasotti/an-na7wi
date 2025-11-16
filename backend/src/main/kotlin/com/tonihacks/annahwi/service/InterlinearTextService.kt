@@ -259,7 +259,7 @@ class InterlinearTextService {
     }
 
     @Transactional
-    fun updateAlignment(textId: UUID, sentenceId: UUID, alignmentId: UUID, alignment: WordAlignment, vocabularyWordId: UUID?): WordAlignment {
+    fun updateAlignment(textId: UUID, sentenceId: UUID, alignmentId: UUID, alignment: WordAlignment, vocabularyWordId: UUID?, updateTokenOrder: Boolean = true): WordAlignment {
         logger.info("Updating alignment $alignmentId in sentence $sentenceId")
 
         val existingAlignment = wordAlignmentRepository.findById(alignmentId)
@@ -272,7 +272,10 @@ class InterlinearTextService {
         existingAlignment.arabicTokens = alignment.arabicTokens
         existingAlignment.transliterationTokens = alignment.transliterationTokens
         existingAlignment.translationTokens = alignment.translationTokens
-        existingAlignment.tokenOrder = alignment.tokenOrder
+        // Only update tokenOrder if explicitly requested
+        if (updateTokenOrder) {
+            existingAlignment.tokenOrder = alignment.tokenOrder
+        }
         existingAlignment.updatedAt = LocalDateTime.now()
 
         if (vocabularyWordId != null) {
