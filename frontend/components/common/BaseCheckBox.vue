@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-start">
+  <div :class="customStyle">
     <input
       :id="id"
       :value="modelValue"
@@ -15,17 +15,18 @@
 </template>
 
 <script setup lang="ts">
-
 interface BaseCheckBoxProps {
   modelValue: boolean
   id?: string
   labelText?: string
+  customStyle?: string
 }
 
 withDefaults(defineProps<BaseCheckBoxProps>(), {
   modelValue: false,
-  id: 'checkbox-' + Math.random().toString(36).substring(2, 9),
+  id: `checkbox-${Math.random().toString(36).substring(2, 9)}`,
   labelText: '',
+  customStyle: 'flex-start',
 })
 
 const emit = defineEmits<{

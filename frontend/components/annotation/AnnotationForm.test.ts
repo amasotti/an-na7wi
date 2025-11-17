@@ -39,6 +39,15 @@ vi.mock('../common/WordSelector.vue', () => ({
   },
 }))
 
+vi.mock('../common/BaseCheckbox.vue', () => ({
+  default: {
+    template:
+      '<input data-testid="base-checkbox" type="checkbox" :checked="modelValue" @change="$emit(\'update:modelValue\', $event.target.checked)" />',
+    props: ['modelValue', 'label'],
+    emits: ['update:modelValue'],
+  },
+}))
+
 vi.mock('../common/ColorPicker.vue', () => ({
   default: {
     template: '<div data-testid="color-picker" />',
@@ -92,7 +101,6 @@ describe('AnnotationForm', () => {
     expect(wrapper.find('#content').exists()).toBe(true)
     expect(wrapper.find('#type').exists()).toBe(true)
     expect(wrapper.find('#masteryLevel').exists()).toBe(true)
-    expect(wrapper.find('#needsReview').exists()).toBe(true)
   })
 
   it('shows correct title for new annotation', () => {
@@ -132,13 +140,11 @@ describe('AnnotationForm', () => {
     const contentInput = wrapper.find('#content').element as unknown as HTMLInputElement
     const typeSelect = wrapper.find('#type').element as unknown as HTMLInputElement
     const masteryLevelSelect = wrapper.find('#masteryLevel').element as unknown as HTMLInputElement
-    const needsReviewCheckbox = wrapper.find('#needsReview').element as unknown as HTMLInputElement
 
     expect(anchorTextInput.value).toBe(mockAnnotation.anchorText)
     expect(contentInput.value).toBe(mockAnnotation.content)
     expect(typeSelect.value).toBe(mockAnnotation.type)
     expect(masteryLevelSelect.value).toBe(mockAnnotation.masteryLevel)
-    expect(needsReviewCheckbox.value).toBe('on')
   })
 
   it('uses selectedText for new annotation', async () => {
@@ -223,8 +229,6 @@ describe('AnnotationForm', () => {
     await wrapper.find('#content').setValue('test content')
     await wrapper.find('#type').setValue(AnnotationType.GRAMMAR)
     await wrapper.find('#masteryLevel').setValue(MasteryLevel.MASTERED)
-    await wrapper.find('#needsReview').setValue(true)
-
     await wrapper.find('form').trigger('submit.prevent')
 
     expect(wrapper.emitted('submit')).toBeTruthy()
@@ -235,7 +239,7 @@ describe('AnnotationForm', () => {
         type: AnnotationType.GRAMMAR,
         masteryLevel: MasteryLevel.MASTERED,
         linkedWordIds: [],
-        needsReview: true,
+        needsReview: false,
         color: '#32a7cf',
       },
     ])

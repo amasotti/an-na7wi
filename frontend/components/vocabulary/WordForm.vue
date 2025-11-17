@@ -154,49 +154,36 @@
         </h3>
         <div class="form-section-grid">
           <div class="form-field-row">
-            <div class="form-group">
-              <label class="form-label">Part of Speech</label>
-              <BaseSelect
-                v-model="form.partOfSpeech"
-                :options="partsOfSpeechOptions"
-                placeholder="Select Part of Speech"
-                aria-describedby="pos-help"
-              />
-            </div>
-            <div class="form-group">
-              <label class="form-label">
-                Difficulty
-                <span class="text-red-500 ml-1">*</span>
-              </label>
-              <BaseSelect
-                v-model="form.difficulty"
-                :options="difficultyOptions"
-                required
-                aria-describedby="difficulty-help"
-              />
-            </div>
+            <BaseSelect
+              v-model="form.partOfSpeech"
+              :options="partsOfSpeechOptions"
+              placeholder="Select Part of Speech"
+              aria-describedby="pos-help"
+              label="PoS"
+            />
+
+            <BaseSelect
+              v-model="form.difficulty"
+              :options="difficultyOptions"
+              required
+              aria-describedby="difficulty-help"
+              label="Difficulty"
+            />
           </div>
           <div class="form-field-row">
-            <div class="form-group">
-              <label class="form-label">
-                Dialect
-                <span class="text-red-500 ml-1">*</span>
-              </label>
-              <BaseSelect
-                v-model="form.dialect"
-                :options="dialectOptions"
-                required
-                aria-describedby="dialect-help"
-              />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Mastery Level</label>
-              <BaseSelect
-                v-model="form.masteryLevel"
-                :options="masteryLevelOptions"
-                aria-describedby="mastery-help"
-              />
-            </div>
+            <BaseSelect
+              v-model="form.dialect"
+              :options="dialectOptions"
+              required
+              aria-describedby="dialect-help"
+              label="Dialect"
+            />
+            <BaseSelect
+              v-model="form.masteryLevel"
+              :options="masteryLevelOptions"
+              aria-describedby="mastery-help"
+              label="Mastery Level"
+            />
           </div>
         </div>
       </section>

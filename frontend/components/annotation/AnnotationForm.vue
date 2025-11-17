@@ -101,19 +101,6 @@
         </select>
       </div>
 
-      <!-- Needs Review -->
-      <div class="flex items-center">
-        <input
-          id="needsReview"
-          v-model="form.needsReview"
-          type="checkbox"
-          class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-        />
-        <label for="needsReview" class="ml-2 block text-sm text-gray-700">
-          Needs Review
-        </label>
-      </div>
-
       <!-- Color (optional) -->
       <ColorPicker 
         v-model="form.color" 
@@ -171,6 +158,7 @@ import type {
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
 import WordSelector from '~/components/annotation/WordSelector.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
+import BaseCheckBox from '~/components/common/BaseCheckBox.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import ColorPicker from '~/components/common/ColorPicker.vue'

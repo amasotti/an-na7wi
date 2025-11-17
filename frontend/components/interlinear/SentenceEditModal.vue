@@ -35,13 +35,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import BaseCheckBox from '~/components/common/BaseCheckBox.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
 import DeleteButton from '~/components/common/DeleteButton.vue'
 import EditButton from '~/components/common/EditButton.vue'
 import SaveButton from '~/components/common/SaveButton.vue'
 import TokenizeBtn from '~/components/interlinear/alignment/TokenizeBtn.vue'
 import InterlinearSentenceEditor from '~/components/interlinear/InterlinearSentenceEditor.vue'
-import BaseCheckBox from "~/components/common/BaseCheckBox.vue";
 
 const store = useInterlinearStore()
 const { showSentenceEditModal, editingSentence, editingSentenceOrder, sentenceSaving } =
