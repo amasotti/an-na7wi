@@ -1,6 +1,7 @@
 import { isNil } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { interlinearService } from '~/composables/interlinearService'
+import { textService } from '~/composables/textService'
 import { wordService } from '~/composables/wordService'
 import type {
   InterlinearSentence,
@@ -454,7 +455,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     }
   }
 
-  async function saveSentence() {
+  async function saveSentence(autotokenize = false) {
     if (!editingSentence.value || !currentText.value) return
 
     sentenceSaving.value = true
@@ -472,13 +473,19 @@ export const useInterlinearStore = defineStore('interlinear', () => {
         })
       } else {
         // Create new sentence
-        await interlinearService.addSentence(currentText.value.id, {
+        const newSentence = await interlinearService.addSentence(currentText.value.id, {
           arabicText: editingSentence.value.arabicText!,
           transliteration: editingSentence.value.transliteration!,
           translation: editingSentence.value.translation!,
           annotations: editingSentence.value.annotations,
           sentenceOrder: editingSentence.value.sentenceOrder || 0,
         })
+
+        // Set the new sentence as the editing sentence so we can autotokenize it
+        if (autotokenize) {
+          editingSentence.value = { ...newSentence }
+          await autoAlign(false)
+        }
       }
 
       // Refresh the text to get updated data
@@ -490,6 +497,18 @@ export const useInterlinearStore = defineStore('interlinear', () => {
       throw err
     } finally {
       sentenceSaving.value = false
+    }
+  }
+
+  async function autoTransliterateSentence() {
+    if (!editingSentence.value?.arabicText) return
+
+    try {
+      const response = await textService.transliterateText(editingSentence.value.arabicText)
+      updateSentenceField('transliteration', response.transliteratedText)
+    } catch (err) {
+      error.value = 'Failed to transliterate sentence'
+      console.error(err)
     }
   }
 
@@ -861,6 +880,7 @@ export const useInterlinearStore = defineStore('interlinear', () => {
     closeSentenceEditModal,
     updateSentenceField,
     saveSentence,
+    autoTransliterateSentence,
     deleteSentenceFromModal,
 
     // Actions - Alignment
