@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file (created with git cliff).
 
+## [2.6.1] - 2025-11-17
+
+[Compare with last version](https://github.com/amasotti/an-na7wi/compare/e985143252003ea458445f2e90359dbe899bc59f..ffd1ad9defa658d0177efda8957f5fa3958eba01)
+### 🚀 Features
+
+
+- Add BaseCheckBox component and integrate autotokenize option in SentenceEditModal ([e567ce7](https://github.com/amasotti/an-na7wi/commit/e567ce779942937d6e4a2327cdcc66073a1186b2))
+
+### 🐛 Bug Fixes
+
+
+- Fix redundant labels for newly introduced select component ([ffd1ad9](https://github.com/amasotti/an-na7wi/commit/ffd1ad9defa658d0177efda8957f5fa3958eba01))
+
 ## [2.6.0] - 2025-11-16
 
 [Compare with last version](https://github.com/amasotti/an-na7wi/compare/abd06439d2251248edcb1ab58802a630ff1c100f..e985143252003ea458445f2e90359dbe899bc59f)
