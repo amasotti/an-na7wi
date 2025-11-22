@@ -4,6 +4,7 @@
 import { onMounted, ref } from 'vue'
 import { useRootStore } from '#imports'
 import type { RootWithWords, WordSummary } from '~/types'
+import {isNil} from "lodash-es";
 
 interface TreeNode {
   id: string
@@ -39,8 +40,9 @@ function buildTree(root: RootWithWords, words: WordSummary[]): TreeNode {
 
     // Find all children of this word
     const children = words.filter(w => w.derivedFromId === wordId)
-    node.children = children.map(child => buildSubtree(child.id))
-
+    if (children.length > 0) {
+      node.children = children.map(child => buildSubtree(child.id))
+    }
     return node
   }
 
@@ -53,19 +55,18 @@ function buildTree(root: RootWithWords, words: WordSummary[]): TreeNode {
   }
 
   // Find all words directly derived from root (no derivedFromId)
-  const primaryWords = words.filter(w => !w.derivedFromId)
+  const primaryWords = words.filter(w => isNil(w.derivedFromId))
   rootNode.children = primaryWords.map(w => buildSubtree(w.id))
 
   return rootNode
 }
 
 function toMermaid(node: TreeNode): string {
-  console.log('tree node:', node)
   const lines = ['mindmap', `  root((${fmt(node)}))`]
 
   function walk(currentNode: TreeNode, indent = 4) {
     for (const child of currentNode.children) {
-      lines.push(`${''.repeat(indent)}[${fmt(child)}]`)
+      lines.push(`${' '.repeat(indent)}[${fmt(child)}]`)
       walk(child, indent + 2)
     }
   }
@@ -77,7 +78,7 @@ function toMermaid(node: TreeNode): string {
 function fmt(
   node: TreeNode | { arabic: string; transliteration: string; meaning: string }
 ): string {
-  return `${node.arabic}<br>${node.transliteration}<br>${node.meaning}`
+  return `${node.arabic} \n ${node.transliteration} \n ${node.meaning}`
 }
 
 const mm = toMermaid(buildTree(currentRootWithWords.value!, currentRootWithWords.value!.words))
