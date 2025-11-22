@@ -56,6 +56,7 @@ export interface Word {
   dictionaryLinks: DictionaryLink[]
   pronunciationLink?: string
   createdAt: string
+  derivedFromId?: string | null
 }
 
 export interface Annotation {

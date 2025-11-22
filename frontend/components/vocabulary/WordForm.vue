@@ -41,7 +41,7 @@
               required
               aria-describedby="translation-help"
             />
-            <div class="invisible">Placeholder to put the root on the right</div>
+
             <BaseInput
               v-model="form.root"
               label="Root"
@@ -297,6 +297,7 @@ const form = ref({
   masteryLevel: MasteryLevel.NEW,
   dictionaryLinks: [] as DictionaryLink[],
   pronunciationLink: '',
+  derivedFromId: '' as string | null,
 })
 
 // Watch for changes in the word prop to update the form
@@ -317,6 +318,7 @@ watch(
         masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
         dictionaryLinks: newWord.dictionaryLinks || [],
         pronunciationLink: newWord.pronunciationLink || '',
+        derivedFromId: newWord.derivedFromId || null,
       }
     } else {
       form.value = {
@@ -332,6 +334,7 @@ watch(
         masteryLevel: MasteryLevel.NEW,
         dictionaryLinks: [] as DictionaryLink[],
         pronunciationLink: '',
+        derivedFromId: null,
       }
     }
   },
