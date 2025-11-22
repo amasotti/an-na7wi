@@ -41,7 +41,7 @@
               required
               aria-describedby="translation-help"
             />
-
+            <DerivedFromSelector v-model="form.derivedFromId" />
             <BaseInput
               v-model="form.root"
               label="Root"
@@ -254,6 +254,7 @@ import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
 import BaseModal from '../common/BaseModal.vue'
 import BaseSelect from '../common/BaseSelect.vue'
+import DerivedFromSelector from './DerivedFromSelector.vue'
 import DictionaryLinkManager from './DictionaryLinkManager.vue'
 
 interface Props {
