@@ -34,6 +34,13 @@
       </section>
     </div>
 
+    <section>
+      <h2 class="text-xl font-semibold text-gray-900">
+        Linguistic Analysis
+      </h2>
+      <RootsRootMap />
+    </section>
+
   </main>
 
   <footer v-else>

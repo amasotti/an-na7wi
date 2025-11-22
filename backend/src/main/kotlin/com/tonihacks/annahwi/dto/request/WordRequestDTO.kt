@@ -5,6 +5,7 @@ import com.tonihacks.annahwi.entity.Difficulty
 import com.tonihacks.annahwi.entity.MasteryLevel
 import com.tonihacks.annahwi.entity.PartOfSpeech
 import com.tonihacks.annahwi.entity.Word
+import java.util.UUID
 
 /**
  * Data Transfer Object for Word creation and update requests
@@ -23,6 +24,7 @@ data class WordRequestDTO(
     val masteryLevel: MasteryLevel? = MasteryLevel.NEW,
     val dictionaryLinks: List<DictionaryLinkRequestDTO> = emptyList(),
     val pronunciationLink: String? = null,
+    val derivedFromId: UUID? = null,
 ) {
     fun toEntity(): Word {
         val word = Word().apply {

@@ -158,7 +158,6 @@ import type {
 import { AnnotationType as AnnotationTypeEnum, MasteryLevel as MasteryLevelEnum } from '@/types'
 import WordSelector from '~/components/annotation/WordSelector.vue'
 import BaseButton from '~/components/common/BaseButton.vue'
-import BaseCheckBox from '~/components/common/BaseCheckBox.vue'
 import BaseModal from '~/components/common/BaseModal.vue'
 import BaseTextArea from '~/components/common/BaseTextArea.vue'
 import ColorPicker from '~/components/common/ColorPicker.vue'

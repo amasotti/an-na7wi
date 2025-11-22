@@ -41,8 +41,8 @@
           </BaseBadge>
 
           <BaseBadge
-            v-if="word.dialect !== 'MSA'"
-            variant="outline"
+            v-if="word.dialect"
+            :variant="dialectColor"
             size="sm"
           >
             {{ word.dialect }}
@@ -71,9 +71,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import BaseBadge from '@/components/common/BaseBadge.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import type { WordSummary } from '@/types'
+import type { Dialect, WordSummary } from '@/types'
+import { dialectToColor } from '~/utils/textMetadata'
 
 interface Props {
   word: WordSummary
@@ -81,8 +83,13 @@ interface Props {
 
 type Emits = (e: 'click', arabic: string) => void
 
-defineProps<Props>()
+const props = defineProps<Props>()
 defineEmits<Emits>()
+
+const dialectColor = computed(() => {
+  if (props.word.dialect == null) return 'neutral'
+  return dialectToColor[props.word.dialect as Dialect]
+})
 
 const getDifficultyVariant = (difficulty: string) => {
   switch (difficulty.toLowerCase()) {

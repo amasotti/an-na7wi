@@ -14,7 +14,8 @@ data class WordSummaryDTO(
     val translation: String?,
     val partOfSpeech: String?,
     val difficulty: String,
-    val dialect: String
+    val dialect: String,
+    val derivedFromId: UUID?
 ) {
     companion object {
         fun fromEntity(word: Word): WordSummaryDTO {
@@ -25,7 +26,8 @@ data class WordSummaryDTO(
                 translation = word.translation,
                 partOfSpeech = word.partOfSpeech?.name,
                 difficulty = word.difficulty.name,
-                dialect = word.dialect.name
+                dialect = word.dialect.name,
+                derivedFromId = word.derivedFrom?.id
             )
         }
         

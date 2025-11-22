@@ -150,3 +150,64 @@
 .interlinear-annotations-text {
   @apply text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic;
 }
+
+/* ===================================================================
+   Full Text Preview
+   =================================================================== */
+
+.interlinear-preview-container {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mt-8 overflow-hidden;
+}
+
+.interlinear-preview-header {
+  @apply flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50;
+}
+
+.interlinear-preview-title {
+  @apply text-lg font-semibold text-gray-800 dark:text-gray-200 m-0;
+}
+
+.interlinear-preview-content {
+  @apply px-6 py-5;
+}
+
+.interlinear-preview-section {
+  @apply space-y-2;
+}
+
+.interlinear-preview-label {
+  @apply text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2;
+}
+
+.interlinear-preview-text {
+  @apply p-4 bg-gray-50 dark:bg-gray-900/50 rounded-md;
+  user-select: text;
+  cursor: text;
+}
+
+/* Dictionary Search Button */
+.dictionary-search-button {
+  @apply flex items-center gap-2 px-4 py-2
+  bg-primary-600 hover:bg-primary-700 text-white
+  rounded-lg shadow-sm hover:shadow-md
+  font-medium text-sm
+  transition-all duration-200
+  cursor-pointer;
+}
+
+.dictionary-search-button:disabled {
+  @apply bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400
+  cursor-not-allowed opacity-50 shadow-none;
+}
+
+.dictionary-search-button:disabled:hover {
+  @apply bg-gray-300 dark:bg-gray-600 shadow-none;
+}
+
+.dictionary-button-icon {
+  @apply flex-shrink-0;
+}
+
+.dictionary-button-text {
+  @apply whitespace-nowrap;
+}

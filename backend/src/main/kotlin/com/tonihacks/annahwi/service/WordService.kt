@@ -170,10 +170,21 @@ class WordService {
     @Transactional
     fun create(wordDTO: WordRequestDTO): WordResponseDTO {
         logger.info("Creating new word: ${wordDTO.arabic}")
-        
+
         val word = wordDTO.toEntity()
         word.createdAt = LocalDateTime.now()
-        
+
+        // Handle derivedFrom assignment
+        if (wordDTO.derivedFromId != null) {
+            val parentWord = wordRepository.findById(wordDTO.derivedFromId)
+            if (parentWord != null) {
+                word.derivedFrom = parentWord
+                logger.debug("Set derivedFrom to word ${parentWord.id} for new word ${word.arabic}")
+            } else {
+                logger.warn("Parent word not found with ID ${wordDTO.derivedFromId}, ignoring derivedFrom")
+            }
+        }
+
         // Handle root assignment
         if (!wordDTO.root.isNullOrBlank()) {
             try {
@@ -218,40 +229,39 @@ class WordService {
                 word.root = wordDTO.root
             }
         }
-        
+
         // Persist the word
         wordRepository.persist(word)
-        
+
         return WordResponseDTO.fromEntity(word)
-    }
-    
-    /**
-     * Create a new word (legacy method for backward compatibility)
-     */
-    @Transactional
-    fun create(word: Word): Word {
-        logger.info("Creating new word: ${word.arabic}")
-        
-        // Set creation timestamp
-        word.createdAt = LocalDateTime.now()
-        
-        // Persist the word
-        wordRepository.persist(word)
-        
-        return word
     }
     
     /**
      * Update an existing word using DTO
      */
     @Transactional
+    @Suppress("LongMethod")
     fun update(id: UUID, wordDTO: WordRequestDTO): WordResponseDTO {
         logger.info("Updating word with ID: $id")
-        
+
         val existingWord = wordRepository.findById(id)
             ?: throw AppException(AppError.NotFound.Word(id.toString()))
         wordDTO.updateEntity(existingWord)
-        
+
+        // Handle derivedFrom assignment
+        if (wordDTO.derivedFromId != null) {
+            val parentWord = wordRepository.findById(wordDTO.derivedFromId)
+            if (parentWord != null) {
+                existingWord.derivedFrom = parentWord
+                logger.debug("Updated derivedFrom to word ${parentWord.id} for word ${existingWord.arabic}")
+            } else {
+                logger.warn("Parent word not found with ID ${wordDTO.derivedFromId}, ignoring derivedFrom")
+            }
+        } else {
+            // Clear derivedFrom relationship if no derivedFromId provided
+            existingWord.derivedFrom = null
+        }
+
         // Handle root assignment
         if (!wordDTO.root.isNullOrBlank()) {
             try {
@@ -299,37 +309,11 @@ class WordService {
             // Clear root relationship if no root provided
             existingWord.arabicRoot = null
         }
-        
+
         // Persist the updated word
         wordRepository.persistAndFlush(existingWord)
-        
+
         return WordResponseDTO.fromEntity(existingWord)
-    }
-    
-    /**
-     * Update an existing word (legacy method for backward compatibility)
-     */
-    @Transactional
-    fun update(id: UUID, word: Word): Word {
-        logger.info("Updating word with ID: $id")
-        
-        val existingWord = wordRepository.findById(id)
-            ?: throw AppException(AppError.NotFound.Word(id.toString()))
-        
-        // Update fields
-        existingWord.arabic = word.arabic
-        existingWord.transliteration = word.transliteration
-        existingWord.translation = word.translation
-        existingWord.root = word.root
-        existingWord.partOfSpeech = word.partOfSpeech
-        existingWord.notes = word.notes
-        existingWord.difficulty = word.difficulty
-        existingWord.dialect = word.dialect
-        
-        // Persist the updated word
-        wordRepository.persist(existingWord)
-        
-        return existingWord
     }
     
     /**

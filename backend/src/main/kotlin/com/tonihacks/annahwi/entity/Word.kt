@@ -50,7 +50,11 @@ class Word : PanacheEntityBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "root_id")
     var arabicRoot: ArabicRoot? = null
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "derived_from")
+    var derivedFrom: Word? = null
+
     @Enumerated(EnumType.STRING)
     @Column(name = "part_of_speech")
     var partOfSpeech: PartOfSpeech? = null

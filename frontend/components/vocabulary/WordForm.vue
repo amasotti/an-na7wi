@@ -41,7 +41,7 @@
               required
               aria-describedby="translation-help"
             />
-            <div class="invisible">Placeholder to put the root on the right</div>
+            <DerivedFromSelector v-model="form.derivedFromId" />
             <BaseInput
               v-model="form.root"
               label="Root"
@@ -254,6 +254,7 @@ import BaseIcon from '../common/BaseIcon.vue'
 import BaseInput from '../common/BaseInput.vue'
 import BaseModal from '../common/BaseModal.vue'
 import BaseSelect from '../common/BaseSelect.vue'
+import DerivedFromSelector from './DerivedFromSelector.vue'
 import DictionaryLinkManager from './DictionaryLinkManager.vue'
 
 interface Props {
@@ -297,6 +298,7 @@ const form = ref({
   masteryLevel: MasteryLevel.NEW,
   dictionaryLinks: [] as DictionaryLink[],
   pronunciationLink: '',
+  derivedFromId: '' as string | null,
 })
 
 // Watch for changes in the word prop to update the form
@@ -317,6 +319,7 @@ watch(
         masteryLevel: newWord.masteryLevel || MasteryLevel.NEW,
         dictionaryLinks: newWord.dictionaryLinks || [],
         pronunciationLink: newWord.pronunciationLink || '',
+        derivedFromId: newWord.derivedFromId || null,
       }
     } else {
       form.value = {
@@ -332,6 +335,7 @@ watch(
         masteryLevel: MasteryLevel.NEW,
         dictionaryLinks: [] as DictionaryLink[],
         pronunciationLink: '',
+        derivedFromId: null,
       }
     }
   },

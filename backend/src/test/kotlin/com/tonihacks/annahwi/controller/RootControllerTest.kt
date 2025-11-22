@@ -146,7 +146,8 @@ class RootControllerTest {
                 translation = "to write",
                 partOfSpeech = "VERB",
                 difficulty = "BEGINNER",
-                dialect = "MSA"
+                dialect = "MSA",
+                derivedFromId = null
             )
         )
 

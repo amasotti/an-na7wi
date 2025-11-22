@@ -56,6 +56,7 @@ export interface Word {
   dictionaryLinks: DictionaryLink[]
   pronunciationLink?: string
   createdAt: string
+  derivedFromId?: string | null
 }
 
 export interface Annotation {
@@ -109,6 +110,7 @@ export interface WordSummary {
   partOfSpeech?: string
   difficulty: string
   dialect: string
+  derivedFromId?: string | null
 }
 
 export interface RootWithWords {

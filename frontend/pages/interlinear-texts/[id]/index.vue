@@ -17,6 +17,10 @@
 
       <!-- Main Content -->
       <InterlinearTextViewer />
+
+      <!-- Full text preview -->
+      <InterlinearTextPreview />
+
     </main>
 
     <!-- Delete Text Modal -->
@@ -35,6 +39,7 @@ import { InterlinearTextViewer } from '#components'
 import BaseErrorState from '~/components/common/BaseErrorState.vue'
 import LoadingEffect from '~/components/common/LoadingEffect.vue'
 import InterlinearTextDeleteModal from '~/components/interlinear/InterlinearTextDeleteModal.vue'
+import InterlinearTextPreview from '~/components/interlinear/InterlinearTextPreview.vue'
 import InterlinearTextDetailHeader from '~/components/interlinear/text-detail/InterlinearTextDetailHeader.vue'
 import { useInterlinearStore } from '~/stores/interlinearStore'
 

@@ -27,6 +27,7 @@ data class WordResponseDTO(
     val masteryLevel: MasteryLevel?,
     val dictionaryLinks: List<DictionaryLinkDTO>,
     val pronunciationLink: String?,
+    val derivedFromId: UUID?,
     val createdAt: LocalDateTime
 ) {
     companion object {
@@ -50,6 +51,7 @@ data class WordResponseDTO(
                 masteryLevel = word.masteryLevel,
                 dictionaryLinks = DictionaryLinkDTO.fromEntities(word.dictionaryLinks),
                 pronunciationLink = word.pronunciationLink,
+                derivedFromId = word.derivedFrom?.id,
                 createdAt = word.createdAt
             )
         }
