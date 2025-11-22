@@ -110,6 +110,7 @@ export interface WordSummary {
   partOfSpeech?: string
   difficulty: string
   dialect: string
+  derivedFromId?: string | null
 }
 
 export interface RootWithWords {

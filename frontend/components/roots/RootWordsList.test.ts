@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/vue'
-import { describe, expect, it, vi } from 'vitest'
-import { RootsRootWordsList as RootWordsList } from '#components'
-import { mockedRoot } from '~/test/mocks/roots.mock'
-import { mockWords } from '~/test/mocks/words.mock'
-import { Dialect, Difficulty, type Root, type WordSummary } from '~/types'
+import {render, screen} from '@testing-library/vue'
+import {describe, expect, it, vi} from 'vitest'
+import {RootsRootWordsList as RootWordsList} from '#components'
+import {mockedRoot} from '~/test/mocks/roots.mock'
+import {mockWords} from '~/test/mocks/words.mock'
+import {Dialect, Difficulty, type Root, type WordSummary} from '~/types'
 
 // Mock rootStore
 const mockRootStore = {
@@ -98,11 +98,10 @@ describe('RootWordsList', () => {
   })
 
   it('handles very long root display text', () => {
-    const longRoot = {
+    mockRootStore.currentRootWithWords!.root = {
       ...mockedRoot,
       displayForm: 'ه د سا ق ش ع ر ت ط',
     }
-    mockRootStore.currentRootWithWords!.root = longRoot
     render(RootWordsList)
     expect(screen.getByText('Words from Root ه د سا ق ش ع ر ت ط')).toBeInTheDocument()
   })
@@ -152,7 +151,7 @@ describe('RootWordsList', () => {
   })
 
   it('handles words with missing properties gracefully', () => {
-    const incompleteWords = [
+    mockRootStore.currentRootWithWords!.words = [
       {
         id: '1',
         arabic: 'كتب',
@@ -160,8 +159,6 @@ describe('RootWordsList', () => {
         dialect: Dialect.MSA,
       } as WordSummary,
     ]
-
-    mockRootStore.currentRootWithWords!.words = incompleteWords
     render(RootWordsList)
 
     expect(screen.getByText('كتب')).toBeInTheDocument()

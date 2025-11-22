@@ -34,6 +34,11 @@
       </section>
     </div>
 
+    <section>
+      <h2>Map</h2>
+      <RootsRootMap />
+    </section>
+
   </main>
 
   <footer v-else>
