@@ -2,8 +2,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import {useRootStore} from "#imports";
-import type {RootWithWords, WordSummary} from "~/types";
+import { useRootStore } from '#imports'
+import type { RootWithWords, WordSummary } from '~/types'
 
 interface TreeNode {
   id: string
@@ -14,7 +14,7 @@ interface TreeNode {
 }
 
 const container = ref<HTMLElement | null>(null)
-const store = useRootStore();
+const store = useRootStore()
 
 const { currentRootWithWords } = storeToRefs(store)
 
@@ -25,7 +25,6 @@ const wordToNode = (word: WordSummary): TreeNode => ({
   meaning: word.translation || 'N/A',
   children: [],
 })
-
 
 function buildTree(root: RootWithWords, words: WordSummary[]): TreeNode {
   const wordMap = new Map(words.map(w => [w.id, w]))
@@ -61,12 +60,12 @@ function buildTree(root: RootWithWords, words: WordSummary[]): TreeNode {
 }
 
 function toMermaid(node: TreeNode): string {
-  console.log("tree node:", node)
+  console.log('tree node:', node)
   const lines = ['mindmap', `  root((${fmt(node)}))`]
 
   function walk(currentNode: TreeNode, indent = 4) {
     for (const child of currentNode.children) {
-      lines.push(' '.repeat(indent) + `[${fmt(child)}]`)
+      lines.push(`${''.repeat(indent)}[${fmt(child)}]`)
       walk(child, indent + 2)
     }
   }
@@ -75,7 +74,9 @@ function toMermaid(node: TreeNode): string {
   return lines.join('\n')
 }
 
-function fmt(node: TreeNode | { arabic: string; transliteration: string; meaning: string }): string {
+function fmt(
+  node: TreeNode | { arabic: string; transliteration: string; meaning: string }
+): string {
   return `${node.arabic}<br>${node.transliteration}<br>${node.meaning}`
 }
 

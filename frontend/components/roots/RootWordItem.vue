@@ -71,11 +71,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import BaseBadge from '@/components/common/BaseBadge.vue'
 import BaseIcon from '@/components/common/BaseIcon.vue'
-import {Dialect, type WordSummary} from '@/types'
+import type { Dialect, WordSummary } from '@/types'
 import { dialectToColor } from '~/utils/textMetadata'
-import {computed} from "vue";
 
 interface Props {
   word: WordSummary

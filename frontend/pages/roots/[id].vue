@@ -35,7 +35,9 @@
     </div>
 
     <section>
-      <h2>Map</h2>
+      <h2 class="text-xl font-semibold text-gray-900">
+        Linguistic Analysis
+      </h2>
       <RootsRootMap />
     </section>
 

@@ -100,7 +100,7 @@ const resetSearch = () => {
 // Load selected word when modelValue changes externally
 watch(
   () => props.modelValue,
-  async (newValue) => {
+  async newValue => {
     if (newValue && (!selectedWord.value || selectedWord.value.id !== newValue)) {
       try {
         const word = await wordService.getWord(newValue)
@@ -124,7 +124,7 @@ watch(
 
 // Debounced search
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
-watch(searchQuery, (newQuery) => {
+watch(searchQuery, newQuery => {
   if (debounceTimer) clearTimeout(debounceTimer)
   if (!newQuery.trim()) {
     resetSearch()

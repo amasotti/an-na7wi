@@ -1,9 +1,9 @@
-import {render, screen} from '@testing-library/vue'
-import {describe, expect, it, vi} from 'vitest'
-import {RootsRootWordsList as RootWordsList} from '#components'
-import {mockedRoot} from '~/test/mocks/roots.mock'
-import {mockWords} from '~/test/mocks/words.mock'
-import {Dialect, Difficulty, type Root, type WordSummary} from '~/types'
+import { render, screen } from '@testing-library/vue'
+import { describe, expect, it, vi } from 'vitest'
+import { RootsRootWordsList as RootWordsList } from '#components'
+import { mockedRoot } from '~/test/mocks/roots.mock'
+import { mockWords } from '~/test/mocks/words.mock'
+import { Dialect, Difficulty, type Root, type WordSummary } from '~/types'
 
 // Mock rootStore
 const mockRootStore = {

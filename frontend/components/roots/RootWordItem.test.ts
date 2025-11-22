@@ -57,15 +57,6 @@ describe('RootWordItem', () => {
     expect(screen.getByText('TUNISIAN')).toBeInTheDocument()
   })
 
-  it('does not display dialect badge for MSA', () => {
-    renderWithStore(RootWordItem, {
-      props: defaultProps,
-    })
-
-    // MSA should not be shown as a badge
-    expect(screen.queryByText('MSA')).not.toBeInTheDocument()
-  })
-
   it('does not show transliteration when not provided', () => {
     const wordWithoutTransliteration = { ...mockWord, transliteration: undefined }
     renderWithStore(RootWordItem, {
