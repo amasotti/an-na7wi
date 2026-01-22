@@ -28,7 +28,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "apexcharts": "^5.3.6",
     "axios": "^1.13.2",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "markdown-it": "^14.1.0",
     "mermaid": "^11.12.1",
     "nuxt": "^4.2.1",
