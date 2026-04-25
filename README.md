@@ -3,6 +3,9 @@
 [![🚀 CI Pipeline](https://github.com/amasotti/an-na7wi/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/amasotti/an-na7wi/actions/workflows/ci.yml)
 [![🚀 Release Pipeline](https://github.com/amasotti/an-na7wi/actions/workflows/release.yml/badge.svg)](https://github.com/amasotti/an-na7wi/actions/workflows/release.yml)
 
+> [!WARNING]
+> **This project is no longer maintained.** I switched stack to Ktor + Svelte and started [qalam](../qalam) from scratch, incorporating the lessons learned here. Head there for active development.
+
 An-Nahwi (النحوي - "The Grammarian") is a learning project I started because I couldn't find a good Arabic learning app
 that combined text management, roots in-depth study, vocabulary learning and some analytics and flashcards learning
 tools.
